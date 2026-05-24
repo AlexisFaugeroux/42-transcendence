@@ -1,0 +1,64 @@
+.container {
+  height: 500px;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: 1200px;
+}
+
+.header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.headerCorner {
+  border: 1px solid blue;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 24px;
+  width: 200px;
+}
+
+.barLabelsRow {
+  height: 24px;
+  position: relative;
+}
+
+.barLabel {
+  align-items: center;
+  border-left: 2px solid #555;
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  padding-left: 8px;
+  position: absolute;
+}
+
+.barLabelOdd {
+  background-color: #2a2a2a;
+}
+
+.barLabelEven {
+  background-color: #333;
+}
+
+.barLabelText {
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.body {
+  display: flex;
+}
+
+.rackList {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.rackItem {
+  border: 1px solid green;
+  box-sizing: border-box;
+}
