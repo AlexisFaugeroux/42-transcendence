@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Inputs</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 14px; background: var(--bg-app); color: var(--fg1); display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
+  .field { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; font-size: 11px; }
+  .field .lbl { color: var(--fg3); font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; }
+  input[type=text], select { background: var(--color-void); border: 0.5px solid var(--line-soft); color: var(--fg1); padding: 4px 8px; font-family: var(--font-display); font-weight: 300; font-size: 11px; border-radius: 3px; outline: none; height: 22px; box-sizing: border-box; width: 100%; }
+  input[type=text]:focus { border-color: var(--color-blue); box-shadow: 0 0 3px -1px var(--color-blue); }
+  .checkbox { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer; }
+  .checkbox .box { width: 12px; height: 12px; border: 0.5px solid var(--color-dark); border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; }
+  .checkbox.on .box { border-color: var(--color-orange); color: var(--color-orange); box-shadow: 0 0 3px -1px var(--color-orange); }
+  .radio { display: inline-flex; gap: 0; border: 0.5px solid var(--color-dark); border-radius: 3px; overflow: hidden; }
+  .radio button { background: transparent; color: var(--fg2); border: 0; padding: 4px 10px; font-family: var(--font-display); font-weight: 300; font-size: 10px; cursor: pointer; border-right: 0.5px solid var(--color-dark); }
+  .radio button:last-child { border-right: 0; }
+  .radio button.on { background: color-mix(in srgb, var(--color-blue) 14%, transparent); color: var(--color-blue); }
+</style></head>
+<body>
+  <div class="field"><div class="lbl">Project Name</div><input type="text" value="Untitled Project"></div>
+  <div class="field"><div class="lbl">Sample Rate</div>
+    <select><option>48000 Hz</option></select>
+  </div>
+  <div class="field"><div class="lbl">Auto-Save</div>
+    <label class="checkbox on"><span class="box">✓</span>Enabled every 30s</label>
+  </div>
+  <div class="field"><div class="lbl">Latency Mode</div>
+    <div class="radio"><button>Low</button><button class="on">Balanced</button><button>Stable</button></div>
+  </div>
+</body></html>

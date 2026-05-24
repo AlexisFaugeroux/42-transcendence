@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Semantic Colors</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 14px; background: var(--bg-app); }
+  .row { display: flex; gap: 0; align-items: stretch; height: 28px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; font-size: 10px; }
+  .row > div { display: flex; align-items: center; padding: 0 10px; flex: 1; gap: 8px; }
+  .label { color: var(--fg2); font-family: var(--font-mono); font-size: 9px; min-width: 110px; flex: 0 0 110px !important; padding-left: 0 !important; background: transparent !important; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 2px; flex: 0 0 14px !important; }
+  .name { color: var(--fg1); }
+</style></head>
+<body>
+  <div class="row"><div class="label">--bg-app</div><div style="background: var(--bg-app); color: var(--fg2)">app canvas</div></div>
+  <div class="row"><div class="label">--bg-panel</div><div style="background: var(--bg-panel); color: var(--fg1)">header / footer</div></div>
+  <div class="row"><div class="label">--bg-card</div><div style="background: var(--bg-card); color: var(--fg1)">card / well</div></div>
+  <div class="row"><div class="label">--bg-elevated</div><div style="background: var(--bg-elevated); color: var(--fg1)">menu / dialog</div></div>
+  <div class="row"><div class="label">--color-active</div><div style="background: var(--color-active); color: white">menu hover / select</div></div>
+  <div class="row"><div class="label">--fg1 / fg2 / fg3</div>
+    <div style="background: var(--bg-card); color: var(--fg1)">primary</div>
+    <div style="background: var(--bg-card); color: var(--fg2)">secondary</div>
+    <div style="background: var(--bg-card); color: var(--fg3)">muted</div>
+  </div>
+</body></html>

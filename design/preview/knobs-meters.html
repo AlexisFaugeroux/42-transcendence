@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Knobs & Meters</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 14px; background: var(--bg-app); color: var(--fg1); display: flex; gap: 18px; align-items: center; justify-content: center; }
+  .ctrl { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-display); font-size: 9px; color: var(--fg3); text-transform: uppercase; letter-spacing: 0.05em; }
+  .knob { width: 28px; height: 28px; }
+  .pmeter { width: 90px; height: 16px; background: var(--color-void); border-radius: 2px; padding: 1px; display: flex; gap: 1px; }
+  .pmeter > .ch { flex: 1; background: linear-gradient(90deg, var(--color-green) 0%, var(--color-green) 65%, var(--color-yellow) 65%, var(--color-yellow) 88%, var(--color-red) 88%, var(--color-red) 100%); }
+  .pmeter > .ch.q1 { mask: linear-gradient(90deg, black 0% var(--p, 50%), transparent var(--p, 50%) 100%); }
+  .vol { width: 12px; height: 80px; background: var(--color-void); border-radius: 2px; position: relative; padding: 4px; }
+  .vol .thumb { position: absolute; left: 50%; top: 35%; transform: translateX(-50%); width: 14px; height: 6px; background: var(--color-yellow); border-radius: 1px; box-shadow: 0 0 4px -1px var(--color-yellow); }
+  .vol .marks { width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent 0 5px, var(--line-soft) 5px 6px); }
+  .val { color: var(--fg1); font-family: var(--font-mono); font-size: 9px; }
+</style></head>
+<body>
+  <div class="ctrl">
+    <svg class="knob" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="36" fill="none" stroke="var(--color-void)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="var(--color-yellow)" stroke-width="6" stroke-linecap="round" stroke-dasharray="170 226" transform="rotate(135 50 50)" filter="drop-shadow(0 0 3px var(--color-yellow))"/>
+      <line x1="50" y1="20" x2="50" y2="34" stroke="var(--fg1)" stroke-width="2" stroke-linecap="round" transform="rotate(75 50 50)"/>
+    </svg>
+    <div class="val">-3 dB</div>
+    <div>volume</div>
+  </div>
+  <div class="ctrl">
+    <svg class="knob" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="36" fill="none" stroke="var(--color-void)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="var(--color-green)" stroke-width="6" stroke-linecap="round" stroke-dasharray="60 226" transform="rotate(-90 50 50)" filter="drop-shadow(0 0 3px var(--color-green))"/>
+      <line x1="50" y1="20" x2="50" y2="34" stroke="var(--fg1)" stroke-width="2" stroke-linecap="round" transform="rotate(20 50 50)"/>
+    </svg>
+    <div class="val">L 22</div>
+    <div>pan</div>
+  </div>
+  <div class="ctrl">
+    <div class="vol"><div class="marks"></div><div class="thumb"></div></div>
+    <div>fader</div>
+  </div>
+  <div class="ctrl">
+    <div class="pmeter"><div class="ch q1" style="--p: 72%"></div><div class="ch q1" style="--p: 65%"></div></div>
+    <div class="pmeter"><div class="ch q1" style="--p: 35%"></div><div class="ch q1" style="--p: 40%"></div></div>
+    <div>peak meter</div>
+  </div>
+</body></html>

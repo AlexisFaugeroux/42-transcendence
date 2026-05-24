@@ -1,0 +1,20 @@
+{
+  "name": "@transcendence/back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "prettier --check . && eslint .",
+    "fix": "prettier --write . && eslint --fix ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "prettier": "@transcendence/prettier-config",
+  "devDependencies": {
+    "@transcendence/eslint-config": "workspace:*",
+    "@transcendence/prettier-config": "workspace:*"
+  }
+}

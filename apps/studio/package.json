@@ -1,0 +1,54 @@
+{
+  "name": "@transcendence/studio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "check": "prettier --check . && eslint .",
+    "fix": "prettier --write . && eslint --fix ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "prettier": "@transcendence/prettier-config",
+  "dependencies": {
+    "@transcendence/ui": "workspace:*",
+    "@opendaw/lib-box": "0.0.82",
+    "@opendaw/lib-dawproject": "0.0.67",
+    "@opendaw/lib-dom": "0.0.80",
+    "@opendaw/lib-dsp": "0.0.81",
+    "@opendaw/lib-fusion": "0.0.89",
+    "@opendaw/lib-jsx": "0.0.80",
+    "@opendaw/lib-midi": "0.0.63",
+    "@opendaw/lib-runtime": "0.0.76",
+    "@opendaw/lib-std": "0.0.75",
+    "@opendaw/lib-xml": "0.0.61",
+    "@opendaw/studio-adapters": "0.0.104",
+    "@opendaw/studio-boxes": "0.0.87",
+    "@opendaw/studio-core": "0.0.135",
+    "@opendaw/studio-enums": "0.0.72",
+    "@opendaw/studio-sdk": "0.0.137",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@transcendence/eslint-config": "workspace:*",
+    "@transcendence/prettier-config": "workspace:*",
+    "@vitejs/plugin-react": "6.0.2",
+    "@types/node": "24.12.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "vite": "8.0.14"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@parcel/watcher"
+    ]
+  }
+}

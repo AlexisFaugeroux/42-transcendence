@@ -1,0 +1,161 @@
+/* Google Fonts substitute — flagged: original openDAW Rubik/Open Sans .woff2 not provided */
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&family=Open+Sans:wght@400;600&display=swap");
+
+/* openDAW Design System — Colors & Type
+   Source: extracted from openDAW Studio codebase (ui/Fonts.ts, Colors enum,
+   ui/header/Header.sass background hsl(197,14%,6%), ui/components/Menu.sass active hsl(210,90%,30%),
+   ui/components/ButtonCheckboxRadio.sass, ui/dashboard/Dashboard.sass).
+
+   The Colors enum exposes named hues (blue/green/orange/yellow/red/purple/gray/dark/
+   bright/shadow/black). Values below are derived from observed usage and the standard
+   openDAW saturated-on-near-black scheme.
+*/
+
+@font-face {
+  font-family: "Rubik";
+  font-weight: 300;
+  src: url("./fonts/rubik-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Rubik";
+  font-weight: 400;
+  src: url("./fonts/rubik-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("./fonts/OpenSans-Regular.ttf") format("truetype");
+}
+
+:root {
+  /* === Brand / Accent Hues (Colors enum) === */
+  --color-blue:    hsl(210, 90%, 50%);
+  --color-green:   hsl(140, 65%, 45%);
+  --color-orange:  hsl(25,  90%, 55%);
+  --color-yellow:  hsl(45,  95%, 55%);
+  --color-red:     hsl(8,   85%, 55%);
+  --color-purple:  hsl(280, 65%, 60%);
+  --color-cyan:    hsl(190, 75%, 50%);
+
+  /* === Neutrals (Colors enum: bright → black) === */
+  --color-bright:  hsl(0, 0%, 92%);    /* primary fg (text on dark) */
+  --color-gray:    hsl(0, 0%, 56%);    /* secondary fg */
+  --color-dark:    hsl(0, 0%, 38%);    /* disabled / inactive icons / labels */
+  --color-shadow:  hsl(197, 14%, 12%); /* card / well surface */
+  --color-black:   hsl(197, 14%, 6%);  /* app chrome / panels */
+  --color-void:    hsl(197, 14%, 3%);  /* deepest bg */
+
+  /* === Semantic Surfaces === */
+  --bg-app:        var(--color-void);
+  --bg-panel:      var(--color-black);   /* hsl(197,14%,6%) — header/footer */
+  --bg-panel-2:    hsl(197, 14%, 8%);    /* dashboard panel */
+  --bg-card:       var(--color-shadow);
+  --bg-elevated:   hsl(197, 14%, 16%);   /* menu/dialog floating */
+  --line-faint:    rgba(255, 255, 255, 0.04);
+  --line-soft:     rgba(255, 255, 255, 0.07);
+  --line-hover:    rgba(255, 255, 255, 0.12);
+
+  /* === Foreground === */
+  --fg1:           var(--color-bright);
+  --fg2:           var(--color-gray);
+  --fg3:           var(--color-dark);
+
+  /* === Active / Selection === */
+  --color-active:        hsl(210, 90%, 30%);    /* Menu.sass $ACTIVE */
+  --color-active-parent: hsla(210, 90%, 30%, 0.5);
+
+  /* === Type Stacks === */
+  --font-display:  "Rubik", system-ui, sans-serif;     /* UI/headers */
+  --font-body:     "Open Sans", system-ui, sans-serif; /* prose */
+  --font-mono:     ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* === Type Scale (UI is dense — small sizes dominate) === */
+  --fs-10:  10px;   /* footer, tiny labels */
+  --fs-11:  11px;
+  --fs-12:  12px;   /* default UI */
+  --fs-13:  13px;   /* dashboard prose */
+  --fs-14:  14px;
+  --fs-18:  18px;   /* dashboard h2 */
+  --fs-22:  22px;
+  --fs-36:  36px;   /* dashboard h1 (2.25em @ 16px) */
+
+  /* === Radii === */
+  --radius-1: 2px;   /* highlight pill */
+  --radius-2: 4px;   /* button frame, default */
+  --radius-3: 6px;
+  --radius-4: 8px;
+
+  /* === Shadows === */
+  --glow-active:   0 0 3px -1px var(--color-active);
+  --glow-frame:    0 0 3px -1px currentColor;
+  --shadow-floating: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+
+  /* === Spacing (em-based; UI uses em widely) === */
+  --gap-1: 0.25em;
+  --gap-2: 0.5em;
+  --gap-3: 0.75em;
+  --gap-4: 1em;
+  --gap-6: 1.5em;
+}
+
+/* === Base / Semantic Element Styles === */
+html, body {
+  background: var(--bg-app);
+  color: var(--fg1);
+  font-family: var(--font-display);
+  font-size: var(--fs-12);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-36);
+  color: white;
+  margin: 0 0 0.05em -3px;
+}
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-18);
+  color: var(--color-blue);
+  margin: 0;
+}
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-14);
+  color: var(--color-orange);
+  margin: 0;
+  text-transform: none;
+}
+h5 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin: 0;
+}
+p, li {
+  font-family: var(--font-body);
+  font-size: var(--fs-13);
+  line-height: 1.5;
+  color: var(--fg2);
+  margin: 0.3em 0;
+}
+a { color: var(--color-blue); text-decoration: none; }
+a:hover { color: var(--color-bright); }
+code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  color: var(--color-green);
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+}
+.highlight {
+  color: rgba(0,0,0,0.8);
+  background: var(--color-red);
+  border-radius: var(--radius-1);
+  padding: 0 2px;
+}
