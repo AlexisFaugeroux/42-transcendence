@@ -13,7 +13,10 @@ export interface Clip {
   audioDuration: number;
   trackIndex: number;
   trackName: string;
+<<<<<<< HEAD
   gap: number;
+=======
+>>>>>>> e391d15 (chore: initial monorepo structure and tooling)
   position: number;
   duration: number;
   color: string;

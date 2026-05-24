@@ -1,7 +1,7 @@
 import { type Project } from '@opendaw/studio-core';
 import type { JSX } from 'react';
-import type { Clip } from '../../lib/types';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
+import type { Clip } from '../../lib/types';
 import { PIXELS_PER_PULSE, ROW_HEIGTH } from './constants';
 import { Grid } from './Grid';
 import styles from './Timeline.module.scss';

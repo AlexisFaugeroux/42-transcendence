@@ -1,9 +1,9 @@
-import { createBaseConfig, createReactConfig } from '@transcendence/eslint-config'
+import { createBaseConfig, createReactConfig } from '@transcendence/eslint-config';
 
 export default [
   ...createBaseConfig({
     ignores: ['dist/', 'build/'],
-  tsconfigRootDir: import.meta.dirname,
+    tsconfigRootDir: import.meta.dirname,
   }),
   ...createReactConfig(),
-]
+];

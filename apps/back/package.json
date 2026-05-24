@@ -2,16 +2,16 @@
   "name": "@transcendence/back",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "check": "prettier --check . && eslint .",
-    "fix": "prettier --write . && eslint --fix ."
+    "fix": "prettier --write . && eslint --fix .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "prettier": "@transcendence/prettier-config",
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
