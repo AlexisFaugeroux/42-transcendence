@@ -34,7 +34,7 @@ Packages reference each other with `workspace:*` and are scoped `@transcendence/
 | Frontend | React 19 + TypeScript, Vite, SASS modules |
 | Audio engine | `@opendaw/*` SDK packages ([openDAW-headless](https://github.com/andremichelle/openDAW-headless)) |
 | Backend | Node.js |
-| Database / Auth | Supabase (Postgres + RLS + Supabase Auth) |
+| Database | PostgreSQL (Alpine) in Docker — may migrate to Supabase later |
 | Real-time sync | WebSockets + Yjs (collaborative editing in the studio) |
 | Hosting | Infomaniak VPS (nginx + Node.js, audio files on disk) |
 | Audio storage | VPS disk, served by nginx with `auth_request` access control |
@@ -78,7 +78,8 @@ samples library, studio workspace.
 
 ## Architecture notes
 
-- **Database:** Supabase (free tier). Relational data only — audio files stay on disk.
+- **Database:** PostgreSQL (Alpine image) in a Docker container. Relational data only —
+  audio files stay on disk. May migrate to Supabase later.
   See `docs/architecture/database.md`.
 - **Audio storage:** VPS disk at `/var/www/audio/`. Uploads go through the backend,
   served by nginx with `auth_request` to the backend for per-user access control.
