@@ -3,5 +3,4 @@ packages:
   - "packages/*"
 allowBuilds:
   '@parcel/watcher': false
-  leveldown: set this to true or false
-minimumReleaseAge: 64800
+  leveldown: true
