@@ -231,6 +231,12 @@ importers:
       '@transcendence/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+      react-dom:
+        specifier: 19.2.6
+        version: 19.2.6(react@19.2.6)
     devDependencies:
       '@transcendence/eslint-config':
         specifier: workspace:*
@@ -238,6 +244,18 @@ importers:
       '@transcendence/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: 6.0.2
+        version: 6.0.2(vite@8.0.14(@types/node@24.12.3))
+      vite:
+        specifier: 8.0.14
+        version: 8.0.14(@types/node@24.12.3)
 
   apps/studio:
     dependencies:
