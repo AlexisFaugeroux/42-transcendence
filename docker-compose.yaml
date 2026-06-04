@@ -4,10 +4,10 @@ services:
     env_file:
       - 'apps/back/.env'
     restart : always
-    port:
+    ports:
       - 5432:5432
     volumes:
-      - transcendance_db_data:/var/lib/postgresql/data
+      - transcendance_db_data:/var/lib/postgresql
 
 volumes:
   transcendance_db_data:
