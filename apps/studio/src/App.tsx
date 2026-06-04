@@ -1,4 +1,3 @@
-import { AnimationFrame } from '@opendaw/lib-dom';
 import { PPQN } from '@opendaw/lib-dsp';
 import { InstrumentFactories } from '@opendaw/studio-adapters';
 import type { Project } from '@opendaw/studio-core';
@@ -8,7 +7,8 @@ import { seedDemoData } from './lib/seedDemoData';
 import type { Clip } from './lib/types';
 import { AddTrackButton, type TrackKind } from './ui/AddTrackButton';
 import { Timeline } from './ui/Timeline/Timeline';
-import { Transport } from './ui/Transport/Transport';
+import { Header } from './ui/Header/Header';
+import { ProjectProvider } from './contexts/ProjectContext';
 
 export interface Track {
   name: string;
@@ -19,9 +19,6 @@ export interface Track {
 function App(): JSX.Element {
   const [project, setProject] = useState<Project | null>(null);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentPosition, setCurrentPosition] = useState(0);
-  const [bpm, setBpm] = useState(120);
   const [clips, setClips] = useState<Clip[]>([]);
   const [tracks, setTracks] = useState<Track[]>([]);
 
@@ -52,45 +49,6 @@ function App(): JSX.Element {
       mounted = false;
     };
   }, []);
-
-  // Subscribe to engine state
-  useEffect(() => {
-    if (!project || !audioContext) return;
-
-    const playingSub = project.engine.isPlaying.catchupAndSubscribe((obs) => {
-      setIsPlaying(obs.getValue());
-    });
-
-    const positionSub = AnimationFrame.add(() => {
-      const enginePos = project.engine.position.getValue();
-      const latencySeconds = audioContext.baseLatency + audioContext.outputLatency;
-      const latencyPulses = PPQN.secondsToPulses(latencySeconds, bpm);
-      setCurrentPosition(Math.max(0, enginePos - latencyPulses));
-    });
-
-    const bpmSub = project.timelineBox.bpm.catchupAndSubscribe((field) => {
-      setBpm(field.getValue());
-    });
-
-    return () => {
-      playingSub.terminate();
-      positionSub.terminate();
-      bpmSub.terminate();
-    };
-  }, [project, audioContext, bpm]);
-
-  async function handlePlay() {
-    if (!project || !audioContext) return;
-
-    if (audioContext.state === 'suspended') await audioContext.resume();
-
-    project.engine.play();
-  }
-
-  function handleStop() {
-    if (!project) return;
-    project.engine.stop(true); // also reset at position 0;
-  }
 
   function handleBpmChange(newBpm: number) {
     if (!project) return;
@@ -161,31 +119,17 @@ function App(): JSX.Element {
     });
   }
 
-  if (!project) return <div>Loading...</div>;
+  if (!project || !audioContext) return <div>Loading...</div>;
 
   return (
     <div className="app">
-      <h1>MakeSomeNoise</h1>
+      <ProjectProvider value={{ project, audioContext }}>
+        <Header handleBpmChange={handleBpmChange} />
 
-      <AddTrackButton onAddTrack={handleAddTrack} />
+        <AddTrackButton onAddTrack={handleAddTrack} />
 
-      <Timeline
-        project={project}
-        clips={clips}
-        tracks={tracks.map((track) => track.name)}
-        currentPosition={currentPosition}
-        isPlaying={isPlaying}
-      />
-
-      <Transport
-        isPlaying={isPlaying}
-        bpm={bpm}
-        onPlay={() => void handlePlay()}
-        onStop={handleStop}
-        onBpmChange={handleBpmChange}
-      />
-
-      {/* <TrackList tracks={tracks} project={project} /> */}
+        <Timeline clips={clips} tracks={tracks.map((track) => track.name)} />
+      </ProjectProvider>
     </div>
   );
 }

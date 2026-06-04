@@ -1,10 +1,11 @@
-import { type Project } from '@opendaw/studio-core';
+import type { Project } from '@opendaw/studio-core';
 import type { JSX } from 'react';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
 import type { Clip } from '../../lib/types';
 import { PIXELS_PER_PULSE, ROW_HEIGTH } from './constants';
-import { Grid } from './Grid';
+import { Grid } from './Grid/Grid';
 import styles from './Timeline.module.scss';
+import { useProject } from '../../contexts/ProjectContext';
 
 function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
   const bars = computeBarsFromSDK(project);
@@ -25,14 +26,13 @@ function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
 }
 
 interface TimelineProps {
-  project: Project;
   clips: Clip[];
   tracks: string[];
-  currentPosition: number;
-  isPlaying: boolean;
 }
 
-export function Timeline({ clips, currentPosition, isPlaying, project, tracks }: TimelineProps): JSX.Element {
+export function Timeline({ clips, tracks }: TimelineProps): JSX.Element {
+  const { project } = useProject();
+
   const totalDuration = project.timelineBox.durationInPulses.getValue();
 
   return (
@@ -55,15 +55,7 @@ export function Timeline({ clips, currentPosition, isPlaying, project, tracks }:
               </div>
             ))}
           </div>
-          <Grid
-            project={project}
-            height={500}
-            pixelsPerPulse={0.1}
-            tracks={tracks}
-            clips={clips}
-            isPlaying={isPlaying}
-            currentPosition={currentPosition}
-          />
+          <Grid height={500} pixelsPerPulse={0.1} tracks={tracks} clips={clips} />
         </div>
       </div>
     </>

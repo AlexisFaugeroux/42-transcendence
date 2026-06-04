@@ -1,0 +1,57 @@
+.metricsContainer {
+  display: flex;
+  align-items: center;
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0 10px;
+    line-height: 1;
+
+    .metricValue {
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      color: var(--fg1);
+
+      &.primary {
+        font-size: 18px;
+      }
+
+      &.accent {
+        font-size: 18px;
+        color: var(--color-orange);
+      }
+
+}
+
+    .bpmInput {
+      all: unset;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+      font-size: 18px;
+      color: var(--color-orange);
+      width: 3ch;
+      text-align: right;
+
+      -moz-appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+
+    .metricLabel {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+  }
+}
