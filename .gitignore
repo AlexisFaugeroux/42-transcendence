@@ -1,6 +1,8 @@
 .DS_Store
 .vscode
 
+.env
+**/.env
 **/build
 **/dist
 **/node_modules
