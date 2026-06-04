@@ -93,6 +93,7 @@ samples library, studio workspace.
   not just the *what*.
 - Prefer small, verifiable steps. Get the minimal version working first, then refine.
 - Push back when I'm overcomplicating something.
+- Do not edit, instead show the changes so they can be manually implemented
 - Check `docs/` for architecture decisions before proposing infrastructure changes.
 - Each app may have its own `CLAUDE.md` with app-specific context — read it when
   working in that app.

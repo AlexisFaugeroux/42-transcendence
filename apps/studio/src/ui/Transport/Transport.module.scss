@@ -1,0 +1,55 @@
+.container {
+  background: #2a2a2a;
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.controls {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.btnActive {
+  cursor: pointer;
+}
+
+.btnDisabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.btnPlay {
+  background: #10b981;
+}
+
+.btnStop {
+  background: #ef4444;
+}
+
+.bpmSection {
+  flex: 1;
+}
+
+.bpmLabel {
+  color: #fff;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.bpmSlider {
+  width: 100%;
+}
