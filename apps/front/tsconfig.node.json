@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-      "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-      "target": "es2024",
-      "lib": ["ES2024"],
-      "module": "esnext",
-      "skipLibCheck": true,
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2024"],
+    "module": "esnext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "skipLibCheck": true,
 
-      "moduleResolution": "bundler",
-      "allowImportingTsExtensions": true,
-      "verbatimModuleSyntax": true,
-      "moduleDetection": "force",
-      "noEmit": true
-    },
-    "include": ["vite.config.ts"]
-  }
+    "target": "es2024",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "verbatimModuleSyntax": true
+  },
+  "include": ["vite.config.ts"]
+}

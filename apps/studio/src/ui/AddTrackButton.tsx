@@ -8,9 +8,9 @@ interface AddTrackButtonProps {
 }
 
 const OPTIONS: { value: TrackKind; label: string }[] = [
-  { value: 'tape', label: 'Audio (Tape)' },
-  { value: 'nano', label: 'Sampler (Nano)' },
-  { value: 'vaporisateur', label: 'Synth (Vaporisateur)' },
+  { label: 'Audio (Tape)', value: 'tape' },
+  { label: 'Sampler (Nano)', value: 'nano' },
+  { label: 'Synth (Vaporisateur)', value: 'vaporisateur' },
 ];
 
 export function AddTrackButton({ onAddTrack }: AddTrackButtonProps): JSX.Element {

@@ -18,6 +18,7 @@ function getPatternPositions(instrumentName: string): number[] {
       // On every beat
       return Array.from({ length: BARS * 4 }, (_, i) => i * Quarter);
     case 'Shaker':
+      // Beats 1 and 3 of each bar
       return Array.from({ length: BARS * 4 }, (_, i) => i * Quarter + Quarter / 2);
     default:
       return [];
@@ -98,7 +99,7 @@ export async function seedDemoData(
           color: audioFile.color,
           duration: clipDuration,
           gap,
-          label: 'Prout',
+          label: audioFile.name,
           position,
           regionBox,
           trackIndex: index,
