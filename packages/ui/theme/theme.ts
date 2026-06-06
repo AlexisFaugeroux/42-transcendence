@@ -9,6 +9,8 @@ export const theme = {
   cyan: "var(--color-cyan)",
 
   /* === Semantic Surfaces === */
+  bgPanel: "var(--color-black)",
+  bgPanel2: "hsl(197, 14%, 8%)",
   lineFaint: "rgba(255, 255, 255, 0.04)",
   lineSoft: "rgba(255, 255, 255, 0.07)",
   lineHover: "rgba(255, 255, 255, 0.12)",
