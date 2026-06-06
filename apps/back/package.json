@@ -8,13 +8,20 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "check": "prettier --check . && eslint .",
+    "dev": "tsx watch src/index.ts",
     "fix": "prettier --write . && eslint --fix .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node build/index.js"
   },
   "prettier": "@transcendence/prettier-config",
+  "dependencies": {
+    "fastify": "5.8.5"
+  },
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
-    "@transcendence/prettier-config": "workspace:*"
+    "@transcendence/prettier-config": "workspace:*",
+    "@types/node": "24.12.3",
+    "tsx": "4.22.3"
   }
 }
