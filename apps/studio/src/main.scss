@@ -160,3 +160,9 @@ button {
   border-radius: var(--radius-1);
   padding: 0 2px;
 }
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

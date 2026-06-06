@@ -6,6 +6,7 @@ import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { ROW_HEIGTH } from '../constants';
 import styles from './Grid.module.scss';
 import { ClipWaveform } from './ClipWaveform/ClipWaveform';
+import { theme } from '@ui/theme/theme';
 
 interface GridPros {
   height: number;
@@ -84,8 +85,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         y={ROW_HEIGTH * index}
         height={ROW_HEIGTH}
         width={fullGridWidth}
-        fill="#2a2a2a"
-        opacity={0.7}
+        fill={theme.bgPanel}
       />,
     );
   });

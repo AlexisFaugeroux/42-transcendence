@@ -1,0 +1,27 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  padding: 0 12px;
+  background: var(--line-soft);
+  border-bottom: 1px solid var(--line-faint);
+
+  .headerTitle {
+    display: inline-flex;
+    align-items: center;
+    color: var(--fg2);
+    font-size: 11px;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .label {
+      font-family: var(--font-display);
+      font-weight: 400;
+    }
+  }
+}

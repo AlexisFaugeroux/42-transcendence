@@ -10,11 +10,7 @@ import styles from './Header.module.scss';
 import { Transport } from './Transport/Transport';
 import { Metrics } from './Metrics/Metrics';
 
-interface HeaderProps {
-  handleBpmChange: (newBpm: number) => void;
-}
-
-export function Header({ handleBpmChange }: HeaderProps): JSX.Element {
+export function Header(): JSX.Element {
   return (
     <header className={styles.header}>
       {/* TODO: must link to sessions page from front app */}
@@ -56,7 +52,7 @@ export function Header({ handleBpmChange }: HeaderProps): JSX.Element {
       <Transport />
       <Separator />
 
-      <Metrics handleBpmChange={handleBpmChange} />
+      <Metrics />
       <Separator />
 
       <div className={styles.peakMeter}>

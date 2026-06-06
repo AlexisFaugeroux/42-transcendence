@@ -1,23 +1,31 @@
 .container {
-  height: 500px;
-  overflow-x: auto;
-  overflow-y: auto;
-  width: 1200px;
-}
-
-.header {
   display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 2;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
 }
 
-.headerCorner {
-  border: 1px solid blue;
-  box-sizing: border-box;
+.topRow {
+  display: flex;
   flex-shrink: 0;
   height: 24px;
+  min-width: 0;
+}
+
+.corner {
+  flex-shrink: 0;
   width: 200px;
+  height: 24px;
+  box-sizing: border-box;
+  border: 1px solid blue;
+  background-color: var(--bg-panel);
+}
+
+.barLabelsViewport {
+  flex: 1;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+  background-color: var(--bg-panel);
 }
 
 .barLabelsRow {
@@ -26,39 +34,41 @@
 }
 
 .barLabel {
+  display: flex;
   align-items: center;
+  position: absolute;
+  height: 100%;
   border-left: 2px solid #555;
   box-sizing: border-box;
-  display: flex;
-  height: 100%;
-  padding-left: 8px;
-  position: absolute;
-}
-
-.barLabelOdd {
-  background-color: #2a2a2a;
-}
-
-.barLabelEven {
-  background-color: #333;
+  padding-left: 5px;
 }
 
 .barLabelText {
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
+  color: var(--font-display);
+  font-size: 10px;
 }
 
-.body {
+.bottomRow {
   display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
 }
 
-.rackList {
+.rackViewport {
   flex-shrink: 0;
   width: 200px;
+  overflow: hidden;
+  background-color: var(--bg-panel);
 }
 
 .rackItem {
   border: 1px solid green;
   box-sizing: border-box;
+}
+
+.gridViewport {
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: none;
 }

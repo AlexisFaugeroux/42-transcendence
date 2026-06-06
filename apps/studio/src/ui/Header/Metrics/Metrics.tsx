@@ -1,13 +1,12 @@
 import { useEffect, useState, type JSX } from 'react';
 import styles from './Metrics.module.scss';
 import { useProject } from '../../../contexts/ProjectContext';
+import { useTracks } from '../../../contexts/TracksContext';
+import { PPQN } from '@opendaw/lib-dsp';
 
-interface MetricsProps {
-  handleBpmChange: (newBpm: number) => void;
-}
-
-export function Metrics({ handleBpmChange }: MetricsProps): JSX.Element {
+export function Metrics(): JSX.Element {
   const { project } = useProject();
+  const { clips, setClips } = useTracks();
   const [bpm, setBpm] = useState(120);
 
   useEffect(() => {
@@ -19,6 +18,26 @@ export function Metrics({ handleBpmChange }: MetricsProps): JSX.Element {
       sub.terminate();
     };
   }, [project.timelineBox.bpm]);
+
+  function handleBpmChange(newBpm: number) {
+    project.editing.modify(() => {
+      project.timelineBox.bpm.setValue(newBpm);
+
+      // Recalculate clip durations
+      clips.forEach((clip) => {
+        const newDuration = Math.min(Math.round(PPQN.secondsToPulses(clip.audioDuration, newBpm)), clip.gap);
+        clip.regionBox.duration.setValue(newDuration);
+        clip.regionBox.loopDuration.setValue(newDuration);
+      });
+    });
+
+    const updatedClips = clips.map((clip) => ({
+      ...clip,
+      duration: Math.min(Math.round(PPQN.secondsToPulses(clip.audioDuration, newBpm)), clip.gap),
+    }));
+
+    setClips(updatedClips);
+  }
 
   return (
     <div className={styles.metricsContainer}>
