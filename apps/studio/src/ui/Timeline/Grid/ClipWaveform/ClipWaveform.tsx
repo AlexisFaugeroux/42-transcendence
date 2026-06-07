@@ -1,10 +1,13 @@
-import { useEffect, useState, useRef, type JSX } from 'react';
-import type { Clip } from '../../../../lib/types';
-import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
 import { PeaksPainter } from '@opendaw/lib-fusion';
-import { ROW_HEIGTH } from '../../constants';
+import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
+import { type JSX, useEffect, useRef, useState } from 'react';
 import { useProject } from '../../../../contexts/ProjectContext';
+import type { Clip } from '../../../../lib/types';
+import { ROW_HEIGTH } from '../../constants';
 import styles from './ClipWaveform.module.scss';
+
+//TODO: create a renderWaveform function that contains lines 98-114
+//then use CanvasPainter for React optimization
 
 interface ClipWaveformProps {
   clip: Clip;

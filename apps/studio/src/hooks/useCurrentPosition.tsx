@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useProject } from '../contexts/ProjectContext';
 import { AnimationFrame } from '@opendaw/lib-dom';
 import { PPQN } from '@opendaw/lib-dsp';
+import { useEffect, useState } from 'react';
+import { useProject } from '../contexts/ProjectContext';
 
 export function useCurrentPosition(bpm: number): number {
-  const { project, audioContext } = useProject();
+  const { audioContext, project } = useProject();
   const [position, setPosition] = useState(0);
 
   useEffect(() => {

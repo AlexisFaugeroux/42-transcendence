@@ -12,5 +12,5 @@ export function usePanels(initState: Record<Panel['id'], boolean>) {
     return visibility[id];
   }
 
-  return { visibility, toggle, isVisible };
+  return { isVisible, toggle, visibility };
 }

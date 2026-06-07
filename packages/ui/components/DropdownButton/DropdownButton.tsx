@@ -1,16 +1,27 @@
 import styles from "./DropdownButton.module.scss";
-import { type JSX, useEffect, useRef, useState } from "react";
+import {
+  type JSX,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  useId,
+} from "react";
 
 interface DropdownButton<T extends string> {
   label: string;
-  options: { label: string; value: T }[];
+  options: { label: string | ReactNode; value: T }[];
   onSelect: (value: T) => void;
+  icon?: ReactNode;
+  className?: string;
 }
 
 export function DropdownButton<T extends string>({
   label,
+  icon,
   options,
   onSelect,
+  className,
 }: DropdownButton<T>): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,19 +39,22 @@ export function DropdownButton<T extends string>({
   }, [isOpen]);
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div
+      className={`${styles.container} ${className ?? ""}`}
+      ref={containerRef}
+    >
       <button
         onClick={() => {
           setIsOpen((isOpen) => !isOpen);
         }}
       >
-        {label}
+        {icon ?? label}
       </button>
 
       {isOpen ? (
         <ul className={styles.menu}>
           {options.map((opt) => (
-            <li key={opt.label}>
+            <li key={opt.value}>
               <button
                 onClick={() => {
                   setIsOpen(false);

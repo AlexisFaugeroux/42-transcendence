@@ -1,12 +1,12 @@
 import { type JSX, useEffect, useState } from 'react';
-import { computeBarsFromSDK } from '../../../lib/audioUtils';
-import type { Clip } from '../../../lib/types';
+import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
+import { computeBarsFromSDK } from '../../../lib/audioUtils';
+import type { Clip } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
-import styles from './Grid.module.scss';
 import { ClipWaveform } from './ClipWaveform/ClipWaveform';
-import { theme } from '@ui/theme/theme';
+import styles from './Grid.module.scss';
 
 interface GridPros {
   height: number;
@@ -49,10 +49,12 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
 
   // lines
   const lines: JSX.Element[] = [];
-  bars.forEach((bar) => {
+  bars.forEach((bar, index) => {
     const beatDuration = bar.durationPpqn / bar.nominator;
 
     for (let beat = 0; beat < bar.nominator; beat++) {
+      if (index === 0 && beat === 0) continue;
+
       const ppqnPosition = bar.startPpqn + beat * beatDuration;
       const x = ppqnPosition * pixelsPerPulse;
 
@@ -75,7 +77,14 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
   tracks.forEach((_, index) => {
     if (index !== 0) {
       tracksSvg.push(
-        <rect key={`sep-${index}`} x={0} y={index * ROW_HEIGTH - 1} height={1} width={fullGridWidth} fill="#000" />,
+        <rect
+          key={`sep-${index}`}
+          x={0}
+          y={index * ROW_HEIGTH - 1}
+          height={1}
+          width={fullGridWidth}
+          fill={theme.lineSoft}
+        />,
       );
     }
     tracksSvg.push(
@@ -101,7 +110,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
 
     const x = currentPosition * pixelsPerPulse;
 
-    return <line x1={x} y1={0} x2={x} y2={height} stroke="#FFF" strokeWidth={2} />;
+    return <line x1={x} y1={0} x2={x} y2={height} stroke={theme.fg1} strokeWidth={2} />;
   }
 
   return (

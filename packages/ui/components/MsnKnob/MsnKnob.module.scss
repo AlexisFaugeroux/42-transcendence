@@ -1,0 +1,16 @@
+.knob {
+  min-width: 1.75em;
+  max-width: 1.75em;
+  min-height: 1.75em;
+  max-height: 1.75em;
+  place-self: center;
+  align-self: center;
+  cursor: pointer;
+  touch-action: none; // prevents scroll while dragging
+
+  .shadow {
+    opacity: 0.5;
+    filter: blur(1px);
+    mix-blend-mode: luminosity;
+  }
+}

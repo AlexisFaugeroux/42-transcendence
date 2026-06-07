@@ -4,7 +4,8 @@ A minimal web-based DAW built on the [openDAW-headless](https://github.com/andre
 is a slimmed-down version of [openDAW](https://opendaw.studio/), focusing on core DAW interactions rather than a
 full-featured production tool.
 
-**Current development**: Header component and Transport
+**Current development**: racks element style and following features: Track name, Volume knob, Pan knob, Mute button,
+Solo button, A menu to delete the track
 
 ## Target features (MVP)
 

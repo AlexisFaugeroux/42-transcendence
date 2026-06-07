@@ -1,13 +1,14 @@
+import { InstrumentFactories } from '@opendaw/studio-adapters';
 import type { Project } from '@opendaw/studio-core';
-import { useRef, type JSX, type UIEvent } from 'react';
-import { computeBarsFromSDK } from '../../lib/audioUtils';
-import { PIXELS_PER_PULSE, ROW_HEIGTH } from './constants';
-import { Grid } from './Grid/Grid';
-import styles from './Timeline.module.scss';
+import { type JSX, type UIEvent, useRef } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
+import { computeBarsFromSDK } from '../../lib/audioUtils';
 import { AddTrackButton, type TrackKind } from '../../ui/AddTrackButton';
-import { InstrumentFactories } from '@opendaw/studio-adapters';
+import { PIXELS_PER_PULSE, ROW_HEIGTH } from './constants';
+import { Grid } from './Grid/Grid';
+import { Rack } from './Rack/Rack';
+import styles from './Timeline.module.scss';
 
 function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
   const bars = computeBarsFromSDK(project);
@@ -25,7 +26,7 @@ function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
 
 export function Timeline(): JSX.Element {
   const { project } = useProject();
-  const { clips, tracks, setTracks } = useTracks();
+  const { clips, setTracks, tracks } = useTracks();
   const rackListRef = useRef<HTMLDivElement>(null);
   const barLabelsRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,7 @@ export function Timeline(): JSX.Element {
   const timelineWidth = totalDuration * PIXELS_PER_PULSE;
 
   const handleGridScroll = (e: UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollLeft } = e.currentTarget;
+    const { scrollLeft, scrollTop } = e.currentTarget;
     if (rackListRef.current) rackListRef.current.scrollTop = scrollTop;
     if (barLabelsRef.current) barLabelsRef.current.scrollLeft = scrollLeft;
   };
@@ -49,7 +50,13 @@ export function Timeline(): JSX.Element {
 
             setTracks((prev) => [
               ...prev,
-              { color: '#888', name: `${kind} ${prev.length + 1}`, uuid: trackBox.target.address.uuid },
+              {
+                audioUnitBox,
+                color: '#888',
+                instrumentName: 'Tape',
+                name: `${kind} ${prev.length + 1}`,
+                uuid: trackBox.target.address.uuid,
+              },
             ]);
           }
           break;
@@ -61,7 +68,13 @@ export function Timeline(): JSX.Element {
 
             setTracks((prev) => [
               ...prev,
-              { color: '#888', name: `${kind} ${prev.length + 1}`, uuid: trackBox.target.address.uuid },
+              {
+                audioUnitBox,
+                color: '#888',
+                instrumentName: 'Nano',
+                name: `${kind} ${prev.length + 1}`,
+                uuid: trackBox.target.address.uuid,
+              },
             ]);
           }
           break;
@@ -75,7 +88,13 @@ export function Timeline(): JSX.Element {
 
             setTracks((prev) => [
               ...prev,
-              { color: '#888', name: `${kind} ${prev.length + 1}`, uuid: trackBox.target.address.uuid },
+              {
+                audioUnitBox,
+                color: '#888',
+                instrumentName: 'Vaporisateur',
+                name: `${kind} ${prev.length + 1}`,
+                uuid: trackBox.target.address.uuid,
+              },
             ]);
           }
           break;
@@ -101,9 +120,7 @@ export function Timeline(): JSX.Element {
       <div className={styles.bottomRow}>
         <div ref={rackListRef} className={styles.rackViewport}>
           {tracks.map((track, index) => (
-            <div key={`rack-${index}`} className={styles.rackItem} style={{ height: ROW_HEIGTH }}>
-              {track.name}
-            </div>
+            <Rack key={`rack-${index}`} track={track} />
           ))}
         </div>
         <div className={styles.gridViewport} onScroll={handleGridScroll}>

@@ -16,7 +16,7 @@ export interface Panel {
 }
 
 export const panels: Panel[] = [
-  { id: 'timeline', label: 'Timeline', header: TimelineHeader, main: Timeline },
+  { header: TimelineHeader, id: 'timeline', label: 'Timeline', main: Timeline },
   // { id: 'browser', label: 'Browser', component: Browser},
   // { id: 'devices', label: 'Devices', component: Devices},
   // { id: 'editor', label: 'Editor', component: Editor},

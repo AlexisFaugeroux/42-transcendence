@@ -58,7 +58,9 @@ export async function seedDemoData(
       instrumentBox.label.setValue(audioFile.name);
 
       createdTracks.push({
+        audioUnitBox,
         color: audioFile.color,
+        instrumentName: 'Tape',
         name: audioFile.name,
         uuid: trackBox.address.uuid,
       });
