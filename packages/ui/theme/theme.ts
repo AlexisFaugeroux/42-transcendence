@@ -11,6 +11,7 @@ export const theme = {
   /* === Semantic Surfaces === */
   bgPanel: "var(--color-black)",
   bgPanel2: "hsl(197, 14%, 8%)",
+  bgElevated: "hsl(197, 14%, 16%)",
   lineFaint: "rgba(255, 255, 255, 0.04)",
   lineSoft: "rgba(255, 255, 255, 0.07)",
   lineHover: "rgba(255, 255, 255, 0.12)",

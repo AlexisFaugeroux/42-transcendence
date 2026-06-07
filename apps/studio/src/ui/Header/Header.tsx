@@ -1,14 +1,14 @@
 import type { JSX } from 'react';
+import { IconBtn } from '@ui/components/IconBtn/IconBtn';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
+import { MsnPeakMeter } from '@ui/components/MsnPeakMeter/MsnPeakMeter';
 import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import { Separator } from '@ui/components/Separator/Separator';
-import { IconBtn } from '@ui/components/IconBtn/IconBtn';
-import { StudioIcon } from '../StudioIcon/StudioIcon';
-import { MsnPeakMeter } from '@ui/components/MsnPeakMeter/MsnPeakMeter';
 import { theme } from '@ui/theme/theme';
+import { StudioIcon } from '../StudioIcon/StudioIcon';
 import styles from './Header.module.scss';
-import { Transport } from './Transport/Transport';
 import { Metrics } from './Metrics/Metrics';
+import { Transport } from './Transport/Transport';
 
 export function Header(): JSX.Element {
   return (

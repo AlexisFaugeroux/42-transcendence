@@ -1,0 +1,52 @@
+.container {
+  height: 60px;
+  border: 1px solid var(--line-soft);
+  border-left: 0;
+  border-right: 0;
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 250px;
+  box-sizing: border-box;
+  padding: 6px 10px;
+}
+
+.headerContainer {
+  width: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.labels {
+  flex: 1;
+  min-width: 0;
+
+  .name {
+    font-size: 11px;
+    color: var(--fg1);
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .instrument {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    color: var(--fg3);
+  }
+}
+
+.knobs {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8rem;
+}
+
+.dropdownButton {
+  color: var(--fg3);
+  cursor: pointer;
+}

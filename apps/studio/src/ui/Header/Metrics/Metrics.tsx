@@ -1,8 +1,8 @@
-import { useEffect, useState, type JSX } from 'react';
-import styles from './Metrics.module.scss';
+import { PPQN } from '@opendaw/lib-dsp';
+import { type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
-import { PPQN } from '@opendaw/lib-dsp';
+import styles from './Metrics.module.scss';
 
 export function Metrics(): JSX.Element {
   const { project } = useProject();

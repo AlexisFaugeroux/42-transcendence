@@ -1,9 +1,9 @@
-import { useEffect, useState, type JSX } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { IconBtn } from '@ui/components/IconBtn/IconBtn';
-import { StudioIcon } from '../../StudioIcon/StudioIcon';
 import { theme } from '@ui/theme/theme';
-import styles from './Transport.module.scss';
 import { useProject } from '../../../contexts/ProjectContext';
+import { StudioIcon } from '../../StudioIcon/StudioIcon';
+import styles from './Transport.module.scss';
 
 export function Transport(): JSX.Element {
   const { audioContext, project } = useProject();

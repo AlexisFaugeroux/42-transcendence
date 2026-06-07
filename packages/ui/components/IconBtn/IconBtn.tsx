@@ -11,6 +11,8 @@ interface IconBtnProps {
   background?: CSSProperties["background"];
   borderColor?: CSSProperties["borderColor"];
   borderRadius?: CSSProperties["borderRadius"];
+  borderStyle?: CSSProperties["borderStyle"];
+  borderWidth?: CSSProperties["borderWidth"];
   boxShadow?: CSSProperties["boxShadow"];
   fontSize?: CSSProperties["fontSize"];
   padding?: CSSProperties["padding"];
@@ -27,6 +29,8 @@ export function IconBtn({
   width = 26,
   height = 26,
   borderColor,
+  borderStyle,
+  borderWidth,
   fontSize,
   padding,
   onClick,
@@ -42,6 +46,8 @@ export function IconBtn({
         background,
         borderRadius,
         borderColor,
+        borderStyle,
+        borderWidth,
         color: color ? color : "var(--fg2)",
         cursor: "pointer",
         display: "inline-flex",

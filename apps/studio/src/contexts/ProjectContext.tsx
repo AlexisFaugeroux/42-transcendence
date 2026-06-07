@@ -1,5 +1,5 @@
 import type { Project } from '@opendaw/studio-core';
-import { createContext, useContext, useEffect, useRef, useState, type JSX, type ReactNode } from 'react';
+import { createContext, type JSX, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { initializeOpenDaw } from '../lib/projectSetup';
 
 interface ProjectContextValue {
@@ -23,7 +23,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       });
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
-      setValue({ audioContext, project, localAudioBuffers: localAudioBuffersRef.current });
+      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project });
     })();
 
     return () => {
