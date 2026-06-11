@@ -3,16 +3,16 @@ import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
-import type { Clip } from '../../../lib/types';
+import type { Clip as ClipData } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
-import { ClipWaveform } from './ClipWaveform/ClipWaveform';
+import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
 
 interface GridPros {
   height: number;
   pixelsPerPulse: number; // zoom level, e.g 0.1 means 0.1px per PPQN tick
   tracks: string[];
-  clips: Clip[];
+  clips: ClipData[];
 }
 
 export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.Element {
@@ -128,7 +128,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         const y = ROW_HEIGTH * trackIndex;
         const width = clip.duration * pixelsPerPulse;
 
-        return <ClipWaveform key={`clip-waveform-${index}`} clip={clip} x={x} y={y} width={width} />;
+        return <Clip key={`clip-waveform-${index}`} clip={clip} x={x} y={y} width={width} />;
       })}
     </div>
   );
