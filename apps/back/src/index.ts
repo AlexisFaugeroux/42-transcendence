@@ -1,4 +1,3 @@
-import dotenv from "dotenv/config"
 import Fastify from 'fastify';
 
 const app = Fastify({ logger: true });

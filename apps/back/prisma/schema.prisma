@@ -7,19 +7,68 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  ARTIST
+}
+
+enum AudioType {
+  SAMPLE
+  TRACK
+}
+
+enum Key {
+  A_key
+  B_key
+  C_key
+  D_key
+  E_key
+  F_key
+  G_key
+}
+
+enum OwnerType {
+  PLATEFORM
+  USER
+}
+
+enum VisibilityType {
+  PRIVATE
+  SHARED
+  PUBLIC
+}
+
+model Owner {
+  id        String     @id @default(uuid()) 
+  type      OwnerType
+  user      User?
+  samples    AudioFile[]
+}
+
 model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String? @unique
-  posts Post[]
+  id          String     @id @default(uuid()) 
+  email       String  @unique
+  pseudo      String  @unique
+  password    String
+  role        Role
+  owner       Owner @relation(fields: [ownerId], references: [id])
+  ownerId     String @unique
+  followedBy  User[]  @relation("UserFollows")
+  following   User[]  @relation("UserFollows")
+  createdAt   DateTime @default(now())
+  uptdatedAt  DateTime @updatedAt
 } 
 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  img_url   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
+model AudioFile {
+  id          String @id @default(uuid())
+  owner       Owner @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  bpm         Int?
+  key         Key?
+  visibility  VisibilityType
+  url         String
+  length      Int
+  bytes       Int
+  createdAt   DateTime @default(now())
+  uptdatedAt  DateTime @updatedAt
 }
