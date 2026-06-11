@@ -15,5 +15,5 @@
     "target": "ES2023"
   },
   "exclude": ["build", "node_modules"],
-  "include": ["src"]
+  "include": ["src", "script/script.ts"]
 }
