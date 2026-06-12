@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 import { DropdownButton } from '@ui/components/DropdownButton/DropdownButton';
 import { theme } from '@ui/theme/theme';
-import { StudioIcon } from './StudioIcon/StudioIcon';
+import { StudioIcon } from './components/StudioIcon/StudioIcon';
 
 export type TrackKind = 'tape' | 'nano' | 'vaporisateur';
 

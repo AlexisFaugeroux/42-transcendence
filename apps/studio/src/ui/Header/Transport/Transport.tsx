@@ -2,7 +2,7 @@ import { type JSX, useEffect, useState } from 'react';
 import { IconBtn } from '@ui/components/IconBtn/IconBtn';
 import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
-import { StudioIcon } from '../../StudioIcon/StudioIcon';
+import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
 import styles from './Transport.module.scss';
 
 export function Transport(): JSX.Element {

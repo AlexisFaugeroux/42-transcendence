@@ -8,7 +8,7 @@ import { theme } from '@ui/theme/theme';
 import type { Track } from '../../../App';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
-import { StudioIcon } from '../../StudioIcon/StudioIcon';
+import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
 import styles from './Rack.module.scss';
 
 interface RackProps {
