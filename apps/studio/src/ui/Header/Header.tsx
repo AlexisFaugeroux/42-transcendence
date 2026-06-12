@@ -1,14 +1,14 @@
 import type { JSX } from 'react';
 import { IconBtn } from '@ui/components/IconBtn/IconBtn';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnPeakMeter } from '@ui/components/MsnPeakMeter/MsnPeakMeter';
 import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import { Separator } from '@ui/components/Separator/Separator';
 import { theme } from '@ui/theme/theme';
-import { StudioIcon } from '../StudioIcon/StudioIcon';
+import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './Header.module.scss';
 import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
+import { Meter } from './Meter/Meter';
 
 export function Header(): JSX.Element {
   return (
@@ -55,10 +55,7 @@ export function Header(): JSX.Element {
       <Metrics />
       <Separator />
 
-      <div className={styles.peakMeter}>
-        <div className={styles.peakMeterDisplayValue}>MASTER -2.6 db</div>
-        <MsnPeakMeter layout="horizontal" l={0.62} r={0.55} width={120} />
-      </div>
+      <Meter />
     </header>
   );
 }

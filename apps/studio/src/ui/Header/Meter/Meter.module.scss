@@ -1,0 +1,14 @@
+.peakMeter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 0 10px;
+
+  .peakMeterDisplayValue {
+    color: var(--fg3);
+    font-size: 9px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5;
+  }
+}
