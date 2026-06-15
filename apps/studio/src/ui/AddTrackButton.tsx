@@ -1,5 +1,5 @@
-import type { JSX, ReactNode } from 'react';
-import { DropdownButton } from '@ui/components/DropdownButton/DropdownButton';
+import { Dropdown, type MenuProps } from '@transcendence/ui';
+import type { JSX } from 'react';
 import { theme } from '@ui/theme/theme';
 import { StudioIcon } from './components/StudioIcon/StudioIcon';
 
@@ -9,24 +9,25 @@ interface AddTrackButtonProps {
   onAddTrack: (value: TrackKind) => void;
 }
 
-const OPTIONS: { value: TrackKind; label: string | ReactNode }[] = [
-  { label: 'Audio (Tape)', value: 'tape' },
-  { label: 'Sampler (Nano)', value: 'nano' },
-  { label: 'Synth (Vaporisateur)', value: 'vaporisateur' },
+const items: MenuProps['items'] = [
+  { key: 'tape', label: 'Audio (Tape)' },
+  { key: 'nano', label: 'Sampler (Nano)' },
+  { key: 'vaporisateur', label: 'Synth (Vaporisateur)' },
 ];
 
 export function AddTrackButton({ onAddTrack }: AddTrackButtonProps): JSX.Element {
   return (
-    <DropdownButton
-      label="Add Track"
-      icon={
-        <div style={{ alignItems: 'center', display: 'flex' }}>
-          <StudioIcon name="add" size={14} color={theme.fg1} />
-          <span style={{ fontSize: 10 }}> Add track</span>
-        </div>
-      }
-      options={OPTIONS}
-      onSelect={onAddTrack}
-    />
+    <Dropdown
+      menu={{
+        items,
+        onClick: ({ key }) => onAddTrack(key as TrackKind),
+      }}
+      trigger={['click']}
+    >
+      <button style={{ alignItems: 'center', background: 'transparent', border: 0, cursor: 'pointer', display: 'flex' }}>
+        <StudioIcon name="add" size={14} color={theme.fg1} />
+        <span style={{ fontSize: 10 }}> Add track</span>
+      </button>
+    </Dropdown>
   );
 }

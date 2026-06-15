@@ -1,6 +1,6 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
+import { Dropdown } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
-import { DropdownButton } from '@ui/components/DropdownButton/DropdownButton';
 import { IconBtn } from '@ui/components/IconBtn/IconBtn';
 import { MsnKnob } from '@ui/components/MsnKnob/MsnKnob';
 import { MsnPill } from '@ui/components/MsnPill/MsnPill';
@@ -120,29 +120,23 @@ export function Rack({ track }: RackProps): JSX.Element {
         <MsnPill label="M" active={isMute} onClick={handleMuteClick} color={theme.yellow} />
         <MsnPill label="S" active={isSolo} onClick={handleSoloClick} color={theme.red} />
         {/* <MsnPill dot active={false} color={theme.orange} /> */}
-        <DropdownButton
-          className={styles.dropdownButton}
-          label="menu"
-          icon={<StudioIcon name="moreV" size={16} color={theme.orange} />}
-          options={[
-            {
-              label: (
-                <div
-                  style={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    gap: 6,
-                  }}
-                >
-                  <StudioIcon name="delete" color={theme.red} size={12} />
-                  <span>Delete</span>
-                </div>
-              ),
-              value: 'delete',
-            },
-          ]}
-          onSelect={handleDeleteTrack}
-        ></DropdownButton>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'delete',
+                label: 'Delete',
+                icon: <StudioIcon name="delete" color={theme.red} size={12} />,
+              },
+            ],
+            onClick: handleDeleteTrack,
+          }}
+          trigger={['click']}
+        >
+          <button className={styles.dropdownButton}>
+            <StudioIcon name="moreV" size={16} color={theme.orange} />
+          </button>
+        </Dropdown>
       </div>
     </div>
   );
