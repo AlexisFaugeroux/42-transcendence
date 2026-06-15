@@ -4,7 +4,7 @@ A minimal web-based DAW built on the [openDAW-headless](https://github.com/andre
 is a slimmed-down version of [openDAW](https://opendaw.studio/), focusing on core DAW interactions rather than a
 full-featured production tool.
 
-**Current development**: vu meter in header component
+**Current development**: clip handling (move them around the timeline, delete them, duplicate them)
 
 ## Target features (MVP)
 
