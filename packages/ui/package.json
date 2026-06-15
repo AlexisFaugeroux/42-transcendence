@@ -2,7 +2,13 @@
   "name": "@transcendence/ui",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./icons": "./icons.ts",
+    "./theme": "./theme/theme.ts",
+    "./components/*": "./components/*"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,9 +18,11 @@
   "type": "module",
   "private": "true",
   "dependencies": {
+    "@ant-design/icons": "6.2.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "clsx": "^2.1.1",
+    "antd": "6.4.4",
+    "clsx": "2.1.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   }

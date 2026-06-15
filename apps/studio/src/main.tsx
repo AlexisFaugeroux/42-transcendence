@@ -1,4 +1,5 @@
 import './main.scss';
+import { MsnThemeProvider } from '@transcendence/ui';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
@@ -8,6 +9,8 @@ if (!root) throw new Error('Root element not found');
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <MsnThemeProvider>
+      <App />
+    </MsnThemeProvider>
   </StrictMode>,
 );
