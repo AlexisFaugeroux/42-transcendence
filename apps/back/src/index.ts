@@ -1,14 +1,6 @@
-import Fastify from 'fastify';
+import { buildApp } from './app';
 
-const app = Fastify({ logger: true });
-
-app.get('/', (_, reply) => {
-  reply.send('OK\n');
-});
-
-app.get('/ping', (_, reply) => {
-  reply.send('pong\n');
-});
+const app = await buildApp();
 
 app.listen({ port: 8080 }, (err) => {
   if (err) {
