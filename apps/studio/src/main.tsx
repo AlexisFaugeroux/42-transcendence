@@ -1,3 +1,4 @@
+import '@transcendence/ui/styles/colors_and_type.css';
 import './main.scss';
 import { MsnThemeProvider } from '@transcendence/ui';
 import { StrictMode } from 'react';

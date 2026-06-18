@@ -1,11 +1,14 @@
 import type { JSX } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import SignIn from './pages/SignIn/SignIn';
 
 export function App(): JSX.Element {
   return (
-    <div>
-      <h1 style={{ color: 'red' }}>MakeSomeNoise</h1>
-
-      <p>Coucou</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<SignIn />} />
+      </Routes>
+    </Router>
   );
 }
+export default App;

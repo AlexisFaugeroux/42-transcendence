@@ -7,26 +7,32 @@ const msnTheme: ThemeConfig = {
   cssVar: { prefix: 'msn' },
   hashed: false,
   token: {
-    colorPrimary: 'hsl(210, 90%, 50%)',
-    colorSuccess: 'hsl(140, 65%, 45%)',
-    colorWarning: 'hsl(45, 95%, 55%)',
-    colorError: 'hsl(8, 85%, 55%)',
-    colorInfo: 'hsl(190, 75%, 50%)',
+    // Seed colors: antd derives whole palettes (hover/active/disabled steps) from
+    // these in JS, so they MUST be literal parseable colors — a `var(--…)` string
+    // would break the derivation. Keep in sync with colors_and_type.css (the source).
+    colorPrimary: 'hsl(210, 90%, 50%)', // --color-blue  (primary action — see design/README.md)
+    colorSuccess: 'hsl(140, 65%, 45%)', // --color-green
+    colorWarning: 'hsl(45, 95%, 55%)', // --color-yellow
+    colorError: 'hsl(8, 85%, 55%)', // --color-red
+    colorInfo: 'hsl(190, 75%, 50%)', // --color-cyan
 
-    colorBgBase: 'hsl(197, 14%, 3%)',
-    colorBgLayout: 'hsl(197, 14%, 6%)',
-    colorBgContainer: 'hsl(197, 14%, 8%)',
-    colorBgElevated: 'hsl(197, 14%, 16%)',
+    // Base bg/layout seeds (derive the surface scale): also literal.
+    colorBgBase: 'hsl(197, 14%, 3%)', // --color-void
+    colorBgLayout: 'hsl(197, 14%, 6%)', // openDAW header bg (no exact palette var)
 
-    colorText: 'hsl(0, 0%, 92%)',
-    colorTextSecondary: 'hsl(0, 0%, 56%)',
-    colorTextTertiary: 'hsl(0, 0%, 38%)',
+    // Tokens antd uses directly → reference the single source of truth.
+    colorBgContainer: 'var(--bg-panel-2)',
+    colorBgElevated: 'var(--bg-elevated)',
+
+    colorText: 'var(--fg1)',
+    colorTextSecondary: 'var(--fg2)',
+    colorTextTertiary: 'var(--fg3)',
     colorTextQuaternary: 'rgba(255, 255, 255, 0.25)',
 
-    colorBorder: 'rgba(255, 255, 255, 0.07)',
-    colorBorderSecondary: 'rgba(255, 255, 255, 0.04)',
+    colorBorder: 'var(--line-soft)',
+    colorBorderSecondary: 'var(--line-faint)',
 
-    fontFamily: '"Rubik", system-ui, sans-serif',
+    fontFamily: 'var(--font-display)',
     fontSize: 12,
 
     borderRadius: 4,
@@ -37,8 +43,8 @@ const msnTheme: ThemeConfig = {
   },
   components: {
     Menu: {
-      itemSelectedBg: 'hsl(210, 90%, 30%)',
-      itemSelectedColor: 'hsl(0, 0%, 92%)',
+      itemSelectedBg: 'var(--color-active)',
+      itemSelectedColor: 'var(--fg1)',
     },
     Typography: {
       titleMarginBottom: 0,

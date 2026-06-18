@@ -1,0 +1,10 @@
+/* App-specific styles only.
+   Design-system tokens, type and base element styles live in the shared
+   single source of truth: @transcendence/ui/styles/colors_and_type.css
+   (imported in main.tsx). */
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

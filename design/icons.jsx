@@ -1,4 +1,5 @@
-/* global React */
+  
+  /* global React */
 // MakeSomeNoise — bespoke icon set, currentColor, 24x24 viewBox
 const MSN_ICONS = {
   // brand mark — three vertical bars + a dot
