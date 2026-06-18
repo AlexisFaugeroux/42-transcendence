@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "extends": "./tsconfig.json",
+  "include": ["prisma.config.ts", "*.config.ts"]
+}
