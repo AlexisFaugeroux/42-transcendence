@@ -9,6 +9,10 @@ import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../../constants';
 import styles from './Clip.module.scss';
 import { useTracks } from '../../../../contexts/TracksContext';
 import { PPQN } from '@opendaw/lib-dsp';
+import { type MenuProps } from '@ui/index';
+import { Dropdown } from '@ui/index';
+import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
+import { theme } from '@ui/theme/theme';
 
 function renderClipHeader(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string, height: number) {
   ctx.fillStyle = color;
@@ -167,14 +171,15 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
       setDragOffsetPx(0);
 
       const currentTrack = tracks.find((t) => t.name === clip.trackName);
+      const newEnd = newPosition + clip.duration;
       if (
         newPosition === startPosition ||
         clips.some(
           (c) =>
             c.regionBox !== clip.regionBox &&
             c.trackName === currentTrack?.name &&
-            c.position <= newPosition &&
-            c.position + c.duration >= newPosition,
+            c.position + c.duration > newPosition &&
+            c.position < newEnd,
         )
       )
         return;
@@ -202,17 +207,32 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
   function handleDelete() {
     project.editing.modify(() => {
       clip.regionBox.delete();
+      clip.eventsCollectionBox.delete();
     });
 
     setClips((prev) => prev.filter((c) => c.regionBox !== clip.regionBox));
   }
 
+  const menuItems: MenuProps['items'] = [
+    {
+      key: 'delete',
+      label: 'Delete',
+      icon: <StudioIcon name="delete" color={theme.red} size={12} />,
+    },
+  ];
+
+  const onMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'delete') handleDelete();
+  };
+
   return (
-    <canvas
-      onMouseDown={handleMouseDown}
-      ref={canvasRef}
-      className={styles.clipCanvas}
-      style={{ height: ROW_HEIGTH, left: x + dragOffsetPx, top: y, width }}
-    />
+    <Dropdown menu={{ items: menuItems, onClick: onMenuClick }} trigger={['contextMenu']}>
+      <canvas
+        onMouseDown={handleMouseDown}
+        ref={canvasRef}
+        className={styles.clipCanvas}
+        style={{ height: ROW_HEIGTH, left: x + dragOffsetPx, top: y, width }}
+      />
+    </Dropdown>
   );
 }

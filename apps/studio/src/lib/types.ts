@@ -1,5 +1,5 @@
 import { type ppqn } from '@opendaw/lib-dsp';
-import type { AudioRegionBox } from '@opendaw/studio-boxes';
+import type { AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 
 export interface BarInfo {
   startPpqn: ppqn;
@@ -18,5 +18,6 @@ export interface Clip {
   duration: number;
   color: string;
   label: string;
+  eventsCollectionBox: ValueEventCollectionBox;
   regionBox: AudioRegionBox;
 }
