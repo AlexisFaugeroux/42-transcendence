@@ -103,6 +103,7 @@ export async function seedDemoData(
           gap,
           label: audioFile.name,
           position,
+          eventsCollectionBox,
           regionBox,
           trackIndex: index,
           trackName: audioFile.name,
