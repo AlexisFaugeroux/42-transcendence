@@ -124,8 +124,6 @@ export function Rack({ track }: RackProps): JSX.Element {
           menu={{
             items: [
               {
-                key: 'delete',
-                label: 'Delete',
                 icon: (
                   <StudioIcon
                     name="delete"
@@ -136,6 +134,8 @@ export function Rack({ track }: RackProps): JSX.Element {
                     }}
                   />
                 ),
+                key: 'delete',
+                label: 'Delete',
                 style: {
                   fontSize: '10px',
                 },

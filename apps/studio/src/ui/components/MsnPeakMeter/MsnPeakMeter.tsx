@@ -1,7 +1,7 @@
-import { useEffect, useRef, type JSX } from 'react';
-import type { PeaksRef } from '../../../hooks/useMasterPeaks';
-import { CanvasPainter } from '@opendaw/studio-core';
 import { AnimationFrame } from '@opendaw/lib-dom';
+import { CanvasPainter } from '@opendaw/studio-core';
+import { type JSX, useEffect, useRef } from 'react';
+import type { PeaksRef } from '../../../hooks/useMasterPeaks';
 
 interface MsnPeakMeterProps {
   peaksRef: PeaksRef;
@@ -9,7 +9,7 @@ interface MsnPeakMeterProps {
   height?: number;
 }
 
-export function MsnPeakMeter({ peaksRef, width = 120, height = 11 }: MsnPeakMeterProps): JSX.Element {
+export function MsnPeakMeter({ height = 11, peaksRef, width = 120 }: MsnPeakMeterProps): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export function MsnPeakMeter({ peaksRef, width = 120, height = 11 }: MsnPeakMete
 
     const barH = Math.floor((height - 1) / 2);
 
-    const painter = new CanvasPainter(canvas, ({ context, actualWidth, actualHeight }) => {
+    const painter = new CanvasPainter(canvas, ({ actualHeight, actualWidth, context }) => {
       context.clearRect(0, 0, actualHeight, actualHeight);
 
       // Background
@@ -49,5 +49,5 @@ export function MsnPeakMeter({ peaksRef, width = 120, height = 11 }: MsnPeakMete
     };
   }, [peaksRef, height]);
 
-  return <canvas ref={canvasRef} style={{ width, height, borderRadius: 1 }} />;
+  return <canvas ref={canvasRef} style={{ borderRadius: 1, height, width }} />;
 }

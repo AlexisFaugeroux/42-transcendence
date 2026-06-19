@@ -1,5 +1,5 @@
-import type { User } from '../generated/prisma/client.ts';
-import { OwnerType, Role } from '../generated/prisma/enums.ts';
+import type { User } from '../src/generated/prisma/client';
+import { OwnerType, Role } from '../src/generated/prisma/enums';
 import { prisma } from '../src/utils/prisma';
 
 type UserInput = Pick<User, 'email' | 'pseudo' | 'role' | 'password'>;

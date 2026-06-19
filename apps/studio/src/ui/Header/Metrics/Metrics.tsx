@@ -1,12 +1,9 @@
-import { PPQN } from '@opendaw/lib-dsp';
 import { type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
-import { useTracks } from '../../../contexts/TracksContext';
 import styles from './Metrics.module.scss';
 
 export function Metrics(): JSX.Element {
   const { project } = useProject();
-  const { clips, setClips } = useTracks();
   const [bpm, setBpm] = useState(120);
 
   useEffect(() => {
@@ -22,21 +19,7 @@ export function Metrics(): JSX.Element {
   function handleBpmChange(newBpm: number) {
     project.editing.modify(() => {
       project.timelineBox.bpm.setValue(newBpm);
-
-      // Recalculate clip durations
-      clips.forEach((clip) => {
-        const newDuration = Math.min(Math.round(PPQN.secondsToPulses(clip.audioDuration, newBpm)), clip.gap);
-        clip.regionBox.duration.setValue(newDuration);
-        clip.regionBox.loopDuration.setValue(newDuration);
-      });
     });
-
-    const updatedClips = clips.map((clip) => ({
-      ...clip,
-      duration: Math.min(Math.round(PPQN.secondsToPulses(clip.audioDuration, newBpm)), clip.gap),
-    }));
-
-    setClips(updatedClips);
   }
 
   return (
@@ -56,7 +39,7 @@ export function Metrics(): JSX.Element {
           value={bpm}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value < 1 || value > 200) return;
+            if (value > 200) return;
             handleBpmChange(Number(e.target.value));
           }}
         />
