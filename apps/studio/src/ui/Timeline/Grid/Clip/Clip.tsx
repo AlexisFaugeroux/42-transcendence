@@ -1,5 +1,5 @@
 import { Peaks, PeaksPainter } from '@opendaw/lib-fusion';
-import type { Option } from '@opendaw/lib-std';
+import { UUID, type Option } from '@opendaw/lib-std';
 import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
 import { CanvasPainter } from '@opendaw/studio-core';
 import React, { type JSX, useEffect, useRef, useState } from 'react';
@@ -13,6 +13,7 @@ import { type MenuProps } from '@ui/index';
 import { Dropdown } from '@ui/index';
 import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
 import { theme } from '@ui/theme/theme';
+import { AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 
 function renderClipHeader(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string, height: number) {
   ctx.fillStyle = color;
@@ -81,6 +82,8 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
   const [dragOffsetPx, setDragOffsetPx] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const relatedTrack = tracks.find((t) => t.trackBox === clip.trackBox);
 
   // Subscribe to sample loader
   useEffect(() => {
@@ -163,6 +166,8 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
 
+      if (!relatedTrack) return;
+
       const deltaPx = ev.clientX - startMouseX;
       const deltaPpqn = deltaPx / PIXELS_PER_PULSE;
       const rawPpqn = Math.max(0, startPosition + deltaPpqn);
@@ -170,14 +175,13 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
 
       setDragOffsetPx(0);
 
-      const currentTrack = tracks.find((t) => t.name === clip.trackName);
       const newEnd = newPosition + clip.duration;
       if (
         newPosition === startPosition ||
         clips.some(
           (c) =>
+            c.trackBox === relatedTrack.trackBox &&
             c.regionBox !== clip.regionBox &&
-            c.trackName === currentTrack?.name &&
             c.position + c.duration > newPosition &&
             c.position < newEnd,
         )
@@ -204,7 +208,57 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
     window.addEventListener('mouseup', onUp);
   }
 
+  function handleDuplicate() {
+    if (!relatedTrack) return;
+
+    const newClipPosition = clip.position + clip.duration;
+    const newClipEndPosition = newClipPosition + clip.duration;
+
+    if (
+      clips.some(
+        (c) =>
+          c.regionBox !== clip.regionBox &&
+          c.trackName === relatedTrack.name &&
+          c.position + c.duration > newClipPosition &&
+          c.position < newClipEndPosition,
+      )
+    )
+      return;
+
+    const duplicate = project.editing.modify(() => {
+      const eventsCollectionBox = ValueEventCollectionBox.create(project.boxGraph, UUID.generate());
+      const regionBox = AudioRegionBox.create(project.boxGraph, UUID.generate(), (box) => {
+        box.regions.refer(relatedTrack.trackBox.regions);
+        box.file.refer(clip.audioFileBox);
+        box.events.refer(eventsCollectionBox.owners);
+        box.position.setValue(newClipPosition);
+        box.duration.setValue(clip.duration);
+        box.loopOffset.setValue(0);
+        box.loopDuration.setValue(clip.duration);
+        box.label.setValue(clip.audioFileBox.name);
+        box.mute.setValue(false);
+      });
+
+      const loopTo = project.timelineBox.loopArea.to.getValue();
+      if (newClipEndPosition > loopTo) {
+        const bar = PPQN.Quarter * 4;
+        const newEnd = Math.ceil(newClipEndPosition / bar) * bar;
+        project.timelineBox.durationInPulses.setValue(newEnd);
+        project.timelineBox.loopArea.to.setValue(newEnd);
+      }
+
+      return { eventsCollectionBox, regionBox };
+    });
+
+    if (duplicate.isEmpty()) return;
+    const { eventsCollectionBox, regionBox } = duplicate.unwrap();
+
+    setClips((prev) => [...prev, { ...clip, eventsCollectionBox, position: newClipPosition, regionBox }]);
+  }
+
   function handleDelete() {
+    // WARN: Do not delete clip.trackBox or clip.audioFiles
+    // as they reference shared objects used by other clips, tracks etc...
     project.editing.modify(() => {
       clip.regionBox.delete();
       clip.eventsCollectionBox.delete();
@@ -215,14 +269,43 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
 
   const menuItems: MenuProps['items'] = [
     {
+      icon: (
+        <StudioIcon
+          name="clip"
+          size={10}
+          style={{
+            marginRight: '4px',
+          }}
+        />
+      ),
+      key: 'duplicate',
+      label: 'Duplicate',
+      style: {
+        fontSize: '10px',
+      },
+    },
+    {
+      icon: (
+        <StudioIcon
+          name="delete"
+          color={theme.red}
+          size={10}
+          style={{
+            marginRight: '4px',
+          }}
+        />
+      ),
       key: 'delete',
       label: 'Delete',
-      icon: <StudioIcon name="delete" color={theme.red} size={12} />,
+      style: {
+        fontSize: '10px',
+      },
     },
   ];
 
   const onMenuClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'delete') handleDelete();
+    else if (key === 'duplicate') handleDuplicate();
   };
 
   return (

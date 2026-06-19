@@ -1,4 +1,4 @@
-import type { AudioUnitBox } from '@opendaw/studio-boxes';
+import type { AudioUnitBox, TrackBox } from '@opendaw/studio-boxes';
 import type { JSX } from 'react';
 import { ProjectProvider } from './contexts/ProjectContext';
 import { TracksProvider } from './contexts/TracksContext';
@@ -11,6 +11,7 @@ export interface Track {
   name: string;
   instrumentName: 'Nano' | 'Vaporisateur' | 'Tape';
   uuid: Readonly<Uint8Array>;
+  trackBox: TrackBox;
   color: string;
 }
 

@@ -50,7 +50,7 @@ export async function seedDemoData(
   const createdTracks: Track[] = [];
 
   editing.modify(() => {
-    audioPairs.forEach(({ audioBuffer, audioFile }, index) => {
+    audioPairs.forEach(({ audioBuffer, audioFile }) => {
       // Create track
       const { audioUnitBox, instrumentBox, trackBox } = api.createInstrument(InstrumentFactories.Tape);
 
@@ -58,10 +58,11 @@ export async function seedDemoData(
       instrumentBox.label.setValue(audioFile.name);
 
       createdTracks.push({
-        audioUnitBox,
+        audioUnitBox, // mixer channel
         color: audioFile.color,
         instrumentName: 'Tape',
         name: audioFile.name,
+        trackBox, // actual engine counterpart of UI Track
         uuid: trackBox.address.uuid,
       });
 
@@ -98,6 +99,7 @@ export async function seedDemoData(
 
         createdClips.push({
           audioDuration: PPQN.pulsesToSeconds(clipDuration, bpm),
+          audioFileBox,
           color: audioFile.color,
           duration: clipDuration,
           gap,
@@ -105,8 +107,8 @@ export async function seedDemoData(
           position,
           eventsCollectionBox,
           regionBox,
-          trackIndex: index,
           trackName: audioFile.name,
+          trackBox,
         });
       });
     });

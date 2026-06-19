@@ -55,7 +55,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Tape',
                 name: `${kind} ${prev.length + 1}`,
-                uuid: trackBox.target.address.uuid,
+                uuid: trackBox.address.uuid,
               },
             ]);
           }
@@ -73,7 +73,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Nano',
                 name: `${kind} ${prev.length + 1}`,
-                uuid: trackBox.target.address.uuid,
+                uuid: trackBox.address.uuid,
               },
             ]);
           }
@@ -93,7 +93,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Vaporisateur',
                 name: `${kind} ${prev.length + 1}`,
-                uuid: trackBox.target.address.uuid,
+                uuid: trackBox.address.uuid,
               },
             ]);
           }
@@ -124,12 +124,7 @@ export function Timeline(): JSX.Element {
           ))}
         </div>
         <div className={styles.gridViewport} onScroll={handleGridScroll}>
-          <Grid
-            height={tracks.length * ROW_HEIGTH}
-            pixelsPerPulse={PIXELS_PER_PULSE}
-            tracks={tracks.map(({ name }) => name)}
-            clips={clips}
-          />
+          <Grid height={tracks.length * ROW_HEIGTH} pixelsPerPulse={PIXELS_PER_PULSE} tracks={tracks} clips={clips} />
         </div>
       </div>
     </div>
