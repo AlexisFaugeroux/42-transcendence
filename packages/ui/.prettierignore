@@ -1,0 +1,4 @@
+# Build output
+# node_modules and .git are ignored by Prettier by default.
+dist/
+build/

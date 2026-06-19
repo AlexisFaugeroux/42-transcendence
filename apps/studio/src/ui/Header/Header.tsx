@@ -6,9 +6,9 @@ import { Separator } from '@ui/components/Separator/Separator';
 import { theme } from '@ui/theme/theme';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './Header.module.scss';
+import { Meter } from './Meter/Meter';
 import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
-import { Meter } from './Meter/Meter';
 
 export function Header(): JSX.Element {
   return (

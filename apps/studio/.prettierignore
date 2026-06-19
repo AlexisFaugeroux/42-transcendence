@@ -1,0 +1,5 @@
+# Build output & static assets (mirrors eslint.config.js ignores)
+# node_modules and .git are ignored by Prettier by default.
+dist/
+build/
+public/

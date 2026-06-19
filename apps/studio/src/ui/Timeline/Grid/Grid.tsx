@@ -1,5 +1,7 @@
+import { UUID } from '@opendaw/lib-std';
 import { type JSX, useEffect, useState } from 'react';
 import { theme } from '@ui/theme/theme';
+import type { Track } from '../../../App';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
@@ -7,7 +9,6 @@ import type { Clip as ClipData } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
 import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
-import type { Track } from '../../../App';
 
 interface GridPros {
   height: number;
@@ -121,7 +122,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         {lines}
         {isPlaying ? renderPlayhead({ currentPosition, isPlaying }) : null}
       </svg>
-      {clips.map((clip, index) => {
+      {clips.map((clip) => {
         const trackIndex = tracks.findIndex((t) => t.trackBox === clip.trackBox);
         if (trackIndex === -1) return null;
 
@@ -129,7 +130,9 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         const y = ROW_HEIGTH * trackIndex;
         const width = clip.duration * pixelsPerPulse;
 
-        return <Clip key={`clip-waveform-${index}`} clip={clip} x={x} y={y} width={width} />;
+        return (
+          <Clip key={UUID.toString(clip.regionBox.address.uuid)} bpm={bpm} clip={clip} x={x} y={y} width={width} />
+        );
       })}
     </div>
   );

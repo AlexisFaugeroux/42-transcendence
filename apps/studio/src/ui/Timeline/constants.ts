@@ -5,3 +5,5 @@ export const ROW_HEIGTH = 60;
 export const RACK_WIDTH = 250;
 
 export const BAR_LABEL_HEIGHT = 24;
+
+export const RESIZE_HANDLE_PX = 6;

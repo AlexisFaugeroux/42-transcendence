@@ -1,8 +1,8 @@
-import { MsnPeakMeter } from '../../components/MsnPeakMeter/MsnPeakMeter';
-import { useEffect, useRef, type JSX } from 'react';
-import styles from './Meter.module.scss';
-import { useMasterPeaks } from '../../../hooks/useMasterPeaks';
 import { AnimationFrame } from '@opendaw/lib-dom';
+import { type JSX, useEffect, useRef } from 'react';
+import { useMasterPeaks } from '../../../hooks/useMasterPeaks';
+import { MsnPeakMeter } from '../../components/MsnPeakMeter/MsnPeakMeter';
+import styles from './Meter.module.scss';
 
 export function Meter(): JSX.Element {
   const peaksRef = useMasterPeaks();

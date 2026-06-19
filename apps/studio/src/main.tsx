@@ -1,5 +1,5 @@
-import '@transcendence/ui/styles/colors_and_type.css';
 import './main.scss';
+import '@transcendence/ui/styles/colors_and_type.css';
 import { MsnThemeProvider } from '@transcendence/ui';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

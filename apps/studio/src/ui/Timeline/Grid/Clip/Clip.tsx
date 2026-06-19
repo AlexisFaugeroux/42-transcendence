@@ -1,19 +1,19 @@
-import { Peaks, PeaksPainter } from '@opendaw/lib-fusion';
-import { UUID, type Option } from '@opendaw/lib-std';
-import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
-import { CanvasPainter } from '@opendaw/studio-core';
-import React, { type JSX, useEffect, useRef, useState } from 'react';
-import { useProject } from '../../../../contexts/ProjectContext';
-import type { Clip } from '../../../../lib/types';
-import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../../constants';
-import styles from './Clip.module.scss';
-import { useTracks } from '../../../../contexts/TracksContext';
 import { PPQN } from '@opendaw/lib-dsp';
+import { Peaks, PeaksPainter } from '@opendaw/lib-fusion';
+import { type Option, UUID } from '@opendaw/lib-std';
+import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
+import { AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
+import { CanvasPainter } from '@opendaw/studio-core';
+import { type JSX, memo, type MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
 import { type MenuProps } from '@ui/index';
 import { Dropdown } from '@ui/index';
-import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
 import { theme } from '@ui/theme/theme';
-import { AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
+import { useProject } from '../../../../contexts/ProjectContext';
+import { useTracks } from '../../../../contexts/TracksContext';
+import type { Clip as ClipType } from '../../../../lib/types';
+import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
+import { PIXELS_PER_PULSE, RESIZE_HANDLE_PX, ROW_HEIGTH } from '../../constants';
+import styles from './Clip.module.scss';
 
 function renderClipHeader(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string, height: number) {
   ctx.fillStyle = color;
@@ -40,6 +40,7 @@ function renderWaveform(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   peaksOpt: Option<Peaks>,
+  audioDuration: number,
   headerHeight: number,
 ) {
   const peaks = peaksOpt.unwrap();
@@ -56,7 +57,7 @@ function renderWaveform(
       v0: -1,
       v1: 1,
       x0: 5, // slightly off not to be on top of the border
-      x1: canvas.width,
+      x1: audioDuration,
       y0: headerHeight + 3 + channel * peaksHeight,
       y1: 3 + (channel + 1) * peaksHeight,
     });
@@ -70,20 +71,23 @@ function renderClipBorder(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext
 }
 
 interface ClipProps {
-  clip: Clip;
+  bpm: number;
+  clip: ClipType;
   x: number;
   y: number;
   width: number;
 }
 
-export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
+export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): JSX.Element {
   const { project } = useProject();
   const { clips, setClips, tracks } = useTracks();
   const [dragOffsetPx, setDragOffsetPx] = useState(0);
+  const [resizeDeltaPx, setResizeDeltaPx] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const relatedTrack = tracks.find((t) => t.trackBox === clip.trackBox);
+  const SNAP = PPQN.Quarter / 4;
 
   // Subscribe to sample loader
   useEffect(() => {
@@ -138,20 +142,24 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
         headerHeight,
       );
       renderClipBackground(canvas, context, clip.color, headerHeight);
-      renderWaveform(canvas, context, peaksOptions, headerHeight);
+      renderWaveform(
+        canvas,
+        context,
+        peaksOptions,
+        PPQN.secondsToPulses(clip.audioDuration, bpm) * PIXELS_PER_PULSE,
+        headerHeight,
+      );
       renderClipBorder(canvas, context, clip.color);
     });
 
     return () => {
       painter.terminate();
     };
-  }, [isReady, clip, width, project, x, y]);
+  }, [bpm, isReady, clip, project]);
 
-  function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
-    e.preventDefault();
+  function startMove(e: ReactMouseEvent<HTMLCanvasElement>) {
     const startMouseX = e.clientX;
     const startPosition = clip.position;
-    const SNAP = PPQN.Quarter / 4;
 
     function onMove(ev: MouseEvent) {
       const deltaPx = ev.clientX - startMouseX;
@@ -208,6 +216,78 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
     window.addEventListener('mouseup', onUp);
   }
 
+  function startResize(e: ReactMouseEvent<HTMLCanvasElement>) {
+    const startMouseX = e.clientX;
+    const startDuration = clip.duration;
+    const MIN_DURATION = SNAP; // no zero or negative width;
+
+    function onMove(ev: MouseEvent) {
+      const deltaPx = ev.clientX - startMouseX;
+      const deltaPpqn = deltaPx / PIXELS_PER_PULSE;
+      const rawDuration = Math.max(MIN_DURATION, startDuration + deltaPpqn);
+      const snapped = Math.round(rawDuration / SNAP) * SNAP;
+      setResizeDeltaPx((snapped - startDuration) * PIXELS_PER_PULSE);
+    }
+
+    function onUp(ev: MouseEvent) {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+
+      if (!relatedTrack) return;
+      const deltaPx = ev.clientX - startMouseX;
+      const rawDuration = Math.max(MIN_DURATION, startDuration + deltaPx / PIXELS_PER_PULSE);
+      const newDuration = Math.round(rawDuration / SNAP) * SNAP;
+      const newEnd = clip.position + newDuration;
+
+      if (
+        clips.some(
+          (c) =>
+            c.trackBox === relatedTrack.trackBox &&
+            c.regionBox !== clip.regionBox &&
+            c.position + c.duration > clip.position &&
+            c.position < newEnd,
+        )
+      ) {
+        setResizeDeltaPx(0);
+        return;
+      }
+
+      setResizeDeltaPx(0);
+      if (newDuration === startDuration) return;
+
+      project.editing.modify(() => {
+        clip.regionBox.duration.setValue(newDuration);
+        clip.regionBox.loopDuration.setValue(newDuration);
+
+        const clipEnd = clip.position + newDuration;
+        const loopTo = project.timelineBox.loopArea.to.getValue();
+        if (clipEnd > loopTo) {
+          const bar = PPQN.Quarter * 4;
+          const newEnd = Math.ceil(clipEnd / bar) * bar;
+          project.timelineBox.durationInPulses.setValue(newEnd);
+          project.timelineBox.loopArea.to.setValue(newEnd);
+        }
+      });
+
+      setClips((prev) => prev.map((c) => (c.regionBox === clip.regionBox ? { ...c, duration: newDuration } : c)));
+    }
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }
+
+  function handleMouseDown(e: ReactMouseEvent<HTMLCanvasElement>) {
+    if (e.button !== 0) return; // left button only
+    e.preventDefault();
+
+    const offsetX = e.nativeEvent.offsetX;
+    if (offsetX >= width - RESIZE_HANDLE_PX) {
+      startResize(e);
+    } else {
+      startMove(e);
+    }
+  }
+
   function handleDuplicate() {
     if (!relatedTrack) return;
 
@@ -257,7 +337,7 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
   }
 
   function handleDelete() {
-    // WARN: Do not delete clip.trackBox or clip.audioFiles
+    // WARN: Do not delete clip.trackBox, clip.eventsCollectionBox or clip.audioFiles
     // as they reference shared objects used by other clips, tracks etc...
     project.editing.modify(() => {
       clip.regionBox.delete();
@@ -265,6 +345,12 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
     });
 
     setClips((prev) => prev.filter((c) => c.regionBox !== clip.regionBox));
+  }
+
+  function handleHoverCursor(e: ReactMouseEvent<HTMLCanvasElement>) {
+    const offsetX = e.nativeEvent.offsetX; // x within the canvas;
+    const nearRightEdge = offsetX >= width - RESIZE_HANDLE_PX;
+    e.currentTarget.style.cursor = nearRightEdge ? 'ew-resize' : 'grab';
   }
 
   const menuItems: MenuProps['items'] = [
@@ -312,10 +398,11 @@ export function Clip({ clip, width, x, y }: ClipProps): JSX.Element {
     <Dropdown menu={{ items: menuItems, onClick: onMenuClick }} trigger={['contextMenu']}>
       <canvas
         onMouseDown={handleMouseDown}
+        onMouseMove={handleHoverCursor}
         ref={canvasRef}
         className={styles.clipCanvas}
-        style={{ height: ROW_HEIGTH, left: x + dragOffsetPx, top: y, width }}
+        style={{ height: ROW_HEIGTH, left: x + dragOffsetPx, top: y, width: width + resizeDeltaPx }}
       />
     </Dropdown>
   );
-}
+});

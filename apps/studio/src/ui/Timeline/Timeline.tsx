@@ -55,6 +55,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Tape',
                 name: `${kind} ${prev.length + 1}`,
+                trackBox,
                 uuid: trackBox.address.uuid,
               },
             ]);
@@ -73,6 +74,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Nano',
                 name: `${kind} ${prev.length + 1}`,
+                trackBox,
                 uuid: trackBox.address.uuid,
               },
             ]);
@@ -93,6 +95,7 @@ export function Timeline(): JSX.Element {
                 color: '#888',
                 instrumentName: 'Vaporisateur',
                 name: `${kind} ${prev.length + 1}`,
+                trackBox,
                 uuid: trackBox.address.uuid,
               },
             ]);

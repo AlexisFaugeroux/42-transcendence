@@ -82,7 +82,7 @@ export async function seedDemoData(
       positions.forEach((position) => {
         const clipDuration = Math.min(Math.round(PPQN.secondsToPulses(audioBuffer.duration, bpm)), gap);
 
-        // Create events collection
+        // Create events collection - holds events values for a regionBox such as automation values
         const eventsCollectionBox = ValueEventCollectionBox.create(boxGraph, UUID.generate());
 
         const regionBox = AudioRegionBox.create(boxGraph, UUID.generate(), (box) => {
@@ -102,13 +102,13 @@ export async function seedDemoData(
           audioFileBox,
           color: audioFile.color,
           duration: clipDuration,
+          eventsCollectionBox,
           gap,
           label: audioFile.name,
           position,
-          eventsCollectionBox,
           regionBox,
-          trackName: audioFile.name,
           trackBox,
+          trackName: audioFile.name,
         });
       });
     });
