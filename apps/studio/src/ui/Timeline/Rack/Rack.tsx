@@ -126,7 +126,19 @@ export function Rack({ track }: RackProps): JSX.Element {
               {
                 key: 'delete',
                 label: 'Delete',
-                icon: <StudioIcon name="delete" color={theme.red} size={12} />,
+                icon: (
+                  <StudioIcon
+                    name="delete"
+                    color={theme.red}
+                    size={10}
+                    style={{
+                      marginRight: '4px',
+                    }}
+                  />
+                ),
+                style: {
+                  fontSize: '10px',
+                },
               },
             ],
             onClick: handleDeleteTrack,

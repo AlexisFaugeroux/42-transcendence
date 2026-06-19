@@ -7,11 +7,12 @@ import type { Clip as ClipData } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
 import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
+import type { Track } from '../../../App';
 
 interface GridPros {
   height: number;
   pixelsPerPulse: number; // zoom level, e.g 0.1 means 0.1px per PPQN tick
-  tracks: string[];
+  tracks: Track[];
   clips: ClipData[];
 }
 
@@ -121,7 +122,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         {isPlaying ? renderPlayhead({ currentPosition, isPlaying }) : null}
       </svg>
       {clips.map((clip, index) => {
-        const trackIndex = tracks.indexOf(clip.trackName);
+        const trackIndex = tracks.findIndex((t) => t.trackBox === clip.trackBox);
         if (trackIndex === -1) return null;
 
         const x = clip.position * pixelsPerPulse;

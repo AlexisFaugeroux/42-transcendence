@@ -10,9 +10,9 @@ interface AddTrackButtonProps {
 }
 
 const items: MenuProps['items'] = [
-  { key: 'tape', label: 'Audio (Tape)' },
-  { key: 'nano', label: 'Sampler (Nano)' },
-  { key: 'vaporisateur', label: 'Synth (Vaporisateur)' },
+  { key: 'tape', label: 'Audio (Tape)', style: { fontSize: '10px' } },
+  { key: 'nano', label: 'Sampler (Nano)', style: { fontSize: '10px' } },
+  { key: 'vaporisateur', label: 'Synth (Vaporisateur)', style: { fontSize: '10px' } },
 ];
 
 export function AddTrackButton({ onAddTrack }: AddTrackButtonProps): JSX.Element {
