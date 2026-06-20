@@ -1,0 +1,26 @@
+.footerContainer {
+  flex-shrink: 0;
+  display: flex;
+  height: 25px;
+  width: 100%;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--line-faint);
+
+  .footerDivider {
+    flex: 1;
+  }
+
+  .footerLegalMentions {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 12px;
+    color: var(--fg3);
+    font-size: 10px;
+
+    .footerPrivacy {
+      color: var(--fg3);
+      letter-spacing: 0.5px;
+    }
+  }
+}
