@@ -1,6 +1,6 @@
 import { InstrumentFactories } from '@opendaw/studio-adapters';
-import type { Project } from '@opendaw/studio-core';
-import { type JSX, type UIEvent, useRef } from 'react';
+import { Project } from '@opendaw/studio-core';
+import { type JSX, type MouseEvent, type UIEvent, useRef } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
@@ -25,7 +25,7 @@ function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
 }
 
 export function Timeline(): JSX.Element {
-  const { project } = useProject();
+  const { audioContext, project } = useProject();
   const { clips, setTracks, tracks } = useTracks();
   const rackListRef = useRef<HTMLDivElement>(null);
   const barLabelsRef = useRef<HTMLDivElement>(null);
@@ -105,6 +105,25 @@ export function Timeline(): JSX.Element {
     });
   }
 
+  function handleDoubleClick(e: MouseEvent) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const xPx = e.clientX - rect.left;
+    const pulses = xPx / PIXELS_PER_PULSE;
+
+    const bars = computeBarsFromSDK(project);
+    const bar = bars.find((b) => pulses >= b.startPpqn && pulses < b.startPpqn + b.durationPpqn);
+
+    project.editing.modify(() => {
+      project.engine.setPosition(bar?.startPpqn ?? 0);
+    });
+
+    if (audioContext.state === 'suspended') {
+      void audioContext.resume();
+    }
+
+    project.engine.play();
+  }
+
   return (
     <div className={styles.container}>
       {/* Top row: corner + bar labels*/}
@@ -113,7 +132,7 @@ export function Timeline(): JSX.Element {
           <AddTrackButton onAddTrack={handleAddTrack} />
         </div>
         <div ref={barLabelsRef} className={styles.barLabelsViewport}>
-          <div className={styles.barLabelsRow} style={{ width: timelineWidth }}>
+          <div className={styles.barLabelsRow} style={{ width: timelineWidth }} onDoubleClick={handleDoubleClick}>
             {renderLabels(project, PIXELS_PER_PULSE)}
           </div>
         </div>
