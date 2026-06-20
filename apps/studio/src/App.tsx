@@ -3,6 +3,7 @@ import type { JSX } from 'react';
 import { ProjectProvider } from './contexts/ProjectContext';
 import { TracksProvider } from './contexts/TracksContext';
 import { usePanels } from './hooks/usePanels';
+import { Footer } from './ui/Footer/Footer';
 import { Header } from './ui/Header/Header';
 import { panels } from './ui/panels';
 
@@ -23,13 +24,15 @@ function App(): JSX.Element {
       <ProjectProvider>
         <TracksProvider>
           <Header />
-
-          {panels.map((panel) => (
-            <div key={panel.id} style={{ border: '2px solid var(--line-soft)' }}>
-              <panel.header id={panel.id} label={panel.label} onToggle={toggle} />
-              {isVisible(panel.id) ? <panel.main /> : null}
-            </div>
-          ))}
+          <main style={{ flex: 1, overflow: 'auto' }}>
+            {panels.map((panel) => (
+              <div key={panel.id} style={{ border: '2px solid var(--line-soft)' }}>
+                <panel.header id={panel.id} label={panel.label} onToggle={toggle} />
+                {isVisible(panel.id) ? <panel.main /> : null}
+              </div>
+            ))}
+          </main>
+          <Footer />
         </TracksProvider>
       </ProjectProvider>
     </div>
