@@ -1,12 +1,13 @@
 import { InstrumentFactories } from '@opendaw/studio-adapters';
 import { Project } from '@opendaw/studio-core';
-import { type JSX, type MouseEvent, type UIEvent, useRef } from 'react';
+import { type JSX, type MouseEvent, type UIEvent, useRef, type WheelEvent } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
 import { AddTrackButton, type TrackKind } from '../../ui/AddTrackButton';
-import { PIXELS_PER_PULSE, ROW_HEIGTH } from './constants';
+import { PIXELS_PER_PULSE } from './constants';
 import { Grid } from './Grid/Grid';
+import { LoopRegionHandleStrip } from './LoopRegion/LoopRegionHandleStrip';
 import { Rack } from './Rack/Rack';
 import styles from './Timeline.module.scss';
 
@@ -29,6 +30,7 @@ export function Timeline(): JSX.Element {
   const { clips, setTracks, tracks } = useTracks();
   const rackListRef = useRef<HTMLDivElement>(null);
   const barLabelsRef = useRef<HTMLDivElement>(null);
+  const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const totalDuration = project.timelineBox.durationInPulses.getValue();
   const timelineWidth = totalDuration * PIXELS_PER_PULSE;
@@ -37,6 +39,10 @@ export function Timeline(): JSX.Element {
     const { scrollLeft, scrollTop } = e.currentTarget;
     if (rackListRef.current) rackListRef.current.scrollTop = scrollTop;
     if (barLabelsRef.current) barLabelsRef.current.scrollLeft = scrollLeft;
+  };
+
+  const handleRackListScroll = (e: WheelEvent<HTMLDivElement>) => {
+    if (gridViewportRef.current) gridViewportRef.current.scrollTop += e.deltaY;
   };
 
   function handleAddTrack(kind: TrackKind) {
@@ -135,18 +141,19 @@ export function Timeline(): JSX.Element {
           <div className={styles.barLabelsRow} style={{ width: timelineWidth }} onDoubleClick={handleDoubleClick}>
             {renderLabels(project, PIXELS_PER_PULSE)}
           </div>
+          <LoopRegionHandleStrip timelineWidth={timelineWidth} />
         </div>
       </div>
 
       {/* Bottom row: rack list + grid*/}
       <div className={styles.bottomRow}>
-        <div ref={rackListRef} className={styles.rackViewport}>
+        <div ref={rackListRef} className={styles.rackViewport} onWheel={handleRackListScroll}>
           {tracks.map((track, index) => (
             <Rack key={`rack-${index}`} track={track} />
           ))}
         </div>
-        <div className={styles.gridViewport} onScroll={handleGridScroll}>
-          <Grid height={tracks.length * ROW_HEIGTH} pixelsPerPulse={PIXELS_PER_PULSE} tracks={tracks} clips={clips} />
+        <div ref={gridViewportRef} className={styles.gridViewport} onScroll={handleGridScroll}>
+          <Grid pixelsPerPulse={PIXELS_PER_PULSE} tracks={tracks} clips={clips} />
         </div>
       </div>
     </div>

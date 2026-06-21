@@ -3,6 +3,7 @@ import { UUID } from '@opendaw/lib-std';
 import { InstrumentFactories } from '@opendaw/studio-adapters';
 import { AudioFileBox, AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 import type { Project } from '@opendaw/studio-core';
+import { theme } from '@ui/theme/theme';
 import type { Track } from '../App';
 import { loadAudioFile } from './audioUtils';
 import type { Clip } from './types';
@@ -33,8 +34,8 @@ export async function seedDemoData(
 ): Promise<{ clips: Clip[]; tracks: Track[] }> {
   // Load audio files and pair them with the corresponding audioBuffer
   const audioFiles: { name: string; url: string; color: string }[] = [
-    { color: '#ef4444', name: 'Kick', url: `${import.meta.env.BASE_URL}/audio/KICK/DPV1_KICK_001.wav` },
-    { color: '#ef4', name: 'Shaker', url: `${import.meta.env.BASE_URL}/audio/SHAKER/DPV1_SHAKER_DRY_001.wav` },
+    { color: theme.red, name: 'Kick', url: `${import.meta.env.BASE_URL}/audio/KICK/DPV1_KICK_001.wav` },
+    { color: theme.yellow, name: 'Shaker', url: `${import.meta.env.BASE_URL}/audio/SHAKER/DPV1_SHAKER_DRY_001.wav` },
   ];
   const audioPairs: { audioFile: { name: string; url: string; color: string }; audioBuffer: AudioBuffer }[] = [];
   for (const audioFile of audioFiles) {

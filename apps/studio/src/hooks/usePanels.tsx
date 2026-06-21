@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Panel } from '../ui/panels';
+import type { Panel } from '../ui/PanelFrame/panels';
 
 export function usePanels(initState: Record<Panel['id'], boolean>) {
   const [visibility, setVisibility] = useState(initState);

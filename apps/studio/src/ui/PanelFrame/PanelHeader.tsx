@@ -1,10 +1,10 @@
 import type { JSX } from 'react';
 import { theme } from '@ui/theme/theme';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
-import type { PanelHeaderProps } from '../panels';
-import styles from './TimelineHeader.module.scss';
+import type { PanelHeaderProps } from '../PanelFrame/panels';
+import styles from './PanelHeader.module.scss';
 
-export function TimelineHeader({ id, label, onToggle }: PanelHeaderProps): JSX.Element {
+export function PanelHeader({ id, label, onToggle }: PanelHeaderProps): JSX.Element {
   return (
     <div className={styles.headerContainer}>
       <span className={styles.headerTitle}>

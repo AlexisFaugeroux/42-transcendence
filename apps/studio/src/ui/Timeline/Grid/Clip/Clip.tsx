@@ -10,43 +10,50 @@ import { Dropdown } from '@ui/index';
 import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../../contexts/ProjectContext';
 import { useTracks } from '../../../../contexts/TracksContext';
+import { resolveCssColor } from '../../../../lib/resolveCssColor';
 import type { Clip as ClipType } from '../../../../lib/types';
 import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
 import { PIXELS_PER_PULSE, RESIZE_HANDLE_PX, ROW_HEIGTH } from '../../constants';
 import styles from './Clip.module.scss';
 
-function renderClipHeader(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string, height: number) {
+function renderClipHeader(ctx: CanvasRenderingContext2D, color: string, width: number, headerHeight: number) {
   ctx.fillStyle = color;
   ctx.globalAlpha = 0.5;
-  ctx.fillRect(0, 0, canvas.width, height);
+  ctx.fillRect(0, 0, width, headerHeight);
   ctx.globalAlpha = 1.0;
 }
 
-function renderClipName(ctx: CanvasRenderingContext2D, label: string, color: string, height: number) {
+function renderClipName(ctx: CanvasRenderingContext2D, label: string, color: string, headerHeight: number) {
   ctx.fillStyle = color;
-  ctx.font = `${9 * devicePixelRatio}px Rubik, sans-serif`;
+  ctx.font = '9px Rubik, sans-serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText(label, 4 * devicePixelRatio, height / 2);
+  ctx.fillText(label, 4, headerHeight / 2);
 }
 
-function renderClipBackground(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string, height: number) {
+function renderClipBackground(
+  ctx: CanvasRenderingContext2D,
+  color: string,
+  width: number,
+  height: number,
+  headerHeight: number,
+) {
   ctx.fillStyle = color;
-  ctx.globalAlpha = 0.15;
-  ctx.fillRect(0, height, canvas.width, canvas.height);
+  ctx.globalAlpha = 0.1;
+  ctx.fillRect(0, headerHeight, width, height - headerHeight);
   ctx.globalAlpha = 1.0;
 }
 
 function renderWaveform(
-  canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   peaksOpt: Option<Peaks>,
   audioDuration: number,
+  height: number,
   headerHeight: number,
 ) {
   const peaks = peaksOpt.unwrap();
   const numFrames = peaks.numFrames;
   const numberOfChannels = peaks.numChannels;
-  const peaksHeight = Math.floor((canvas.height - 4) / numberOfChannels);
+  const peaksHeight = Math.floor((height - 4) / numberOfChannels);
 
   ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-bright').trim();
 
@@ -64,10 +71,12 @@ function renderWaveform(
   }
 }
 
-function renderClipBorder(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, color: string) {
+function renderClipBorder(ctx: CanvasRenderingContext2D, color: string, width: number, height: number) {
   ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+  const lineWidth = 1;
+  ctx.lineWidth = lineWidth;
+  ctx.globalAlpha = 0.5;
+  ctx.strokeRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth);
 }
 
 interface ClipProps {
@@ -133,23 +142,33 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
       const peaksOptions = regionAdapter.file.peaks;
       if (peaksOptions.isEmpty()) return;
 
-      const headerHeight = 25;
-      renderClipHeader(canvas, context, clip.color, headerHeight);
+      const dpr = devicePixelRatio;
+      const cssW = canvas.width / dpr;
+      const cssH = canvas.height / dpr;
+
+      context.save();
+      context.setTransform(dpr, 0, 0, dpr, 0, 0); // 1 unit = 1px CSS on every support
+
+      const headerHeight = 14;
+
+      renderClipHeader(context, resolveCssColor(clip.color), cssW, headerHeight);
       renderClipName(
         context,
         clip.label,
         getComputedStyle(document.documentElement).getPropertyValue('--fg1'),
         headerHeight,
       );
-      renderClipBackground(canvas, context, clip.color, headerHeight);
+      renderClipBackground(context, resolveCssColor(clip.color), cssW, cssH, headerHeight);
       renderWaveform(
-        canvas,
         context,
         peaksOptions,
         PPQN.secondsToPulses(clip.audioDuration, bpm) * PIXELS_PER_PULSE,
+        cssH,
         headerHeight,
       );
-      renderClipBorder(canvas, context, clip.color);
+      renderClipBorder(context, resolveCssColor(clip.color), cssW, cssH);
+
+      context.restore();
     });
 
     return () => {
@@ -205,7 +224,6 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
           const bar = PPQN.Quarter * 4;
           const newEnd = Math.ceil(clipEnd / bar) * bar;
           project.timelineBox.durationInPulses.setValue(newEnd);
-          project.timelineBox.loopArea.to.setValue(newEnd);
         }
       });
 
@@ -265,7 +283,6 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
           const bar = PPQN.Quarter * 4;
           const newEnd = Math.ceil(clipEnd / bar) * bar;
           project.timelineBox.durationInPulses.setValue(newEnd);
-          project.timelineBox.loopArea.to.setValue(newEnd);
         }
       });
 
