@@ -1,5 +1,5 @@
 import { UUID } from '@opendaw/lib-std';
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useRef, useState } from 'react';
 import { theme } from '@ui/theme/theme';
 import type { Track } from '../../../App';
 import { useProject } from '../../../contexts/ProjectContext';
@@ -7,20 +7,22 @@ import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
 import type { Clip as ClipData } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
+import { LoopRegionBandOver } from '../LoopRegion/LoopRegionBandOver';
 import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
 
 interface GridPros {
-  height: number;
   pixelsPerPulse: number; // zoom level, e.g 0.1 means 0.1px per PPQN tick
   tracks: Track[];
   clips: ClipData[];
 }
 
-export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.Element {
+export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
   const { project } = useProject();
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(120);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sub = project.timelineBox.bpm.catchupAndSubscribe((obs) => {
@@ -49,6 +51,26 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
     };
   }, [project.engine.isPlaying]);
 
+  useEffect(() => {
+    const viewport = wrapperRef.current?.parentElement; // grid viewport
+    if (!viewport) return;
+
+    const update = () => {
+      setViewportHeight(viewport.clientHeight);
+    };
+    update();
+
+    const reszieObserver = new ResizeObserver(update);
+    reszieObserver.observe(viewport);
+
+    return () => {
+      reszieObserver.disconnect();
+    };
+  }, []);
+
+  const contentHeight = tracks.length * ROW_HEIGTH; // current height property
+  const gridHeight = Math.max(contentHeight, viewportHeight);
+
   // lines
   const lines: JSX.Element[] = [];
   bars.forEach((bar, index) => {
@@ -65,10 +87,10 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
       lines.push(
         <rect
           key={`${bar.barNumber}-${beat}`}
-          x={x}
+          x={x - 1}
           y={0}
           width={2}
-          height={height}
+          height={gridHeight}
           fill={isMeasure ? '#555' : '#333'}
         />,
       );
@@ -89,6 +111,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
         />,
       );
     }
+
     tracksSvg.push(
       <rect
         key={`track-${index}`}
@@ -101,6 +124,12 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
     );
   });
 
+  if (tracks.length > 0) {
+    tracksSvg.push(
+      <rect key={`sep-last`} x={0} y={contentHeight - 1} height={1} width={fullGridWidth} fill={theme.lineSoft} />,
+    );
+  }
+
   function renderPlayhead({
     currentPosition,
     isPlaying,
@@ -112,12 +141,12 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
 
     const x = currentPosition * pixelsPerPulse;
 
-    return <line x1={x} y1={0} x2={x} y2={height} stroke={theme.fg1} strokeWidth={2} />;
+    return <line x1={x} y1={0} x2={x} y2={gridHeight} stroke={theme.fg1} strokeWidth={2} />;
   }
 
   return (
-    <div className={styles.wrapper} style={{ width: fullGridWidth }}>
-      <svg width={svgWidth} height={height} className={styles.svg}>
+    <div ref={wrapperRef} className={styles.wrapper} style={{ width: fullGridWidth }}>
+      <svg width={svgWidth} height={gridHeight} className={styles.svg}>
         {tracksSvg}
         {lines}
         {isPlaying ? renderPlayhead({ currentPosition, isPlaying }) : null}
@@ -134,6 +163,7 @@ export function Grid({ clips, height, pixelsPerPulse, tracks }: GridPros): JSX.E
           <Clip key={UUID.toString(clip.regionBox.address.uuid)} bpm={bpm} clip={clip} x={x} y={y} width={width} />
         );
       })}
+      <LoopRegionBandOver />
     </div>
   );
 }

@@ -4,9 +4,8 @@
    (imported in main.tsx). */
 
 .app {
-  width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   flex-direction: column;
 }

@@ -1,0 +1,11 @@
+.loopHandleStrip {
+  height: 12px;
+  border-top: 1px solid var(--line-faint);
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+
+  svg {
+    display: block;
+  }
+}

@@ -1,0 +1,8 @@
+.loopBand {
+  position: absolute;
+  top: 0;
+  pointer-events: none;
+  border-left: 1px solid color-mix(in srgb, var(--color-purple) 90%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--color-purple) 50%, transparent);
+  box-sizing: border-box;
+}

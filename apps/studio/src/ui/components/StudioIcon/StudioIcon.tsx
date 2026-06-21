@@ -46,14 +46,10 @@ const STUDIO_ICONS: Record<StudioIconLabel, JSX.Element | undefined> = {
   folder: <path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z" fill="currentColor" />,
   font: <path d="M5 19l5-14h2l5 14h-2.2l-1.3-3.7H8.5L7.2 19H5zm4-5.4h4l-2-5.7-2 5.7z" fill="currentColor" />,
   loop: (
-    <path
-      d="M5 8h10a4 4 0 0 1 4 4M19 16H9a4 4 0 0 1-4-4M16 5l3 3-3 3M8 19l-3-3 3-3"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <g fill="currentColor">
+      <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7z" />
+      <path d="M17 17H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />
+    </g>
   ),
   marker: <path d="M5 4h11l3 4-3 4H5z" fill="currentColor" />,
   meter: (

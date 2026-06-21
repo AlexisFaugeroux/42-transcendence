@@ -1,11 +1,12 @@
 import type { AudioUnitBox, TrackBox } from '@opendaw/studio-boxes';
 import type { JSX } from 'react';
+import styles from './App.module.scss';
 import { ProjectProvider } from './contexts/ProjectContext';
 import { TracksProvider } from './contexts/TracksContext';
 import { usePanels } from './hooks/usePanels';
 import { Footer } from './ui/Footer/Footer';
 import { Header } from './ui/Header/Header';
-import { panels } from './ui/panels';
+import { PanelFrame } from './ui/PanelFrame/PanelFrame';
 
 export interface Track {
   audioUnitBox: AudioUnitBox;
@@ -17,20 +18,35 @@ export interface Track {
 }
 
 function App(): JSX.Element {
-  const { isVisible, toggle } = usePanels({ browser: false, devices: false, editor: false, timeline: true });
+  const { isVisible, toggle } = usePanels({ browser: true, devices: true, editor: false, timeline: true });
 
   return (
     <div className="app">
       <ProjectProvider>
         <TracksProvider>
           <Header />
-          <main style={{ flex: 1, overflow: 'auto' }}>
-            {panels.map((panel) => (
-              <div key={panel.id} style={{ border: '2px solid var(--line-soft)' }}>
-                <panel.header id={panel.id} label={panel.label} onToggle={toggle} />
-                {isVisible(panel.id) ? <panel.main /> : null}
-              </div>
-            ))}
+          <main className={styles.workspace}>
+            <PanelFrame id="browser" className={styles.browserSlot} isVisible={isVisible} onToggle={toggle} />
+            <div className={styles.rightArea}>
+              <PanelFrame
+                id="timeline"
+                className={isVisible('timeline') ? styles.timelineSlot : styles.collapsedSlot}
+                isVisible={isVisible}
+                onToggle={toggle}
+              />
+              <PanelFrame
+                id="editor"
+                className={isVisible('editor') ? styles.editorSlot : styles.collapsedSlot}
+                isVisible={isVisible}
+                onToggle={toggle}
+              />
+              <PanelFrame
+                id="devices"
+                className={isVisible('devices') ? styles.devicesSlot : styles.collapsedSlot}
+                isVisible={isVisible}
+                onToggle={toggle}
+              />
+            </div>
           </main>
           <Footer />
         </TracksProvider>

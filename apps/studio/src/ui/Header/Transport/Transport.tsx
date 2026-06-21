@@ -8,6 +8,7 @@ import styles from './Transport.module.scss';
 export function Transport(): JSX.Element {
   const { audioContext, project } = useProject();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(() => project.timelineBox.loopArea.enabled.getValue());
 
   useEffect(() => {
     const sub = project.engine.isPlaying.catchupAndSubscribe((obs) => {
@@ -19,7 +20,17 @@ export function Transport(): JSX.Element {
     };
   }, [project.engine.isPlaying]);
 
-  /* TODO: link rec and loop buttons to audio engine */
+  useEffect(() => {
+    const sub = project.timelineBox.loopArea.enabled.catchupAndSubscribe((obs) => {
+      setIsLooping(obs.getValue());
+    });
+
+    return () => {
+      sub.terminate();
+    };
+  }, [project.timelineBox.loopArea.enabled]);
+
+  /* TODO: link rec buttons to audio engine */
   return (
     <div className={styles.transportContainer}>
       <IconBtn
@@ -61,11 +72,13 @@ export function Transport(): JSX.Element {
       </IconBtn>
       <IconBtn
         color={theme.orange}
-        background={isPlaying ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void}
-        borderColor={isPlaying ? theme.orange : theme.lineSoft}
-        boxShadow={isPlaying ? `0 0 8px -3px ${theme.orange}` : 'none'}
+        background={isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void}
+        borderColor={isLooping ? theme.orange : theme.lineSoft}
+        boxShadow={isLooping ? `0 0 8px -3px ${theme.orange}` : 'none'}
         onClick={() => {
-          console.log('rec-prout');
+          project.editing.modify(() => {
+            project.timelineBox.loopArea.enabled.setValue(!isLooping);
+          });
         }}
       >
         <StudioIcon name="loop" size={18} />
