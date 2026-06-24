@@ -22,3 +22,10 @@ export interface Clip {
   eventsCollectionBox: ValueEventCollectionBox;
   regionBox: AudioRegionBox;
 }
+
+export interface Sample {
+  name: string;
+  bpm?: number;
+  samplekey?: string;
+  url: string;
+}

@@ -34,8 +34,8 @@ export async function seedDemoData(
 ): Promise<{ clips: Clip[]; tracks: Track[] }> {
   // Load audio files and pair them with the corresponding audioBuffer
   const audioFiles: { name: string; url: string; color: string }[] = [
-    { color: theme.red, name: 'Kick', url: `${import.meta.env.BASE_URL}/audio/KICK/DPV1_KICK_001.wav` },
-    { color: theme.yellow, name: 'Shaker', url: `${import.meta.env.BASE_URL}/audio/SHAKER/DPV1_SHAKER_DRY_001.wav` },
+    { color: theme.fg2, name: 'Kick', url: `${import.meta.env.BASE_URL}/audio/KICK/DPV1_KICK_001.wav` },
+    { color: theme.fg2, name: 'Shaker', url: `${import.meta.env.BASE_URL}/audio/SHAKER/DPV1_SHAKER_DRY_001.wav` },
   ];
   const audioPairs: { audioFile: { name: string; url: string; color: string }; audioBuffer: AudioBuffer }[] = [];
   for (const audioFile of audioFiles) {
