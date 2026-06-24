@@ -4,9 +4,11 @@ import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import type { PanelHeaderProps } from '../PanelFrame/panels';
 import styles from './PanelHeader.module.scss';
 
-export function PanelHeader({ id, label, onToggle }: PanelHeaderProps): JSX.Element {
+export function PanelHeader({ id, isVisible, label, onToggle }: PanelHeaderProps): JSX.Element {
   return (
-    <div className={styles.headerContainer}>
+    <div
+      className={id === 'browser' && !isVisible(id) ? styles.headerContainerBrowserCollapsed : styles.headerContainer}
+    >
       <span className={styles.headerTitle}>
         <button
           onClick={() => {

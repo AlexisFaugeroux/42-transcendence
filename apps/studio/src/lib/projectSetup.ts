@@ -215,7 +215,7 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
     soundfontService,
   });
 
-  // Ser BPM is custom value provided
+  // Set BPM if custom value provided
   if (bpm && bpm !== 120) {
     project.editing.modify(() => {
       project.timelineBox.bpm.setValue(bpm);

@@ -9,6 +9,11 @@
     width: 280px;
   }
 
+  .browserSlotCollapsed {
+    flex-shrink: 0;
+    width: 16px;
+  }
+
   .rightArea {
     flex: 1;
     min-width: 0;

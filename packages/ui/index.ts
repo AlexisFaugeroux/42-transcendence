@@ -1,2 +1,3 @@
-export * from 'antd';
-export { MsnThemeProvider } from './theme/MsnThemeProvider';
+export * from "antd";
+export * from "@ant-design/icons";
+export { MsnThemeProvider } from "./theme/MsnThemeProvider";
