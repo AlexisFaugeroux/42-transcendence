@@ -11,7 +11,7 @@
   :global(.ant-tabs-content) {
     height: 100%;
   }
-  :global(.ant-tabs-tabpane) {
+  :global(.ant-tabs-tabpane-active) {
     height: 100%;
     display: flex;
     flex-direction: column;
