@@ -8,8 +8,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "prebuild": "node scripts/gen-sample-manifest.mjs",
     "build": "tsc -b && vite build",
     "check": "prettier --check . && eslint .",
+    "predev": "node scripts/gen-sample-manifest.mjs",
     "dev": "vite",
     "fix": "prettier --write . && eslint --fix .",
     "lint": "eslint .",

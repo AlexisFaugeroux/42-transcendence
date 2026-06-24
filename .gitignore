@@ -10,3 +10,5 @@
 **/*.txt
 
 **/generated/prisma
+
+**/public/audio/manifest.json
