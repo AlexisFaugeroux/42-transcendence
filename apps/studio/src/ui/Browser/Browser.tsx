@@ -16,7 +16,6 @@ export function Browser(): JSX.Element {
         theme={{
           components: {
             Tabs: {
-              // barre de sélection
               horizontalItemPaddingSM: '6px 0', // hauteur des onglets (déf. "8px 0")
               horizontalMargin: '0 0 0 0', // hover
               inkBarColor: theme.orange, // taille de police

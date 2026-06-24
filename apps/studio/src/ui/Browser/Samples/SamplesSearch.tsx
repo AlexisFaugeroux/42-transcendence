@@ -1,14 +1,14 @@
 import type { Dispatch, JSX, SetStateAction } from 'react';
-import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, Table, TeamOutlined } from '@ui/index';
+import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, TeamOutlined } from '@ui/index';
 import { theme } from '@ui/theme/theme';
 import type { SampleLibrary } from './Samples';
 
 interface SamplesSearchProps {
-  activeLibraries: SampleLibrary;
-  setActiveLibraries: Dispatch<SetStateAction<SampleLibrary>>;
+  activeLib: SampleLibrary;
+  setActiveLib: Dispatch<SetStateAction<SampleLibrary>>;
 }
 
-export function SamplesSearch({ activeLibraries, setActiveLibraries }: SamplesSearchProps): JSX.Element {
+export function SamplesSearch({ activeLib, setActiveLib }: SamplesSearchProps): JSX.Element {
   return (
     <div
       style={{
@@ -39,9 +39,9 @@ export function SamplesSearch({ activeLibraries, setActiveLibraries }: SamplesSe
       >
         <Button
           size="small"
-          style={{ borderColor: activeLibraries.user ? theme.orange : undefined }}
+          style={{ borderColor: activeLib === 'user' ? theme.orange : undefined }}
           onClick={() => {
-            setActiveLibraries({ ...activeLibraries, user: !activeLibraries.user });
+            if (activeLib !== 'user') setActiveLib('user');
           }}
         >
           <FolderOutlined style={{ color: theme.orange }} />
@@ -49,9 +49,9 @@ export function SamplesSearch({ activeLibraries, setActiveLibraries }: SamplesSe
 
         <Button
           size="small"
-          style={{ borderColor: activeLibraries.shared ? theme.orange : undefined }}
+          style={{ borderColor: activeLib === 'shared' ? theme.orange : undefined }}
           onClick={() => {
-            setActiveLibraries({ ...activeLibraries, shared: !activeLibraries.shared });
+            if (activeLib !== 'shared') setActiveLib('shared');
           }}
         >
           <TeamOutlined style={{ color: theme.orange }} />
