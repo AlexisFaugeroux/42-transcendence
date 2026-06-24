@@ -16,7 +16,7 @@ export function PanelFrame({ className, id, isVisible, onToggle }: PanelFramePro
 
   return (
     <div className={`${styles.panelFrame} ${className ?? ''}`}>
-      <Header id={id} label={label} onToggle={onToggle} />
+      <Header id={id} label={label} isVisible={isVisible} onToggle={onToggle} />
       {isVisible(id) ? (
         <div className={styles.panelBody}>
           <Main />

@@ -25,8 +25,14 @@ function App(): JSX.Element {
       <ProjectProvider>
         <TracksProvider>
           <Header />
+
           <main className={styles.workspace}>
-            <PanelFrame id="browser" className={styles.browserSlot} isVisible={isVisible} onToggle={toggle} />
+            <PanelFrame
+              id="browser"
+              className={isVisible('browser') ? styles.browserSlot : styles.browserSlotCollapsed}
+              isVisible={isVisible}
+              onToggle={toggle}
+            />
             <div className={styles.rightArea}>
               <PanelFrame
                 id="timeline"
@@ -48,6 +54,7 @@ function App(): JSX.Element {
               />
             </div>
           </main>
+
           <Footer />
         </TracksProvider>
       </ProjectProvider>

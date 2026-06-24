@@ -1,9 +1,9 @@
 import { type JSX, useEffect, useState } from 'react';
+import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
 import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../constants';
 import styles from './LoopRegionBandOver.module.scss';
-import { theme } from '@ui/theme/theme';
 
 export function LoopRegionBandOver(): JSX.Element {
   const { project } = useProject();
@@ -44,12 +44,12 @@ export function LoopRegionBandOver(): JSX.Element {
     <div
       className={styles.loopBand}
       style={{
+        background: isLooping ? `color-mix(in srgb, ${theme.purple} 7%, transparent)` : 'none',
+        borderLeft: `2px solid color-mix(in srgb, ${isLooping ? theme.purple : theme.fg2} 50%, transparent)`,
+        borderRight: `2px solid color-mix(in srgb, ${isLooping ? theme.purple : theme.fg2} 50%, transparent)`,
         height,
         left,
         width,
-        background: isLooping ? `color-mix(in srgb, ${theme.purple} 7%, transparent)` : 'none',
-        borderLeft: `1px solid color-mix(in srgb, ${isLooping ? theme.purple : theme.fg2} 50%, transparent)`,
-        borderRight: `1px solid color-mix(in srgb, ${isLooping ? theme.purple : theme.fg2} 50%, transparent)`,
       }}
     />
   );
