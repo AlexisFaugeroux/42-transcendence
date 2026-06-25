@@ -5,9 +5,9 @@ import { IconBtn } from '@ui/components/IconBtn/IconBtn';
 import { MsnKnob } from '@ui/components/MsnKnob/MsnKnob';
 import { MsnPill } from '@ui/components/MsnPill/MsnPill';
 import { theme } from '@ui/theme/theme';
-import type { Track } from '../../../App';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
+import type { Track } from '../../../lib/types';
 import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
 import styles from './Rack.module.scss';
 

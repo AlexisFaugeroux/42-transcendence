@@ -14,6 +14,7 @@ import {
   Project,
   type SampleProvider,
   SampleService,
+  SampleStorage,
   type SoundfontProvider,
   Workers,
 } from '@opendaw/studio-core';
@@ -143,7 +144,6 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
 
   // Create sample manager with optional local audio buffer support
   const sampleProvider: SampleProvider = {
-    // eslint-disable-next-line @typescript-eslint/require-await
     fetch: async (uuid: UUID.Bytes): Promise<[AudioData, SampleMetaData]> => {
       const uuidString = UUID.toString(uuid);
       console.debug(`Sample manager fetch called for UUID: ${uuidString}`);
@@ -169,9 +169,15 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
         }
       }
 
-      // No local buffer found — warn instead of hitting the OpenDAW API (CORS fails in dev)
-      console.warn(`No local audio buffer found for UUID: ${uuidString}. The sample will not be available.`);
-      throw new Error(`Sample not found locally: ${uuidString}`);
+      // Samples imported via SampleService
+      const sample = await SampleStorage.get().exists(uuid);
+      if (sample) {
+        const [audioData, _peaks, meta] = await SampleStorage.get().load(uuid);
+        return [audioData, meta];
+      }
+
+      console.warn(`No audio buffer found for UUID: ${uuidString}. The sample will not be available.`);
+      throw new Error(`Sample not found: ${uuidString}`);
     },
   };
   const sampleManager = new GlobalSampleLoaderManager(sampleProvider);

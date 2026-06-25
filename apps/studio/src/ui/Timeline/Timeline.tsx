@@ -1,10 +1,10 @@
-import { InstrumentFactories } from '@opendaw/studio-adapters';
 import { Project } from '@opendaw/studio-core';
 import { type JSX, type MouseEvent, type UIEvent, useRef, type WheelEvent } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
+import { createTrack, type InstrumentType } from '../../lib/arrangementFactory';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
-import { AddTrackButton, type TrackKind } from '../../ui/AddTrackButton';
+import { AddTrackButton } from '../../ui/AddTrackButton';
 import { PIXELS_PER_PULSE } from './constants';
 import { Grid } from './Grid/Grid';
 import { LoopRegionHandleStrip } from './LoopRegion/LoopRegionHandleStrip';
@@ -45,69 +45,11 @@ export function Timeline(): JSX.Element {
     if (gridViewportRef.current) gridViewportRef.current.scrollTop += e.deltaY;
   };
 
-  function handleAddTrack(kind: TrackKind) {
+  function handleAddTrack(instrument: InstrumentType) {
     project.editing.modify(() => {
-      switch (kind) {
-        case 'tape':
-          {
-            const { audioUnitBox, instrumentBox, trackBox } = project.api.createInstrument(InstrumentFactories.Tape);
-            audioUnitBox.volume.setValue(0);
-            instrumentBox.label.setValue(`${kind} ${tracks.length + 1}`);
+      const newTrack = createTrack(project.api, instrument);
 
-            setTracks((prev) => [
-              ...prev,
-              {
-                audioUnitBox,
-                color: '#888',
-                instrumentName: 'Tape',
-                name: `${kind} ${prev.length + 1}`,
-                trackBox,
-                uuid: trackBox.address.uuid,
-              },
-            ]);
-          }
-          break;
-        case 'nano':
-          {
-            const { audioUnitBox, instrumentBox, trackBox } = project.api.createInstrument(InstrumentFactories.Nano);
-            audioUnitBox.volume.setValue(0);
-            instrumentBox.label.setValue(`${kind} ${tracks.length + 1}`);
-
-            setTracks((prev) => [
-              ...prev,
-              {
-                audioUnitBox,
-                color: '#888',
-                instrumentName: 'Nano',
-                name: `${kind} ${prev.length + 1}`,
-                trackBox,
-                uuid: trackBox.address.uuid,
-              },
-            ]);
-          }
-          break;
-        case 'vaporisateur':
-          {
-            const { audioUnitBox, instrumentBox, trackBox } = project.api.createInstrument(
-              InstrumentFactories.Vaporisateur,
-            );
-            audioUnitBox.volume.setValue(0);
-            instrumentBox.label.setValue(`${kind} ${tracks.length + 1}`);
-
-            setTracks((prev) => [
-              ...prev,
-              {
-                audioUnitBox,
-                color: '#888',
-                instrumentName: 'Vaporisateur',
-                name: `${kind} ${prev.length + 1}`,
-                trackBox,
-                uuid: trackBox.address.uuid,
-              },
-            ]);
-          }
-          break;
-      }
+      setTracks((prev) => [...prev, newTrack]);
     });
   }
 

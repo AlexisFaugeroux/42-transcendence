@@ -1,11 +1,10 @@
 import { UUID } from '@opendaw/lib-std';
 import { type JSX, useEffect, useRef, useState } from 'react';
 import { theme } from '@ui/theme/theme';
-import type { Track } from '../../../App';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
-import type { Clip as ClipData } from '../../../lib/types';
+import type { Clip as ClipData, Track } from '../../../lib/types';
 import { ROW_HEIGTH } from '../constants';
 import { LoopRegionBandOver } from '../LoopRegion/LoopRegionBandOver';
 import { Clip } from './Clip/Clip';

@@ -1,5 +1,11 @@
 import { type ppqn } from '@opendaw/lib-dsp';
-import type { AudioFileBox, AudioRegionBox, TrackBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
+import type {
+  AudioFileBox,
+  AudioRegionBox,
+  AudioUnitBox,
+  TrackBox,
+  ValueEventCollectionBox,
+} from '@opendaw/studio-boxes';
 
 export interface BarInfo {
   startPpqn: ppqn;
@@ -9,12 +15,21 @@ export interface BarInfo {
   barNumber: number;
 }
 
+export interface Track {
+  audioUnitBox: AudioUnitBox;
+  name: string;
+  instrumentName: 'Nano' | 'Vaporisateur' | 'Tape';
+  uuid: Readonly<Uint8Array>;
+  trackBox: TrackBox;
+  color: string;
+}
+
 export interface Clip {
   audioDuration: number;
   audioFileBox: AudioFileBox;
   trackName: string;
   trackBox: TrackBox;
-  gap: number;
+  gap?: number;
   position: number;
   duration: number;
   color: string;

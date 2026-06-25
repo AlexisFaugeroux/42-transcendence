@@ -6,11 +6,10 @@ import type { SampleLibrary } from './Samples';
 interface SamplesSearchProps {
   activeLib: SampleLibrary;
   setActiveLib: Dispatch<SetStateAction<SampleLibrary>>;
-  search: string;
   setSearch: Dispatch<SetStateAction<string>>;
 }
 
-export function SamplesSearch({ activeLib, setActiveLib, search, setSearch }: SamplesSearchProps): JSX.Element {
+export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSearchProps): JSX.Element {
   return (
     <div
       style={{
