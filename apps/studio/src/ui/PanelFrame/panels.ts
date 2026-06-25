@@ -6,6 +6,7 @@ import { Timeline } from '../Timeline/Timeline';
 import { PanelHeader } from './PanelHeader';
 
 export interface PanelHeaderProps {
+  icon: string;
   id: Panel['id'];
   label: string;
   onToggle: (id: Panel['id']) => void;

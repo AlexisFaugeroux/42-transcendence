@@ -5,18 +5,31 @@ import { theme } from '@ui/theme/theme';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
 import type { Sample } from '../../../lib/types';
 import { SamplesSearch } from './SamplesSearch';
+import styles from './Samples.module.scss';
 
 export type SampleLibrary = 'user' | 'shared';
 
 const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = [
-  { dataIndex: 'name', ellipsis: true, title: 'Name', width: 170 },
-  { align: 'right', dataIndex: 'bpm', title: 'Bpm' },
-  { align: 'right', dataIndex: 'sampleKey', title: 'Key' },
+  {
+    dataIndex: 'name',
+    ellipsis: true,
+    title: 'Name',
+    width: 170,
+    sorter: (a, b) => a.name.localeCompare(b.name),
+  },
+  { align: 'right', dataIndex: 'bpm', title: 'Bpm', sorter: (a, b) => (a.bpm ?? 0) - (b.bpm ?? 0) },
+  {
+    align: 'right',
+    dataIndex: 'sampleKey',
+    title: 'Key',
+    sorter: (a, b) => a.name.localeCompare(b.name),
+  },
 ];
 
 export function Samples(): JSX.Element {
   const [activeLib, setActiveLib] = useState<SampleLibrary>('user');
   const [samples, setSamples] = useState<Sample[]>([]);
+  const [search, setSearch] = useState('');
   const { ref, y } = useTableScrollY();
 
   useEffect(() => {
@@ -36,11 +49,13 @@ export function Samples(): JSX.Element {
     };
   }, []);
 
-  const dataSource = samples.map((sample) => ({ ...sample, key: UUID.generate().toString() }));
+  const dataSource = samples
+    .map((sample) => ({ ...sample, key: UUID.generate().toString() }))
+    .filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
 
   return (
     <>
-      <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} />
+      <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} search={search} setSearch={setSearch} />
 
       <ConfigProvider
         theme={{
@@ -52,13 +67,17 @@ export function Samples(): JSX.Element {
               fontSize: 11,
               headerBg: theme.bgPanel,
               headerColor: theme.fg2,
-              lineHeight: 0.6,
+              lineHeight: 0.8,
               rowHoverBg: theme.orange,
+              headerSortActiveBg: 'transparent',
+              headerSortHoverBg: 'transparent',
+              bodySortBg: 'transparent',
+              fixedHeaderSortActiveBg: 'transparent',
             },
           },
         }}
       >
-        <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
+        <div ref={ref} className={styles.table} style={{ flex: 1, minHeight: 0 }}>
           <Table
             bordered={false}
             columns={columns}

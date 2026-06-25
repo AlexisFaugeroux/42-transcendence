@@ -1,0 +1,13 @@
+.table {
+  // icône inactive (les deux flèches haut/bas au repos)
+  :global(.ant-table-column-sorter-up),
+  :global(.ant-table-column-sorter-down) {
+    color: var(--fg2, #888); // ta couleur "inactif"
+  }
+
+  // icône active (la flèche sélectionnée)
+  :global(.ant-table-column-sorter-up.active),
+  :global(.ant-table-column-sorter-down.active) {
+    color: var(--orange, #ff7a00); // ta couleur "actif"
+  }
+}

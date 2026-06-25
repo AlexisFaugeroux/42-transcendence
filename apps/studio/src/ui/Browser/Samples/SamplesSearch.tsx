@@ -6,9 +6,11 @@ import type { SampleLibrary } from './Samples';
 interface SamplesSearchProps {
   activeLib: SampleLibrary;
   setActiveLib: Dispatch<SetStateAction<SampleLibrary>>;
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 }
 
-export function SamplesSearch({ activeLib, setActiveLib }: SamplesSearchProps): JSX.Element {
+export function SamplesSearch({ activeLib, setActiveLib, search, setSearch }: SamplesSearchProps): JSX.Element {
   return (
     <div
       style={{
@@ -27,6 +29,7 @@ export function SamplesSearch({ activeLib, setActiveLib }: SamplesSearchProps): 
             },
             Input: {
               activeBg: theme.void,
+              activeBorderColor: theme.fg3,
               colorBgContainer: theme.void,
               colorBorder: theme.lineHover,
               colorText: theme.fg2,
@@ -38,25 +41,28 @@ export function SamplesSearch({ activeLib, setActiveLib }: SamplesSearchProps): 
         }}
       >
         <Button
-          size="small"
           style={{ borderColor: activeLib === 'user' ? theme.orange : undefined }}
           onClick={() => {
             if (activeLib !== 'user') setActiveLib('user');
           }}
-        >
-          <FolderOutlined style={{ color: theme.orange }} />
-        </Button>
+          icon={<FolderOutlined style={{ color: theme.orange }} />}
+        />
 
         <Button
-          size="small"
           style={{ borderColor: activeLib === 'shared' ? theme.orange : undefined }}
           onClick={() => {
             if (activeLib !== 'shared') setActiveLib('shared');
           }}
-        >
-          <TeamOutlined style={{ color: theme.orange }} />
-        </Button>
-        <Input size="small" prefix={<SearchOutlined style={{ color: theme.fg3 }} />} placeholder="Chercher un sample" />
+          icon={<TeamOutlined style={{ color: theme.orange }} />}
+        />
+        <Input
+          size="small"
+          prefix={<SearchOutlined style={{ color: theme.fg3 }} />}
+          placeholder="Chercher un sample"
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+        />
       </ConfigProvider>
     </div>
   );
