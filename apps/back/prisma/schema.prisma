@@ -57,6 +57,7 @@ model User {
   following   User[]  @relation("UserFollows")
   createdAt   DateTime @default(now())
   uptdatedAt  DateTime @updatedAt
+  sessions    Session[]
 } 
 
 model AudioFile {
@@ -71,4 +72,14 @@ model AudioFile {
   bytes       Int
   createdAt   DateTime @default(now())
   uptdatedAt  DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  createdAt DateTime @default(now())
 }
