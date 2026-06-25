@@ -33,4 +33,4 @@ export class SessionRepository {
   }
 }
 
-export const sessionService = new SessionRepository(prisma);
+export const sessionRepository = new SessionRepository(prisma);
