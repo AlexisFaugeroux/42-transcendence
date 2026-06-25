@@ -4,8 +4,8 @@ import { ConfigProvider, Table, type TableColumnsType } from '@ui/index';
 import { theme } from '@ui/theme/theme';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
 import type { Sample } from '../../../lib/types';
-import { SamplesSearch } from './SamplesSearch';
 import styles from './Samples.module.scss';
+import { SamplesSearch } from './SamplesSearch';
 
 export type SampleLibrary = 'user' | 'shared';
 
@@ -13,16 +13,16 @@ const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = 
   {
     dataIndex: 'name',
     ellipsis: true,
+    sorter: (a, b) => a.name.localeCompare(b.name),
     title: 'Name',
     width: 170,
-    sorter: (a, b) => a.name.localeCompare(b.name),
   },
-  { align: 'right', dataIndex: 'bpm', title: 'Bpm', sorter: (a, b) => (a.bpm ?? 0) - (b.bpm ?? 0) },
+  { align: 'right', dataIndex: 'bpm', sorter: (a, b) => (a.bpm ?? 0) - (b.bpm ?? 0), title: 'Bpm' },
   {
     align: 'right',
     dataIndex: 'sampleKey',
-    title: 'Key',
     sorter: (a, b) => a.name.localeCompare(b.name),
+    title: 'Key',
   },
 ];
 
@@ -55,24 +55,24 @@ export function Samples(): JSX.Element {
 
   return (
     <>
-      <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} search={search} setSearch={setSearch} />
+      <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} setSearch={setSearch} />
 
       <ConfigProvider
         theme={{
           components: {
             Table: {
+              bodySortBg: 'transparent',
               borderColor: 'none',
               colorBgContainer: theme.bgPanel,
               colorText: theme.fg1,
+              fixedHeaderSortActiveBg: 'transparent',
               fontSize: 11,
               headerBg: theme.bgPanel,
               headerColor: theme.fg2,
-              lineHeight: 0.8,
-              rowHoverBg: theme.orange,
               headerSortActiveBg: 'transparent',
               headerSortHoverBg: 'transparent',
-              bodySortBg: 'transparent',
-              fixedHeaderSortActiveBg: 'transparent',
+              lineHeight: 0.8,
+              rowHoverBg: theme.orange,
             },
           },
         }}

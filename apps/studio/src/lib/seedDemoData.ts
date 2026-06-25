@@ -1,20 +1,17 @@
 import { PPQN } from '@opendaw/lib-dsp';
-import { UUID } from '@opendaw/lib-std';
-import { InstrumentFactories } from '@opendaw/studio-adapters';
-import { AudioFileBox, AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 import type { Project } from '@opendaw/studio-core';
 import { theme } from '@ui/theme/theme';
-import type { Track } from '../App';
+import { createClipFromBuffer, createTrack } from './arrangementFactory';
 import { loadAudioFile } from './audioUtils';
-import type { Clip } from './types';
+import type { Clip, Track } from './types';
 
 const { Quarter } = PPQN;
 
 // Helper function for pattern positions
-function getPatternPositions(instrumentName: string): number[] {
+function getPatternPositions(name: string): number[] {
   const BARS = 4;
 
-  switch (instrumentName) {
+  switch (name) {
     case 'Kick':
       // On every beat
       return Array.from({ length: BARS * 4 }, (_, i) => i * Quarter);
@@ -30,7 +27,6 @@ export async function seedDemoData(
   project: Project,
   audioContext: AudioContext,
   localAudioBuffers: Map<string, AudioBuffer>,
-  bpm: number,
 ): Promise<{ clips: Clip[]; tracks: Track[] }> {
   // Load audio files and pair them with the corresponding audioBuffer
   const audioFiles: { name: string; url: string; color: string }[] = [
@@ -46,72 +42,32 @@ export async function seedDemoData(
   }
 
   // Create tracks and clips
-  const { api, boxGraph, editing } = project;
+  const { api, editing } = project;
   const createdClips: Clip[] = [];
   const createdTracks: Track[] = [];
 
   editing.modify(() => {
     audioPairs.forEach(({ audioBuffer, audioFile }) => {
       // Create track
-      const { audioUnitBox, instrumentBox, trackBox } = api.createInstrument(InstrumentFactories.Tape);
+      const newTrack = createTrack(api, 'Tape');
 
-      audioUnitBox.volume.setValue(0);
-      instrumentBox.label.setValue(audioFile.name);
+      createdTracks.push(newTrack);
 
-      createdTracks.push({
-        audioUnitBox, // mixer channel
-        color: audioFile.color,
-        instrumentName: 'Tape',
-        name: audioFile.name,
-        trackBox, // actual engine counterpart of UI Track
-        uuid: trackBox.address.uuid,
-      });
-
-      // Create AudioFileBox
-      const fileUUID = UUID.generate();
-
-      localAudioBuffers.set(UUID.toString(fileUUID), audioBuffer);
-
-      const audioFileBox = AudioFileBox.create(boxGraph, fileUUID, (box) => {
-        box.fileName.setValue(audioFile.name);
-        box.endInSeconds.setValue(audioBuffer.duration);
-      });
-
-      // Create clips based on pattern
       const positions = getPatternPositions(audioFile.name);
-      const gap = positions.length > 1 ? positions[1] - positions[0] : Infinity; // Prevents overlapping audio clips
-      positions.forEach((position) => {
-        const clipDuration = Math.min(Math.round(PPQN.secondsToPulses(audioBuffer.duration, bpm)), gap);
-
-        // Create events collection - holds events values for a regionBox such as automation values
-        const eventsCollectionBox = ValueEventCollectionBox.create(boxGraph, UUID.generate());
-
-        const regionBox = AudioRegionBox.create(boxGraph, UUID.generate(), (box) => {
-          box.regions.refer(trackBox.regions);
-          box.file.refer(audioFileBox);
-          box.events.refer(eventsCollectionBox.owners);
-          box.position.setValue(position);
-          box.duration.setValue(clipDuration);
-          box.loopOffset.setValue(0);
-          box.loopDuration.setValue(clipDuration);
-          box.label.setValue(audioFile.name);
-          box.mute.setValue(false);
-        });
-
-        createdClips.push({
-          audioDuration: PPQN.pulsesToSeconds(clipDuration, bpm),
-          audioFileBox,
-          color: audioFile.color,
-          duration: clipDuration,
-          eventsCollectionBox,
-          gap,
-          label: audioFile.name,
+      for (const position of positions) {
+        const nextPos = positions.filter((p) => p > position).reduce((min, p) => Math.min(min, p), Infinity);
+        const maxDuration = nextPos - position;
+        const newClip = createClipFromBuffer(
+          project,
+          newTrack,
+          audioBuffer,
+          audioFile.name,
+          localAudioBuffers,
           position,
-          regionBox,
-          trackBox,
-          trackName: audioFile.name,
-        });
-      });
+          maxDuration,
+        );
+        createdClips.push(newClip);
+      }
     });
   });
 

@@ -9,9 +9,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { Track } from '../App';
 import { seedDemoData } from '../lib/seedDemoData';
-import type { Clip } from '../lib/types';
+import type { Clip, Track } from '../lib/types';
 import { useProject } from './ProjectContext';
 
 interface TracksContext {
@@ -33,7 +32,7 @@ export function TracksProvider({ children }: { children: ReactNode }): JSX.Eleme
     if (hasSeeded.current) return;
     hasSeeded.current = true;
     void (async () => {
-      const { clips, tracks } = await seedDemoData(project, audioContext, localAudioBuffers, 120);
+      const { clips, tracks } = await seedDemoData(project, audioContext, localAudioBuffers);
 
       setTracks(tracks);
       setClips(clips);
