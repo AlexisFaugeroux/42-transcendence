@@ -1,5 +1,5 @@
 import { UUID } from '@opendaw/lib-std';
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState, type DragEvent } from 'react';
 import { ConfigProvider, Table, type TableColumnsType } from '@ui/index';
 import { theme } from '@ui/theme/theme';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
@@ -85,6 +85,13 @@ export function Samples(): JSX.Element {
             size="small"
             pagination={false}
             scroll={{ y }}
+            onRow={(record) => ({
+              draggable: true,
+              onDragStart: (e: DragEvent<HTMLTableRowElement>) => {
+                e.dataTransfer.setData('application/x-sample', JSON.stringify(record));
+                e.dataTransfer.effectAllowed = 'copy';
+              },
+            })}
           />
         </div>
       </ConfigProvider>

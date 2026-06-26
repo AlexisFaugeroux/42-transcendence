@@ -1,23 +1,26 @@
 import { UUID } from '@opendaw/lib-std';
-import { type JSX, useEffect, useRef, useState } from 'react';
+import { type JSX, useEffect, useRef, useState, type DragEvent } from 'react';
 import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
-import type { Clip as ClipData, Track } from '../../../lib/types';
-import { ROW_HEIGTH } from '../constants';
+import type { Clip as ClipData, Sample, Track } from '../../../lib/types';
+import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../constants';
 import { LoopRegionBandOver } from '../LoopRegion/LoopRegionBandOver';
 import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
+import { createClip } from '../../../lib/arrangementFactory';
+import { useTracks } from '../../../contexts/TracksContext';
+import { findTrackAt, mergeClipChanges } from './helpers';
 
 interface GridPros {
-  pixelsPerPulse: number; // zoom level, e.g 0.1 means 0.1px per PPQN tick
   tracks: Track[];
   clips: ClipData[];
 }
 
-export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
-  const { project } = useProject();
+export function Grid({ clips, tracks }: GridPros): JSX.Element {
+  const { audioContext, project, localAudioBuffers } = useProject();
+  const { setClips } = useTracks();
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(120);
   const [viewportHeight, setViewportHeight] = useState(0);
@@ -36,8 +39,8 @@ export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
   const currentPosition = useCurrentPosition(bpm);
 
   const totalDuration = project.timelineBox.durationInPulses.getValue();
-  const fullGridWidth = totalDuration * pixelsPerPulse;
-  const svgWidth = totalDuration * pixelsPerPulse;
+  const fullGridWidth = totalDuration * PIXELS_PER_PULSE;
+  const svgWidth = totalDuration * PIXELS_PER_PULSE;
   const bars = computeBarsFromSDK(project);
 
   useEffect(() => {
@@ -79,7 +82,7 @@ export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
       if (index === 0 && beat === 0) continue;
 
       const ppqnPosition = bar.startPpqn + beat * beatDuration;
-      const x = ppqnPosition * pixelsPerPulse;
+      const x = ppqnPosition * PIXELS_PER_PULSE;
 
       const isMeasure = beat % bar.denominator === 0;
 
@@ -138,13 +141,40 @@ export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
   }): JSX.Element | null {
     if (!isPlaying) return null;
 
-    const x = currentPosition * pixelsPerPulse;
+    const x = currentPosition * PIXELS_PER_PULSE;
 
     return <line x1={x} y1={0} x2={x} y2={gridHeight} stroke={theme.fg1} strokeWidth={2} />;
   }
 
+  async function handleOnDrop(e: DragEvent) {
+    e.preventDefault();
+    const sample = JSON.parse(e.dataTransfer.getData('application/x-sample')) as Sample;
+
+    const grid = e.currentTarget.getBoundingClientRect();
+    const dropX = Math.max(e.clientX - grid.x, 0);
+    const dropY = Math.max(e.clientY - grid.y, 0);
+
+    const targetTrack = findTrackAt(tracks, dropY);
+    if (!targetTrack) return;
+
+    const position = dropX / PIXELS_PER_PULSE;
+    const res = await createClip(audioContext, project, targetTrack, sample.url, localAudioBuffers, position, clips);
+    if (!res) return;
+
+    setClips((prev) => mergeClipChanges(prev, res));
+  }
+
   return (
-    <div ref={wrapperRef} className={styles.wrapper} style={{ width: fullGridWidth }}>
+    <div
+      ref={wrapperRef}
+      className={styles.wrapper}
+      style={{ width: fullGridWidth }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      }}
+      onDrop={(e) => void handleOnDrop(e)}
+    >
       <svg width={svgWidth} height={gridHeight} className={styles.svg}>
         {tracksSvg}
         {lines}
@@ -154,9 +184,9 @@ export function Grid({ clips, pixelsPerPulse, tracks }: GridPros): JSX.Element {
         const trackIndex = tracks.findIndex((t) => t.trackBox === clip.trackBox);
         if (trackIndex === -1) return null;
 
-        const x = clip.position * pixelsPerPulse;
+        const x = clip.position * PIXELS_PER_PULSE;
         const y = ROW_HEIGTH * trackIndex;
-        const width = clip.duration * pixelsPerPulse;
+        const width = clip.duration * PIXELS_PER_PULSE;
 
         return (
           <Clip key={UUID.toString(clip.regionBox.address.uuid)} bpm={bpm} clip={clip} x={x} y={y} width={width} />
