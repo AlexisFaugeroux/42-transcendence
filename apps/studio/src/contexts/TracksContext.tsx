@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { seedDemoData } from '../lib/seedDemoData';
+/* import { seedDemoData } from '../lib/seedDemoData'; */
 import type { Clip, Track } from '../lib/types';
 import { useProject } from './ProjectContext';
 
@@ -31,12 +31,13 @@ export function TracksProvider({ children }: { children: ReactNode }): JSX.Eleme
   useEffect(() => {
     if (hasSeeded.current) return;
     hasSeeded.current = true;
-    void (async () => {
+    // TODO: to be replaced by actual project data when loading an existing project
+    /* void (async () => {
       const { clips, tracks } = await seedDemoData(project, audioContext, localAudioBuffers);
 
       setTracks(tracks);
       setClips(clips);
-    })();
+    })(); */
   }, [audioContext, project, localAudioBuffers]);
 
   return <tracksContext.Provider value={{ clips, setClips, setTracks, tracks }}>{children}</tracksContext.Provider>;

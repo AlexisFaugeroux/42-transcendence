@@ -4,10 +4,12 @@ import type { BarInfo } from './types';
 
 export async function loadAudioFile(audioContext: AudioContext, url: string): Promise<AudioBuffer | undefined> {
   try {
-    const response = await fetch(url);
+    const fullPath = `${import.meta.env.BASE_URL}/${url}`;
+    const response = await fetch(fullPath);
     if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
 
     const arrayBuffer = await response.arrayBuffer();
+    // In case of browser incompatibilities, use WavFile.decodeFloats for .wav files and FFmpegWorker for other conversions
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
     return audioBuffer;

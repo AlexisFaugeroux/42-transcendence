@@ -63,7 +63,7 @@ function renderWaveform(
       u1: numFrames,
       v0: -1,
       v1: 1,
-      x0: 5, // slightly off not to be on top of the border
+      x0: 2, // slightly off not to be on top of the border
       x1: audioDuration,
       y0: headerHeight + 3 + channel * peaksHeight,
       y1: 3 + (channel + 1) * peaksHeight,
@@ -154,7 +154,7 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
       renderClipHeader(context, resolveCssColor(clip.color), cssW, headerHeight);
       renderClipName(
         context,
-        clip.label,
+        clip.trackName,
         getComputedStyle(document.documentElement).getPropertyValue('--fg1'),
         headerHeight,
       );

@@ -95,7 +95,7 @@ export function Timeline(): JSX.Element {
           ))}
         </div>
         <div ref={gridViewportRef} className={styles.gridViewport} onScroll={handleGridScroll}>
-          <Grid pixelsPerPulse={PIXELS_PER_PULSE} tracks={tracks} clips={clips} />
+          <Grid tracks={tracks} clips={clips} />
         </div>
       </div>
     </div>
