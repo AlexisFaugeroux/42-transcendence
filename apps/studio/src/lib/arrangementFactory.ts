@@ -15,7 +15,7 @@ export function maxDurationAt(position: number, clips: Clip[], track: Track) {
     .reduce((min, clip) => Math.min(min, clip.position - position), Infinity);
 }
 
-export function createTrack(api: ProjectApi, instrument: InstrumentType): Track {
+export function createTrack(api: ProjectApi, instrument: InstrumentType, name?: string): Track {
   let deviceBox: InstrumentFactory;
   switch (instrument) {
     case 'Tape':
@@ -37,7 +37,7 @@ export function createTrack(api: ProjectApi, instrument: InstrumentType): Track 
     audioUnitBox,
     color: theme.fg2,
     instrumentName: instrument,
-    name: instrument,
+    name: name ?? instrument,
     trackBox,
     uuid: trackBox.address.uuid,
   };

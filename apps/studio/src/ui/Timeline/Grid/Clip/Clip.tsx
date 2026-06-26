@@ -315,7 +315,7 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
       clips.some(
         (c) =>
           c.regionBox !== clip.regionBox &&
-          c.trackName === relatedTrack.name &&
+          c.trackBox === relatedTrack.trackBox &&
           c.position + c.duration > newClipPosition &&
           c.position < newClipEndPosition,
       )
