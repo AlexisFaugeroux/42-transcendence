@@ -1,16 +1,16 @@
 import { UUID } from '@opendaw/lib-std';
-import { type JSX, useEffect, useRef, useState, type DragEvent } from 'react';
+import { type DragEvent, type JSX, useEffect, useRef, useState } from 'react';
 import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
+import { useTracks } from '../../../contexts/TracksContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
+import { createClip } from '../../../lib/arrangementFactory';
 import { computeBarsFromSDK } from '../../../lib/audioUtils';
 import type { Clip as ClipData, Sample, Track } from '../../../lib/types';
 import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../constants';
 import { LoopRegionBandOver } from '../LoopRegion/LoopRegionBandOver';
 import { Clip } from './Clip/Clip';
 import styles from './Grid.module.scss';
-import { createClip } from '../../../lib/arrangementFactory';
-import { useTracks } from '../../../contexts/TracksContext';
 import { findTrackAt, mergeClipChanges } from './helpers';
 
 interface GridPros {
@@ -19,7 +19,7 @@ interface GridPros {
 }
 
 export function Grid({ clips, tracks }: GridPros): JSX.Element {
-  const { audioContext, project, localAudioBuffers } = useProject();
+  const { audioContext, localAudioBuffers, project } = useProject();
   const { setClips } = useTracks();
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(120);

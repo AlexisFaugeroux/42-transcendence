@@ -53,53 +53,58 @@ const followsLookup: Record<string, string[]> = {
 };
 
 async function seedDb() {
-  console.log('Create PLATEFORM owner...');
-  await prisma.owner.create({
-    data: {
-      type: OwnerType.PLATEFORM,
-    },
-  });
+  const rows = await prisma.$queryRaw<{ exists: boolean }[]>`
+    SELECT EXISTS (SELECT 1 FROM "User") AS "exists"
+  `;
+  if (rows[0].exists) {
+    console.log('Database not empty, skipping seed.');
+  }
 
-  console.log('Create users...');
-  const userPromises = users.map((user) =>
-    prisma.user.create({
+  await prisma.$transaction(async (tx) => {
+    console.log('Create PLATEFORM owner...');
+    await tx.owner.create({
       data: {
-        ...user,
-        owner: {
-          create: {
-            type: OwnerType.USER,
+        type: OwnerType.PLATEFORM,
+      },
+    });
+
+    console.log('Create users...');
+    for (const user of users) {
+      await tx.user.create({
+        data: {
+          ...user,
+          owner: {
+            create: {
+              type: OwnerType.USER,
+            },
           },
         },
-      },
-    }),
-  );
+      });
+    }
 
-  await Promise.all(userPromises);
-
-  console.log('Create follows...');
-  const followsPromise = Object.entries(followsLookup).map(([pseudo, followingPseudo]) =>
-    prisma.user.update({
-      data: {
-        following: {
-          set: followingPseudo.map((pseudo) => ({ pseudo })),
+    console.log('Create follows...');
+    for (const [pseudo, followingPseudo] of Object.entries(followsLookup)) {
+      await tx.user.update({
+        data: {
+          following: {
+            set: followingPseudo.map((pseudo) => ({ pseudo })),
+          },
         },
-      },
-      where: {
-        pseudo,
-      },
-    }),
-  );
-
-  for (const promise of followsPromise) {
-    await promise;
-  }
+        where: {
+          pseudo,
+        },
+      });
+    }
+  });
 }
 
 try {
   console.log('Start seeding db....');
   await seedDb();
   console.log('Seeding complete !');
+  await prisma.$disconnect();
 } catch (error) {
   console.error(error);
+  await prisma.$disconnect();
   process.exit(1);
 }
