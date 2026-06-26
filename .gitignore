@@ -1,8 +1,13 @@
 .DS_Store
 .vscode
+**/.claude
 
 .env
+.env.prod
 **/.env
+**/.env.prod
+infra/nginx/certs
+
 **/build
 **/dist
 **/node_modules

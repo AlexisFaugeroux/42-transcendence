@@ -1,12 +1,13 @@
 import type { FC } from 'react';
 import { Browser } from '../Browser/Browser';
+import type { StudioIconLabel } from '../components/StudioIcon/types';
 import { Devices } from '../Devices/Devices';
 import { Editor } from '../Editor/Editor';
 import { Timeline } from '../Timeline/Timeline';
 import { PanelHeader } from './PanelHeader';
 
 export interface PanelHeaderProps {
-  icon: string;
+  icon: StudioIconLabel;
   id: Panel['id'];
   label: string;
   onToggle: (id: Panel['id']) => void;

@@ -1,10 +1,11 @@
 import type { JSX } from 'react';
+import type { StudioIconLabel } from '../components/StudioIcon/types';
 import styles from './PanelFrame.module.scss';
 import { type Panel, panels } from './panels';
 
 interface PanelFramePros {
   id: Panel['id'];
-  icon: string;
+  icon: StudioIconLabel;
   className?: string;
   isVisible: (id: Panel['id']) => boolean;
   onToggle: (id: Panel['id']) => void;

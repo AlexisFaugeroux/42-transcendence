@@ -1,14 +1,79 @@
 services:
-  transcendance_db_data :
+  db:
     image: postgres:18-alpine
     env_file:
       - 'apps/back/.env'
     restart : always
-    ports:
-      - 5432:5432
     volumes:
-      - transcendance_db_data:/var/lib/postgresql
+      - db_data:/var/lib/postgresql
+      - ./infra/postgres:/docker-entrypoint-initdb.d:ro
+    networks:
+      - transcendence_net
+
+  nginx-audio:
+    image: nginx:1.30.3-alpine
+    restart: always
+    expose:
+      - '80'
+    volumes:
+     - ./infra/nginx/audio.conf:/etc/nginx/conf.d/default.conf:ro
+     - audio_data:/var/www/audio:ro
+    networks:
+      - transcendence_net
+
+  back:
+    profiles:
+      - 'prod'
+    build: { context: ., dockerfile: apps/back/Dockerfile }
+    env_file:
+      - 'apps/back/.env.prod'
+    restart: always
+    depends_on:
+      - 'db'
+    networks:
+      - transcendence_net
+
+  front:
+    profiles:
+      - 'prod'
+    build: { context: ., dockerfile: apps/front/Dockerfile }
+    restart: always
+    networks:
+      - transcendence_net
+      
+  studio:
+    profiles:
+     - 'prod'
+    build: { context: ., dockerfile: apps/studio/Dockerfile }
+    restart: always
+    networks:
+      - transcendence_net
+
+  reverse-proxy:
+    profiles:
+      - 'prod'
+    image: nginx:1.30.3-alpine
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - front
+      - studio
+      - back
+      - nginx-audio
+    volumes:
+      - ./infra/nginx/reverse-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./infra/nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - transcendence_net
+
+networks:
+  transcendence_net:
+    name: transcendence_net
 
 volumes:
-  transcendance_db_data:
-    name: transcendance_db_data
+  audio_data:
+    name: audio_data
+  db_data:
+    name: db_data

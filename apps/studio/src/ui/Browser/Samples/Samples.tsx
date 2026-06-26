@@ -1,5 +1,5 @@
 import { UUID } from '@opendaw/lib-std';
-import { type JSX, useEffect, useState, type DragEvent } from 'react';
+import { type DragEvent, type JSX, useEffect, useState } from 'react';
 import { ConfigProvider, Table, type TableColumnsType } from '@ui/index';
 import { theme } from '@ui/theme/theme';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
