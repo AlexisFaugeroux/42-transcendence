@@ -1,17 +1,17 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import fp from 'fastify-plugin';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import fp from 'fastify-plugin';
 import { SessionRepository, sessionRepository } from '../repositories/session';
 
 export function authCookieOptions() {
   return {
     httpOnly: true,
+    maxAge: Math.floor(SessionRepository.TTL_MS / 1000),
+    path: '/',
     sameSite: 'lax' as const,
     secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: Math.floor(SessionRepository.TTL_MS / 1000),
   };
 }
 
@@ -21,8 +21,8 @@ async function authPlugin(app: FastifyInstance) {
 
   await app.register(cookie);
   await app.register(jwt, {
-    secret,
     cookie: { cookieName: 'token', signed: false },
+    secret,
     sign: { expiresIn: '7d' },
   });
   // global: false → only routes that opt in via `config.rateLimit` are limited,
