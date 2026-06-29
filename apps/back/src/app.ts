@@ -1,6 +1,6 @@
 import Fastify, { type FastifyInstance } from 'fastify';
-import authPlugin from './plugins/auth';
 import { authRoutes } from './routes/auth';
+import authPlugin from './plugins/auth';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?

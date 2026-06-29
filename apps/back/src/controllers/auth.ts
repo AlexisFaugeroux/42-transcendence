@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { hashPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
 
+
 interface RegisterBody {
   email: string;
   pseudo: string;
