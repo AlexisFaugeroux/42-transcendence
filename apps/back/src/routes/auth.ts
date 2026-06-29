@@ -35,4 +35,6 @@ export function authRoutes(app: FastifyInstance) {
     { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: loginSchema },
     authController.login,
   );
+  app.get('/api/auth/me', { preHandler: app.authenticate }, authController.me);
+  app.post('/api/auth/logout', { preHandler: app.authenticate }, authController.logout);
 }
