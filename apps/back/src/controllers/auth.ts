@@ -1,11 +1,17 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { hashPassword } from '../utils/password';
+import { authCookieOptions } from '../plugins/auth';
+import { sessionRepository } from '../repositories/session';
+import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
-
 
 interface RegisterBody {
   email: string;
   pseudo: string;
+  password: string;
+}
+
+interface LoginBody {
+  email: string;
   password: string;
 }
 
@@ -32,6 +38,21 @@ export class AuthController {
     });
 
     return reply.code(201).send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
+  };
+
+  public login = async (req: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
+    const { email, password } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user || !(await verifyPassword(password, user.password))) {
+      return reply.code(401).send({ error: 'invalid credentials' });
+    }
+
+    const session = await sessionRepository.create(user.id, req.headers['user-agent']);
+    const token = req.server.signAuthToken({ sid: session.id, sub: user.id });
+    reply.setCookie('token', token, authCookieOptions());
+
+    return reply.code(200).send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
 }
 
