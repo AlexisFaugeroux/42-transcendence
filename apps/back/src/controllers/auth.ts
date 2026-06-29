@@ -54,6 +54,18 @@ export class AuthController {
 
     return reply.code(200).send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
+  
+  public me = async (req: FastifyRequest, reply: FastifyReply) => {
+    const user = await prisma.user.findUnique({ where: { id: req.authUser.id } });
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    return reply.send({ user: { id: user.id, email: user.email, pseudo: user.pseudo, role: user.role } });
+  };
+
+  public logout = async (req: FastifyRequest, reply: FastifyReply) => {
+    await sessionRepository.revoke(req.authUser.sid);
+    reply.clearCookie('token', { path: '/' });
+    return reply.code(204).send();
+  };
 }
 
 // Singleton shared by the route layer.
