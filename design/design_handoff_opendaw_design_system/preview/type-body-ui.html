@@ -1,17 +1,75 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Type — Body & UI</title>
-<link rel="stylesheet" href="../colors_and_type.css">
-<style>
-  body { padding: 16px 20px; background: var(--bg-app); color: var(--fg1); }
-  .row { display: flex; align-items: baseline; gap: 14px; padding: 4px 0; border-bottom: 1px solid var(--line-faint); }
-  .row:last-child { border: 0; }
-  .meta { color: var(--fg3); font-family: var(--font-mono); font-size: 9px; flex: 0 0 180px; }
-  .demo { flex: 1; }
-</style></head>
-<body>
-  <div class="row"><div class="meta">Rubik 300 · 12px · UI default</div><div class="demo" style="font-size: 12px; color: var(--fg1)">Audio Output Latency · Primary Tracks · Tempo</div></div>
-  <div class="row"><div class="meta">Rubik 300 · 11px · footer</div><div class="demo" style="font-size: 11px; color: var(--fg2)">Storage 41% · Sample rate 48000 Hz</div></div>
-  <div class="row"><div class="meta">Rubik 300 · 10px · tiny label</div><div class="demo" style="font-size: 10px; color: var(--fg3); letter-spacing: 0.02em">CPU · MEM · IN · OUT</div></div>
-  <div class="row"><div class="meta">Open Sans 400 · 13px</div><div class="demo" style="font-family: var(--font-body); font-size: 13px; color: var(--fg2)">openDAW respects your privacy. This application does not collect personal data.</div></div>
-  <div class="row"><div class="meta">Mono · 11px · code</div><div class="demo"><code>noteOn(60, 100)</code></div></div>
-</body></html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Type — Body & UI</title>
+    <link rel="stylesheet" href="../colors_and_type.css" />
+    <style>
+      body {
+        padding: 16px 20px;
+        background: var(--bg-app);
+        color: var(--fg1);
+      }
+      .row {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--line-faint);
+      }
+      .row:last-child {
+        border: 0;
+      }
+      .meta {
+        color: var(--fg3);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        flex: 0 0 180px;
+      }
+      .demo {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div class="meta">Rubik 300 · 12px · UI default</div>
+      <div class="demo" style="font-size: 12px; color: var(--fg1)">
+        Audio Output Latency · Primary Tracks · Tempo
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">Rubik 300 · 11px · footer</div>
+      <div class="demo" style="font-size: 11px; color: var(--fg2)">
+        Storage 41% · Sample rate 48000 Hz
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">Rubik 300 · 10px · tiny label</div>
+      <div
+        class="demo"
+        style="font-size: 10px; color: var(--fg3); letter-spacing: 0.02em"
+      >
+        CPU · MEM · IN · OUT
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">Open Sans 400 · 13px</div>
+      <div
+        class="demo"
+        style="
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: var(--fg2);
+        "
+      >
+        openDAW respects your privacy. This application does not collect
+        personal data.
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">Mono · 11px · code</div>
+      <div class="demo"><code>noteOn(60, 100)</code></div>
+    </div>
+  </body>
+</html>

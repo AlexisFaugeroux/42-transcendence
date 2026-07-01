@@ -39,21 +39,21 @@ There are two important top-level folders:
 
 This is where the **applications** live -- the things that actually run. Each subfolder is a standalone app with its own `package.json`.
 
-| App | Description |
-|-----|-------------|
-| `back` | The backend server |
-| `front` | The frontend client |
-| `studio` | The DAW studio |
+| App      | Description         |
+| -------- | ------------------- |
+| `back`   | The backend server  |
+| `front`  | The frontend client |
+| `studio` | The DAW studio      |
 
 ### `packages/`
 
 This is where the **shared packages** live -- reusable pieces of code that apps (or other packages) can depend on. They are not meant to run on their own.
 
-| Package | Description |
-|---------|-------------|
-| `eslint-config` | A shared set of ESLint rules so all apps lint code the same way |
-| `prettier-config` | A shared Prettier config so all apps format code the same way |
-| `ui` | Shared UI components that can be used by `front`, `studio`, or any future app |
+| Package           | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `eslint-config`   | A shared set of ESLint rules so all apps lint code the same way               |
+| `prettier-config` | A shared Prettier config so all apps format code the same way                 |
+| `ui`              | Shared UI components that can be used by `front`, `studio`, or any future app |
 
 ## How packages reference each other
 
@@ -93,13 +93,13 @@ This means every folder inside `apps/` and `packages/` that has a `package.json`
 
 All commands should be run **from the root** of the monorepo.
 
-| Command | What it does |
-|---------|-------------|
-| `pnpm install` | Install dependencies for **all** apps and packages at once |
-| `pnpm --filter @transcendence/studio dev` | Run the `dev` script only in the `studio` app |
-| `pnpm --filter @transcendence/back test` | Run the `test` script only in the `back` app |
-| `pnpm run check` | Run the root-level `check` script (prettier + eslint) |
-| `pnpm run fix` | Auto-fix formatting and lint issues |
+| Command                                   | What it does                                               |
+| ----------------------------------------- | ---------------------------------------------------------- |
+| `pnpm install`                            | Install dependencies for **all** apps and packages at once |
+| `pnpm --filter @transcendence/studio dev` | Run the `dev` script only in the `studio` app              |
+| `pnpm --filter @transcendence/back test`  | Run the `test` script only in the `back` app               |
+| `pnpm run check`                          | Run the root-level `check` script (prettier + eslint)      |
+| `pnpm run fix`                            | Auto-fix formatting and lint issues                        |
 
 The `--filter` flag is how you target a specific app or package. The value after `--filter` is the `name` field from that package's `package.json`.
 

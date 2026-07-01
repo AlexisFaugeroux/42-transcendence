@@ -2,8 +2,8 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
-  '@parcel/watcher': false
-  '@prisma/engines': false
+  "@parcel/watcher": false
+  "@prisma/engines": false
   esbuild: true
   leveldown: true
   prisma: false

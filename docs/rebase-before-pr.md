@@ -21,7 +21,7 @@ reach a similar result but produce very different histories.
 
 ## The two strategies, side by side
 
-### Merge — *combine* the two histories
+### Merge — _combine_ the two histories
 
 `git merge origin/main` creates a brand-new **merge commit** (`M`) that ties the
 two histories together. Your original commits stay exactly where they were.
@@ -36,7 +36,7 @@ two histories together. Your original commits stay exactly where they were.
 - ❌ History becomes a **tangle of branches** with extra merge commits.
 - ❌ The graph no longer reads as a simple story of "what changed."
 
-### Rebase — *replay* your work on top of the latest `main`
+### Rebase — _replay_ your work on top of the latest `main`
 
 `git rebase origin/main` takes your commits, sets them aside, fast-forwards your
 branch to the tip of `main`, then **replays your commits one by one** on top.
@@ -47,10 +47,10 @@ branch to the tip of `main`, then **replays your commits one by one** on top.
   D---E---F---G              origin/main
 ```
 
-- ✅ History stays **linear** — it reads like you started your work *today*, from
+- ✅ History stays **linear** — it reads like you started your work _today_, from
   the current `main`.
 - ✅ No noisy merge commits; the PR diff shows only your changes.
-- ⚠️ Your commits are **rewritten** — `A B C` become *new* commits `A' B' C'`
+- ⚠️ Your commits are **rewritten** — `A B C` become _new_ commits `A' B' C'`
   with new hashes. This is why a rebased branch needs a force-push (see below).
 
 ### Why we prefer rebase here
@@ -60,7 +60,7 @@ A clean, linear history makes pull requests easier to review and `git log` /
 reviewer sees a tidy series of commits applied on top of current `main`, with no
 merge noise.
 
-> Rule of thumb: **rebase to update your *own* branch before a PR; never rebase a
+> Rule of thumb: **rebase to update your _own_ branch before a PR; never rebase a
 > branch other people are already building on.** Rewriting shared history forces
 > everyone else to untangle their copies.
 

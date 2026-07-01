@@ -15,6 +15,7 @@
   },
   "prettier": "@transcendence/prettier-config",
   "dependencies": {
+    "@tanstack/react-query": "5.101.2",
     "@transcendence/ui": "workspace:*",
     "antd": "6.4.4",
     "react": "19.2.6",

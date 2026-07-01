@@ -1,31 +1,31 @@
+import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input } from '@transcendence/ui';
 import { theme } from '@transcendence/ui/theme';
 import { type JSX, useState } from 'react';
+import { useNavigate, type FormProps } from 'react-router-dom';
 import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
 import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
+import { loginFetch } from '../../api/auth.ts';
+import type { SignInValues } from '../../utils/types.ts';
 import styles from './SignIn.module.scss';
-
-interface SignInValues {
-  email: string;
-  password: string;
-}
 
 export default function SignIn(): JSX.Element {
   const [form] = Form.useForm<SignInValues>();
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const {
+    isPending,
+    mutate: loginMutation,
+  } = useMutation({
+    mutationFn: loginFetch,
+    onSuccess: () => { navigate('/'); },
+    onError: () => { 
+      form.setFields(
+        [{name: 'password', errors: ['Invalid email or password.']}]); 
+    }
+  });
 
-  // antd calls onFinish only after all the validation rules pass.
-  const onFinish = (values: SignInValues): void => {
-    setLoading(true);
-
-    // TODO: replace this fake delay with the real backend request later.
-    window.setTimeout(() => {
-      setLoading(false);
-      console.log('Sign-in submitted:', values);
-
-      // --- Want to preview the error state? Uncomment the next line: ---
-      // form.setFields([{ name: 'password', errors: ["That password doesn't match our records."] }]);
-    }, 1200);
+  const submit = async (values: SignInValues) => {
+    loginMutation(values);
   };
 
   return (
@@ -42,7 +42,7 @@ export default function SignIn(): JSX.Element {
           <p className={styles.subtitle}>Pick up your session, your friends, your beats.</p>
 
           <div className={styles.card}>
-            <Form form={form} layout="vertical" requiredMark={false} onFinish={onFinish}>
+            <Form form={form} layout="vertical" requiredMark={false} onFinish={submit}>
               <Form.Item
                 label="Email"
                 name="email"
@@ -69,8 +69,8 @@ export default function SignIn(): JSX.Element {
               </div>
 
               <Form.Item>
-                <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={loading}>
-                  {loading ? 'SIGNING IN…' : 'LOG IN →'}
+                <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={isPending}>
+                  {isPending ? 'SIGNING IN…' : 'LOG IN →'}
                 </Button>
               </Form.Item>
             </Form>
