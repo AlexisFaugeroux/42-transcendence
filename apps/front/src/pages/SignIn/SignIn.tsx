@@ -78,7 +78,7 @@ export default function SignIn(): JSX.Element {
 
           <div className={styles.footer}>
             New here?{' '}
-            <a className={styles.link} href="#">
+            <a className={styles.link} href="/signup">
               Create an account →
             </a>
           </div>
