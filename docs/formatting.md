@@ -46,27 +46,27 @@ The configuration lives in `packages/prettier-config/prettierrc.js`:
 
 ```js
 export default {
-  arrowParens: 'always',
+  arrowParens: "always",
   jsonRecursiveSort: true,
   printWidth: 120,
   semi: true,
   singleQuote: true,
   tabWidth: 2,
-  trailingComma: 'all',
+  trailingComma: "all",
 };
 ```
 
 Here is what each rule means in practice:
 
-| Rule | Value | What you write | What Prettier outputs |
-|------|-------|---------------|----------------------|
-| `singleQuote` | `true` | `"hello"` | `'hello'` |
-| `semi` | `true` | `const x = 1` | `const x = 1;` |
-| `tabWidth` | `2` | any indentation | 2-space indentation |
-| `printWidth` | `120` | a very long line | line is split if it exceeds 120 characters |
-| `trailingComma` | `'all'` | `[1, 2, 3]` | `[1, 2, 3,]` (comma after `3`) |
-| `arrowParens` | `'always'` | `x => x + 1` | `(x) => x + 1` |
-| `jsonRecursiveSort` | `true` | unordered JSON keys | keys sorted alphabetically |
+| Rule                | Value      | What you write      | What Prettier outputs                      |
+| ------------------- | ---------- | ------------------- | ------------------------------------------ |
+| `singleQuote`       | `true`     | `"hello"`           | `'hello'`                                  |
+| `semi`              | `true`     | `const x = 1`       | `const x = 1;`                             |
+| `tabWidth`          | `2`        | any indentation     | 2-space indentation                        |
+| `printWidth`        | `120`      | a very long line    | line is split if it exceeds 120 characters |
+| `trailingComma`     | `'all'`    | `[1, 2, 3]`         | `[1, 2, 3,]` (comma after `3`)             |
+| `arrowParens`       | `'always'` | `x => x + 1`        | `(x) => x + 1`                             |
+| `jsonRecursiveSort` | `true`     | unordered JSON keys | keys sorted alphabetically                 |
 
 The config also includes two plugins:
 
@@ -91,10 +91,10 @@ shared package automatically.
 
 From the **root** of the monorepo:
 
-| Command | What it does |
-|---------|-------------|
+| Command          | What it does                                                             |
+| ---------------- | ------------------------------------------------------------------------ |
 | `pnpm run check` | Checks formatting (and linting) -- reports issues without changing files |
-| `pnpm run fix` | Fixes formatting (and linting) -- rewrites files in place |
+| `pnpm run fix`   | Fixes formatting (and linting) -- rewrites files in place                |
 
 Under the hood, these commands run:
 

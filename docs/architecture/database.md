@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: transcendence
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -46,6 +46,7 @@ row-level security. The relational schema would carry over since Supabase runs
 standard PostgreSQL.
 
 Key benefits of a Supabase migration:
+
 - Built-in auth (Supabase Auth) instead of rolling our own
 - Row Level Security (RLS) for client-direct access patterns
 - Keeps the VPS lightweight (nginx + Node.js only)
@@ -56,9 +57,8 @@ This is not planned for the MVP — just noted as a potential evolution.
 
 - Auth strategy (custom JWT vs future Supabase Auth)
 - Migration tooling (raw SQL scripts, a migration library, or Supabase CLI later)
-- Schema design for users, sessions, samples, projects
-=======
-Last updated: 2026-05-26
+- # Schema design for users, sessions, samples, projects
+  Last updated: 2026-05-26
 
 ## Preferred solution: Supabase
 
@@ -79,15 +79,16 @@ and makes 2 GB VPS RAM sufficient.
 The Node.js backend and/or the client use `@supabase/supabase-js`:
 
 ```ts
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+);
 ```
 
 Two access patterns:
+
 - **Backend as middleman** — API receives requests, queries Supabase, returns results
 - **Client direct** — browser talks to Supabase for auth/realtime, secured by Row Level Security (RLS)
 

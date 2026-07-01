@@ -1,5 +1,5 @@
 /* Google Fonts substitute — flagged: original openDAW Rubik/Open Sans .woff2 not provided */
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&family=Open+Sans:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&family=Open+Sans:wght@400;600&display=swap");
 
 /* openDAW Design System — Colors & Type
    Source: extracted from openDAW Studio codebase (ui/Fonts.ts, Colors enum,
@@ -53,9 +53,9 @@
   --color-active-parent: hsla(210, 90%, 30%, 0.5);
 
   /* === Type Stacks === */
-  --font-display: 'Rubik', system-ui, sans-serif; /* UI/headers */
-  --font-body: 'Open Sans', system-ui, sans-serif; /* prose */
-  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+  --font-display: "Rubik", system-ui, sans-serif; /* UI/headers */
+  --font-body: "Open Sans", system-ui, sans-serif; /* prose */
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
 
   /* === Type Scale (UI is dense — small sizes dominate) === */
   --fs-10: 10px; /* footer, tiny labels */
@@ -76,7 +76,8 @@
   /* === Shadows === */
   --glow-active: 0 0 3px -1px var(--color-active);
   --glow-frame: 0 0 3px -1px currentColor;
-  --shadow-floating: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-floating:
+    0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
 
   /* === Spacing (em-based; UI uses em widely) === */
   --gap-1: 0.25em;

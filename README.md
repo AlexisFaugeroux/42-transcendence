@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by `<login1>`, `<login2>`, `<login3>`, ...*
+_This project has been created as part of the 42 curriculum by `<login1>`, `<login2>`, `<login3>`, ..._
 
 # MakeSomeNoise
 
@@ -50,11 +50,11 @@ management, and a social layer (following producers).
 
 > **⚠️ TODO (team to fill in).** For each member listed in the first line of this README:
 >
-> | Member (login) | Name | Role(s) | Responsibilities |
-> |---|---|---|---|
-> | `<login1>` | … | PO / PM / Tech Lead / Developer | … |
-> | `<login2>` | … | … | … |
-> | `<login3>` | … | … | … |
+> | Member (login) | Name | Role(s)                         | Responsibilities |
+> | -------------- | ---- | ------------------------------- | ---------------- |
+> | `<login1>`     | …    | PO / PM / Tech Lead / Developer | …                |
+> | `<login2>`     | …    | …                               | …                |
+> | `<login3>`     | …    | …                               | …                |
 
 ---
 
@@ -70,15 +70,15 @@ management, and a social layer (following producers).
 
 ## Technical Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | React 19 + TypeScript, Vite, SASS modules, Ant Design, React Router |
-| **Audio engine (studio)** | [`@opendaw/*`](https://github.com/andremichelle/openDAW-headless) SDK |
-| **Backend** | Node.js, [Fastify](https://fastify.dev/) (`@fastify/jwt`, `@fastify/cookie`, `@fastify/rate-limit`) |
-| **ORM / DB access** | [Prisma](https://www.prisma.io/) (`@prisma/client`, `@prisma/adapter-pg`, `pg`) |
-| **Database** | PostgreSQL 18 |
-| **Reverse proxy / static / audio** | nginx (TLS termination, static serving, `auth_request`) |
-| **Tooling** | pnpm workspace monorepo, Docker & Docker Compose, esbuild, Vite |
+| Layer                              | Technology                                                                                          |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Frontend**                       | React 19 + TypeScript, Vite, SASS modules, Ant Design, React Router                                 |
+| **Audio engine (studio)**          | [`@opendaw/*`](https://github.com/andremichelle/openDAW-headless) SDK                               |
+| **Backend**                        | Node.js, [Fastify](https://fastify.dev/) (`@fastify/jwt`, `@fastify/cookie`, `@fastify/rate-limit`) |
+| **ORM / DB access**                | [Prisma](https://www.prisma.io/) (`@prisma/client`, `@prisma/adapter-pg`, `pg`)                     |
+| **Database**                       | PostgreSQL 18                                                                                       |
+| **Reverse proxy / static / audio** | nginx (TLS termination, static serving, `auth_request`)                                             |
+| **Tooling**                        | pnpm workspace monorepo, Docker & Docker Compose, esbuild, Vite                                     |
 
 **Justification for major technical choices:**
 
@@ -180,11 +180,11 @@ cp apps/back/.env.example apps/back/.env.prod   # production
 
 Then set the values:
 
-| Variable | Notes |
-|----------|-------|
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container) |
-| `POSTGRES_URL` | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod` |
-| `JWT_SECRET` | A strong random secret for signing JWTs |
+| Variable                                            | Notes                                                                                                                          |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                     |
+| `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod` |
+| `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                        |
 
 > Two databases live in a single Postgres instance: `transcendence_dev` and
 > `transcendence_prod` (created by `infra/postgres/init_databases.sql`). Each environment
@@ -231,15 +231,15 @@ pnpm --filter @transcendence/studio dev           # studio
 > **⚠️ TODO (team to confirm status and owners).** Candidate features detected in the
 > codebase — confirm what is actually implemented and who worked on each.
 >
-> | Feature | Description | Status | Owner(s) |
-> |---|---|---|---|
-> | Web DAW (studio) | Drag-and-drop samples onto the timeline, transport, playback | … | … |
-> | Samples library | Browse and manage audio samples | … | … |
-> | Authentication | Accounts, JWT, sessions | … | … |
-> | Social graph | Follow / followers | … | … |
-> | Audio file access control | nginx `auth_request` → backend ownership check | … | … |
-> | Recorder | Live sessions / podcasts | … | … |
-> | Mixer | Mixing / mastering | … | … |
+> | Feature                   | Description                                                  | Status | Owner(s) |
+> | ------------------------- | ------------------------------------------------------------ | ------ | -------- |
+> | Web DAW (studio)          | Drag-and-drop samples onto the timeline, transport, playback | …      | …        |
+> | Samples library           | Browse and manage audio samples                              | …      | …        |
+> | Authentication            | Accounts, JWT, sessions                                      | …      | …        |
+> | Social graph              | Follow / followers                                           | …      | …        |
+> | Audio file access control | nginx `auth_request` → backend ownership check               | …      | …        |
+> | Recorder                  | Live sessions / podcasts                                     | …      | …        |
+> | Mixer                     | Mixing / mastering                                           | …      | …        |
 
 ---
 
@@ -247,9 +247,9 @@ pnpm --filter @transcendence/studio dev           # studio
 
 > **⚠️ TODO (team to fill in).** List every chosen `ft_transcendence` module.
 >
-> | Module | Type | Points | Justification & implementation | Owner(s) |
-> |---|---|---|---|---|
-> | … | Major (2 pts) / Minor (1 pt) | … | … | … |
+> | Module | Type                         | Points | Justification & implementation | Owner(s) |
+> | ------ | ---------------------------- | ------ | ------------------------------ | -------- |
+> | …      | Major (2 pts) / Minor (1 pt) | …      | …                              | …        |
 >
 > **Total: `<sum>` points** (Major = 2 pts, Minor = 1 pt).
 

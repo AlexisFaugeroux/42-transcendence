@@ -17,11 +17,11 @@ as static content.
 
 ### Alternatives considered
 
-| Option | Notes |
-|---|---|
-| Cloudflare R2 | 10 GB free, no egress fees |
-| Backblaze B2 + Cloudflare CDN | 10 GB free, zero egress |
-| Oracle Cloud Free Tier | Free ARM VPS, unreliable availability |
+| Option                        | Notes                                 |
+| ----------------------------- | ------------------------------------- |
+| Cloudflare R2                 | 10 GB free, no egress fees            |
+| Backblaze B2 + Cloudflare CDN | 10 GB free, zero egress               |
+| Oracle Cloud Free Tier        | Free ARM VPS, unreliable availability |
 
 ## Initial upload
 

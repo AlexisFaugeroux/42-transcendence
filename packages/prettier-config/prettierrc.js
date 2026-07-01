@@ -1,29 +1,29 @@
 export default {
-  arrowParens: 'always',
+  arrowParens: "always",
   jsonRecursiveSort: true,
   overrides: [
     {
-      files: '*.md',
+      files: "*.md",
       options: {
-        proseWrap: 'always',
+        proseWrap: "always",
       },
     },
     {
-      files: ['*.yaml', '*.yml'],
+      files: ["*.yaml", "*.yml"],
       options: {
-        parser: 'yaml',
+        parser: "yaml",
         singleQuote: false,
-        quoteProps: 'as-needed',
+        quoteProps: "as-needed",
       },
     },
   ],
   plugins: [
-    import.meta.resolve('prettier-plugin-sort-json'),
-    import.meta.resolve('prettier-plugin-packagejson'),
+    import.meta.resolve("prettier-plugin-sort-json"),
+    import.meta.resolve("prettier-plugin-packagejson"),
   ],
   printWidth: 120,
   semi: true,
   singleQuote: true,
   tabWidth: 2,
-  trailingComma: 'all',
+  trailingComma: "all",
 };

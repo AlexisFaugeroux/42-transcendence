@@ -25,7 +25,7 @@ how we make the wristband, how the browser carries it, and how we check it.
 **JWT (JSON Web Token).** A small string with three parts: a header, a payload
 (some JSON data we choose), and a **signature**. We sign the payload with a
 secret key only the server knows. Later, anyone can hand the token back to us and
-we can verify the signature to be sure *we* issued it and nobody tampered with
+we can verify the signature to be sure _we_ issued it and nobody tampered with
 the payload. The key word is **verify, not look up**: checking a signature is
 pure math, so it needs no database. That makes JWTs fast — but, as we'll see, it
 also creates a problem.
@@ -47,7 +47,7 @@ signature and never stores the token, there's no "off switch." If someone logs
 out — or we want to kill a stolen token — the token stays valid until it expires
 on its own. That's unacceptable: logout has to actually log you out.
 
-Our fix: the JWT doesn't just say *who* you are, it also carries a **session id**
+Our fix: the JWT doesn't just say _who_ you are, it also carries a **session id**
 (`sid`) that points at a `Session` row in Postgres. On every request we do two
 cheap steps:
 
@@ -68,7 +68,7 @@ existing architecture rather than new overhead.
 
 JWTs can be signed in different ways. We use **HS256** — one shared secret that
 both signs and verifies. The alternative, RS256, uses a private key to sign and a
-public key to verify, which matters when *many separate services* need to verify
+public key to verify, which matters when _many separate services_ need to verify
 tokens they didn't issue. We have a single backend, so there's no
 key-distribution problem to solve. One secret is the simpler, correct choice.
 
@@ -95,12 +95,12 @@ Four small, independently testable units. The HTTP routes wire them together;
 **no route talks to Prisma or the JWT library directly.** Keeping each concern in
 its own unit is what makes the whole thing testable and easy to reason about.
 
-| Unit | What it does | Built on |
-|---|---|---|
-| `password` util | Hash a password; verify a password against a hash | `node:crypto` (scrypt) |
-| `token` util | Sign a JWT; verify a JWT | `@fastify/jwt`, `JWT_SECRET` |
-| `session` service | Create, look up, and revoke session rows | Prisma |
-| `authenticate` hook | Read cookie → verify JWT → check session → attach `req.user` | the three units above |
+| Unit                | What it does                                                 | Built on                     |
+| ------------------- | ------------------------------------------------------------ | ---------------------------- |
+| `password` util     | Hash a password; verify a password against a hash            | `node:crypto` (scrypt)       |
+| `token` util        | Sign a JWT; verify a JWT                                     | `@fastify/jwt`, `JWT_SECRET` |
+| `session` service   | Create, look up, and revoke session rows                     | Prisma                       |
+| `authenticate` hook | Read cookie → verify JWT → check session → attach `req.user` | the three units above        |
 
 The `authenticate` hook is the glue: it's the function every protected route runs
 first. If it succeeds, the route can trust `req.user`; if not, the request is

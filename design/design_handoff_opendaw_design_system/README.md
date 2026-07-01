@@ -5,6 +5,7 @@
 This package documents the openDAW visual language — colors, typography, spacing, components, and brand — as observed in the openDAW Studio codebase (`opendaw.studio`, an open-source web-based DAW). It includes a hi-fi click-thru prototype of the Studio shell (Dashboard → Arrangement → Mixer) plus 14 isolated reference cards covering the design tokens and component vocabulary.
 
 The intent is to give a developer everything they need to either:
+
 - Build new openDAW screens consistent with the existing app, or
 - Re-skin / extend an openDAW fork while preserving its visual identity.
 
@@ -13,11 +14,12 @@ The intent is to give a developer everything they need to either:
 **The HTML files in this bundle are design references, not production code.** They were produced as static HTML + inline-Babel React, hardcoded values, no real audio engine. Do not ship them as-is.
 
 The openDAW codebase is **TypeScript + custom JSX runtime (`@opendaw/lib-jsx`) + SASS-modules**. When implementing:
+
 - Use the existing `@opendaw/lib-jsx` `createElement` import and SASS-with-`@use "@/colors"` pattern — do **not** introduce React, styled-components, or Tailwind.
 - Reuse existing primitives in `ui/components/` (`Button`, `Knob`, `Checkbox`, `MenuButton`, `RadioGroup`, `PeakMeter`, `Icon`) — the prototype re-implements them only because the real ones aren't standalone.
 - Read tokens from `Colors` (`@opendaw/studio-enums`) and `IconSymbol` rather than hardcoded hex / SVG paths.
 
-If applying this design *outside* the openDAW codebase (a separate marketing site, a companion tool), pick the framework that best fits and translate the tokens — they are framework-agnostic CSS variables.
+If applying this design _outside_ the openDAW codebase (a separate marketing site, a companion tool), pick the framework that best fits and translate the tokens — they are framework-agnostic CSS variables.
 
 ## Fidelity
 
@@ -35,11 +37,13 @@ If applying this design *outside* the openDAW codebase (a separate marketing sit
 **Purpose:** Welcome screen. First view on cold start. User picks a demo project or follows resource links.
 
 **Layout:**
+
 - Vertical-scrolling article, centered, max-width `900px`, padded `32px 24px`.
 - Background: `var(--bg-panel-2)` = `hsl(197, 14%, 8%)`.
 - Article content stack: `h1` → `h2` → intro paragraph → 2-column grid (Demo Projects 1fr / Resources `240px` fixed) → footer paragraph.
 
 **Components:**
+
 - **`h1` "Welcome to openDAW"** — Rubik 400, 36px, color `white`, margin `0 0 0.05em -3px` (the negative left-margin is intentional, optical alignment).
 - **`h2` "A new holistic exploration of music creation inside your browser"** — Rubik 400, 18px, color `var(--color-blue)` = `hsl(210, 90%, 50%)`, margin `0`.
 - **Intro paragraph** — Open Sans 400, 13px, color `var(--fg2)` = `hsl(0, 0%, 56%)`, line-height `1.55`. Inline `<a>` use `var(--color-blue)`.
@@ -56,11 +60,13 @@ If applying this design *outside* the openDAW codebase (a separate marketing sit
 **Purpose:** Persistent top bar across all studio screens. Holds brand menu, undo/redo, MIDI/help, transport, time displays, master peak meter, screen selector, performance stats.
 
 **Layout:**
+
 - Height `2.5em` (≥ 36px), background `var(--bg-panel)` = `hsl(197, 14%, 6%)`, bottom border `1px solid var(--line-faint)`.
 - Single horizontal flex row, padding `0 6px`. Sections separated by `<Hr/>` — a 1px vertical divider in `var(--line-faint)` with `6px` horizontal margin.
 - Order: Brand menu · Hr · Undo/Redo · Hr · MIDI + Help · Hr · Transport (Play/Stop/Record/Loop) · Hr · UnitDisplays (BPM, Sig, Bars, Time) · Hr · Metronome · Hr · `flex: 1` spacer · Hr · master PeakMeter · Hr · Screen selector · Hr · Performance stats.
 
 **Components:**
+
 - **Brand menu** — `<button>`, transparent bg, contains `<h5>openDAW</h5>` (Rubik 400 12px `var(--fg1)`) + 10px triangle icon `var(--fg2)`. On hover → fg becomes `var(--fg1)`.
 - **IconButton** (undo/redo/midi/help/transport/metronome) — Square button, transparent bg, `padding: 4px`, 14px SVG icon. Default color `var(--fg2)` → hover `var(--fg1)`. Active state takes a per-button color (record = red, midi = orange, metronome = orange, play = green, help = green).
 - **UnitDisplay** — Vertical stack, right-aligned, padding `0 6px`. Top: 14px Rubik 400 tabular-nums value, color `var(--fg1)` (the active "Bars" display uses 18px and `var(--color-blue)`). Bottom: 8px uppercase Rubik 300 unit label `var(--fg3)`, letter-spacing `0.6`.
@@ -77,16 +83,19 @@ If applying this design *outside* the openDAW codebase (a separate marketing sit
 **Purpose:** Main timeline — multi-track strip view with audio + MIDI regions over a bar grid.
 
 **Layout:**
+
 - Two-row flex column inside the workspace area. Row 1: Ruler. Row 2: scrollable Tracks list.
 - Each row has a fixed `160px` left column ("Tracks" header / track header) and a flexible region area.
 - **Bars × zoom:** 16 bars × 34px per bar = 544px content width.
 
 **Ruler (`height: 24px`):**
+
 - Background `var(--bg-panel)`. Bottom border `1px solid var(--line-faint)`.
 - SVG ticks: every bar gets a tick from y=14, every 4th bar from y=4 in `var(--fg2)`. Bar number label every 4 bars at `(x+3, y=11)` Rubik mono 9px `var(--fg2)`.
 - **Playhead** — Vertical 1px line in `var(--color-orange)` at `(2.5 * zoom)` px, with a 8×6 downward-pointing triangle flag at the top.
 
 **Track row (`height: 44px`, bottom border `1px solid var(--line-faint)`):**
+
 - **Track header** (160px wide, `var(--bg-panel)`, right border `1px solid var(--line-faint)`):
   - Top row: 8×8 square color swatch (track accent color, with `0 0 4px -1px <color>` glow) + 11px track name `var(--fg1)` + three mini-buttons M / S / R.
     - **M** (mute): when active, `var(--color-red)` border + fg, `box-shadow: 0 0 3px -1px currentColor`, bg `color-mix(in srgb, var(--color-red) 14%, transparent)`. When inactive, `var(--color-dark)` border + `var(--fg3)` fg.
@@ -105,6 +114,7 @@ If applying this design *outside* the openDAW codebase (a separate marketing sit
 - **Add Track row** — At end of list, padding `8px 12px`, 12px add icon + 11px "Add Track" text, `var(--fg3)`.
 
 **Track data (default seed):**
+
 1. **Drums** — Playfield instrument, `var(--color-blue)`, regions at bars 1-4, 5-8 ("Drums A"), 9-16 ("Drums B").
 2. **Bass** — Vaporisateur, `var(--color-purple)`, regions at 3-8 ("Bass Lo"), 11-16 ("Bass Hi").
 3. **Lead** — Vaporisateur, `var(--color-yellow)`, regions at 5-8, 13-16.
@@ -119,10 +129,12 @@ If applying this design *outside* the openDAW codebase (a separate marketing sit
 **Purpose:** Channel-strip view of all tracks + auxes + master.
 
 **Layout:**
+
 - Horizontal flex row, `overflow-x: auto`, full-height. Background `var(--color-void)`.
 - Each strip is **56px wide**, `flex-shrink: 0`, right border `1px solid var(--line-faint)`. Master strip uses `var(--bg-card)` background to differentiate.
 
 **Strip contents (top → bottom, `8px 0` outer padding, gap `6px`):**
+
 1. **Type label** (only on AUX/MASTER) — 8px uppercase letter-spaced `0.06`. AUX = `var(--color-orange)`, MASTER = `var(--fg1)` weight 400 letter-spacing `0.08`.
 2. **Pan knob** — 22px, bipolar, `var(--color-green)`. Knob renders a 36-radius arc in a 100×100 viewBox, 6px stroke, drop-shadow glow (`0 0 2px <color>`), value pointer is a 3px line from center to (r-6).
 3. **Sends** (non-aux/master only) — Two horizontal mini-faders. Each is a 3px-tall track in `var(--color-void)` with an orange fill (`var(--color-orange)`), labeled `RV` and `DL` in 8px Rubik mono `var(--fg3)` to the right.
@@ -177,6 +189,7 @@ No animations or transitions are specified — the live app is largely instantan
 ## State Management
 
 For a faithful in-app implementation, follow the existing observable pattern:
+
 - `service.layout.screen` — `ObservableValue<ScreenKey>`.
 - `service.projectProfileService` — current project, optional. Holds `engine`, `timelineBoxAdapter`, `editing`, `liveStreamReceiver`.
 - `service.engine.bpm`, `service.engine.position`, `EngineAddresses.PEAKS` — engine-level streams.
@@ -191,27 +204,30 @@ For an external prototype, plain React state per the JSX files is fine.
 All tokens live in `colors_and_type.css` as CSS variables. Reproduced here for reference:
 
 ### Brand / Accent Hues
-| Token | Value | Use |
-|---|---|---|
-| `--color-blue` | `hsl(210, 90%, 50%)` | primary, h2 headings, links, active screen |
-| `--color-green` | `hsl(140, 65%, 45%)` | save / pan knob / play / OK |
-| `--color-orange` | `hsl(25, 90%, 55%)` | regions, h3, metronome, browser tab active |
-| `--color-yellow` | `hsl(45, 95%, 55%)` | volume / solo |
-| `--color-red` | `hsl(8, 85%, 55%)` | record / mute / danger |
-| `--color-purple` | `hsl(280, 65%, 60%)` | publish / apply / Vaporisateur |
-| `--color-cyan` | `hsl(190, 75%, 50%)` | accent (Pad track) |
+
+| Token            | Value                | Use                                        |
+| ---------------- | -------------------- | ------------------------------------------ |
+| `--color-blue`   | `hsl(210, 90%, 50%)` | primary, h2 headings, links, active screen |
+| `--color-green`  | `hsl(140, 65%, 45%)` | save / pan knob / play / OK                |
+| `--color-orange` | `hsl(25, 90%, 55%)`  | regions, h3, metronome, browser tab active |
+| `--color-yellow` | `hsl(45, 95%, 55%)`  | volume / solo                              |
+| `--color-red`    | `hsl(8, 85%, 55%)`   | record / mute / danger                     |
+| `--color-purple` | `hsl(280, 65%, 60%)` | publish / apply / Vaporisateur             |
+| `--color-cyan`   | `hsl(190, 75%, 50%)` | accent (Pad track)                         |
 
 ### Neutrals (197° hue tint on darks)
-| Token | Value | Use |
-|---|---|---|
-| `--color-bright` | `hsl(0, 0%, 92%)` | primary fg |
-| `--color-gray` | `hsl(0, 0%, 56%)` | secondary fg |
-| `--color-dark` | `hsl(0, 0%, 38%)` | disabled / hairline borders |
-| `--color-shadow` | `hsl(197, 14%, 12%)` | card / well |
-| `--color-black` | `hsl(197, 14%, 6%)` | header / footer / panel |
-| `--color-void` | `hsl(197, 14%, 3%)` | deepest bg / arrangement canvas |
+
+| Token            | Value                | Use                             |
+| ---------------- | -------------------- | ------------------------------- |
+| `--color-bright` | `hsl(0, 0%, 92%)`    | primary fg                      |
+| `--color-gray`   | `hsl(0, 0%, 56%)`    | secondary fg                    |
+| `--color-dark`   | `hsl(0, 0%, 38%)`    | disabled / hairline borders     |
+| `--color-shadow` | `hsl(197, 14%, 12%)` | card / well                     |
+| `--color-black`  | `hsl(197, 14%, 6%)`  | header / footer / panel         |
+| `--color-void`   | `hsl(197, 14%, 3%)`  | deepest bg / arrangement canvas |
 
 ### Semantic Surfaces
+
 - `--bg-app: var(--color-void)`
 - `--bg-panel: var(--color-black)`
 - `--bg-panel-2: hsl(197, 14%, 8%)` (dashboard)
@@ -224,16 +240,19 @@ All tokens live in `colors_and_type.css` as CSS variables. Reproduced here for r
 - `--color-active-parent: hsla(210, 90%, 30%, 0.5)`
 
 ### Foreground
+
 - `--fg1: var(--color-bright)` — primary text
 - `--fg2: var(--color-gray)` — secondary text
 - `--fg3: var(--color-dark)` — muted / labels
 
 ### Type
+
 - `--font-display: "Rubik", system-ui, sans-serif` — UI / headers (Rubik 300 default UI weight, 400 for headings)
 - `--font-body: "Open Sans", system-ui, sans-serif` — prose paragraphs
 - `--font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace` — values, code, file paths
 
 ### Type Scale (UI is dense, small wins)
+
 - `--fs-10: 10px` — footer items, tiny labels
 - `--fs-11: 11px`
 - `--fs-12: 12px` — default UI
@@ -244,17 +263,20 @@ All tokens live in `colors_and_type.css` as CSS variables. Reproduced here for r
 - `--fs-36: 36px` — h1
 
 ### Radii
+
 - `--radius-1: 2px` — pill / region / mini-button
 - `--radius-2: 4px` — default button / card
 - `--radius-3: 6px`
 - `--radius-4: 8px`
 
 ### Shadows / Glows
+
 - `--glow-active: 0 0 3px -1px var(--color-active)` — focus / press
 - `--glow-frame: 0 0 3px -1px currentColor` — active framed button
 - `--shadow-floating: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)` — menu, dialog
 
 ### Spacing (em-based, follows the live SASS)
+
 - `--gap-1: 0.25em`
 - `--gap-2: 0.5em`
 - `--gap-3: 0.75em`

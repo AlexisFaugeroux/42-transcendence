@@ -34,35 +34,38 @@ handles everything else. They are configured to not conflict with each other.
 Our ESLint configuration lives in
 `packages/eslint-config/eslint.config.js`. It exports two functions:
 
-| Function | Used by | What it does |
-|----------|---------|-------------|
-| `createBaseConfig()` | All apps | TypeScript rules, import sorting, promise handling, regexp checks |
-| `createReactConfig()` | `front`, `studio` | React-specific rules (hooks, JSX, refresh) |
+| Function              | Used by           | What it does                                                      |
+| --------------------- | ----------------- | ----------------------------------------------------------------- |
+| `createBaseConfig()`  | All apps          | TypeScript rules, import sorting, promise handling, regexp checks |
+| `createReactConfig()` | `front`, `studio` | React-specific rules (hooks, JSX, refresh)                        |
 
 Each app has its own `eslint.config.js` that imports from the shared package.
 For example, `apps/back/eslint.config.js` only uses the base config:
 
 ```js
-import { createBaseConfig } from '@transcendence/eslint-config'
+import { createBaseConfig } from "@transcendence/eslint-config";
 
 export default createBaseConfig({
-  ignores: ['dist/', 'build/'],
+  ignores: ["dist/", "build/"],
   tsconfigRootDir: import.meta.dirname,
-})
+});
 ```
 
 While `apps/front/eslint.config.js` adds the React layer on top:
 
 ```js
-import { createBaseConfig, createReactConfig } from '@transcendence/eslint-config'
+import {
+  createBaseConfig,
+  createReactConfig,
+} from "@transcendence/eslint-config";
 
 export default [
   ...createBaseConfig({
-    ignores: ['dist/', 'build/'],
+    ignores: ["dist/", "build/"],
     tsconfigRootDir: import.meta.dirname,
   }),
   ...createReactConfig(),
-]
+];
 ```
 
 This way, all apps share the same base rules, but only the frontend apps get
@@ -73,13 +76,13 @@ the React-specific ones.
 Our Prettier configuration lives in
 `packages/prettier-config/prettierrc.js`. Here are the main settings:
 
-| Setting | Value | Meaning |
-|---------|-------|---------|
-| `singleQuote` | `true` | Use `'hello'` instead of `"hello"` |
-| `semi` | `true` | Always add semicolons at the end of statements |
-| `tabWidth` | `2` | Indent with 2 spaces |
-| `printWidth` | `120` | Lines can be up to 120 characters long |
-| `trailingComma` | `'all'` | Add trailing commas everywhere possible |
+| Setting         | Value   | Meaning                                        |
+| --------------- | ------- | ---------------------------------------------- |
+| `singleQuote`   | `true`  | Use `'hello'` instead of `"hello"`             |
+| `semi`          | `true`  | Always add semicolons at the end of statements |
+| `tabWidth`      | `2`     | Indent with 2 spaces                           |
+| `printWidth`    | `120`   | Lines can be up to 120 characters long         |
+| `trailingComma` | `'all'` | Add trailing commas everywhere possible        |
 
 Each app references this config in its `package.json`:
 
@@ -93,11 +96,11 @@ Each app references this config in its `package.json`:
 
 From the **root** of the monorepo:
 
-| Command | What it does |
-|---------|-------------|
-| `pnpm run check` | Runs Prettier and ESLint across the project (reports errors but does not fix them) |
-| `pnpm run fix` | Runs Prettier and ESLint and **auto-fixes** what it can |
-| `pnpm --filter @transcendence/studio run check` | Runs checks only in the `studio` app |
+| Command                                         | What it does                                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `pnpm run check`                                | Runs Prettier and ESLint across the project (reports errors but does not fix them) |
+| `pnpm run fix`                                  | Runs Prettier and ESLint and **auto-fixes** what it can                            |
+| `pnpm --filter @transcendence/studio run check` | Runs checks only in the `studio` app                                               |
 
 Always run `check` or `fix` **before pushing** your code. This avoids breaking
 the build for everyone else.
@@ -131,11 +134,7 @@ Add the following to your VS Code settings. You can open them with
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.workingDirectories": [
-    "apps/back",
-    "apps/front",
-    "apps/studio"
-  ]
+  "eslint.workingDirectories": ["apps/back", "apps/front", "apps/studio"]
 }
 ```
 

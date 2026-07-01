@@ -19,5 +19,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["components", "theme", "index.ts", "icons.ts", "declarations.d.ts"]
+  "include": [
+    "components",
+    "theme",
+    "index.ts",
+    "icons.ts",
+    "declarations.d.ts"
+  ]
 }
