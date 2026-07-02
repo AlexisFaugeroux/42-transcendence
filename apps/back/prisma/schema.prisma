@@ -38,6 +38,20 @@ enum VisibilityType {
   PUBLIC
 }
 
+model Project {
+  id          String @id @default(uuid())
+  name        String
+  user        User @relation(fields: [userId], references: [id])
+  userId      String
+  audioFile   AudioFile[]
+  blob        Bytes
+  length      Int
+  bpm         Int
+  visibility  VisibilityType @default(PRIVATE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Owner {
   id        String     @id @default(uuid()) 
   type      OwnerType
@@ -53,6 +67,7 @@ model User {
   role        Role
   owner       Owner @relation(fields: [ownerId], references: [id])
   ownerId     String @unique
+  projects    Project[]
   followedBy  User[]  @relation("UserFollows")
   following   User[]  @relation("UserFollows")
   createdAt   DateTime @default(now())
@@ -64,9 +79,10 @@ model AudioFile {
   id          String @id @default(uuid())
   owner       Owner @relation(fields: [ownerId], references: [id])
   ownerId     String
+  project     Project[]
   bpm         Int?
   key         Key?
-  visibility  VisibilityType
+  visibility  VisibilityType @default(PRIVATE)
   url         String
   length      Int
   bytes       Int
