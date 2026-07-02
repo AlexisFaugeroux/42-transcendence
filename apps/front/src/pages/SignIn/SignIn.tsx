@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input } from '@transcendence/ui';
 import { theme } from '@transcendence/ui/theme';
 import { type JSX, useState } from 'react';
-import { useNavigate, type FormProps } from 'react-router-dom';
+import { type FormProps, useNavigate } from 'react-router-dom';
 import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
 import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
 import { loginFetch } from '../../api/auth.ts';
@@ -12,16 +12,14 @@ import styles from './SignIn.module.scss';
 export default function SignIn(): JSX.Element {
   const [form] = Form.useForm<SignInValues>();
   const navigate = useNavigate();
-  const {
-    isPending,
-    mutate: loginMutation,
-  } = useMutation({
+  const { isPending, mutate: loginMutation } = useMutation({
     mutationFn: loginFetch,
-    onSuccess: () => { navigate('/'); },
-    onError: () => { 
-      form.setFields(
-        [{name: 'password', errors: ['Invalid email or password.']}]); 
-    }
+    onError: () => {
+      form.setFields([{ errors: ['Invalid email or password.'], name: 'password' }]);
+    },
+    onSuccess: () => {
+      navigate('/');
+    },
   });
 
   const submit = async (values: SignInValues) => {

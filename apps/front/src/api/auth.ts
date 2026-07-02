@@ -8,14 +8,13 @@ export const loginFetch = async (body: SignInValues) => {
       email: body.email,
       password: body.password,
     }),
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'POST',
-    credentials: "include",
   });
   if (!res.ok) throw new Error(`[/api/auth/login] Login failed ${res.status}`);
   const data = await res.json();
   return data;
 };
-
