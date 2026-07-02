@@ -26,6 +26,9 @@ RUN pnpm --filter @transcendence/back deploy --prod --legacy /prod
 FROM base AS runtime
 WORKDIR /app
 COPY --from=build /prod .
+COPY samples/platform.zip samples/platform.zip
+COPY samples/alex.zip samples/alex.zip
+COPY samples/julien.zip samples/julien.zip
 RUN chmod +x /app/docker-entrypoint.sh
 ENV NODE_ENV=production
 EXPOSE 8080

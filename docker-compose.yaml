@@ -30,6 +30,9 @@ services:
     restart: always
     depends_on:
       - "db"
+      - "nginx-audio"
+    volumes:
+      - audio_data:/var/www/audio:rw
     networks:
       - transcendence_net
 
@@ -55,8 +58,8 @@ services:
     image: nginx:1.30.3-alpine
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     depends_on:
       - front
       - studio

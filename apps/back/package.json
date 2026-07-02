@@ -15,7 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:seed": "tsx scripts/seedDb.dev.ts",
-    "db:studio": "prisma studio --url $(cat .env | grep DATABASE_URL= | cut -d= -f2- )",
+    "db:studio": "prisma studio --url $(cat .env | grep POSTGRES_URL= | cut -d= -f2- )",
     "dev": "tsx watch src/index.ts",
     "fix": "prettier --write . && eslint --fix .",
     "start": "node build/index.js"
