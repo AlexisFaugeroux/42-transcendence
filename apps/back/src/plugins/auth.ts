@@ -1,9 +1,8 @@
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { UnauthorizedError } from '../domain/errors';
 import { SessionRepository, sessionRepository } from '../repositories/session';
 
 export function authCookieOptions() {
@@ -34,16 +33,16 @@ async function authPlugin(app: FastifyInstance) {
     return this.jwt.sign(payload);
   });
 
-  app.decorate('authenticate', async function (req: FastifyRequest) {
+  app.decorate('authenticate', async function (req: FastifyRequest, reply: FastifyReply) {
     try {
       const payload = await req.jwtVerify<{ sub: string; sid: string }>();
       const session = await sessionRepository.findValid(payload.sid);
       if (!session) {
-        throw new UnauthorizedError('unauthorized');
+        reply.code(403).send({ message: 'unauthorized' });
       }
       req.authUser = { id: payload.sub, sid: payload.sid };
     } catch {
-      throw new UnauthorizedError('unauthorized');
+      reply.code(403).send({ message: 'unauthorized' });
     }
   });
 }

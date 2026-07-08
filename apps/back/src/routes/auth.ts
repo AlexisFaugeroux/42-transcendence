@@ -40,4 +40,5 @@ export function authRoutes(app: FastifyInstance) {
   app.get('/api/auth/me', { preHandler: app.authenticate }, authController.me);
 
   app.post('/api/auth/logout', { preHandler: app.authenticate }, authController.logout);
+  app.get('/api/auth/check-access', { preHandler: app.authenticate }, authController.checkAccess);
 }

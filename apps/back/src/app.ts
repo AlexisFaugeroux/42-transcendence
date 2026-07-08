@@ -16,6 +16,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   await app.register(authPlugin);
+  await app.register(authRoutes);
 
   app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
     if (error instanceof UnauthorizedError) {
@@ -34,17 +35,6 @@ export async function buildApp(): Promise<FastifyInstance> {
     request.log.error(error);
     return reply.code(500).send({ error: 'internal error' });
   });
-
-  app.get('/', (_req: FastifyRequest, reply: FastifyReply) => {
-    reply.send('OK\n');
-  });
-
-  app.get('/ping', (_req: FastifyRequest, reply: FastifyReply) => {
-    reply.send('pong\n');
-  });
-
-  // same Fastify instance
-  authRoutes(app);
 
   return app;
 }
