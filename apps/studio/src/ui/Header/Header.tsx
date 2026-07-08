@@ -9,6 +9,7 @@ import styles from './Header.module.scss';
 import { Meter } from './Meter/Meter';
 import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
+import { SaveButton } from './SaveButton/SaveButton'
 
 export function Header(): JSX.Element {
   return (
@@ -56,6 +57,8 @@ export function Header(): JSX.Element {
       <Separator />
 
       <Meter />
+      <Separator />
+      <SaveButton />
     </header>
   );
 }

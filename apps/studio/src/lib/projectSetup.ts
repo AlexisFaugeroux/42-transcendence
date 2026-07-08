@@ -231,7 +231,6 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
   // Start audio worklet and wait for engine to be ready
   project.startAudioWorklet();
   await project.engine.isReady();
-
   console.debug('Engine is ready!');
 
   // Resume AudioContext on first user interaction if it starts suspended
