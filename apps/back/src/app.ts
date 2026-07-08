@@ -1,5 +1,6 @@
 import cors from '@fastify/cors';
-import Fastify, { type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from './domain/errors';
 import authPlugin from './plugins/auth';
 import { authRoutes } from './routes/auth';
 
@@ -16,15 +17,34 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await app.register(authPlugin);
 
-  await app.register(authRoutes);
+  app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
+    if (error instanceof UnauthorizedError) {
+      return reply.code(401).send({ error: error.message });
+    }
+    if (error instanceof ForbiddenError) {
+      return reply.code(403).send({ error: error.message });
+    }
+    if (error instanceof NotFoundError) {
+      return reply.code(404).send({ error: error.message });
+    }
+    if (error instanceof ConflictError) {
+      return reply.code(409).send({ error: error.message });
+    }
 
-  app.get('/', (_, reply) => {
+    request.log.error(error);
+    return reply.code(500).send({ error: 'internal error' });
+  });
+
+  app.get('/', (_req: FastifyRequest, reply: FastifyReply) => {
     reply.send('OK\n');
   });
 
-  app.get('/ping', (_, reply) => {
+  app.get('/ping', (_req: FastifyRequest, reply: FastifyReply) => {
     reply.send('pong\n');
   });
+
+  // same Fastify instance
+  authRoutes(app);
 
   return app;
 }

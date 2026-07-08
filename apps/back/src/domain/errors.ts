@@ -11,3 +11,17 @@ export class NotFoundError extends Error {
     this.name = 'NotFoundError';
   }
 }
+
+export class UnauthorizedError extends Error {
+  constructor(message = 'invalid credentials') {
+    super(message);
+    this.name = 'UnauthorizedError';
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor(message = 'forbidden') {
+    super(message);
+    this.name = 'ForbiddenError';
+  }
+}

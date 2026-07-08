@@ -1,4 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { ConflictError, UnauthorizedError } from '../domain/errors';
 import { authCookieOptions } from '../plugins/auth';
 import { sessionRepository } from '../repositories/session';
 import { hashPassword, verifyPassword } from '../utils/password';
@@ -23,7 +24,7 @@ export class AuthController {
     const { email, password, pseudo } = req.body;
     const existing = await prisma.user.findFirst({ where: { OR: [{ email }, { pseudo }] } });
     if (existing) {
-      return reply.code(409).send({ error: 'email or pseudo already in use' });
+      throw new ConflictError('email or pseudo already in use');
     }
 
     const user = await prisma.user.create({
@@ -43,7 +44,7 @@ export class AuthController {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user || !(await verifyPassword(password, user.password))) {
-      return reply.code(401).send({ error: 'invalid credentials' });
+      throw new UnauthorizedError();
     }
     const session = await sessionRepository.create(user.id, req.headers['user-agent']);
     const token = req.server.signAuthToken({ sid: session.id, sub: user.id });
@@ -53,7 +54,7 @@ export class AuthController {
 
   public me = async (req: FastifyRequest, reply: FastifyReply) => {
     const user = await prisma.user.findUnique({ where: { id: req.authUser.id } });
-    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!user) throw new UnauthorizedError('unauthorized');
     return reply.send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
 
