@@ -1,0 +1,6 @@
+# Force LF for all text files; auto-detect binary
+* text=auto eol=lf
+
+# Keep Windows-specific scripts as CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input } from '@transcendence/ui';
 import { theme } from '@transcendence/ui/theme';
-import { type JSX, useState } from 'react';
-import { type FormProps, useNavigate } from 'react-router-dom';
+import { type JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
 import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
 import { loginFetch } from '../../api/auth.ts';
-import type { SignInValues } from '../../utils/types.ts';
+import type { SignInValues } from '../../api/types.ts';
 import styles from './SignIn.module.scss';
 
 export default function SignIn(): JSX.Element {
@@ -18,11 +18,11 @@ export default function SignIn(): JSX.Element {
       form.setFields([{ errors: ['Invalid email or password.'], name: 'password' }]);
     },
     onSuccess: () => {
-      navigate('/');
+      void navigate('/');
     },
   });
 
-  const submit = async (values: SignInValues) => {
+  const submit = (values: SignInValues) => {
     loginMutation(values);
   };
 

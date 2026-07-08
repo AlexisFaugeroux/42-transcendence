@@ -1,8 +1,8 @@
-import type { SignInValues } from '../utils/types.ts';
+import type { AuthResponse, SignInValues } from './types.ts';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-export const loginFetch = async (body: SignInValues) => {
+export async function loginFetch(body: SignInValues): Promise<AuthResponse> {
   const res = await fetch(`${BASE_URL}/api/auth/login`, {
     body: JSON.stringify({
       email: body.email,
@@ -14,7 +14,9 @@ export const loginFetch = async (body: SignInValues) => {
     },
     method: 'POST',
   });
+
   if (!res.ok) throw new Error(`[/api/auth/login] Login failed ${res.status}`);
-  const data = await res.json();
+  const data = (await res.json()) as AuthResponse;
+
   return data;
-};
+}
