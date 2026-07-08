@@ -1,9 +1,17 @@
-import type { FastifyReply, FastifyRequest } from 'fastify';
-import { ConflictError, UnauthorizedError } from '../domain/errors';
+import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
+import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../domain/errors';
 import { authCookieOptions } from '../plugins/auth';
+import { audioFileRepository } from '../repositories/audioFile';
 import { sessionRepository } from '../repositories/session';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
+
+interface CheckAccessQueryParams extends RouteGenericInterface {
+  Querystring: {
+    ownerId: string;
+    sampleId: string;
+  };
+}
 
 interface RegisterBody {
   email: string;
@@ -62,6 +70,15 @@ export class AuthController {
     await sessionRepository.revoke(req.authUser.sid);
     reply.clearCookie('token', { path: '/' });
     return reply.code(204).send();
+  };
+
+  public checkAccess = async (req: FastifyRequest<CheckAccessQueryParams>, reply: FastifyReply) => {
+    const { ownerId, sampleId } = req.query;
+    const sample = await audioFileRepository.findById(sampleId);
+    if (!sample) throw new NotFoundError();
+    if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+      throw new ForbiddenError();
+    reply.code(200).send();
   };
 }
 
