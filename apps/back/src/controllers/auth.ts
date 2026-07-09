@@ -5,30 +5,34 @@ import { audioFileRepository } from '../repositories/audioFile';
 import { sessionRepository } from '../repositories/session';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
+import type { AuthResponse, LoginBody, RegisterBody } from '../domain/auth';
 
-interface CheckAccessQueryParams extends RouteGenericInterface {
+interface CheckAccessRoute extends RouteGenericInterface {
   Querystring: {
     ownerId: string;
     sampleId: string;
   };
 }
 
-interface RegisterBody {
-  email: string;
-  pseudo: string;
-  password: string;
+interface RegisterRoute extends RouteGenericInterface {
+  Body: RegisterBody;
+  Reply: AuthResponse;
 }
 
-interface LoginBody {
-  email: string;
-  password: string;
+interface LoginRoute extends RouteGenericInterface {
+  Body: LoginBody;
+  Reply: AuthResponse;
+}
+
+interface MeRoute extends RouteGenericInterface {
+  Reply: AuthResponse;
 }
 
 export class AuthController {
   // Arrow-function property, NOT a method: Fastify binds a handler's `this` to the
   // FastifyInstance, so a plain method would lose `this`. An arrow property keeps
   // `this` bound to the controller while still being safe to pass as a callback.
-  public register = async (req: FastifyRequest<{ Body: RegisterBody }>, reply: FastifyReply) => {
+  public register = async (req: FastifyRequest<RegisterRoute>, reply: FastifyReply<RegisterRoute>) => {
     const { email, password, pseudo } = req.body;
     const existing = await prisma.user.findFirst({ where: { OR: [{ email }, { pseudo }] } });
     if (existing) {
@@ -48,7 +52,7 @@ export class AuthController {
     return reply.code(201).send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
 
-  public login = async (req: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
+  public login = async (req: FastifyRequest<LoginRoute>, reply: FastifyReply<LoginRoute>) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user || !(await verifyPassword(password, user.password))) {
@@ -60,9 +64,9 @@ export class AuthController {
     return reply.code(200).send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
 
-  public me = async (req: FastifyRequest, reply: FastifyReply) => {
+  public me = async (req: FastifyRequest, reply: FastifyReply<MeRoute>) => {
     const user = await prisma.user.findUnique({ where: { id: req.authUser.id } });
-    if (!user) throw new UnauthorizedError('unauthorized');
+    if (!user) throw new UnauthorizedError();
     return reply.send({ user: { email: user.email, id: user.id, pseudo: user.pseudo, role: user.role } });
   };
 
@@ -72,7 +76,7 @@ export class AuthController {
     return reply.code(204).send();
   };
 
-  public checkAccess = async (req: FastifyRequest<CheckAccessQueryParams>, reply: FastifyReply) => {
+  public checkAccess = async (req: FastifyRequest<CheckAccessRoute>, reply: FastifyReply) => {
     const { ownerId, sampleId } = req.query;
     const sample = await audioFileRepository.findById(sampleId);
     if (!sample) throw new NotFoundError();
