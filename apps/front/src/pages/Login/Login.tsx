@@ -5,15 +5,16 @@ import { type JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
 import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
-import { loginFetch } from '../../api/auth.ts';
-import type { SignInValues } from '../../api/types.ts';
-import styles from './SignIn.module.scss';
+import { loginRequest } from '../../api/auth.ts';
+import type { LoginBody } from '../../api/types.ts';
+import styles from './Login.module.scss';
 
-export default function SignIn(): JSX.Element {
-  const [form] = Form.useForm<SignInValues>();
+export default function Login(): JSX.Element {
+  const [form] = Form.useForm<LoginBody>();
   const navigate = useNavigate();
+
   const { isPending, mutate: loginMutation } = useMutation({
-    mutationFn: loginFetch,
+    mutationFn: loginRequest,
     onError: () => {
       form.setFields([{ errors: ['Invalid email or password.'], name: 'password' }]);
     },
@@ -22,7 +23,7 @@ export default function SignIn(): JSX.Element {
     },
   });
 
-  const submit = (values: SignInValues) => {
+  const onFinish = (values: LoginBody) => {
     loginMutation(values);
   };
 
@@ -40,7 +41,7 @@ export default function SignIn(): JSX.Element {
           <p className={styles.subtitle}>Pick up your session, your friends, your beats.</p>
 
           <div className={styles.card}>
-            <Form form={form} layout="vertical" requiredMark={false} onFinish={submit}>
+            <Form form={form} layout="vertical" requiredMark={false} onFinish={onFinish}>
               <Form.Item
                 label="Email"
                 name="email"
@@ -49,7 +50,7 @@ export default function SignIn(): JSX.Element {
                   { message: "That doesn't look like a valid email.", type: 'email' },
                 ]}
               >
-                <Input size="large" placeholder="you@example.com" autoFocus />
+                <Input size="large" placeholder="you@example.com" autoFocus autoComplete="off" />
               </Form.Item>
 
               <Form.Item
@@ -76,7 +77,7 @@ export default function SignIn(): JSX.Element {
 
           <div className={styles.footer}>
             New here?{' '}
-            <a className={styles.link} href="/signup">
+            <a className={styles.link} href="/register">
               Create an account →
             </a>
           </div>

@@ -1,3 +1,5 @@
+import type { RouteGenericInterface } from 'fastify';
+
 export class ConflictError extends Error {
   constructor(message: string) {
     super(message);
@@ -24,4 +26,11 @@ export class ForbiddenError extends Error {
     super(message);
     this.name = 'ForbiddenError';
   }
+}
+
+export interface ErrorReponse extends RouteGenericInterface {
+  Reply: {
+    error: string;
+    status: number;
+  };
 }
