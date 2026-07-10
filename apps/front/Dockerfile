@@ -8,6 +8,7 @@ FROM base AS build
 # Copy files required to install dependencies
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 COPY apps/front/package.json apps/front/
+COPY packages/auth/package.json packages/auth/
 COPY packages/ui/package.json packages/ui/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/prettier-config/package.json packages/prettier-config/

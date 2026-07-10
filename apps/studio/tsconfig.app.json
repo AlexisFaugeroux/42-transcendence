@@ -16,6 +16,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
+      "@auth/*": ["../../packages/auth/*"],
       "@ui/*": ["../../packages/ui/*"]
     },
     "skipLibCheck": true,

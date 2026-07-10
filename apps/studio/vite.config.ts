@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      '@auth': path.resolve(__dirname, '../../packages/auth'),
       '@ui': path.resolve(__dirname, '../../packages/ui'),
     },
   },
@@ -17,5 +18,7 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
     port: 5174,
+    proxy: { '/api': 'http://localhost:8080' },
+    strictPort: true,
   },
 });

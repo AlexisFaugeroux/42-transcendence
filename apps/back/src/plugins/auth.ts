@@ -38,11 +38,12 @@ async function authPlugin(app: FastifyInstance) {
       const payload = await req.jwtVerify<{ sub: string; sid: string }>();
       const session = await sessionRepository.findValid(payload.sid);
       if (!session) {
-        reply.code(403).send({ message: 'unauthorized' });
+        reply.code(401).send({ message: 'unauthorized' });
+        return;
       }
       req.authUser = { id: payload.sub, sid: payload.sid };
     } catch {
-      reply.code(403).send({ message: 'unauthorized' });
+      reply.code(401).send({ message: 'unauthorized' });
     }
   });
 }

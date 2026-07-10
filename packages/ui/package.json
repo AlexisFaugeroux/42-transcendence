@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "private": "true",
+  "private": true,
   "dependencies": {
     "@ant-design/icons": "6.2.5",
     "@types/react": "19.2.14",
