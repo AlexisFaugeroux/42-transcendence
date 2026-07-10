@@ -1,0 +1,66 @@
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--fg1);
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--fg2);
+  font-size: 13px;
+}
+
+.card {
+  background: var(--bg-panel-2);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 16px 20px;
+  align-items: flex-start;
+}
+
+.rowLabel {
+  color: var(--fg2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rowHint {
+  margin-top: 4px;
+  color: var(--fg3);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.rowBody {
+  display: flex;
+  min-width: 0;
+}
+
+.hr {
+  height: 1px;
+  background: var(--line-faint);
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr; // stack label above value on mobile
+    gap: 8px;
+  }
+}

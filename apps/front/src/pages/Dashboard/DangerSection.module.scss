@@ -1,0 +1,67 @@
+.dangerTitle {
+  color: var(--color-red);
+}
+
+.card {
+  background: color-mix(in srgb, var(--color-red) 6%, var(--bg-panel-2));
+  border: 0.5px solid color-mix(in srgb, var(--color-red) 40%, transparent);
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.text {
+  max-width: 540px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--fg1);
+}
+
+.desc {
+  margin: 8px 0 0;
+  color: var(--fg2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.code {
+  color: var(--color-orange);
+  font-family: ui-monospace, monospace;
+}
+
+.modalText {
+  margin: 0;
+  color: var(--fg2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.fieldLabel {
+  color: var(--fg2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 560px) {
+  .body {
+    flex-direction: column;
+  }
+}

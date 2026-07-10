@@ -1,0 +1,25 @@
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.value {
+  color: var(--fg1);
+  font-size: 13px;
+}
+
+.dots {
+  color: var(--fg2);
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+.mono {
+  color: var(--fg2);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
