@@ -1,0 +1,53 @@
+.banner {
+  position: sticky;
+  top: 57px; // sits just under the sticky header
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 32px;
+  background: color-mix(in srgb, var(--color-orange) 16%, var(--bg-panel));
+  border-bottom: 1px solid var(--color-orange);
+}
+
+.error {
+  background: color-mix(in srgb, var(--color-red) 16%, var(--bg-panel));
+  border-bottom-color: var(--color-red);
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg1);
+  font-size: 12px;
+}
+
+.badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--color-orange);
+}
+
+.error .badge {
+  color: var(--color-red);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .banner {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+}
