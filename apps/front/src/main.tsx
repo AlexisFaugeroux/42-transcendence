@@ -1,5 +1,6 @@
 import './main.scss';
 import '@transcendence/ui/styles/colors_and_type.css';
+import { AuthProvider } from '@transcendence/auth';
 import { MsnThemeProvider } from '@transcendence/ui';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -11,7 +12,9 @@ if (!root) throw new Error('Cannot find root');
 createRoot(root).render(
   <StrictMode>
     <MsnThemeProvider>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </MsnThemeProvider>
   </StrictMode>,
 );

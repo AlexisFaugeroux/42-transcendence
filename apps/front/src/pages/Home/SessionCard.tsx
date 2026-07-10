@@ -6,7 +6,12 @@ import styles from './SessionCard.module.scss';
 
 export function SessionCard({ blurb, color, icon, meta, title }: SessionType): JSX.Element {
   return (
-    <button className={styles.card}>
+    <button
+      className={styles.card}
+      onClick={() => {
+        window.location.href = import.meta.env.VITE_STUDIO_URL;
+      }}
+    >
       <div className={styles.top}>
         <div className={styles.iconBox} style={{ color }}>
           <MsnIcon name={icon} size="22px" />

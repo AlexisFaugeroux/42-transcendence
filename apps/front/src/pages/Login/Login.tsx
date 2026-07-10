@@ -1,25 +1,33 @@
 import { useMutation } from '@tanstack/react-query';
+import { useUser } from '@transcendence/auth';
+import type { LoginBody } from '@transcendence/auth';
 import { Button, Form, Input } from '@transcendence/ui';
 import { theme } from '@transcendence/ui/theme';
 import { type JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
 import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
-import { loginRequest } from '../../api/auth.ts';
-import type { LoginBody } from '../../api/types.ts';
+import { safeRedirect } from './helpers.ts';
 import styles from './Login.module.scss';
 
 export default function Login(): JSX.Element {
+  const { login } = useUser();
   const [form] = Form.useForm<LoginBody>();
+  const [params] = useSearchParams();
   const navigate = useNavigate();
 
   const { isPending, mutate: loginMutation } = useMutation({
-    mutationFn: loginRequest,
+    mutationFn: login,
     onError: () => {
       form.setFields([{ errors: ['Invalid email or password.'], name: 'password' }]);
     },
     onSuccess: () => {
-      void navigate('/');
+      const target = safeRedirect(params.get('redirect'));
+      if (target.startsWith('/studio')) {
+        window.location.href = target;
+      } else {
+        void navigate(target, { replace: true });
+      }
     },
   });
 

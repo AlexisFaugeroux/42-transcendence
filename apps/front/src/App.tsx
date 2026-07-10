@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { RequireAuth } from './auth/RequireAuth';
 import { Home } from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -14,7 +15,10 @@ export function App(): JSX.Element {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
+
+          <Route element={<RequireAuth />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
 
           {/*
           <Route element={<AppLayout />}>

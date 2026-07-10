@@ -6,10 +6,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      '@auth': path.resolve(__dirname, '../../packages/auth'),
       '@ui': path.resolve(__dirname, '../../packages/ui'),
     },
   },
   server: {
     port: 5173,
+    proxy: { '/api': 'http://localhost:8080' },
+    strictPort: true,
   },
 });
