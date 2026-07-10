@@ -2,9 +2,10 @@ import { PPQN } from '@opendaw/lib-dsp';
 import type { Project } from '@opendaw/studio-core';
 import type { BarInfo } from './types';
 
-export async function loadAudioFile(audioContext: AudioContext, url: string): Promise<AudioBuffer | undefined> {
+export async function loadAudioFile(audioContext: AudioContext, url: string, uuid : string): Promise<AudioBuffer | undefined> {
   try {
-    const fullPath = `${import.meta.env.BASE_URL}/${url}`;
+    console.log(`loading : ${uuid}`);
+    const fullPath = `http://${import.meta.env.VITE_NGINX_URL}/audio/${url}?sampleId=${uuid}`;
     const response = await fetch(fullPath);
     if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
 

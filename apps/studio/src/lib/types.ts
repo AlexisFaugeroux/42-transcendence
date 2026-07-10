@@ -43,4 +43,5 @@ export interface Sample {
   bpm?: number;
   samplekey?: string;
   url: string;
+  id: string;
 }

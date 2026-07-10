@@ -51,13 +51,12 @@ export function createClipFromBuffer(
   localAudioBuffers: Map<string, AudioBuffer>,
   position: number,
   maxDuration: number,
+  audioFileUUID : string,
 ): Clip {
   const { boxGraph } = project;
 
-  const fileUUID = UUID.generate();
-  localAudioBuffers.set(UUID.toString(fileUUID), audioBuffer);
-
-  const audioFileBox = AudioFileBox.create(boxGraph, fileUUID, (box) => {
+  localAudioBuffers.set(audioFileUUID, audioBuffer);
+  const audioFileBox = AudioFileBox.create(boxGraph, UUID.parse(audioFileUUID), (box) => {
     box.fileName.setValue(name);
     box.endInSeconds.setValue(audioBuffer.duration);
   });
@@ -102,8 +101,9 @@ export async function createClip(
   localAudioBuffers: Map<string, AudioBuffer>,
   position: number,
   existingClips: Clip[],
+  audioFileUUID: string
 ): Promise<{ createdClip: Clip | null; truncatedClip: Clip | null } | null> {
-  const audioBuffer = await loadAudioFile(audioContext, url);
+  const audioBuffer = await loadAudioFile(audioContext, url, audioFileUUID);
   if (!audioBuffer) return null;
 
   if (existingClips.find((clip) => track.trackBox === clip.trackBox && clip.position === position)) return null;
@@ -126,7 +126,7 @@ export async function createClip(
 
   let newClip: Clip | null = null;
   project.editing.modify(() => {
-    newClip = createClipFromBuffer(project, track, audioBuffer, track.name, localAudioBuffers, position, maxDuration);
+    newClip = createClipFromBuffer(project, track, audioBuffer, track.name, localAudioBuffers, position, maxDuration, audioFileUUID);
 
     if (clipToTruncate) {
       clipToTruncate.regionBox.duration.setValue(truncatedNewDuration);

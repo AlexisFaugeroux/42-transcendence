@@ -11,6 +11,7 @@ export interface AudioFile {
   url: string;
   length: number;
   bytes: number;
+  name: string;
 }
 
 export interface CreateAudioFileInput {
@@ -24,9 +25,11 @@ export interface CreateAudioFileInput {
 }
 
 export interface GetAudioFileInput {
+  visibilities?: Visibility[]
   ids?: string[];
   bpms?: number[];
   keys?: Key[];
+  ownerIds?: string[];
 }
 
 export interface UpdateAudioFileInput {

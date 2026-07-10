@@ -86,13 +86,17 @@ class AudioFileRepository {
   }
 
   private _buildFilters(input: GetAudioFileInput) {
-    const { bpms, ids, keys } = input;
+    const { bpms, ids, keys, ownerIds, visibilities } = input;
 
     const idFilter = ids?.length ? { id: { in: ids } } : undefined;
     const bpmFilter = bpms?.length ? { bpm: { in: bpms } } : undefined;
     const keyFilter = keys?.length ? { Key: { in: keys } } : undefined;
+    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
+    const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds  } } : undefined;   
 
     return {
+      ...visibilityFilter,
+      ...ownerIdFilter,
       ...idFilter,
       ...bpmFilter,
       ...keyFilter,

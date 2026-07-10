@@ -158,7 +158,7 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
     if (!targetTrack) return;
 
     const position = dropX / PIXELS_PER_PULSE;
-    const res = await createClip(audioContext, project, targetTrack, sample.url, localAudioBuffers, position, clips);
+    const res = await createClip(audioContext, project, targetTrack, sample.url, localAudioBuffers, position, clips, sample.id);
     if (!res) return;
 
     setClips((prev) => mergeClipChanges(prev, res));

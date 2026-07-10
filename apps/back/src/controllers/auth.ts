@@ -83,12 +83,26 @@ class AuthController {
     return reply.code(204).send();
   };
 
-  public checkAccess = async (req: FastifyRequest<CheckAccessRoute>, reply: FastifyReply) => {
-    const { ownerId, sampleId } = req.query;
+  public checkAccess = async (req: FastifyRequest<CheckAccessQueryParams>, reply: FastifyReply) => {
+    const originalString = req.headers['x-original-uri']
+    if (!originalString || Array.isArray(originalString))
+    { 
+      reply.code(400).send();
+      return ;
+    }
+    const queryParser = new URLSearchParams( originalString.substring( originalString.indexOf('?'), originalString.length ) );
+    const sampleId = queryParser.get('sampleId');
+    const ownerId = queryParser.get('ownerId');
+    if (!sampleId)
+    {
+      console.log("ici");
+      reply.code(400).send();
+      return ;
+    }
     const sample = await audioFileRepository.findById(sampleId);
     if (!sample) throw new NotFoundError();
-    if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
-      throw new ForbiddenError();
+    // if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+    //   throw new ForbiddenError();
     reply.code(200).send();
   };
 
