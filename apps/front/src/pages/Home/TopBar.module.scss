@@ -1,0 +1,93 @@
+.bar {
+  background: var(--color-void);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 16px;
+  height: 100%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  width: 204px; // aligns with the 220px left nav
+}
+
+.search {
+  flex: 1;
+  max-width: 480px;
+}
+
+.kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--fg3);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.iconButton {
+  background: transparent;
+  border: 0;
+  color: var(--fg2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+
+  &:hover {
+    color: var(--fg1);
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  max-width: 160px;
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+  text-align: left;
+}
+
+.userName,
+.userHandle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userName {
+  color: var(--fg1);
+  font-size: 12px;
+}
+
+.userHandle {
+  color: var(--fg3);
+  font-size: 10px;
+}
+
+// Mobile: hide the brand width-spacer alignment and the search to save room.
+@media (max-width: 720px) {
+  .brand {
+    width: auto;
+  }
+  .search {
+    display: none;
+  }
+}

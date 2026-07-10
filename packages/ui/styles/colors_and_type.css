@@ -37,6 +37,7 @@
   --bg-app: var(--color-void);
   --bg-panel: var(--color-black); /* hsl(197,14%,6%) — header/footer */
   --bg-panel-2: hsl(197, 14%, 8%); /* dashboard panel */
+  --bg-panel-3: hsl(197, 14%, 6%); /* side rail */
   --bg-card: var(--color-shadow);
   --bg-elevated: hsl(197, 14%, 16%); /* menu/dialog floating */
   --line-faint: rgba(255, 255, 255, 0.04);

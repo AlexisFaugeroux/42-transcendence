@@ -1,0 +1,66 @@
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.headLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-orange);
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+.count {
+  color: var(--fg3);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.iconBtn {
+  background: transparent;
+  color: var(--fg2);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 3px;
+  width: 24px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--fg1);
+  }
+}
+
+.viewAll {
+  color: var(--fg2);
+  font-size: 11px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+// react-slick wraps each slide in `.slick-slide > div`; padding it (rather
+// than the tile) leaves a gap between cards without breaking the slot width.
+.carousel :global(.slick-slide > div) {
+  padding: 0 6px;
+}

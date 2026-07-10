@@ -1,0 +1,84 @@
+.rail {
+  background: var(--bg-panel-3);
+  border-left: 1px solid var(--line-faint);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-orange);
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.count {
+  color: var(--fg3);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.dot {
+  color: var(--color-green);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.onlineGroup {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.label {
+  color: var(--fg3);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.liveLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-purple);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-purple);
+  box-shadow: 0 0 4px var(--color-purple);
+}
+
+.divider {
+  height: 1px;
+  background: var(--line-faint);
+}
+
+.invite {
+  padding-top: 12px;
+  border-top: 1px solid var(--line-faint);
+}

@@ -1,11 +1,11 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
+import type { AuthResponse, LoginBody, RegisterBody } from '../domain/auth';
 import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../domain/errors';
 import { authCookieOptions } from '../plugins/auth';
 import { audioFileRepository } from '../repositories/audioFile';
 import { sessionRepository } from '../repositories/session';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
-import type { AuthResponse, LoginBody, RegisterBody } from '../domain/auth';
 
 interface CheckAccessRoute extends RouteGenericInterface {
   Querystring: {

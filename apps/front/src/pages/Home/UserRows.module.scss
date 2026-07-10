@@ -1,0 +1,50 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--bg-card);
+  }
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  color: var(--fg1);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity {
+  color: var(--fg3);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live {
+  color: var(--color-purple);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listeners {
+  color: var(--color-orange);
+  font-size: 10px;
+  font-family: ui-monospace, monospace;
+  border: 0.5px solid var(--color-orange);
+  border-radius: 2px;
+  padding: 1px 5px;
+}
