@@ -4,6 +4,7 @@ import authPlugin from './plugins/auth';
 import { authRoutes } from './routes/auth';
 import { userRoutes } from './routes/user';
 
+import { audioRoutes } from './routes/audioFile';
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
   const app = Fastify({
@@ -37,6 +38,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   await app.register(authPlugin);
+  await app.register(audioRoutes, { prefix: '/api/audio'});
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });
 

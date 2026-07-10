@@ -6,7 +6,8 @@ import { useTableScrollY } from '../../../hooks/useTableScrollY';
 import type { Sample } from '../../../lib/types';
 import styles from './Samples.module.scss';
 import { SamplesSearch } from './SamplesSearch';
-
+import { useQuery } from '@tanstack/react-query';
+import { getlistAudioFile } from '../../../api/audiofile';
 export type SampleLibrary = 'user' | 'shared';
 
 const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = [
@@ -32,27 +33,21 @@ export function Samples(): JSX.Element {
   const [search, setSearch] = useState('');
   const { ref, y } = useTableScrollY();
 
-  useEffect(() => {
-    let cancelled = false;
 
-    fetch(`${import.meta.env.BASE_URL}/audio/manifest.json`)
-      .then((res) => res.json() as Promise<Sample[]>)
-      .then((data) => {
-        if (!cancelled) setSamples(data);
-      })
-      .catch((error: unknown) => {
-        console.error('Failed to load sample manifest', error);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  const { data, isSuccess, isError, error } = useQuery<Sample[]>({
+    queryKey: ["getSamples"],
+    queryFn: getlistAudioFile })
+  
+    useEffect(() => {
+    if ( isSuccess )
+      setSamples( data );
+    else if ( isError )
+      console.log( error.message)
+  })
   const dataSource = samples
-    .map((sample) => ({ ...sample, key: UUID.generate().toString() }))
+    .map((sample) => ({ ...sample, key: UUID.generate() }))
     .filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
-
+  
   return (
     <>
       <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} setSearch={setSearch} />

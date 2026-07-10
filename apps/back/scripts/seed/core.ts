@@ -95,9 +95,10 @@ export async function seed(config: SeedConfig): Promise<void> {
       const originalName = abs.split(sep).at(-1) ?? 'unknown.wav';
       const ext = originalName.split('.').at(-1) ?? 'wav';
       const url = `${ownerId}/${id}.${ext}`;
+      const name = "chien-loup"
       const visibility =
         typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
-      return { abs, id, url, visibility };
+      return { abs, id, url, visibility, name };
     });
 
     await prisma.$transaction(async (tx) => {
@@ -110,6 +111,7 @@ export async function seed(config: SeedConfig): Promise<void> {
             ownerId,
             url: sample.url,
             visibility: sample.visibility,
+            name: sample.name
           },
         });
       }
