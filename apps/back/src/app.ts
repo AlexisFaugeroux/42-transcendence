@@ -9,8 +9,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
     logger: {
       transport: {
-        target: 'pino-pretty',
         options: { ignore: 'pid,hostname', translateTime: 'HH:MM:ss Z' },
+        target: 'pino-pretty',
       },
     },
   });

@@ -1,0 +1,54 @@
+.card {
+  text-align: left;
+  background: var(--bg-card);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 18px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    border-color: var(--line-hover);
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.iconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-void);
+  box-shadow: inset 0 0 0 0.5px currentColor;
+}
+
+.title {
+  color: var(--fg1);
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.blurb {
+  color: var(--fg2);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}

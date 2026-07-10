@@ -1,15 +1,15 @@
+import { useMutation } from '@tanstack/react-query';
 import { Button, CheckOutlined, Form, Input, notification } from '@transcendence/ui';
 import type { JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import { theme } from '@ui/theme/theme';
+import { registerRequest } from '../../api/auth';
+import type { ApiErrorReponse } from '../../api/errors';
+import type { RegisterBody } from '../../api/types';
 import { PasswordStrength } from './PasswordStrength';
 import styles from './Register.module.scss';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { registerRequest } from '../../api/auth';
-import type { RegisterBody } from '../../api/types';
-import type { ApiErrorReponse } from '../../api/errors';
 
 export default function Register(): JSX.Element {
   const [form] = Form.useForm<RegisterBody>();

@@ -1,0 +1,31 @@
+.shell {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  background: var(--bg-app);
+  color: var(--fg1);
+  overflow: hidden;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.content {
+  background: var(--bg-panel-2);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+// Mobile: drop the left nav (mirrors the dashboard breakpoint).
+@media (max-width: 720px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .nav {
+    display: none;
+  }
+}

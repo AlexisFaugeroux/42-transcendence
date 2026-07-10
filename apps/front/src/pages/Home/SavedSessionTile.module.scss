@@ -1,0 +1,45 @@
+.tile {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-card);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kind {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.title {
+  color: var(--fg1);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--fg3);
+  font-size: 10px;
+  font-family: ui-monospace, monospace;
+}
+
+.updated {
+  color: var(--fg3);
+  font-size: 10px;
+}
