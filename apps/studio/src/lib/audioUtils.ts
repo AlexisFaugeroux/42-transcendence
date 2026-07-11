@@ -4,8 +4,7 @@ import type { BarInfo } from './types';
 
 export async function loadAudioFile(audioContext: AudioContext, url: string, uuid : string): Promise<AudioBuffer | undefined> {
   try {
-    console.log(`loading : ${uuid}`);
-    const fullPath = `http://${import.meta.env.VITE_NGINX_URL}/audio/${url}?sampleId=${uuid}`;
+    const fullPath = `${import.meta.env.VITE_NGINX_URL}/audio/${url}?sampleId=${uuid}`;
     const response = await fetch(fullPath);
     if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
 

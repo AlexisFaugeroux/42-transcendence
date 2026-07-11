@@ -9,13 +9,6 @@ import { toLinks } from '../repositories/user';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
 
-interface CheckAccessRoute extends RouteGenericInterface {
-  Querystring: {
-    ownerId: string;
-    sampleId: string;
-  };
-}
-
 interface RegisterRoute extends RouteGenericInterface {
   Body: RegisterBody;
   Reply: AuthResponse;
@@ -83,7 +76,7 @@ class AuthController {
     return reply.code(204).send();
   };
 
-  public checkAccess = async (req: FastifyRequest<CheckAccessQueryParams>, reply: FastifyReply) => {
+  public checkAccess = async (req: FastifyRequest, reply: FastifyReply) => {
     const originalString = req.headers['x-original-uri']
     if (!originalString || Array.isArray(originalString))
     { 
@@ -95,14 +88,13 @@ class AuthController {
     const ownerId = queryParser.get('ownerId');
     if (!sampleId)
     {
-      console.log("ici");
       reply.code(400).send();
       return ;
     }
     const sample = await audioFileRepository.findById(sampleId);
     if (!sample) throw new NotFoundError();
-    // if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
-    //   throw new ForbiddenError();
+     if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+       throw new ForbiddenError();
     reply.code(200).send();
   };
 
