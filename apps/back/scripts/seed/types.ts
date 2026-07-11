@@ -3,7 +3,7 @@ import type { VisibilityType } from '../../src/generated/prisma/enums';
 
 export type UserFixture = Omit<User, 'ownerId'>;
 
-export type SampleOwner = 'PLATFORM' | { pseudo: string };
+export type SampleOwner = 'PLATFORM' | { artistName: string };
 
 export interface SampleSet {
   dir: string;

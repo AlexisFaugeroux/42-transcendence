@@ -72,3 +72,9 @@ export function useUser() {
   if (!ctx) throw new Error("useUser used outside a AuthProvider");
   return ctx;
 }
+
+export function useAuthUser(): AuthUser {
+  const { user } = useUser();
+  if (!user) throw new Error(`useAuthUser outside an authenticated route`);
+  return user;
+}

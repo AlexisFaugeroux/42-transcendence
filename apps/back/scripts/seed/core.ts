@@ -42,6 +42,9 @@ export async function seed(config: SeedConfig): Promise<void> {
       const createdUser = await tx.user.create({
         data: {
           ...user,
+          bio: user.bio ?? undefined,
+          links: user.links ?? undefined,
+          location: user.location ?? undefined,
           owner: {
             create: {
               type: OwnerType.USER,
@@ -53,15 +56,15 @@ export async function seed(config: SeedConfig): Promise<void> {
     }
 
     console.log('Create follows...');
-    for (const [pseudo, following] of Object.entries(config.follows)) {
+    for (const [artistName, following] of Object.entries(config.follows)) {
       await tx.user.update({
         data: {
           following: {
-            set: following.map((followed) => ({ pseudo: followed })),
+            set: following.map((followed) => ({ artistName: followed })),
           },
         },
         where: {
-          pseudo,
+          artistName,
         },
       });
     }
@@ -71,8 +74,8 @@ export async function seed(config: SeedConfig): Promise<void> {
 
   const resolveOwnerId = (owner: SampleOwner): string => {
     if (owner === 'PLATFORM') return platformOwner.id;
-    const user = users.find((candidate) => candidate.pseudo === owner.pseudo);
-    if (!user) throw new Error(`Cannot find user ${owner.pseudo}`);
+    const user = users.find((candidate) => candidate.artistName === owner.artistName);
+    if (!user) throw new Error(`Cannot find user ${owner.artistName}`);
     return user.ownerId;
   };
 
@@ -83,7 +86,7 @@ export async function seed(config: SeedConfig): Promise<void> {
 
   for (const sampleSet of config.sampleSets) {
     const ownerId = resolveOwnerId(sampleSet.owner);
-    const label = sampleSet.owner === 'PLATFORM' ? 'platform' : sampleSet.owner.pseudo;
+    const label = sampleSet.owner === 'PLATFORM' ? 'platform' : sampleSet.owner.artistName;
     console.log(`Create ${label} audio files...`);
 
     const files = await walk(sampleSet.dir);

@@ -5,10 +5,13 @@ const registerSchema = {
   body: {
     properties: {
       email: { format: 'email', type: 'string' },
+      firstname: { maxLength: 64, minLength: 1, type: 'string' },
+      handle: { maxLength: 32, minLength: 3, pattern: '^[\\w.]+$', type: 'string' },
+      lastname: { maxLength: 64, minLength: 1, type: 'string' },
       password: { maxLength: 128, minLength: 8, type: 'string' },
-      pseudo: { maxLength: 32, minLength: 1, type: 'string' },
+      artistName: { maxLength: 32, minLength: 1, type: 'string' },
     },
-    required: ['email', 'pseudo', 'password'],
+    required: ['email', 'firstname', 'lastname', 'handle', 'artistName', 'password'],
     type: 'object',
   },
 };

@@ -3,7 +3,13 @@ export type Role = 'ADMIN' | 'ARTIST';
 export interface User {
   id: string;
   email: string;
-  pseudo: string;
+  firstname: string;
+  lastname: string;
+  location?: string;
+  bio?: string;
+  handle: string;
+  links?: { kind: string; url: string }[] | null;
+  artistName: string;
   password: string;
   role: Role;
   ownerId?: string;
@@ -11,8 +17,11 @@ export interface User {
 
 export interface CreateUserInput {
   email: string;
+  firstname: string;
+  lastname: string;
+  handle: string;
   password: string;
-  pseudo: string;
+  artistName: string;
   role?: Role;
 }
 
@@ -24,7 +33,11 @@ export interface GetUserInput {
 
 export interface UpdateUserInput {
   email?: string;
-  pseudo?: string;
+  handle?: string;
+  links?: { kind: string; url: string }[];
+  location: string;
+  artistName?: string;
   password?: string;
   role?: Role;
+  bio?: string;
 }
