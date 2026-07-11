@@ -95,12 +95,12 @@ export async function seed(config: SeedConfig): Promise<void> {
       const originalName = abs.split(sep).at(-1) ?? 'unknown.wav';
       const ext = originalName.split('.').at(-1) ?? 'wav';
       const url = `${ownerId}/${id}.${ext}`;
-      const name = "chien-loup"
+      console.log(originalName, url)
+      const name = originalName
       const visibility =
         typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
-      return { abs, id, url, visibility, name };
+      return { abs, id, url, visibility, name : originalName };
     });
-
     await prisma.$transaction(async (tx) => {
       for (const sample of samples) {
         await tx.audioFile.create({

@@ -3,29 +3,20 @@ import type { GetAudioFileInput } from "../domain/audioFile";
 import { audioFileRepository } from "../repositories/audioFile";
 import type { Visibility, Key } from "../domain/audioFile";
 
-interface GetOption extends RouteGenericInterface {
+interface GetAudioFilesRoute extends RouteGenericInterface {
     Querystring : {
-        ownerId : string[],
-        id: string[],
-        bpm: number[],
-        key: Key[],
-        visibility : Visibility[]
+        ownerIds : string[],
+        ids: string[],
+        bpms: number[],
+        keys: Key[],
+        visibilities : Visibility[]
     }
 }
 
-export class AudioFileController {
+class AudioFileController {
 
-    public get = async ( req : FastifyRequest<GetOption>, reply : FastifyReply ) => {
-        const { ownerId, id, bpm, key, visibility } = req.query; 
-        const data : GetAudioFileInput = {
-            ownerIds : ownerId,
-            ids : id,
-            bpms : bpm,
-            keys : key,
-            visibilities : visibility 
-        }
-        const audio = await audioFileRepository.get( data );
-        console.log( audio );
+    public get = async ( req : FastifyRequest<GetAudioFilesRoute>, reply : FastifyReply ) => {
+        const audio = await audioFileRepository.get( req.query );
         reply.code(200).send( audio );
     }
 }

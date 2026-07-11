@@ -44,10 +44,8 @@ export function Samples(): JSX.Element {
     else if ( isError )
       console.log( error.message)
   })
-  const dataSource = samples
-    .map((sample) => ({ ...sample, key: UUID.generate() }))
+  const dataSource = (data ?? [])
     .filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
-  
   return (
     <>
       <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} setSearch={setSearch} />
@@ -75,6 +73,7 @@ export function Samples(): JSX.Element {
         <div ref={ref} className={styles.table} style={{ flex: 1, minHeight: 0 }}>
           <Table
             bordered={false}
+            rowKey="id"
             columns={columns}
             dataSource={dataSource}
             size="small"
