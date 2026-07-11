@@ -1,14 +1,12 @@
+import type { AuthUser } from '@transcendence/auth';
+
 export interface RegisterBody {
   email: string;
-  pseudo: string;
+  firstname: string;
+  lastname: string;
+  handle: string;
+  artistName: string;
   password: string;
-}
-
-export interface AuthUser {
-  email: string;
-  id: string;
-  pseudo: string;
-  role: 'ADMIN' | 'ARTIST';
 }
 
 export interface AuthResponse {
@@ -17,6 +15,6 @@ export interface AuthResponse {
 
 export interface RegisterResponse {
   email: string;
-  pseudo: string;
+  artistName: string;
   role: 'ADMIN' | 'ARTIST';
 }

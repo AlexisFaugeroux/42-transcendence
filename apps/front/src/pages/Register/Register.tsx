@@ -34,8 +34,9 @@ export default function Register(): JSX.Element {
     onError: (error: ApiErrorReponse) => {
       if (error.status === 409) {
         form.setFields([
-          { errors: ['Email or pseudo already taken.'], name: 'email' },
-          { errors: ['Email or pseudo already taken.'], name: 'pseudo' },
+          { errors: ['Email, artist name or handle already taken.'], name: 'email' },
+          { errors: ['Email, artist name or handle already taken.'], name: 'artistName' },
+          { errors: ['Email, artist name or handle already taken.'], name: 'handle' },
         ]);
       }
     },
@@ -81,16 +82,44 @@ export default function Register(): JSX.Element {
               </Form.Item>
 
               <Form.Item
-                label="Username"
-                name="pseudo"
-                extra="Letters, numbers, dot, underscore"
+                label="First name"
+                name="firstname"
+                rules={[{ message: 'Please enter your first name.', required: true }]}
+              >
+                <Input size="large" placeholder="Lex" autoComplete="off" />
+              </Form.Item>
+
+              <Form.Item
+                label="Last name"
+                name="lastname"
+                rules={[{ message: 'Please enter your last name.', required: true }]}
+              >
+                <Input size="large" placeholder="Moreau" autoComplete="off" />
+              </Form.Item>
+
+              <Form.Item
+                label="Artist name"
+                name="artistName"
+                extra="Your public producer name. Shown on your profile and tracks."
                 rules={[
-                  { message: 'Please choose a username.', required: true },
+                  { message: 'Please choose an artist name.', required: true },
+                  { message: 'At least 3 characters.', min: 3 },
+                ]}
+              >
+                <Input size="large" placeholder="Lex Moreau" autoComplete="off" />
+              </Form.Item>
+
+              <Form.Item
+                label="Handle"
+                name="handle"
+                extra="Used in your profile URL: makesomenoise.fm/@…"
+                rules={[
+                  { message: 'Please choose a handle.', required: true },
                   { message: 'At least 3 characters.', min: 3 },
                   { message: 'Only letters, numbers, dot and underscore.', pattern: /^[\w.]+$/ },
                 ]}
               >
-                <Input size="large" prefix="@" placeholder="lex.moreau" autoComplete="off" />
+                <Input size="large" prefix="@" placeholder="lexmoreau" autoComplete="off" />
               </Form.Item>
 
               <Form.Item

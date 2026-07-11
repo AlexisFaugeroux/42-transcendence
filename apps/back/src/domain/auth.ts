@@ -1,6 +1,11 @@
+import type { Role } from './user';
+
 export interface RegisterBody {
   email: string;
-  pseudo: string;
+  firstname: string;
+  lastname: string;
+  handle: string;
+  artistName: string;
   password: string;
 }
 
@@ -10,10 +15,17 @@ export interface LoginBody {
 }
 
 export interface AuthUser {
-  email: string;
   id: string;
-  pseudo: string;
-  role: string;
+  artistName: string;
+  email: string;
+  joined: Date;
+  firstname: string;
+  lastname: string;
+  location?: string;
+  handle: string;
+  links?: { kind: string; url: string }[] | null;
+  bio?: string;
+  role: Role;
 }
 
 export interface AuthResponse {

@@ -1,7 +1,28 @@
 import type { PrismaClient, User as PrismaUser } from '../../src/generated/prisma/client';
+import type { JsonValue } from '../../src/generated/prisma/internal/prismaNamespace';
 import type { CreateUserInput, GetUserInput, UpdateUserInput, User } from '../domain/user';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
+
+// A `Json?` column comes back as untyped JsonValue. `links` is stored as an
+// array of { kind, url } entries; narrow it here (dropping anything that
+// doesn't fit) rather than asserting the shape blindly.
+export function toLinks(value: JsonValue | null): { kind: string; url: string }[] | null {
+  if (!Array.isArray(value)) return null;
+  const links: { kind: string; url: string }[] = [];
+  for (const entry of value) {
+    if (
+      entry !== null &&
+      typeof entry === 'object' &&
+      !Array.isArray(entry) &&
+      typeof entry.kind === 'string' &&
+      typeof entry.url === 'string'
+    ) {
+      links.push({ kind: entry.kind, url: entry.url });
+    }
+  }
+  return links;
+}
 
 class UserRepository {
   private readonly prisma: PrismaClient;
@@ -105,9 +126,9 @@ class UserRepository {
   // Format prisma response (type User from PrismaClient) into domain type (type User from domain/)
   // because we do not keep every field from the User table in the database
   private _format(user: PrismaUser): User {
-    const { createdAt, updatedAt, ...rest } = user;
+    const { bio, createdAt, links, location, updatedAt, ...rest } = user;
 
-    return rest;
+    return { ...rest, bio: bio ?? undefined, links: toLinks(links), location: location ?? undefined };
   }
 
   private _buildFilters(input: GetUserInput) {

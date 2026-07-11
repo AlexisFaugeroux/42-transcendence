@@ -7,8 +7,11 @@ export async function registerRequest(body: RegisterBody): Promise<RegisterRespo
   const res = await fetch(`${BASE_URL}/api/auth/register`, {
     body: JSON.stringify({
       email: body.email,
+      firstname: body.firstname,
+      handle: body.handle,
+      lastname: body.lastname,
       password: body.password,
-      pseudo: body.pseudo,
+      artistName: body.artistName,
     }),
     credentials: 'include',
     headers: {
