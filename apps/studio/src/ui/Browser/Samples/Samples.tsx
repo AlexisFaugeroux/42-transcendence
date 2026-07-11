@@ -44,7 +44,7 @@ export function Samples(): JSX.Element {
     else if ( isError )
       console.log( error.message)
   })
-  const dataSource = (data ?? [])
+  const dataSource = (samples ?? [])
     .filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
   return (
     <>
