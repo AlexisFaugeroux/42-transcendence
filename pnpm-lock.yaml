@@ -365,15 +365,12 @@ importers:
       '@opendaw/studio-sdk':
         specifier: 0.0.137
         version: 0.0.137(@ffmpeg/ffmpeg@0.12.15)(@ffmpeg/util@0.12.2)(@types/node-fetch@2.6.13)
-<<<<<<< HEAD
-      '@transcendence/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
-=======
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.6)
->>>>>>> d459452 (feat(back): #126  route get audio)
+      '@transcendence/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@transcendence/ui':
         specifier: workspace:*
         version: link:../../packages/ui

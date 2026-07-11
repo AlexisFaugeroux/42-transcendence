@@ -4,6 +4,7 @@ import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from 
 import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
 import { audioFileRepository } from '../repositories/audioFile';
+import { userRepository } from '../repositories/user';
 import { sessionRepository } from '../repositories/session';
 import { toLinks } from '../repositories/user';
 import { hashPassword, verifyPassword } from '../utils/password';
@@ -85,7 +86,13 @@ class AuthController {
     }
     const queryParser = new URLSearchParams( originalString.substring( originalString.indexOf('?'), originalString.length ) );
     const sampleId = queryParser.get('sampleId');
-    const ownerId = queryParser.get('ownerId');
+    const userId = queryParser.get('userId');
+    if ( !userId )
+    {
+      reply.code(400).send();
+      return ;
+    }
+    const ownerId = (await userRepository.findById( userId )).ownerId;
     if (!sampleId)
     {
       reply.code(400).send();
