@@ -51,15 +51,19 @@ export function createClipFromBuffer(
   localAudioBuffers: Map<string, AudioBuffer>,
   position: number,
   maxDuration: number,
-  audioFileUUID : string,
+  audioFileUUID: string,
 ): Clip {
   const { boxGraph } = project;
 
   localAudioBuffers.set(audioFileUUID, audioBuffer);
-  const audioFileBox = AudioFileBox.create(boxGraph, UUID.parse(audioFileUUID), (box) => {
-    box.fileName.setValue(name);
-    box.endInSeconds.setValue(audioBuffer.duration);
-  });
+  const uuid = UUID.parse(audioFileUUID);
+  const found = boxGraph.findBox(uuid);
+  const audioFileBox = found.nonEmpty()
+    ? found.unwrap().asBox(AudioFileBox)
+    : AudioFileBox.create(boxGraph, uuid, (box) => {
+        box.fileName.setValue(name);
+        box.endInSeconds.setValue(audioBuffer.duration);
+      });
 
   const fullDuration = Math.round(PPQN.secondsToPulses(audioBuffer.duration, project.engine.bpm.getValue()));
   const clipDuration = Math.min(fullDuration, maxDuration);
@@ -101,9 +105,10 @@ export async function createClip(
   localAudioBuffers: Map<string, AudioBuffer>,
   position: number,
   existingClips: Clip[],
-  audioFileUUID: string
+  audioFileUUID: string,
+  userId: string,
 ): Promise<{ createdClip: Clip | null; truncatedClip: Clip | null } | null> {
-  const audioBuffer = await loadAudioFile(audioContext, url, audioFileUUID);
+  const audioBuffer = await loadAudioFile(audioContext, url, audioFileUUID, userId);
   if (!audioBuffer) return null;
 
   if (existingClips.find((clip) => track.trackBox === clip.trackBox && clip.position === position)) return null;
@@ -126,7 +131,16 @@ export async function createClip(
 
   let newClip: Clip | null = null;
   project.editing.modify(() => {
-    newClip = createClipFromBuffer(project, track, audioBuffer, track.name, localAudioBuffers, position, maxDuration, audioFileUUID);
+    newClip = createClipFromBuffer(
+      project,
+      track,
+      audioBuffer,
+      track.name,
+      localAudioBuffers,
+      position,
+      maxDuration,
+      audioFileUUID,
+    );
 
     if (clipToTruncate) {
       clipToTruncate.regionBox.duration.setValue(truncatedNewDuration);

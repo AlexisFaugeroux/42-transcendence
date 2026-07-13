@@ -1,12 +1,23 @@
 import { PPQN } from '@opendaw/lib-dsp';
 import type { Project } from '@opendaw/studio-core';
+import { apiFetch } from '@auth/src';
+import { ApiErrorReponse } from '@auth/src/errors';
 import type { BarInfo } from './types';
 
-export async function loadAudioFile(audioContext: AudioContext, url: string, uuid : string): Promise<AudioBuffer | undefined> {
+export async function loadAudioFile(
+  audioContext: AudioContext,
+  url: string,
+  uuid: string,
+  userId: string,
+): Promise<AudioBuffer | undefined> {
   try {
-    const fullPath = `${import.meta.env.VITE_NGINX_URL}/audio/${url}?sampleId=${uuid}`;
-    const response = await fetch(fullPath);
-    if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
+    const queryString = new URLSearchParams({
+      sampleId: uuid,
+      userId,
+    });
+    const fullPath = `${import.meta.env.VITE_NGINX_URL}/audio/${url}?${queryString.toString()}`;
+    const response = await apiFetch(fullPath);
+    if (!response.ok) throw new ApiErrorReponse();
 
     const arrayBuffer = await response.arrayBuffer();
     // In case of browser incompatibilities, use WavFile.decodeFloats for .wav files and FFmpegWorker for other conversions

@@ -1,20 +1,17 @@
-import type { Sample } from "../lib/types";
-import { useUser } from "@auth/src/AuthContext";
-import type { AuthUser } from "@auth/src/types";
+import { apiFetch } from '@auth/src';
+import { ApiErrorReponse } from '@auth/src/errors';
+import type { Sample } from '../lib/types';
 
-const BACK_URL = import.meta.env.VITE_API_URL
-const query = new URLSearchParams();
+const BACK_URL = import.meta.env.VITE_API_URL;
 
-export async function getlistAudioFile() : Promise<Sample[]> {
+export async function getlistAudioFile(): Promise<Sample[]> {
+  const query = new URLSearchParams({
+    visibility: 'PUBLIC',
+  });
 
-	const { user } = useUser();
-	query.set("userId", user.id);
-	query.set( "visibility", "PUBLIC");
+  const res = await apiFetch(`${BACK_URL}/api/audio/get?${query.toString()}`);
+  if (!res.ok) throw new ApiErrorReponse(`[/api/audio/get] : ${res.statusText}`, res.status);
 
-	const res = await fetch(`http://${BACK_URL}/api/audio/get?${query.toString()}`);
-	if ( !res.ok )
-		throw new Error("Failed");
-	const data : Sample[] = await res.json() as Sample[];
-	
-	return data;
+  const data = (await res.json()) as Sample[];
+  return data;
 }

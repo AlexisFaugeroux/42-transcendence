@@ -1,10 +1,18 @@
 import Fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import { ConflictError, type ErrorReponse, ForbiddenError, NotFoundError, UnauthorizedError } from './domain/errors';
+import {
+  BadRequestError,
+  ConflictError,
+  type ErrorReponse,
+  ForbiddenError,
+  InternalServerError,
+  NotFoundError,
+  UnauthorizedError,
+} from './domain/errors';
 import authPlugin from './plugins/auth';
+import { audioRoutes } from './routes/audioFile';
 import { authRoutes } from './routes/auth';
 import { userRoutes } from './routes/user';
 
-import { audioRoutes } from './routes/audioFile';
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
   const app = Fastify({
@@ -32,13 +40,19 @@ export async function buildApp(): Promise<FastifyInstance> {
     if (error instanceof ConflictError) {
       return reply.code(409).send({ error: error.message, status: 409 });
     }
+    if (error instanceof InternalServerError) {
+      return reply.code(500).send({ error: error.message, status: 500 });
+    }
+    if (error instanceof BadRequestError) {
+      return reply.code(400).send({ error: error.message, status: 400 });
+    }
 
     request.log.error(error);
     return reply.code(500).send({ error: 'internal error', status: 500 });
   });
 
   await app.register(authPlugin);
-  await app.register(audioRoutes, { prefix: '/api/audio'});
+  await app.register(audioRoutes, { prefix: '/api/audio' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });
 

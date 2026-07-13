@@ -92,7 +92,7 @@ class AudioFileRepository {
     const bpmFilter = bpms?.length ? { bpm: { in: bpms } } : undefined;
     const keyFilter = keys?.length ? { Key: { in: keys } } : undefined;
     const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
-    const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds  } } : undefined;   
+    const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
 
     return {
       ...visibilityFilter,

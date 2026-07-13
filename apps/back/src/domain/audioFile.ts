@@ -25,7 +25,7 @@ export interface CreateAudioFileInput {
 }
 
 export interface GetAudioFileInput {
-  visibilities?: Visibility[]
+  visibilities?: Visibility[];
   ids?: string[];
   bpms?: number[];
   keys?: Key[];
