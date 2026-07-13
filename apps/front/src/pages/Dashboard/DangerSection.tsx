@@ -1,5 +1,9 @@
-import { Button, Input, message, Modal } from '@transcendence/ui';
+import { useMutation } from '@tanstack/react-query';
+import { Button, CheckOutlined, CloseCircleOutlined, Input, Modal, notification } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { theme } from '@ui/theme/theme';
+import { deleteAccount } from '../../api/user';
 import styles from './DangerSection.module.scss';
 import { SectionHeader } from './primitives';
 
@@ -8,12 +12,50 @@ interface DangerSectionProps {
 }
 
 export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState('');
   const [reason, setReason] = useState('');
+  const [notificationApi, notificationContext] = notification.useNotification();
+
+  const openSuccessNotification = () => {
+    const key = `open${Date.now()}`;
+
+    notificationApi.open({
+      description:
+        " We're sorry to see you leave. All your data were deleted. That includes your projects, tracks and samples.",
+      duration: 5,
+      icon: <CheckOutlined color={theme.green} />,
+      key,
+      title: 'Your account has been delete',
+    });
+  };
+
+  const openErrorNotification = (error: Error) => {
+    const key = `open${Date.now()}`;
+
+    notificationApi.open({
+      description: error.message,
+      duration: 3,
+      icon: <CloseCircleOutlined color={theme.red} />,
+      key,
+      title: 'An error occured while deleting you account',
+    });
+  };
+
+  const { mutate: deleteAccountMutation } = useMutation({
+    mutationFn: deleteAccount,
+    onError: (error) => {
+      openErrorNotification(error);
+    },
+    onSuccess: () => {
+      openSuccessNotification();
+      void navigate('/');
+    },
+  });
 
   // The confirm button only enables when the typed text matches the handle exactly.
-  const matches = typed.trim() === handle;
+  const matches = typed.trim() === handle.toUpperCase();
 
   const close = (): void => {
     setOpen(false);
@@ -22,13 +64,13 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
   };
 
   const confirmDelete = (): void => {
-    // TODO (backend): call the delete-account endpoint here.
     close();
-    void message.success('Account scheduled for deletion.');
+    deleteAccountMutation();
   };
 
   return (
     <div>
+      {notificationContext}
       <SectionHeader
         title={<span className={styles.dangerTitle}>Danger zone</span>}
         subtitle="Irreversible actions. Read carefully."

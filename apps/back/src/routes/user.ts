@@ -3,38 +3,38 @@ import { userController } from '../controllers/user';
 
 const updateProfileSchema = {
   body: {
-    type: 'object',
     additionalProperties: false,
     properties: {
+      artistName: { maxLength: 32, minLength: 1, type: 'string' },
+      bio: { maxLength: 500, type: 'string' },
       email: { format: 'email', type: 'string' },
       firstname: { maxLength: 64, minLength: 1, type: 'string' },
-      lastname: { maxLength: 64, minLength: 1, type: 'string' },
       handle: { maxLength: 32, minLength: 3, pattern: '^[\\w.]+$', type: 'string' },
-      artistName: { maxLength: 32, minLength: 1, type: 'string' },
-      location: { maxLength: 128, type: 'string' },
-      bio: { maxLength: 500, type: 'string' },
+      lastname: { maxLength: 64, minLength: 1, type: 'string' },
       links: {
-        type: 'array',
-        maxItems: 10,
         items: {
-          type: 'object',
           additionalProperties: false,
           properties: {
             kind: { maxLength: 32, minLength: 1, type: 'string' },
             url: { format: 'uri', maxLength: 2048, type: 'string' },
           },
           required: ['kind', 'url'],
+          type: 'object',
         },
+        maxItems: 10,
+        type: 'array',
       },
+      location: { maxLength: 128, type: 'string' },
     },
+    type: 'object',
   },
 };
 
 const changePasswordSchema = {
   body: {
     properties: {
-      oldPassword: { maxLength: 128, minLength: 8, type: 'string' },
       newPassword: { maxLength: 128, minLength: 8, type: 'string' },
+      oldPassword: { maxLength: 128, minLength: 8, type: 'string' },
     },
     required: ['oldPassword', 'newPassword'],
     type: 'object',

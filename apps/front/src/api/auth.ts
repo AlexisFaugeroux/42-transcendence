@@ -1,4 +1,4 @@
-import { ApiErrorReponse } from './errors.ts';
+import { ApiErrorReponse } from '@auth/src/errors.ts';
 import type { RegisterBody, RegisterResponse } from './types.ts';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -6,12 +6,12 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export async function registerRequest(body: RegisterBody): Promise<RegisterResponse> {
   const res = await fetch(`${BASE_URL}/api/auth/register`, {
     body: JSON.stringify({
+      artistName: body.artistName,
       email: body.email,
       firstname: body.firstname,
       handle: body.handle,
       lastname: body.lastname,
       password: body.password,
-      artistName: body.artistName,
     }),
     credentials: 'include',
     headers: {

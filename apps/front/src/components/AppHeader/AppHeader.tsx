@@ -1,11 +1,40 @@
-import { Avatar } from '@transcendence/ui';
+import { useMutation } from '@tanstack/react-query';
+import { useAuthUser, useUser } from '@transcendence/auth';
+import {
+  Button,
+  CloseCircleOutlined,
+  ConfigProvider,
+  Dropdown,
+  FileProtectOutlined,
+  LogoutOutlined,
+  type MenuProps,
+  notification,
+} from '@transcendence/ui';
 import type { JSX } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
+import { theme } from '@ui/theme/theme';
+import { HeaderIconButton } from '../HeaderIconButton/HeaderIconButton';
+import { UserChip } from '../UserChip/UserChip';
 import styles from './AppHeader.module.scss';
 
 export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'settings';
+
+const items: MenuProps['items'] = [
+  {
+    icon: <LogoutOutlined style={{ color: theme.orange }} />,
+    key: 'logout',
+    label: 'Logout',
+    style: { fontSize: '10px' },
+  },
+  {
+    icon: <FileProtectOutlined style={{ color: theme.orange }} />,
+    key: 'privacy',
+    label: 'Privacy terms',
+    style: { fontSize: '10px' },
+  },
+];
 
 interface HeaderLink {
   key: AppHeaderKey;
@@ -23,8 +52,44 @@ const LINKS: HeaderLink[] = [
 // Shared top header for the in-app pages (Home / Sessions / Library / Settings).
 // The `active` prop drives which link is highlighted.
 export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
+  const user = useAuthUser();
+  const { logout } = useUser();
+  const navigate = useNavigate();
+  const [notificationApi, notificationContext] = notification.useNotification();
+
+  const openErrorNotification = (error: Error) => {
+    const key = `open${Date.now()}`;
+
+    notificationApi.open({
+      description: error.message,
+      duration: 3,
+      icon: <CloseCircleOutlined color={theme.red} />,
+      key,
+      title: 'An error occured while deleting you account',
+    });
+  };
+
+  const { mutate: logoutMutation } = useMutation({
+    mutationFn: logout,
+    onError: (error) => {
+      openErrorNotification(error);
+    },
+    onSuccess: () => {
+      void navigate('/');
+    },
+  });
+
+  const onMeunuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'logout') {
+      logoutMutation();
+      return;
+    }
+    void navigate(`/${key}`);
+  };
+
   return (
     <header className={styles.header}>
+      {notificationContext}
       <Link to="/home" className={styles.brand}>
         <MsnIcon name="msn" size="20px" color="var(--color-orange)" />
         <MsnWordmark size={15} accent="var(--color-orange)" />
@@ -43,16 +108,24 @@ export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
       </nav>
 
       <div className={styles.right}>
-        <button className={styles.iconButton} aria-label="Notifications">
+        <HeaderIconButton label="Notifications">
           <MsnIcon name="bell" size="16px" />
-        </button>
-        <div className={styles.user}>
-          <Avatar size={28} shape="square">
-            LM
-          </Avatar>
-          <span className={styles.handle}>@lex.moreau</span>
-          <MsnIcon name="triangle" size="10px" color="var(--fg3)" />
-        </div>
+        </HeaderIconButton>
+        <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
+          <Dropdown
+            trigger={['click']}
+            menu={{ items, onClick: onMeunuClick, style: { border: `1px solid ${theme.lineSoft}` } }}
+          >
+            <Button style={{ background: theme.void, border: 'none', boxShadow: 'none' }}>
+              <UserChip
+                avatarName={user.artistName}
+                name={`${user.firstname} ${user.lastname}`}
+                handle={user.handle}
+                status="online"
+              />
+            </Button>
+          </Dropdown>
+        </ConfigProvider>
       </div>
     </header>
   );

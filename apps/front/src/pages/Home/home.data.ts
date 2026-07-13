@@ -1,7 +1,5 @@
 import type { MsnIconLabel } from '@ui/components/MsnIcon/types';
 
-export const USER = { handle: '@lex.moreau', name: 'Lex Moreau', plan: 'Producer' };
-
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
 export interface SessionType {

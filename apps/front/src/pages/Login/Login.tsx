@@ -19,7 +19,10 @@ export default function Login(): JSX.Element {
   const { isPending, mutate: loginMutation } = useMutation({
     mutationFn: login,
     onError: () => {
-      form.setFields([{ errors: ['Invalid email or password.'], name: 'password' }]);
+      form.setFields([
+        { errors: ['Invalid email or password.'], name: 'email' },
+        { errors: ['Invalid email or password.'], name: 'password' },
+      ]);
     },
     onSuccess: () => {
       const target = safeRedirect(params.get('redirect'));

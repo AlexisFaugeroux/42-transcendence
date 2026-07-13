@@ -1,0 +1,13 @@
+.button {
+  background: transparent;
+  border: 0;
+  color: var(--fg2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+
+  &:hover {
+    color: var(--fg1);
+  }
+}

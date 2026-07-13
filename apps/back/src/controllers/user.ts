@@ -1,9 +1,9 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { userRepository } from '../repositories/user';
-import { hashPassword, verifyPassword } from '../utils/password';
 import { ForbiddenError } from '../domain/errors';
 import type { UpdateUserInput, UserResponse } from '../domain/user';
+import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
+import { hashPassword, verifyPassword } from '../utils/password';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -28,7 +28,7 @@ class UserController {
   };
 
   public updatePassword = async (req: FastifyRequest<UpdatePasswordRoute>, reply: FastifyReply): Promise<void> => {
-    const { oldPassword, newPassword } = req.body;
+    const { newPassword, oldPassword } = req.body;
 
     const user = await userRepository.findById(req.authUser.id);
 
