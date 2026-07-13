@@ -4,8 +4,6 @@ A minimal web-based DAW built on the [openDAW-headless](https://github.com/andre
 is a slimmed-down version of [openDAW](https://opendaw.studio/), focusing on core DAW interactions rather than a
 full-featured production tool.
 
-**Current development**: drag&drop clips to the grid (adds them to the SDK too)
-
 ## Target features (MVP)
 
 1. **Load samples into a timeline/grid** — drag or click to place a clip onto a track.

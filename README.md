@@ -112,8 +112,14 @@ erDiagram
   User {
     string id PK
     string email UK
-    string pseudo UK
+    string handle UK
+    string artistName UK
     string password
+    string firstname
+    string lastname
+    string location "nullable"
+    string bio "nullable"
+    json links "nullable"
     Role role
     string ownerId FK "unique"
     datetime createdAt
@@ -147,9 +153,10 @@ erDiagram
 
 - **Owner** — abstraction that owns audio files. `type` is `PLATEFORM` (shared/platform
   content) or `USER`. An owner optionally maps to a single `User` and to many `AudioFile`s.
-- **User** — account (`email`, `pseudo`, hashed `password`, `role` ∈ {`ADMIN`, `ARTIST`}).
-  Linked one-to-one to an `Owner`. Self many-to-many relation `UserFollows`
-  (`following` / `followedBy`). Has many `Session`s.
+- **User** — account (`email`, `handle`, `artistName` — all unique — hashed
+  `password`, profile fields `firstname` / `lastname` / `location` / `bio` /
+  `links`, `role` ∈ {`ADMIN`, `ARTIST`}). Linked one-to-one to an `Owner`. Self
+  many-to-many relation `UserFollows` (`following` / `followedBy`). Has many `Session`s.
 - **AudioFile** — sample/track metadata: optional `bpm` and `key`, `visibility`
   (`PRIVATE` / `SHARED` / `PUBLIC`), `url`, `length`, `bytes`. The binary file lives on disk.
 - **Session** — authentication session for a user (`expiresAt`, optional `revokedAt`,
@@ -174,8 +181,8 @@ The backend reads two environment files, both **git-ignored** — create them fr
 provided example:
 
 ```sh
-cp apps/back/.env.example apps/back/.env        # development
-cp apps/back/.env.example apps/back/.env.prod   # production
+cp apps/back/.env.example      apps/back/.env        # development
+cp apps/back/.env.prod.example apps/back/.env.prod   # production
 ```
 
 Then set the values:
@@ -197,9 +204,10 @@ pnpm prod
 ```
 
 This generates the TLS certificate, builds all images, and starts every service under the
-`prod` profile. The application is then served at **https://localhost** (self-signed
-certificate — accept the browser warning). Database migrations and the production seed run
-automatically on backend startup.
+`prod` profile. The application is then served at **https://localhost:8443** (the reverse
+proxy publishes `8443:443` and `8080:80`; `http://localhost:8080` redirects to HTTPS —
+self-signed certificate, accept the browser warning). Database migrations and the
+production seed run automatically on backend startup.
 
 Teardown:
 
@@ -264,7 +272,16 @@ pnpm --filter @transcendence/studio dev           # studio
 
 ## Resources
 
-**Documentation & references:**
+**Project documentation (`docs/`):**
+
+- [`monorepo.md`](docs/monorepo.md) — workspace layout, packages, pnpm commands
+- [`infra.md`](docs/infra.md) — dev and prod Docker/nginx topology
+- [`architecture/database.md`](docs/architecture/database.md) — Postgres, the two DBs, schema, env vars
+- [`architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md) — audio storage & access control
+- [`authentication.md`](docs/authentication.md) — JWT + session auth
+- [`prisma.md`](docs/prisma.md) · [`formatting.md`](docs/formatting.md) · [`linting.md`](docs/linting.md) · [`rebase-before-pr.md`](docs/rebase-before-pr.md)
+
+**External documentation & references:**
 
 - [openDAW](https://opendaw.studio/) and [openDAW-headless SDK](https://github.com/andremichelle/openDAW-headless)
 - [Fastify documentation](https://fastify.dev/docs/latest/)

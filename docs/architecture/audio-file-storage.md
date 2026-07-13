@@ -1,107 +1,53 @@
 # Audio File Storage & Access Control
 
-Status: exploratory
-Last updated: 2026-05-26
+App: `apps/back` + nginx (`infra/nginx/`)
 
-## Hosting
+Audio binaries live on disk; only metadata lives in Postgres. nginx serves the
+files and asks the backend for an access decision before handing any file over.
 
-Preferred option: **Infomaniak VPS Lite** (from EUR 2.70/month).
-
-- 1 vCPU, 2 GB RAM, 20 GB NVMe
-- 500 Mb/s bandwidth, unlimited traffic
-- Root SSH access, DDoS protection, Swiss-hosted
-
-The VPS also serves the frontend builds and runs the Node.js backend (see
-[deployment.md](deployment.md) if created). Audio files are served by nginx
-as static content.
-
-### Alternatives considered
-
-| Option                        | Notes                                 |
-| ----------------------------- | ------------------------------------- |
-| Cloudflare R2                 | 10 GB free, no egress fees            |
-| Backblaze B2 + Cloudflare CDN | 10 GB free, zero egress               |
-| Oracle Cloud Free Tier        | Free ARM VPS, unreliable availability |
-
-## Initial upload
-
-Bulk upload via rsync over SSH:
+## Where files live
 
 ```
-rsync -avz ./samples/ root@<vps-ip>:/var/www/audio/
+<AUDIO_ROOT>/<ownerId>/<audioFileId>.wav
 ```
 
-## User uploads
+`AUDIO_ROOT` defaults to `/var/www/audio`. In dev it maps to `infra/audio_data/`
+on the host; in prod to the `audio_data` Docker volume (see [infra.md](../infra.md)).
+The path key is `ownerId` (the `Owner` model), not `userId`.
 
-```
-POST  /api/audio/upload         -> validates, stores to /var/www/audio/{userId}/{file}
-GET   /audio/{userId}/{file}    -> served by nginx with auth gate
-```
+## Data model
 
-Backend validates file type, size, and sanitizes filenames.
+`AudioFile` (`apps/back/prisma/schema.prisma`) — metadata only: `ownerId`,
+`bpm?`, `key?`, `visibility` (`PRIVATE` / `SHARED` / `PUBLIC`), `url`, `length`,
+`bytes`. There is no `filename` / `mime_type` column; the binary is addressed by
+`ownerId`/`id` on disk.
 
-## Per-user access control (nginx auth_request)
+## Access control (nginx `auth_request`)
 
-nginx delegates auth to the backend before serving any file:
+For every `/audio/` request, nginx fires an internal sub-request to the backend,
+which answers 200 / 403 / 404:
 
 ```nginx
+# infra/nginx/audio.conf  (prod; dev uses audio.dev.conf → host.docker.internal:8080)
 location /audio/ {
-    auth_request /auth/check-access;
-    root /var/www;
+  auth_request /auth/check-access;
+  root /var/www;
 }
-
 location = /auth/check-access {
-    internal;
-    proxy_pass http://localhost:3000/api/audio/check-access;
-    proxy_pass_request_body off;
-    proxy_set_header Content-Length "";
-    proxy_set_header X-Original-URI $request_uri;
-    proxy_set_header Cookie $http_cookie;
+  internal;
+  proxy_pass http://back:8080/api/audio/check-access;
+  proxy_set_header X-Original-URI $request_uri;
+  proxy_set_header Cookie $http_cookie;
 }
 ```
 
-The backend checks file ownership in the database — not URL structure.
-Returns 200 (serve), 403 (denied), or 404 (not found).
+The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
+`authenticate` hook, then allows the file if it is `PUBLIC` / `SHARED` or the
+requester owns it (else 403; 404 if missing).
 
-### Ownership check (backend)
+## Uploads
 
-```
-checkAccess(req):
-    userId   = extractUserFromJWT(req.cookie)
-    filePath = req.headers['x-original-uri']
-
-    file = db.audioFiles.findOne({ path: filePath })
-
-    if !file          -> 404
-    if file.userId != userId -> 403
-    return 200
-```
-
-### Data model
-
-```
-audio_files
-    id        UUID   PK
-    user_id   UUID   FK -> users
-    filename  TEXT
-    path      TEXT
-    mime_type TEXT
-    size      BIGINT
-    created_at TIMESTAMP
-```
-
-## Security considerations
-
-- Always validate file type and size on upload
-- Sanitize filenames to prevent path traversal (`../../` attacks)
-- Rate-limit uploads to prevent abuse
-- The `auth_request` check must verify ownership, not just authentication —
-  otherwise any logged-in user can access any file
-- Storage quotas per user to prevent disk exhaustion on the VPS (20 GB shared)
-
-## Open questions
-
-- Per-user storage quota
-- Public / shared samples
-- Audio format constraints (wav, mp3, ogg?)
-- Transcode on upload?
+No upload endpoint yet — files arrive via seeds / the prod image unpacking
+`samples/*.zip`. `services/audioStorage.ts` only implements
+`deleteDirectory(ownerId)`. Upload + validation (type, size, filename
+sanitization, quotas) is still to be built.

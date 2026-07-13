@@ -16,13 +16,15 @@ transcendence/
   apps/
     studio/       Web DAW — built on the openDAW SDK (React 19, Vite, SASS)
     front/        Main frontend — landing, auth, dashboard, social, sessions, samples
-    back/         Backend server (Node.js)
+    back/         Backend server (Fastify + Prisma + PostgreSQL)
   packages/
+    auth/            Shared React auth (context + API client)
     eslint-config/   Shared ESLint rules (base + React configs)
     prettier-config/ Shared Prettier rules
     ui/              Shared UI components (@transcendence/ui)
   design/         UI mockups & design system reference (READ-ONLY, not shipped)
   docs/           Architecture docs, tooling guides
+  infra/          nginx configs, postgres init, TLS certs, audio data
 ```
 
 Packages reference each other with `workspace:*` and are scoped `@transcendence/*`.
@@ -33,11 +35,11 @@ Packages reference each other with `workspace:*` and are scoped `@transcendence/
 | -------------- | ------------------------------------------------------------------------------------------------- |
 | Frontend       | React 19 + TypeScript, Vite, SASS modules                                                         |
 | Audio engine   | `@opendaw/*` SDK packages ([openDAW-headless](https://github.com/andremichelle/openDAW-headless)) |
-| Backend        | Node.js                                                                                           |
-| Database       | PostgreSQL (Alpine) in Docker — may migrate to Supabase later                                     |
+| Backend        | Node.js (Fastify) + Prisma                                                                        |
+| Database       | PostgreSQL 18 (Alpine) in Docker                                                                  |
 | Real-time sync | WebSockets + Yjs (collaborative editing in the studio)                                            |
-| Hosting        | Infomaniak VPS (nginx + Node.js, audio files on disk)                                             |
-| Audio storage  | VPS disk, served by nginx with `auth_request` access control                                      |
+| Hosting        | Docker Compose (nginx reverse proxy + Node.js, audio files on disk)                               |
+| Audio storage  | On-disk volume, served by nginx with `auth_request` access control                                |
 
 ## Key commands
 
@@ -79,12 +81,11 @@ samples library, studio workspace.
 
 ## Architecture notes
 
-- **Database:** PostgreSQL (Alpine image) in a Docker container. Relational data only —
-  audio files stay on disk. May migrate to Supabase later.
-  See `docs/architecture/database.md`.
-- **Audio storage:** VPS disk at `/var/www/audio/`. Uploads go through the backend,
-  served by nginx with `auth_request` to the backend for per-user access control.
-  See `docs/architecture/audio-file-storage.md`.
+- **Database:** PostgreSQL 18 (Alpine image) in a Docker container. Relational data only —
+  audio files stay on disk. See `docs/architecture/database.md`.
+- **Audio storage:** on-disk volume at `/var/www/audio/`, served by nginx with
+  `auth_request` to the backend for access control. See `docs/architecture/audio-file-storage.md`.
+- **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **Real-time collaboration:** Yjs documents synced over WebSockets. Used for the
   studio (collaborative DAW editing) and potentially chat.
 
@@ -92,7 +93,6 @@ samples library, studio workspace.
 
 - This is a student project. When something is non-obvious, explain the _why_,
   not just the _what_.
-- Prefer small, verifiable steps. Get the minimal version working first, then refine.
 - Push back when I'm overcomplicating something.
 - Do not edit, instead show the changes so they can be manually implemented
 - Check `docs/` for architecture decisions before proposing infrastructure changes.

@@ -1,123 +1,72 @@
 # Database
 
-Status: exploratory
-Last updated: 2026-05-28
+App: `apps/back` (Prisma 7 + PostgreSQL 18)
 
-## Current approach: PostgreSQL in Docker
+A single **PostgreSQL 18** container. The backend connects through **Prisma**
+with the `@prisma/adapter-pg` driver adapter. Only relational data lives in the
+DB — audio binaries stay on disk (see
+[audio-file-storage.md](./audio-file-storage.md)).
 
-Run a **PostgreSQL container** (Alpine image) for development and production.
-The Node.js backend connects to it directly. Audio files stay on the VPS disk,
-not in the database — Postgres holds relational data only (users, file metadata,
-projects, sessions).
+## Two databases, one instance
 
-### Docker setup
+| Database             | Used by     | Created by                                                    |
+| -------------------- | ----------- | ------------------------------------------------------------- |
+| `transcendence_dev`  | development | The container, from `POSTGRES_DB` in `apps/back/.env`         |
+| `transcendence_prod` | production  | `infra/postgres/init_databases.sql` (runs on first init only) |
 
-```yaml
-# docker-compose.yml (excerpt)
-services:
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: transcendence
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: transcendence
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+`POSTGRES_URL` decides which one you hit. Init scripts only run when the
+`db_data` volume is empty — wipe it (`pnpm services:kill`) to re-run them.
 
-volumes:
-  pgdata:
-```
+## Environment variables
 
-### Connection
+Read from `apps/back/.env` (dev) / `apps/back/.env.prod` (prod), both
+git-ignored — copy from the `.env.example` / `.env.prod.example` templates.
 
-The backend connects via a standard connection string:
+| Variable                                              | Purpose                                        |
+| ----------------------------------------------------- | ---------------------------------------------- |
+| `POSTGRES_URL`                                        | Prisma connection string                       |
+| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Credentials + DB the container creates on init |
 
 ```env
-DATABASE_URL=postgresql://transcendence:${DB_PASSWORD}@localhost:5432/transcendence
+# dev  — backend on host, DB port published to localhost
+POSTGRES_URL=postgresql://<user>:<password>@localhost:5432/transcendence_dev?schema=public
+# prod — backend in a container, DB reached by service name
+POSTGRES_URL=postgresql://<user>:<password>@db:5432/transcendence_prod?schema=public
 ```
 
-## Possible future migration: Supabase
+The shared client is built in `apps/back/src/utils/prisma.ts`; the generated
+client is committed under `apps/back/src/generated/prisma/` (see
+[prisma.md](../prisma.md)).
 
-We may later migrate to **Supabase** (hosted Postgres + Auth + RLS + realtime).
-This would offload database hosting from the VPS and add built-in auth /
-row-level security. The relational schema would carry over since Supabase runs
-standard PostgreSQL.
+## Schema
 
-Key benefits of a Supabase migration:
+`apps/back/prisma/schema.prisma`:
 
-- Built-in auth (Supabase Auth) instead of rolling our own
-- Row Level Security (RLS) for client-direct access patterns
-- Keeps the VPS lightweight (nginx + Node.js only)
+| Model       | Purpose                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| `Owner`     | Owns audio files. `type` = `PLATEFORM` or `USER`. Optionally maps to one `User`.                |
+| `User`      | Account: `email` / `handle` / `artistName` (unique), hashed `password`, profile fields, `role`. |
+| `AudioFile` | Metadata: `bpm?`, `key?`, `visibility`, `url`, `length`, `bytes`. Belongs to an `Owner`.        |
+| `Session`   | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                 |
 
-This is not planned for the MVP — just noted as a potential evolution.
+Relationships: `User` 1–1 `Owner`; `Owner` 1–N `AudioFile`; `User` 1–N
+`Session`; `User` N–N `User` (follow graph `UserFollows`).
 
-## Open questions
+Enums: `Role` (`ADMIN`, `ARTIST`), `OwnerType` (`PLATEFORM`, `USER`),
+`VisibilityType` (`PRIVATE`, `SHARED`, `PUBLIC`), `Key` (`A_key`…`G_key`),
+`AudioType` (`SAMPLE`, `TRACK`).
 
-- Auth strategy (custom JWT vs future Supabase Auth)
-- Migration tooling (raw SQL scripts, a migration library, or Supabase CLI later)
-- # Schema design for users, sessions, samples, projects
-  Last updated: 2026-05-26
+## Migrations & scripts
 
-## Preferred solution: Supabase
+Run as `pnpm --filter @transcendence/back <script>`:
 
-Use **Supabase** as the database and auth layer instead of running PostgreSQL
-on the VPS. This keeps the VPS lightweight (nginx + Node.js only, ~512 MB RAM)
-and makes 2 GB VPS RAM sufficient.
+| Script        | What it does                                        |
+| ------------- | --------------------------------------------------- |
+| `db:generate` | Regenerate the Prisma client                        |
+| `db:migrate`  | Create/apply a dev migration (`prisma migrate dev`) |
+| `db:reset`    | Drop, recreate, re-migrate, re-seed the dev DB      |
+| `db:seed`     | Seed dev fixtures                                   |
+| `db:studio`   | Open Prisma Studio                                  |
 
-### Free tier limits
-
-- 500 MB database storage — sufficient for relational data (users, file
-  metadata, projects). Audio files live on the VPS disk, not in the DB.
-- 1 GB file storage (unused — we serve files from the VPS)
-- 50,000 monthly active users
-- Project pauses after 1 week of inactivity on free tier
-
-### How it connects
-
-The Node.js backend and/or the client use `@supabase/supabase-js`:
-
-```ts
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-);
-```
-
-Two access patterns:
-
-- **Backend as middleman** — API receives requests, queries Supabase, returns results
-- **Client direct** — browser talks to Supabase for auth/realtime, secured by Row Level Security (RLS)
-
-Both can coexist.
-
-### Local development
-
-The Supabase CLI runs a full local stack via Docker:
-
-```bash
-supabase start   # local Postgres, Auth, Storage, PostgREST on localhost:54321
-supabase stop
-```
-
-Same `@supabase/supabase-js` client, same API, same RLS policies — just a
-different URL via environment variables. No code branching between dev and prod.
-
-```env
-# .env.development
-VITE_SUPABASE_URL=http://localhost:54321
-VITE_SUPABASE_ANON_KEY=<local-anon-key>
-
-# .env.production
-VITE_SUPABASE_URL=https://xyz.supabase.co
-VITE_SUPABASE_ANON_KEY=<prod-anon-key>
-```
-
-## Open questions
-
-- Auth strategy: Supabase Auth vs custom
-- Which tables need RLS policies
-- Migration workflow (Supabase CLI migrations vs manual)
+In production the backend's `docker-entrypoint.sh` runs `prisma migrate deploy`
+and the production seed before starting.
