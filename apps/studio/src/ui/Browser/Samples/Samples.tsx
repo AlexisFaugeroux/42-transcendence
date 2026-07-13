@@ -1,13 +1,10 @@
-import { UUID } from '@opendaw/lib-std';
-import { type DragEvent, type JSX, useEffect, useState } from 'react';
+import { type DragEvent, type JSX, useState } from 'react';
 import { ConfigProvider, Table, type TableColumnsType } from '@ui/index';
 import { theme } from '@ui/theme/theme';
+import { useSamples } from '../../../hooks/useSamples';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
-import type { Sample } from '../../../lib/types';
 import styles from './Samples.module.scss';
 import { SamplesSearch } from './SamplesSearch';
-import { useQuery } from '@tanstack/react-query';
-import { getlistAudioFile } from '../../../api/audiofile';
 export type SampleLibrary = 'user' | 'shared';
 
 const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = [
@@ -29,23 +26,13 @@ const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = 
 
 export function Samples(): JSX.Element {
   const [activeLib, setActiveLib] = useState<SampleLibrary>('user');
-  const [samples, setSamples] = useState<Sample[]>([]);
   const [search, setSearch] = useState('');
   const { ref, y } = useTableScrollY();
 
+  const { data, error, isError } = useSamples();
+  if (isError) console.error(error);
 
-  const { data, isSuccess, isError, error } = useQuery<Sample[]>({
-    queryKey: ["getSamples"],
-    queryFn: getlistAudioFile })
-  
-    useEffect(() => {
-    if ( isSuccess )
-      setSamples( data );
-    else if ( isError )
-      console.log( error.message)
-  })
-  const dataSource = (samples ?? [])
-    .filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
+  const dataSource = (data ?? []).filter((sample) => sample.name.startsWith(search) || sample.name.includes(search));
   return (
     <>
       <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} setSearch={setSearch} />

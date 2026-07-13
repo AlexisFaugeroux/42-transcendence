@@ -1,5 +1,6 @@
 import { UUID } from '@opendaw/lib-std';
 import { type DragEvent, type JSX, useEffect, useRef, useState } from 'react';
+import { useUser } from '@auth/src';
 import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
@@ -25,6 +26,7 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
   const [bpm, setBpm] = useState(120);
   const [viewportHeight, setViewportHeight] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const { user } = useUser();
 
   useEffect(() => {
     const sub = project.timelineBox.bpm.catchupAndSubscribe((obs) => {
@@ -158,7 +160,18 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
     if (!targetTrack) return;
 
     const position = dropX / PIXELS_PER_PULSE;
-    const res = await createClip(audioContext, project, targetTrack, sample.url, localAudioBuffers, position, clips, sample.id);
+    if (!user?.id) return;
+    const res = await createClip(
+      audioContext,
+      project,
+      targetTrack,
+      sample.url,
+      localAudioBuffers,
+      position,
+      clips,
+      sample.id,
+      user.id,
+    );
     if (!res) return;
 
     setClips((prev) => mergeClipChanges(prev, res));

@@ -1,5 +1,19 @@
 import type { RouteGenericInterface } from 'fastify';
 
+export class InternalServerError extends Error {
+  constructor(message = 'internal server error') {
+    super(message);
+    this.name = 'InternalServerError';
+  }
+}
+
+export class BadRequestError extends Error {
+  constructor(message = 'bad request') {
+    super(message);
+    this.name = 'BadRequestError';
+  }
+}
+
 export class ConflictError extends Error {
   constructor(message: string) {
     super(message);

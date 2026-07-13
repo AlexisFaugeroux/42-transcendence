@@ -1,12 +1,12 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/auth';
-import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../domain/errors';
+import { BadRequestError, ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
 import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
 import { audioFileRepository } from '../repositories/audioFile';
-import { userRepository } from '../repositories/user';
 import { sessionRepository } from '../repositories/session';
 import { toLinks } from '../repositories/user';
+import { userRepository } from '../repositories/user';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
 
@@ -78,30 +78,24 @@ class AuthController {
   };
 
   public checkAccess = async (req: FastifyRequest, reply: FastifyReply) => {
-    const originalString = req.headers['x-original-uri']
-    if (!originalString || Array.isArray(originalString))
-    { 
-      reply.code(400).send();
-      return ;
+    const originalString = req.headers['x-original-uri'];
+    if (!originalString || Array.isArray(originalString)) {
+      throw new BadRequestError();
     }
-    const queryParser = new URLSearchParams( originalString.substring( originalString.indexOf('?'), originalString.length ) );
+    const queryParser = new URLSearchParams(
+      originalString.substring(originalString.indexOf('?'), originalString.length),
+    );
     const sampleId = queryParser.get('sampleId');
     const userId = queryParser.get('userId');
-    if ( !userId )
-    {
-      reply.code(400).send();
-      return ;
+    if (!userId || !sampleId) {
+      throw new BadRequestError();
     }
-    const ownerId = (await userRepository.findById( userId )).ownerId;
-    if (!sampleId)
-    {
-      reply.code(400).send();
-      return ;
-    }
+
+    const ownerId = (await userRepository.findById(userId)).ownerId;
     const sample = await audioFileRepository.findById(sampleId);
-    if (!sample) throw new NotFoundError();
-     if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
-       throw new ForbiddenError();
+
+    if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+      throw new ForbiddenError();
     reply.code(200).send();
   };
 
