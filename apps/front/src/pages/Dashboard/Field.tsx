@@ -4,7 +4,7 @@ import type { JSX } from 'react';
 interface FieldTextProps {
   editing: boolean;
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   prefix?: string;
   error?: string;
@@ -27,7 +27,7 @@ export function FieldText({ editing, error, onChange, placeholder, prefix, value
         placeholder={placeholder}
         status={error ? 'error' : undefined}
         onChange={(event) => {
-          onChange(event.target.value);
+          onChange?.(event.target.value);
         }}
       />
       {error ? <span style={{ color: 'var(--color-red)', fontSize: 11 }}>{error}</span> : null}

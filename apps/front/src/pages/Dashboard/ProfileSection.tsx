@@ -1,25 +1,26 @@
+import type { AuthUser } from '@transcendence/auth';
 import { Avatar, Button, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import type { ProfileErrors, UserProfile } from './dashboard.data';
+import type { ProfileErrors } from './dashboard.data';
 import { FieldArea, FieldText } from './Field';
 import { Card, Hr, Row, SectionHeader } from './primitives';
 import styles from './ProfileSection.module.scss';
 
 interface ProfileSectionProps {
-  editing: boolean;
-  form: UserProfile;
+  isEditing: boolean;
+  form: AuthUser;
   errors: ProfileErrors;
-  setField: <K extends keyof UserProfile>(key: K, value: UserProfile[K]) => void;
+  setField: <K extends keyof AuthUser>(key: K, value: AuthUser[K]) => void;
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
 }
 
 export function ProfileSection({
-  editing,
   errors,
   form,
+  isEditing,
   onCancel,
   onEdit,
   onSave,
@@ -31,7 +32,7 @@ export function ProfileSection({
         title="Profile"
         subtitle="Public information shown on your producer page."
         right={
-          editing ? (
+          isEditing ? (
             <span className={styles.editingTag}>● Editing</span>
           ) : (
             <Button onClick={onEdit}>
@@ -44,8 +45,8 @@ export function ProfileSection({
       <Card>
         <Row label="Avatar">
           <div className={styles.avatarRow}>
-            <Avatar size={64}>{form.alias.charAt(0)}</Avatar>
-            {editing ? (
+            <Avatar size={64}>{form.artistName.slice(0, 2).toUpperCase()}</Avatar>
+            {isEditing ? (
               <div className={styles.avatarActions}>
                 <Button size="small">Upload image</Button>
                 <Button size="small" danger>
@@ -59,10 +60,10 @@ export function ProfileSection({
 
         <Row label="Producer alias">
           <FieldText
-            editing={editing}
-            value={form.alias}
+            editing={isEditing}
+            value={form.artistName}
             onChange={(v) => {
-              setField('alias', v);
+              setField('artistName', v);
             }}
             placeholder="Your artist name"
           />
@@ -71,7 +72,7 @@ export function ProfileSection({
 
         <Row label="Handle" hint="Used in your URL: makesomenoise.fm/@…">
           <FieldText
-            editing={editing}
+            editing={isEditing}
             value={form.handle}
             onChange={(v) => {
               setField('handle', v);
@@ -84,8 +85,8 @@ export function ProfileSection({
 
         <Row label="Location">
           <FieldText
-            editing={editing}
-            value={form.location}
+            editing={isEditing}
+            value={form.location ?? ''}
             onChange={(v) => {
               setField('location', v);
             }}
@@ -96,8 +97,8 @@ export function ProfileSection({
 
         <Row label="Bio" hint="Up to 240 characters">
           <FieldArea
-            editing={editing}
-            value={form.bio}
+            editing={isEditing}
+            value={form.bio ?? ''}
             onChange={(v) => {
               setField('bio', v);
             }}
@@ -108,27 +109,31 @@ export function ProfileSection({
 
         <Row label="Links" hint="Site, SoundCloud, Bandcamp, etc.">
           <div className={styles.links}>
-            {form.links.map((link, index) => (
+            {form.links?.map((link, index) => (
               <div key={index} className={styles.linkRow}>
                 <Tag color="blue">{link.kind}</Tag>
                 <FieldText
-                  editing={editing}
+                  editing={isEditing}
                   value={link.url}
                   onChange={(v) => {
-                    const next = [...form.links];
-                    next[index] = { ...next[index], url: v };
-                    setField('links', next);
+                    if (form.links) {
+                      const next = [...form.links];
+                      next[index] = { ...next[index], url: v };
+                      setField('links', next);
+                    }
                   }}
                 />
-                {editing ? (
+                {isEditing ? (
                   <Button
                     type="text"
                     size="small"
                     onClick={() => {
-                      setField(
-                        'links',
-                        form.links.filter((_, j) => j !== index),
-                      );
+                      if (form.links) {
+                        setField(
+                          'links',
+                          form.links.filter((_, j) => j !== index),
+                        );
+                      }
                     }}
                   >
                     ✕
@@ -136,12 +141,14 @@ export function ProfileSection({
                 ) : null}
               </div>
             ))}
-            {editing ? (
+            {isEditing ? (
               <Button
                 size="small"
                 className={styles.addLink}
                 onClick={() => {
-                  setField('links', [...form.links, { kind: 'site', url: '' }]);
+                  if (form.links) {
+                    setField('links', [...form.links, { kind: 'site', url: '' }]);
+                  }
                 }}
               >
                 <MsnIcon name="plus" size="11px" /> Add link
@@ -151,7 +158,7 @@ export function ProfileSection({
         </Row>
       </Card>
 
-      {editing ? (
+      {isEditing ? (
         <div className={styles.actions}>
           <Button onClick={onCancel}>Cancel</Button>
           <Button type="primary" onClick={onSave}>

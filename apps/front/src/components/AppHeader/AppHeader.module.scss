@@ -4,8 +4,10 @@
   z-index: 5;
   background: color-mix(in srgb, var(--bg-app) 88%, transparent);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line-faint);
-  padding: 16px 32px;
+  border-bottom: 1px solid var(--line-soft);
+  height: 60px;
+  box-sizing: border-box;
+  padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,28 +45,4 @@
   display: flex;
   align-items: center;
   gap: 14px;
-}
-
-.iconButton {
-  background: transparent;
-  border: 0;
-  color: var(--fg2);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-
-  &:hover {
-    color: var(--fg1);
-  }
-}
-
-.user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.handle {
-  color: var(--fg1);
-  font-size: 12px;
 }

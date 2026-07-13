@@ -2,7 +2,7 @@
   height: 100vh;
   display: grid;
   grid-template-columns: 220px 1fr 320px;
-  grid-template-rows: 44px 1fr;
+  grid-template-rows: 60px 1fr; // match AppHeader's height
   background: var(--bg-app);
   color: var(--fg1);
   overflow: hidden;

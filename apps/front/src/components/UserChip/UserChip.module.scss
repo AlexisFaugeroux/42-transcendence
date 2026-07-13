@@ -1,0 +1,32 @@
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 160px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+  text-align: left;
+}
+
+.name,
+.handle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.name {
+  color: var(--fg1);
+  font-size: 12px;
+}
+
+.handle {
+  color: var(--fg3);
+  font-size: 10px;
+}

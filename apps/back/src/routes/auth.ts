@@ -4,12 +4,12 @@ import { authController } from '../controllers/auth';
 const registerSchema = {
   body: {
     properties: {
+      artistName: { maxLength: 32, minLength: 1, type: 'string' },
       email: { format: 'email', type: 'string' },
       firstname: { maxLength: 64, minLength: 1, type: 'string' },
       handle: { maxLength: 32, minLength: 3, pattern: '^[\\w.]+$', type: 'string' },
       lastname: { maxLength: 64, minLength: 1, type: 'string' },
       password: { maxLength: 128, minLength: 8, type: 'string' },
-      artistName: { maxLength: 32, minLength: 1, type: 'string' },
     },
     required: ['email', 'firstname', 'lastname', 'handle', 'artistName', 'password'],
     type: 'object',

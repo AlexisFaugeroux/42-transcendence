@@ -1,13 +1,13 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/auth';
 import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError } from '../domain/errors';
+import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
 import { audioFileRepository } from '../repositories/audioFile';
 import { sessionRepository } from '../repositories/session';
+import { toLinks } from '../repositories/user';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { prisma } from '../utils/prisma';
-import { toLinks } from '../repositories/user';
-import type { User } from '../generated/prisma/client';
 
 interface CheckAccessRoute extends RouteGenericInterface {
   Querystring: {
@@ -35,7 +35,7 @@ class AuthController {
   // FastifyInstance, so a plain method would lose `this`. An arrow property keeps
   // `this` bound to the controller while still being safe to pass as a callback.
   public register = async (req: FastifyRequest<RegisterRoute>, reply: FastifyReply<RegisterRoute>) => {
-    const { email, firstname, handle, lastname, password, artistName } = req.body;
+    const { artistName, email, firstname, handle, lastname, password } = req.body;
     const existing = await prisma.user.findFirst({ where: { OR: [{ email }, { artistName }, { handle }] } });
     if (existing) {
       throw new ConflictError('email, artistName or handle already in use');
@@ -43,13 +43,13 @@ class AuthController {
 
     const user = await prisma.user.create({
       data: {
+        artistName,
         email,
         firstname,
         handle,
         lastname,
         owner: { create: { type: 'USER' } },
         password: await hashPassword(password),
-        artistName,
         role: 'ARTIST',
       },
     });
@@ -94,16 +94,16 @@ class AuthController {
 
   private _format(user: User): AuthUser {
     return {
-      id: user.id,
       artistName: user.artistName,
-      joined: user.createdAt,
+      bio: user.bio ?? undefined,
       email: user.email,
       firstname: user.firstname,
-      location: user.location ?? undefined,
-      lastname: user.lastname,
       handle: user.handle,
-      bio: user.bio ?? undefined,
+      id: user.id,
+      joined: user.createdAt,
+      lastname: user.lastname,
       links: toLinks(user.links),
+      location: user.location ?? undefined,
       role: user.role,
     };
   }

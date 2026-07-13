@@ -1,15 +1,16 @@
 import type { JSX } from 'react';
+import { useAuthUser } from '@auth/src';
 import styles from './Greeting.module.scss';
-import { SESSION_TYPES, USER } from './home.data';
+import { SESSION_TYPES } from './home.data';
 import { SessionCard } from './SessionCard';
 
 export function Greeting(): JSX.Element {
-  const firstName = USER.name.split(' ')[0];
+  const { firstname } = useAuthUser();
 
   return (
     <>
       <header>
-        <h1 className={styles.title}>Good evening, {firstName}.</h1>
+        <h1 className={styles.title}>Good evening, {firstname}.</h1>
         <h2 className={styles.subtitle}>Pick up where you left off, or start something new.</h2>
       </header>
 
