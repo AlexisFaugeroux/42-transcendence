@@ -110,7 +110,6 @@ class UserRepository {
     }
   }
 
-  //TODO: ne pas oublier de supp les fichiers sur le serveur Nginx (a faire dans le controller)
   public async delete(id: string): Promise<void> {
     try {
       await this.prisma.$transaction(async (tx) => {

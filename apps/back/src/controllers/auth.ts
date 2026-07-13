@@ -30,7 +30,7 @@ interface MeRoute extends RouteGenericInterface {
   Reply: AuthResponse;
 }
 
-export class AuthController {
+class AuthController {
   // Arrow-function property, NOT a method: Fastify binds a handler's `this` to the
   // FastifyInstance, so a plain method would lose `this`. An arrow property keeps
   // `this` bound to the controller while still being safe to pass as a callback.

@@ -2,6 +2,7 @@ import Fastify, { type FastifyError, type FastifyInstance, type FastifyReply, ty
 import { ConflictError, type ErrorReponse, ForbiddenError, NotFoundError, UnauthorizedError } from './domain/errors';
 import authPlugin from './plugins/auth';
 import { authRoutes } from './routes/auth';
+import { userRoutes } from './routes/user';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
@@ -36,7 +37,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   await app.register(authPlugin);
-  await app.register(authRoutes);
+  await app.register(authRoutes, { prefix: '/api/auth' });
+  await app.register(userRoutes, { prefix: '/api/user' });
 
   return app;
 }

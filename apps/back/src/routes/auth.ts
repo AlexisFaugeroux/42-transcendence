@@ -29,19 +29,19 @@ const loginSchema = {
 
 export function authRoutes(app: FastifyInstance) {
   app.post(
-    '/api/auth/register',
+    '/register',
     { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: registerSchema },
     authController.register,
   );
 
   app.post(
-    '/api/auth/login',
+    '/login',
     { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: loginSchema },
     authController.login,
   );
 
-  app.get('/api/auth/me', { preHandler: app.authenticate }, authController.me);
+  app.get('/me', { preHandler: app.authenticate }, authController.me);
 
-  app.post('/api/auth/logout', { preHandler: app.authenticate }, authController.logout);
-  app.get('/api/auth/check-access', { preHandler: app.authenticate }, authController.checkAccess);
+  app.post('/logout', { preHandler: app.authenticate }, authController.logout);
+  app.get('/check-access', { preHandler: app.authenticate }, authController.checkAccess);
 }
