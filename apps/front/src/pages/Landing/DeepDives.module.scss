@@ -1,0 +1,16 @@
+.section {
+  width: 100%;
+  background: hsl(197, 14%, 8%); // --bg-panel-2
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+@media (max-width: 600px) {
+  .inner {
+    padding: 0 16px 32px;
+  }
+}

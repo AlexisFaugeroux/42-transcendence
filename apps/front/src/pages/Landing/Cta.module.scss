@@ -1,0 +1,48 @@
+.cta {
+  width: 100%;
+  background: hsl(197, 14%, 8%); // --bg-panel-2
+  background-image: radial-gradient(circle at 50% 0%, hsla(25, 90%, 55%, 0.1), transparent 60%);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.accent {
+  color: hsl(25, 90%, 55%);
+}
+
+.sub {
+  max-width: 520px;
+  margin: 14px auto 0;
+  color: hsl(0, 0%, 56%);
+  font-size: 14px;
+}
+
+.actions {
+  display: inline-flex;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .inner {
+    padding: 56px 16px;
+  }
+  .title {
+    font-size: 32px;
+  }
+}
