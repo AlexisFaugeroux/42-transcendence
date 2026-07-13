@@ -34,10 +34,16 @@ export interface GetUserInput {
 export interface UpdateUserInput {
   email?: string;
   handle?: string;
+  firstname?: string;
+  lastnane?: string;
   links?: { kind: string; url: string }[];
-  location: string;
+  location?: string;
   artistName?: string;
   password?: string;
   role?: Role;
   bio?: string;
+}
+
+export interface UserResponse {
+  user: User;
 }
