@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Home } from './pages/Home/Home';
+import { Landing } from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 
@@ -14,6 +15,7 @@ export function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

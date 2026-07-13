@@ -1,0 +1,29 @@
+import type { JSX } from 'react';
+import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
+import styles from './DeepDiveRow.module.scss';
+import { ImagePlaceholder } from './ImagePlaceholder';
+import type { DeepDive } from './landing.data';
+
+interface DeepDiveRowProps extends DeepDive {
+  reverse: boolean;
+}
+
+export function DeepDiveRow({ accent, body, eyebrow, image, reverse, title }: DeepDiveRowProps): JSX.Element {
+  return (
+    <div className={`${styles.row} ${reverse ? styles.reverse : ''}`}>
+      <div className={styles.text}>
+        <div className={styles.eyebrow} style={{ color: accent }}>
+          {eyebrow}
+        </div>
+        <h3 className={styles.title}>{title}</h3>
+        <p className={styles.body}>{body}</p>
+        <a href="#" className={styles.more} style={{ color: accent }}>
+          Learn more <MsnIcon name="arrowR" size="11px" />
+        </a>
+      </div>
+      <div className={styles.art}>
+        <ImagePlaceholder label={image} height={300} accent={accent} />
+      </div>
+    </div>
+  );
+}
