@@ -23,9 +23,9 @@ const COLUMNS: FooterCol[] = [
 ];
 
 const LEGAL: LegalLink[] = [
-  { label: 'Legal mentions' },
   { label: 'Terms', to: '/terms' },
   { label: 'Privacy', to: '/privacy' },
+  { label: 'Legal mentions', to: '/legal' },
   { label: 'Cookies' },
 ];
 
