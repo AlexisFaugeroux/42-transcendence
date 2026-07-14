@@ -139,7 +139,7 @@ export default function Register(): JSX.Element {
 
               <p className={styles.terms}>
                 By creating an account you agree to our{' '}
-                <a className={styles.termsLink} href="#">
+                <a className={styles.termsLink} onClick={() => void navigate('/terms')}>
                   Terms
                 </a>{' '}
                 and{' '}

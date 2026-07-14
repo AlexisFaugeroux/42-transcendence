@@ -7,6 +7,7 @@ import { Home } from './pages/Home/Home';
 import { Landing } from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import { Terms } from './pages/Terms/Terms';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ export function App(): JSX.Element {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/terms" element={<Terms />} />
 
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />

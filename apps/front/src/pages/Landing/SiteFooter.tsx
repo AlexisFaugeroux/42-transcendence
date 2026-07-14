@@ -1,4 +1,5 @@
 import type { JSX } from 'react';
+import { Link } from 'react-router-dom';
 import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import styles from './SiteFooter.module.scss';
@@ -8,6 +9,12 @@ interface FooterCol {
   links: string[];
 }
 
+// `to` set → routed page exists; otherwise still a placeholder anchor.
+interface LegalLink {
+  label: string;
+  to?: string;
+}
+
 const COLUMNS: FooterCol[] = [
   { links: ['Features', 'Beat maker', 'Recording', 'Mixer', 'Stream'], title: 'Product' },
   { links: ['Discover', 'Playlists', 'Live now', 'Discord', 'Newsletter'], title: 'Community' },
@@ -15,7 +22,12 @@ const COLUMNS: FooterCol[] = [
   { links: ['About', 'Contact', 'Press kit'], title: 'Company' },
 ];
 
-const LEGAL = ['Legal mentions', 'Privacy', 'Terms', 'Cookies'];
+const LEGAL: LegalLink[] = [
+  { label: 'Legal mentions' },
+  { label: 'Privacy' },
+  { label: 'Terms', to: '/terms' },
+  { label: 'Cookies' },
+];
 
 export function SiteFooter(): JSX.Element {
   return (
@@ -51,11 +63,17 @@ export function SiteFooter(): JSX.Element {
         <div className={styles.legal}>
           <div>© 2026 MakeSomeNoise. Built with ♥.</div>
           <div className={styles.legalLinks}>
-            {LEGAL.map((item) => (
-              <a key={item} href="#" className={styles.link}>
-                {item}
-              </a>
-            ))}
+            {LEGAL.map((item) =>
+              item.to ? (
+                <Link key={item.label} to={item.to} className={styles.link}>
+                  {item.label}
+                </Link>
+              ) : (
+                <a key={item.label} href="#" className={styles.link}>
+                  {item.label}
+                </a>
+              ),
+            )}
           </div>
         </div>
       </div>
