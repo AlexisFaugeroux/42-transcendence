@@ -5,6 +5,7 @@ import { RequireAuth } from './auth/RequireAuth';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Home } from './pages/Home/Home';
 import { Landing } from './pages/Landing/Landing';
+import { Legal } from './pages/Legal/Legal';
 import Login from './pages/Login/Login';
 import { Privacy } from './pages/Privacy/Privacy';
 import Register from './pages/Register/Register';
@@ -22,6 +23,7 @@ export function App(): JSX.Element {
           <Route path="/register" element={<Register />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/legal" element={<Legal />} />
 
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />
