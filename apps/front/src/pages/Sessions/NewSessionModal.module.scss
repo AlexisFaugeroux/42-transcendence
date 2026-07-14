@@ -1,0 +1,75 @@
+.lead {
+  margin: 0;
+  color: var(--fg2);
+  font-size: 13px;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.typeCard {
+  text-align: left;
+  cursor: pointer;
+  background: var(--color-void);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--fg1);
+
+  &[data-active='true'] {
+    border-color: var(--c);
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+    box-shadow: 0 0 14px -6px var(--c);
+  }
+}
+
+.typeHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c);
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.typeDesc {
+  color: var(--fg2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  color: var(--fg2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 520px) {
+  .types {
+    grid-template-columns: 1fr;
+  }
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}
