@@ -12,7 +12,7 @@ export const WORKSPACE_ITEMS: NavItemDef[] = [
   { icon: 'home', label: 'Home', to: '/home' },
   { badge: '14', icon: 'folder', label: 'My Sessions', to: '/sessions' },
   { badge: '32', icon: 'music', label: 'Tracks', to: '/tracks' },
-  { icon: 'waveform', label: 'Samples', to: '/samples' },
+  { icon: 'waveform', label: 'Library', to: '/library' },
   { icon: 'download', label: 'Exports', to: '/exports' },
 ];
 
