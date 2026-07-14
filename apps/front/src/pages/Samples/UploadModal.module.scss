@@ -1,0 +1,78 @@
+.dropIcon {
+  margin: 0 0 8px;
+}
+.dropTitle {
+  margin: 0;
+  color: var(--fg1);
+  font-size: 14px;
+}
+.dropHint {
+  margin: 4px 0 0;
+  color: var(--fg3);
+  font-size: 12px;
+}
+
+.queueLabel {
+  margin: 16px 0 8px;
+  color: var(--fg3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.queueRow {
+  display: grid;
+  grid-template-columns: 1fr 60px 70px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 3px;
+  background: var(--color-void);
+  border: 0.5px solid var(--line-faint);
+}
+
+.fileName {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--fg2);
+}
+
+.status {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--fg2);
+}
+
+.after {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 3px;
+  background: var(--color-void);
+  border: 0.5px solid var(--line-faint);
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--fg2);
+  display: flex;
+  justify-content: space-between;
+}
+
+.accent {
+  color: var(--color-orange);
+}

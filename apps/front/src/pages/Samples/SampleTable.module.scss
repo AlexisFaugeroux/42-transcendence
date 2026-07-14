@@ -1,0 +1,54 @@
+.play {
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  border: 0.5px solid var(--line-soft);
+  background: var(--color-void);
+  color: var(--fg1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &[data-active='true'] {
+    background: var(--color-orange);
+    color: rgba(0, 0, 0, 0.85);
+  }
+}
+
+.nameLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg1);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  color: var(--fg3);
+  font-size: 11px;
+}
+
+.mono {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg2);
+}
+
+.muted {
+  color: var(--fg3);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
