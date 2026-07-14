@@ -10,6 +10,7 @@ import Login from './pages/Login/Login';
 import { Privacy } from './pages/Privacy/Privacy';
 import Register from './pages/Register/Register';
 import { Samples } from './pages/Samples/Samples';
+import { Sessions } from './pages/Sessions/Sessions';
 import { Terms } from './pages/Terms/Terms';
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ export function App(): JSX.Element {
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />
             <Route path="/library" element={<Samples />} />
+            <Route path="/sessions" element={<Sessions />} />
             <Route path="/settings" element={<Dashboard />} />
           </Route>
 
