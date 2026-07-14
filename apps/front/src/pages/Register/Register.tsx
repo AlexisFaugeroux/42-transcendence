@@ -143,7 +143,7 @@ export default function Register(): JSX.Element {
                   Terms
                 </a>{' '}
                 and{' '}
-                <a className={styles.termsLink} href="#">
+                <a className={styles.termsLink} onClick={() => void navigate('/privacy')}>
                   Privacy policy
                 </a>
                 .
