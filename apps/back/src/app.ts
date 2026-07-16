@@ -11,6 +11,7 @@ import {
 import authPlugin from './plugins/auth';
 import { audioRoutes } from './routes/audioFile';
 import { authRoutes } from './routes/auth';
+import { projectRoutes } from './routes/project';
 import { userRoutes } from './routes/user';
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -28,23 +29,33 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply<ErrorReponse>) => {
+    if (error.validation) {
+      request.log.warn(error);
+      return reply.code(400).send({ error: error.message, status: 400 });
+    }
+    if (error instanceof BadRequestError) {
+      request.log.warn(error);
+      return reply.code(400).send({ error: error.message, status: 400 });
+    }
     if (error instanceof UnauthorizedError) {
+      request.log.warn(error);
       return reply.code(401).send({ error: error.message, status: 401 });
     }
     if (error instanceof ForbiddenError) {
+      request.log.warn(error);
       return reply.code(403).send({ error: error.message, status: 403 });
     }
     if (error instanceof NotFoundError) {
+      request.log.warn(error);
       return reply.code(404).send({ error: error.message, status: 404 });
     }
     if (error instanceof ConflictError) {
+      request.log.warn(error);
       return reply.code(409).send({ error: error.message, status: 409 });
     }
     if (error instanceof InternalServerError) {
+      request.log.error(error);
       return reply.code(500).send({ error: error.message, status: 500 });
-    }
-    if (error instanceof BadRequestError) {
-      return reply.code(400).send({ error: error.message, status: 400 });
     }
 
     request.log.error(error);
@@ -55,6 +66,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(audioRoutes, { prefix: '/api/audio' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });
+  await app.register(projectRoutes, { prefix: '/api/project' });
 
   return app;
 }

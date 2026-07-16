@@ -15,4 +15,4 @@ class OwnerRepository {
   };
 }
 
-export const ownerRepositoty = new OwnerRepository();
+export const ownerRepository = new OwnerRepository();
