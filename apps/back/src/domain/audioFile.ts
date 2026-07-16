@@ -15,6 +15,7 @@ export interface AudioFile {
 }
 
 export interface CreateAudioFileInput {
+  name: string;
   ownerId: string;
   visibility: Visibility;
   url: string;
