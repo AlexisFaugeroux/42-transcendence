@@ -2,19 +2,36 @@
 
 A design system distilled from the **openDAW Studio** codebase — an open-source, browser-based Digital Audio Workstation (DAW) focused on music education and data privacy. No login, no tracking, all in the browser.
 
-> "openDAW is an open source web based music studio with a clear focus on education and data privacy, open to everyone with no login required so you can start creating music right away." — _Dashboard copy_
+> "openDAW is an open source web based music studio with a clear focus on education and data privacy, open to everyone with no login required so you can start creating music right away." — *Dashboard copy*
+
+---
+
+## Components
+
+Registered, reusable components exposed on the bundle (see `components/`):
+
+- **Wordmark** — MakeSomeNoise logotype in Rubik.
+- **Avatar** — initials tile with live/online/idle/offline status dot.
+- **Waveform** — deterministic sample/track waveform with optional playback progress.
+- **PeakMeter** — green/yellow/red stereo level meter.
+- **Tag** — uppercase accent pill.
+- **Button** — framed and solid variants, three sizes, any accent color.
+- **Icon** — bespoke MSN glyph set (`currentColor`, 24×24 viewBox), synced with `packages/ui` in the app repo.
+- **Knob** — draggable instrument-panel knob with anchor + double-click reset, ported from `packages/ui/components/MsnKnob`.
+- **Pill** — tiny mute/solo/arm toggle.
+- **Separator** — vertical hairline divider for toolbars.
 
 ---
 
 ## Sources
 
-| Source                        | Path                                     |
-| ----------------------------- | ---------------------------------------- |
-| openDAW UI codebase (mounted) | `ui/` (read-only via local FS)           |
-| Public site                   | https://opendaw.studio                   |
-| Music publishing              | https://music.opendaw.studio             |
-| API                           | https://api.opendaw.studio               |
-| Repo                          | https://github.com/andremichelle/opendaw |
+| Source | Path |
+|---|---|
+| openDAW UI codebase (mounted) | `ui/` (read-only via local FS) |
+| Public site | https://opendaw.studio |
+| Music publishing | https://music.opendaw.studio |
+| API | https://api.opendaw.studio |
+| Repo | https://github.com/andremichelle/opendaw |
 
 The codebase is JSX-via-`@opendaw/lib-jsx` (not React) + SASS modules. The icon library is a single SVG `<symbol>` sprite (`ui/IconLibrary.tsx`).
 
@@ -22,16 +39,16 @@ The codebase is JSX-via-`@opendaw/lib-jsx` (not React) + SASS modules. The icon 
 
 ## Index (manifest of root)
 
-| File / Folder               | What's in it                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| `README.md`                 | This file                                                                                  |
-| `SKILL.md`                  | Agent-Skills front-matter wrapper                                                          |
-| `colors_and_type.css`       | All CSS variables + base element styles                                                    |
-| `fonts/`                    | Webfonts (**Rubik 300/400** UI; **Open Sans** prose) — _see Caveats_                       |
-| `assets/`                   | Logo SVGs, favicons, icon sprite, sample images                                            |
-| `preview/`                  | Design-System tab cards                                                                    |
-| `ui_kits/studio/`           | High-fidelity recreation of the Studio app (header, transport, mixer, timeline, dashboard) |
-| `ui_kits/studio/index.html` | Click-thru of Studio: dashboard → workspace                                                |
+| File / Folder | What's in it |
+|---|---|
+| `README.md` | This file |
+| `SKILL.md` | Agent-Skills front-matter wrapper |
+| `colors_and_type.css` | All CSS variables + base element styles |
+| `fonts/` | Webfonts (**Rubik 300/400** UI; **Open Sans** prose) — *see Caveats* |
+| `assets/` | Logo SVGs, favicons, icon sprite, sample images |
+| `preview/` | Design-System tab cards |
+| `ui_kits/studio/` | High-fidelity recreation of the Studio app (header, transport, mixer, timeline, dashboard) |
+| `ui_kits/studio/index.html` | Click-thru of Studio: dashboard → workspace |
 
 ---
 
@@ -42,10 +59,9 @@ openDAW is **one product** with several distinct surfaces:
 1. **Studio (`opendaw.studio`)** — the DAW itself. Workspace with header (transport, tempo, signature, time-display), browser panel, mixer, timeline (with primary tracks + audio-unit tracks), device editors (instruments + audio/MIDI effects), modular patcher, piano-roll, code editor (custom JS instruments/effects), shadertoy.
 2. **Dashboard / landing** — entry screen with demo projects, resources, and an info-panel for project metadata + cover art.
 3. **Auxiliary pages** — `/manuals`, `/preferences`, `/privacy`, `/imprint`, `/colors`, `/icons`, `/components`, `/automation`, `/graph`, `/stats`, `/test`, `/performance`.
-4. **Music portal (`music.opendaw.studio`)** — published tracks. _Not in this repo; not modeled._
+4. **Music portal (`music.opendaw.studio`)** — published tracks. *Not in this repo; not modeled.*
 
 Hallmarks:
-
 - **Dense** UI of small controls (knobs, peak meters, drop-downs, framed buttons).
 - **Near-black** panels with **saturated accent hues** for state.
 - **No accounts, no tracking** — privacy-first.
@@ -57,14 +73,12 @@ Hallmarks:
 **Voice:** plainspoken, slightly self-deprecating, builder-to-builder. Open-source culture, not corporate. The product talks about itself in first person plural ("our music portal", "subscribe to our newsletter") and addresses the user as **you**.
 
 **Casing:**
-
 - Page/section titles: **Title Case** ("Welcome to openDAW", "Daily Unique Visitors", "Audio Output Latency").
 - UI labels and tooltips: **Title Case** for verbs/nouns ("Primary Tracks", "Midi Access"), short and direct.
 - Buttons: occasionally **ALL CAPS** for emphasis on commit actions (`APPLY`, `LOAD`, `SAVE` in Preferences).
 - Brand: always lowercase **`openDAW`** mid-sentence, except at the start of a sentence.
 
 **Tone & vibe:**
-
 - Earnest, informational, no marketing fluff. ("The studio is still evolving and not production ready yet.")
 - Privacy stated as a **value**, not a feature. ("No tracking, no data collection, no user accounts." — set in `--color-red` on the Imprint page.)
 - Educational framing: linked "education" page, manuals, tutorials.
@@ -72,13 +86,12 @@ Hallmarks:
 **Emoji:** sparingly. A heart `♥`/`❤️` appears in the footer copy ("Built with ❤️", "thank you ♥"). A warning sign `⚠️` appears next to a storage threshold. **No emoji in product chrome.**
 
 **Specific examples (verbatim from `ui/`):**
-
-- Dashboard h1: _"Welcome to openDAW"_
-- Dashboard h2: _"A new holistic exploration of music creation inside your browser"_
-- Privacy page: _"openDAW respects your privacy. This application does not collect…"_
-- Imprint: _"No tracking, no data collection, no user accounts."_
-- Footer prompt on storage: _" > 80% ⚠️"_
-- Code editor menu group: _"Tracks"_, _"Noise"_ — single-word, color-coded.
+- Dashboard h1: *"Welcome to openDAW"*
+- Dashboard h2: *"A new holistic exploration of music creation inside your browser"*
+- Privacy page: *"openDAW respects your privacy. This application does not collect…"*
+- Imprint: *"No tracking, no data collection, no user accounts."*
+- Footer prompt on storage: *" > 80% ⚠️"*
+- Code editor menu group: *"Tracks"*, *"Noise"* — single-word, color-coded.
 
 **I vs you:** the system mostly uses neither — it labels and describes. When voice surfaces (dashboard, privacy), it's "**we** built this; **you** create" — never "I".
 
@@ -89,9 +102,8 @@ Hallmarks:
 A near-black studio canvas with saturated accents that double as **functional state colors**: each accent has a meaning attached, not just an aesthetic.
 
 ### Color
-
 - **Surfaces** are layered near-blacks tuned at hue 197° (cool, very low saturation): `--color-void → --color-black → --bg-panel-2 → --color-shadow → --bg-elevated`.
-- **Hue accents from the `Colors` enum** — every saturated hue maps to a _function_:
+- **Hue accents from the `Colors` enum** — every saturated hue maps to a *function*:
   - `blue` → primary action / info / record-source / chart
   - `green` → load / save / pan-knob / OK level / monitor
   - `orange` → highlight / region / metronome / sidechain / aux-bus group
@@ -99,10 +111,9 @@ A near-black studio canvas with saturated accents that double as **functional st
   - `red` → record / mute / errors / privacy assertion
   - `purple` → publish / apply / magnitude chart
   - `gray / dark / bright` → neutral foreground levels
-- **No bluish-purple gradients.** Colors are _flat fills with low-opacity glows_, not gradients.
+- **No bluish-purple gradients.** Colors are *flat fills with low-opacity glows*, not gradients.
 
 ### Type
-
 - **Rubik 300** for almost all UI chrome (light weight even at small sizes).
 - **Rubik 400** for emphasis, headings.
 - **Open Sans** for prose paragraphs (dashboard body, manuals).
@@ -110,26 +121,22 @@ A near-black studio canvas with saturated accents that double as **functional st
 - Sizes are **small and dense** — 10–14px for chrome, 36px for the single dashboard h1. UI text is `0.625rem`–`0.75rem` (10–12px).
 
 ### Spacing
-
 - Em-based throughout; controls measure `1.5em–1.75em`.
 - Header is `2.5em` tall, footer `1.25rem`. Knobs `1.75em` square.
 - Panel gaps are 1px hairlines (`gap: 1px`), the chrome between panels is the void itself showing through.
 
 ### Backgrounds
-
 - **No imagery** behind the app. Cover art is the only image surface (project cover, demo project thumbnails).
 - Panels use `panel-background` / `panel-background-dark` mixins — **flat near-black**, sometimes with a faint inner glow. **No textures, no patterns, no gradients.**
 - The marketing/dashboard area uses the same dark panel — there's no separate "marketing aesthetic".
 
 ### Animation
-
 - Minimal. The product is real-time audio — visual motion competes with audio attention.
 - Peak meters, knob value changes, scroller smoothing — **functional motion only**.
 - Hover transitions on menu items are immediate (no eased fade).
 - No bounces, no spring physics, no decorative parallax.
 
 ### Hover / press / active states
-
 - **Hover (menu item):** `background: hsl(210,90%,30%)` solid blue, white text — high-contrast, instant.
 - **Hover (icon button):** color shifts from `--color-dark` → `--color-bright`.
 - **Active (toggled / checked):** `color: var(--color-active)` (the button's `activeColor` prop, e.g. `Colors.orange`), plus a `box-shadow: 0 0 3px -1px <activeColor>` glow and a 4–8% same-color fill.
@@ -137,29 +144,24 @@ A near-black studio canvas with saturated accents that double as **functional st
 - **Disabled:** `pointer-events: none; color: var(--color-dark)`.
 
 ### Borders
-
 - `0.5px solid currentColor` on framed buttons — **half-pixel** lines for a fine, instrument-panel feel.
 - Hairline dividers `1px solid rgba(white, 0.04–0.07)`.
 - No thick borders anywhere.
 
 ### Shadows
-
 - **Outer glows**, not drop shadows: `0 0 3px -1px <accent>` — small, tight, color-matched. Used on framed buttons and active controls.
 - Floating surfaces (menus, dialogs) use a soft shadow + 1px white-04 ring (`mixins.floating`).
 
 ### Transparency & blur
-
 - Color-mix tints for soft fills: `color-mix(in srgb, var(--color) 5%, transparent)`.
 - No `backdrop-filter: blur` — the system relies on solid layered blacks instead.
 - The Knob shadow uses `filter: blur(1px); mix-blend-mode: luminosity` — that's the only blur in chrome.
 
 ### Corner radii
-
 - `0.25em` (≈ 3px) is the universal radius — buttons, menu items, tags. Tight, uniform.
 - Round controls (knobs, peak-meter dots) are full circles.
 
 ### Cards
-
 - Backgrounds: `--color-shadow` (slightly lighter than panel).
 - Border: none — just the background-color step.
 - Radius: `0.25em` or none.
@@ -167,11 +169,9 @@ A near-black studio canvas with saturated accents that double as **functional st
 - Demo project cards are tile-like with a cover image + title + artist line.
 
 ### Iconography
-
 See **ICONOGRAPHY** section below.
 
 ### Layout rules
-
 - **Fixed-height header** + flex-fill workspace + fixed-height footer.
 - The workspace is a **panel grid**: vertical and horizontal regions separated by 1px gutters with `PanelResizer` handles.
 - Tooltips are floating absolute-positioned overlays.

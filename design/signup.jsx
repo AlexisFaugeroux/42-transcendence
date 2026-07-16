@@ -5,42 +5,10 @@ window.SignUpPage = function SignUpPage() {
   const [variant, setVariant] = useStateSignup("filled");
 
   const data = {
-    default: {
-      email: "",
-      username: "",
-      alias: "",
-      password: "",
-      emailErr: null,
-      userErr: null,
-      loading: false,
-    },
-    filled: {
-      email: "rosa.petrov@example.com",
-      username: "rosa.p",
-      alias: "rosa petrov",
-      password: "TapeReel-9-9-2026",
-      emailErr: null,
-      userErr: null,
-      loading: false,
-    },
-    error: {
-      email: "rosa@example.com",
-      username: "rosa",
-      alias: "rosa petrov",
-      password: "shortpw",
-      emailErr: "An account with that email already exists.",
-      userErr: "Handle is taken — try rosa.99 or rosa_p",
-      loading: false,
-    },
-    loading: {
-      email: "rosa.petrov@example.com",
-      username: "rosa.p",
-      alias: "rosa petrov",
-      password: "TapeReel-9-9-2026",
-      emailErr: null,
-      userErr: null,
-      loading: true,
-    },
+    default: { email: "", username: "", alias: "", password: "", emailErr: null, userErr: null, loading: false },
+    filled:  { email: "rosa.petrov@example.com", username: "rosa.p", alias: "rosa petrov", password: "TapeReel-9-9-2026", emailErr: null, userErr: null, loading: false },
+    error:   { email: "rosa@example.com", username: "rosa", alias: "rosa petrov", password: "shortpw", emailErr: "An account with that email already exists.", userErr: "Handle is taken — try rosa.99 or rosa_p", loading: false },
+    loading: { email: "rosa.petrov@example.com", username: "rosa.p", alias: "rosa petrov", password: "TapeReel-9-9-2026", emailErr: null, userErr: null, loading: true },
   }[variant];
 
   // Password strength heuristic for the filled state
@@ -51,23 +19,10 @@ window.SignUpPage = function SignUpPage() {
       eyebrow="Get started"
       title="Create your account"
       subtitle="Free during beta. No tracking, no credit card."
-      footer={
-        <>
-          Already have an account?{" "}
-          <a
-            href="MakeSomeNoise Login.html"
-            style={{ color: "var(--color-orange)" }}
-          >
-            Log in →
-          </a>
-        </>
-      }
+      footer={<>Already have an account? <a href="MakeSomeNoise Login.html" style={{ color: "var(--color-orange)" }}>Log in →</a></>}
       width={460}
     >
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        style={{ display: "flex", flexDirection: "column", gap: 14 }}
-      >
+      <form onSubmit={(e) => e.preventDefault()} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         <MsnField
           label="Email"
           type="email"
@@ -108,41 +63,26 @@ window.SignUpPage = function SignUpPage() {
           )}
         </div>
 
-        <div
-          style={{
-            color: "var(--fg3)",
-            fontSize: 11,
-            fontFamily: "var(--font-body)",
-            lineHeight: 1.5,
-            padding: "8px 0",
-          }}
-        >
+        <div style={{
+          color: "var(--fg3)", fontSize: 11, fontFamily: "var(--font-body)", lineHeight: 1.5,
+          padding: "8px 0",
+        }}>
           By creating an account you agree to our{" "}
           <a style={{ color: "var(--fg2)" }}>Terms</a> and{" "}
           <a style={{ color: "var(--fg2)" }}>Privacy policy</a>.
         </div>
 
         <MsnSubmit loading={data.loading}>
-          {data.loading ? (
-            "Creating account…"
-          ) : (
-            <>
-              Create account <MsnIcon name="arrowR" size="11px" />
-            </>
-          )}
+          {data.loading ? "Creating account…" : <>Create account <MsnIcon name="arrowR" size="11px" /></>}
         </MsnSubmit>
       </form>
 
-      <StateSwitcher
-        variant={variant}
-        setVariant={setVariant}
-        options={[
-          { v: "default", label: "Empty" },
-          { v: "filled", label: "Filled" },
-          { v: "error", label: "Error" },
-          { v: "loading", label: "Loading" },
-        ]}
-      />
+      <StateSwitcher variant={variant} setVariant={setVariant} options={[
+        { v: "default", label: "Empty" },
+        { v: "filled",  label: "Filled" },
+        { v: "error",   label: "Error" },
+        { v: "loading", label: "Loading" },
+      ]} />
     </AuthShell>
   );
 };
@@ -150,7 +90,7 @@ window.SignUpPage = function SignUpPage() {
 function passwordStrength(pw) {
   if (!pw) return { score: 0, label: "" };
   let s = 0;
-  if (pw.length >= 8) s++;
+  if (pw.length >= 8)  s++;
   if (pw.length >= 12) s++;
   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) s++;
   if (/\d/.test(pw)) s++;
@@ -160,42 +100,20 @@ function passwordStrength(pw) {
 }
 
 function PasswordMeter({ score, label }) {
-  const colors = [
-    "var(--color-red)",
-    "var(--color-red)",
-    "var(--color-orange)",
-    "var(--color-yellow)",
-    "var(--color-green)",
-    "var(--color-green)",
-  ];
+  const colors = ["var(--color-red)", "var(--color-red)", "var(--color-orange)", "var(--color-yellow)", "var(--color-green)", "var(--color-green)"];
   const c = colors[score] || "var(--color-dark)";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <div style={{ display: "flex", gap: 3, flex: 1 }}>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              height: 3,
-              borderRadius: 1,
-              background: i < score ? c : "var(--color-void)",
-              boxShadow: i < score ? `0 0 4px -1px ${c}` : "none",
-            }}
-          />
+        {[0,1,2,3,4].map(i => (
+          <div key={i} style={{
+            flex: 1, height: 3, borderRadius: 1,
+            background: i < score ? c : "var(--color-void)",
+            boxShadow: i < score ? `0 0 4px -1px ${c}` : "none",
+          }}/>
         ))}
       </div>
-      <span
-        style={{
-          color: c,
-          fontSize: 10,
-          fontFamily: "var(--font-mono)",
-          textTransform: "uppercase",
-          letterSpacing: 0.4,
-        }}
-      >
-        {label}
-      </span>
+      <span style={{ color: c, fontSize: 10, fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: 0.4 }}>{label}</span>
     </div>
   );
 }

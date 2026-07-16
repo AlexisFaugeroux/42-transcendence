@@ -1,0 +1,28 @@
+<!-- @dsCard group="Components" viewport="420x180" name="Knob" subtitle="Draggable instrument-panel knob (double-click resets)" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>body{margin:0;background:var(--bg-panel-2);color:var(--fg1);display:flex;align-items:center;justify-content:center;height:100vh}#root{display:flex;gap:28px;align-items:center;font-size:24px}.k{display:flex;flex-direction:column;align-items:center;gap:8px}.k span{font-size:9px;color:var(--fg3);text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-mono)}</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="../_ds_bundle.js"></script>
+<script>
+  const { Knob } = window.OpenDAWDesignSystem_019dce;
+  const h = React.createElement;
+  function Demo(){
+    const [a,setA]=React.useState(0.7),[b,setB]=React.useState(0.5),[c,setC]=React.useState(0.3);
+    return h(React.Fragment,null,
+      h("div",{className:"k"},h(Knob,{value:a,color:"var(--color-yellow)",onChange:setA}),h("span",null,"Volume")),
+      h("div",{className:"k"},h(Knob,{value:b,anchor:0.5,color:"var(--color-green)",onChange:setB}),h("span",null,"Pan")),
+      h("div",{className:"k"},h(Knob,{value:c,color:"var(--color-orange)",onChange:setC}),h("span",null,"Drive")),
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(h(Demo));
+</script>
+</body>
+</html>

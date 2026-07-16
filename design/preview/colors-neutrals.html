@@ -1,94 +1,22 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Neutrals</title>
-    <link rel="stylesheet" href="../colors_and_type.css" />
-    <style>
-      body {
-        padding: 16px;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 6px;
-      }
-      .swatch {
-        aspect-ratio: 1.4;
-        border-radius: 4px;
-        padding: 8px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        font-size: 10px;
-      }
-      .swatch.dark {
-        color: var(--color-bright);
-      }
-      .swatch.light {
-        color: rgba(0, 0, 0, 0.85);
-      }
-      .name {
-        font-weight: 400;
-        font-size: 11px;
-      }
-      .val {
-        font-family: var(--font-mono);
-        font-size: 9px;
-        opacity: 0.65;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="grid">
-      <div
-        class="swatch light"
-        style="
-          background: var(--color-bright);
-          border: 1px solid var(--line-soft);
-        "
-      >
-        <div class="name">bright</div>
-        <div class="val">hsl 0/0/92</div>
-      </div>
-      <div class="swatch light" style="background: var(--color-gray)">
-        <div class="name">gray</div>
-        <div class="val">hsl 0/0/56</div>
-      </div>
-      <div class="swatch dark" style="background: var(--color-dark)">
-        <div class="name">dark</div>
-        <div class="val">hsl 0/0/38</div>
-      </div>
-      <div
-        class="swatch dark"
-        style="
-          background: var(--color-shadow);
-          border: 1px solid var(--line-soft);
-        "
-      >
-        <div class="name">shadow</div>
-        <div class="val">197/14/12</div>
-      </div>
-      <div
-        class="swatch dark"
-        style="
-          background: var(--color-black);
-          border: 1px solid var(--line-soft);
-        "
-      >
-        <div class="name">black</div>
-        <div class="val">197/14/6</div>
-      </div>
-      <div
-        class="swatch dark"
-        style="
-          background: var(--color-void);
-          border: 1px solid var(--line-soft);
-        "
-      >
-        <div class="name">void</div>
-        <div class="val">197/14/3</div>
-      </div>
-    </div>
-  </body>
-</html>
+<html><head><meta charset="utf-8"><title>Neutrals</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .swatch { aspect-ratio: 1.4; border-radius: 4px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; }
+  .swatch.dark { color: var(--color-bright); }
+  .swatch.light { color: rgba(0,0,0,0.85); }
+  .name { font-weight: 400; font-size: 11px; }
+  .val { font-family: var(--font-mono); font-size: 9px; opacity: 0.65; }
+</style></head>
+<body>
+  <div class="grid">
+    <div class="swatch light" style="background: var(--color-bright); border: 1px solid var(--line-soft)"><div class="name">bright</div><div class="val">hsl 0/0/92</div></div>
+    <div class="swatch light" style="background: var(--color-gray)"><div class="name">gray</div><div class="val">hsl 0/0/56</div></div>
+    <div class="swatch dark" style="background: var(--color-dark)"><div class="name">dark</div><div class="val">hsl 0/0/38</div></div>
+    <div class="swatch dark" style="background: var(--color-shadow); border: 1px solid var(--line-soft)"><div class="name">shadow</div><div class="val">197/14/12</div></div>
+    <div class="swatch dark" style="background: var(--color-black); border: 1px solid var(--line-soft)"><div class="name">black</div><div class="val">197/14/6</div></div>
+    <div class="swatch dark" style="background: var(--color-void); border: 1px solid var(--line-soft)"><div class="name">void</div><div class="val">197/14/3</div></div>
+  </div>
+</body></html>

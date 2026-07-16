@@ -1,0 +1,33 @@
+<!-- @dsCard group="Components" viewport="520x200" name="Button" subtitle="Framed & solid, 3 sizes, accent colors" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>body{margin:0;background:var(--bg-panel-2);color:var(--fg1);display:flex;align-items:center;justify-content:center;height:100vh}#root{display:flex;flex-direction:column;gap:14px}.row{display:flex;gap:10px;align-items:center}</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="../_ds_bundle.js"></script>
+<script>
+  const { Button } = window.OpenDAWDesignSystem_019dce;
+  const h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    h(React.Fragment, null,
+      h("div", { className: "row" },
+        h(Button, { variant: "solid", color: "var(--color-orange)", size: "lg" }, "Sign up free"),
+        h(Button, { variant: "solid", color: "var(--color-red)" }, "Record"),
+        h(Button, { variant: "solid", color: "var(--color-blue)", size: "sm" }, "Mix"),
+      ),
+      h("div", { className: "row" },
+        h(Button, { variant: "framed", color: "var(--fg1)", size: "lg" }, "Log in"),
+        h(Button, { variant: "framed", color: "var(--color-orange)", active: true }, "Favorites"),
+        h(Button, { variant: "framed", color: "var(--fg2)", size: "sm" }, "Cancel"),
+      ),
+    )
+  );
+</script>
+</body>
+</html>
