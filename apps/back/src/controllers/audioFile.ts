@@ -1,26 +1,20 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import type { Key, Visibility } from '../domain/audioFile';
+import type { GetAudioFileInput } from '../domain/audioFile';
 import { NotFoundError } from '../domain/errors';
 import { InternalServerError } from '../domain/errors';
 import { audioFileRepository } from '../repositories/audioFile';
-import { ownerRepositoty } from '../repositories/owner';
+import { ownerRepository } from '../repositories/owner';
 import { userRepository } from '../repositories/user';
 
 interface GetAudioFilesRoute extends RouteGenericInterface {
-  Querystring: {
-    userId: string;
-    ids: string[];
-    bpms: number[];
-    keys: Key[];
-    visibilities: Visibility[];
-  };
+  Querystring: GetAudioFileInput;
 }
 
 class AudioFileController {
   public get = async (req: FastifyRequest<GetAudioFilesRoute>, reply: FastifyReply) => {
     const userId = req.authUser.id;
 
-    const platformOwnerID = (await ownerRepositoty.get('PLATEFORM')).id;
+    const platformOwnerID = (await ownerRepository.get('PLATEFORM')).id;
 
     if (!platformOwnerID) throw new NotFoundError();
 
