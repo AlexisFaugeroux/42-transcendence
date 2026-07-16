@@ -45,7 +45,7 @@ const getAudioFileQuerySchema = {
 
 export function audioRoutes(app: FastifyInstance) {
   app.get(
-    '/api/audio/get',
+    '/get',
     { preHandler: app.authenticate, schema: { querystring: getAudioFileQuerySchema } },
     audioFileController.get,
   );
