@@ -12,7 +12,7 @@ export interface User {
   artistName: string;
   password: string;
   role: Role;
-  ownerId?: string;
+  ownerId: string;
 }
 
 export interface CreateUserInput {

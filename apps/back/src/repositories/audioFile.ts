@@ -79,6 +79,15 @@ class AudioFileRepository {
     }
   }
 
+  public async sumBytes(ownerId: string): Promise<number> {
+    const result = await prisma.audioFile.aggregate({
+      _sum: { bytes: true },
+      where: { ownerId },
+    });
+
+    return result._sum.bytes ?? 0;
+  }
+
   private _format(audioFile: PrismaAudioFile) {
     const { createdAt, updatedAt, ...rest } = audioFile;
 

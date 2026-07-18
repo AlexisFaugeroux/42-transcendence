@@ -22,6 +22,9 @@ The path key is `ownerId` (the `Owner` model), not `userId`.
 `bytes`. There is no `filename` / `mime_type` column; the binary is addressed by
 `ownerId`/`id` on disk.
 
+`length` (duration) and `bytes` (size) are read from the audio file itself — see
+[wav.md](../wav.md) for how to interpret a `.wav`'s bytes.
+
 ## Access control (nginx `auth_request`)
 
 For every `/audio/` request, nginx fires an internal sub-request to the backend,

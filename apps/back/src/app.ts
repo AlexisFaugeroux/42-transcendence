@@ -1,4 +1,6 @@
+import multipart from '@fastify/multipart';
 import Fastify, { type FastifyError, type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import { AUDIO_USER_QUOTA_BYTES } from './constants';
 import {
   BadRequestError,
   ConflictError,
@@ -6,6 +8,7 @@ import {
   ForbiddenError,
   InternalServerError,
   NotFoundError,
+  PayloadTooLargeError,
   UnauthorizedError,
 } from './domain/errors';
 import authPlugin from './plugins/auth';
@@ -53,6 +56,10 @@ export async function buildApp(): Promise<FastifyInstance> {
       request.log.warn(error);
       return reply.code(409).send({ error: error.message, status: 409 });
     }
+    if (error instanceof PayloadTooLargeError) {
+      request.log.error(error);
+      return reply.code(413).send({ error: error.message, status: 413 });
+    }
     if (error instanceof InternalServerError) {
       request.log.error(error);
       return reply.code(500).send({ error: error.message, status: 500 });
@@ -60,6 +67,13 @@ export async function buildApp(): Promise<FastifyInstance> {
 
     request.log.error(error);
     return reply.code(500).send({ error: 'internal error', status: 500 });
+  });
+
+  await app.register(multipart, {
+    limits: {
+      files: 1,
+      fileSize: AUDIO_USER_QUOTA_BYTES,
+    },
   });
 
   await app.register(authPlugin);
