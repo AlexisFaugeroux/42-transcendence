@@ -43,10 +43,25 @@ const getAudioFileQuerySchema = {
   type: 'object',
 };
 
+const deleteAudioFileSchema = {
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      id: { format: 'uuid', type: 'string' },
+    },
+    required: ['id'],
+    type: 'object',
+  },
+};
+
 export function audioRoutes(app: FastifyInstance) {
   app.get(
     '/get',
     { preHandler: app.authenticate, schema: { querystring: getAudioFileQuerySchema } },
     audioFileController.get,
   );
+
+  app.post('/upload', { preHandler: app.authenticate }, audioFileController.upload);
+
+  app.delete('/delete', { preHandler: app.authenticate, schema: deleteAudioFileSchema }, audioFileController.delete);
 }

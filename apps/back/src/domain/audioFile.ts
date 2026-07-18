@@ -4,22 +4,23 @@ export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
 
 export interface AudioFile {
   id: string;
-  ownerId: string;
   bpm: number | null;
+  ownerId: string;
   key: Key | null;
   visibility: Visibility | null;
   url: string;
-  length: number;
+  duration: number;
   bytes: number;
   name: string;
 }
 
 export interface CreateAudioFileInput {
+  id: string;
   name: string;
   ownerId: string;
   visibility: Visibility;
   url: string;
-  length: number;
+  duration: number;
   bytes: number;
   bpm?: number | null;
   key?: Key | null;
@@ -36,8 +37,14 @@ export interface GetAudioFileInput {
 export interface UpdateAudioFileInput {
   visibility?: Visibility;
   url?: string;
-  length?: number;
+  duration?: number;
   bytes?: number;
   bpm?: number | null;
   key?: Key | null;
+}
+
+export interface UploadAudioFileFields {
+  visibility: Visibility;
+  bpm?: number;
+  key?: Key;
 }

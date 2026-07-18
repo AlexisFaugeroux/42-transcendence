@@ -42,6 +42,13 @@ export class ForbiddenError extends Error {
   }
 }
 
+export class PayloadTooLargeError extends Error {
+  constructor(message = 'request entity too large') {
+    super(message);
+    this.name = 'PayloadTooLargeError';
+  }
+}
+
 export interface ErrorReponse extends RouteGenericInterface {
   Reply: {
     error: string;

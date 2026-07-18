@@ -76,7 +76,7 @@ model AudioFile {
   key         Key?
   visibility  VisibilityType
   url         String
-  length      Int
+  duration    Float
   bytes       Int
   projects    StudioProject[]
   createdAt   DateTime @default(now())

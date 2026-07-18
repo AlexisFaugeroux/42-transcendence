@@ -5,6 +5,7 @@ import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
 import { prisma } from '../../src/utils/prisma';
 import type { SampleOwner, SeedConfig } from './types';
+import { parseWAV } from '../../src/utils/wav';
 
 async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -90,23 +91,29 @@ export async function seed(config: SeedConfig): Promise<void> {
     console.log(`Create ${label} audio files...`);
 
     const files = await walk(sampleSet.dir);
-    const samples = files.map((abs, index) => {
-      const id = randomUUID();
-      const originalName = abs.split(sep).at(-1) ?? 'unknown.wav';
-      const ext = originalName.split('.').at(-1) ?? 'wav';
-      const url = `${ownerId}/${id}.${ext}`;
-      const name = originalName;
-      const visibility =
-        typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
-      return { abs, id, name, url, visibility };
-    });
+    const samples = await Promise.all(
+      files.map(async (abs, index) => {
+        const id = randomUUID();
+        const originalName = abs.split(sep).at(-1) ?? 'unknown.wav';
+        const ext = originalName.split('.').at(-1) ?? 'wav';
+        const url = `${ownerId}/${id}.${ext}`;
+        const name = originalName;
+        const visibility =
+          typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
+
+        const { durationMs, size } = await parseWAV(abs);
+
+        return { abs, durationMs, id, name, size, url, visibility };
+      }),
+    );
+
     await prisma.$transaction(async (tx) => {
       for (const sample of samples) {
         await tx.audioFile.create({
           data: {
-            bytes: 0,
+            bytes: sample.size,
+            duration: sample.durationMs,
             id: sample.id,
-            length: 0,
             name: sample.name,
             ownerId,
             url: sample.url,
