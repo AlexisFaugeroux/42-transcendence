@@ -83,7 +83,7 @@ class ProjectRepository {
   }
 
   private _format(project: StudioProject & { samples: Pick<AudioFile, 'id'>[] }): Project {
-    const { key, mode, samples, state, visibility, createdAt, updatedAt, ...rest } = project;
+    const { createdAt, key, mode, samples, state, updatedAt, visibility, ...rest } = project;
 
     const buffer = toArrayBuffer(state);
     const encodedState = Buffer.from(buffer).toString('base64');
@@ -95,11 +95,11 @@ class ProjectRepository {
 
     return {
       ...rest,
+      createdAt: formattedCreatedAt,
       key: key ?? undefined,
       mode: mode ?? undefined,
       samples: formattedSamples,
       state: encodedState,
-      createdAt: formattedCreatedAt,
       updatedAt: formattedUpdatedAt,
     };
   }

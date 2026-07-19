@@ -4,9 +4,9 @@ import { dirname, join, sep } from 'node:path';
 import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
 import { prisma } from '../../src/utils/prisma';
-import type { SampleOwner, SeedConfig } from './types';
 import { parseWAV } from '../../src/utils/wav';
 import { deriveSampleMeta } from './meta';
+import type { SampleOwner, SeedConfig } from './types';
 
 async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });

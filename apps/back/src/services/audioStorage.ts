@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import { mkdir, rm, unlink } from 'node:fs/promises';
+import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import path from 'node:path';
 import { PayloadTooLargeError } from '../domain/errors';
 
 interface StoredFile {
