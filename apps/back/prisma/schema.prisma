@@ -19,12 +19,48 @@ enum AudioType {
 
 enum Key {
   A_key
+  A_sharp_key
+  B_flat_key
   B_key
   C_key
+  C_sharp_key
+  D_flat_key
   D_key
+  D_sharp_key
+  E_flat_key
   E_key
   F_key
+  F_sharp_key
+  G_flat_key
   G_key
+  G_sharp_key
+  A_flat_key
+}
+
+enum Mode {
+  MAJOR
+  MINOR
+}
+
+enum Family {
+  KICK
+  SNARE
+  CLAP
+  HAT
+  TOM
+  PERC
+  CYMBAL
+  BASS
+  SYNTH
+  LEAD
+  PAD
+  KEYS
+  PLUCK
+  STRINGS
+  BRASS
+  VOCAL
+  FX
+  AMBIENCE
 }
 
 enum OwnerType {
@@ -36,6 +72,12 @@ enum VisibilityType {
   PRIVATE
   SHARED
   PUBLIC
+}
+
+enum AudioFileKind {
+  ONE_SHOT
+  LOOP
+  TRACK
 }
 
 model Owner {
@@ -72,8 +114,11 @@ model AudioFile {
   owner       Owner @relation(fields: [ownerId], references: [id])
   name        String
   ownerId     String
+  family      Family?
+  kind        AudioFileKind?
   bpm         Int?
   key         Key?
+  mode        Mode?
   visibility  VisibilityType
   url         String
   duration    Float
@@ -105,6 +150,7 @@ model StudioProject {
   bpm         Int
   visibility  VisibilityType
   key         Key?
+  mode        Mode?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -1,3 +1,4 @@
+import { formatISO } from '@transcendence/date';
 import type { GetProjectInput, Project, UpsertProjectInput } from '../domain/project';
 import type { AudioFile, PrismaClient, StudioProject } from '../generated/prisma/client';
 import { toArrayBuffer } from '../utils/bytes';
@@ -82,14 +83,25 @@ class ProjectRepository {
   }
 
   private _format(project: StudioProject & { samples: Pick<AudioFile, 'id'>[] }): Project {
-    const { key, samples, state, visibility, ...rest } = project;
+    const { key, mode, samples, state, visibility, createdAt, updatedAt, ...rest } = project;
 
     const buffer = toArrayBuffer(state);
     const encodedState = Buffer.from(buffer).toString('base64');
 
     const formattedSamples = samples.map(({ id }) => id);
 
-    return { ...rest, key: key ?? undefined, samples: formattedSamples, state: encodedState };
+    const formattedCreatedAt = formatISO(createdAt);
+    const formattedUpdatedAt = formatISO(updatedAt);
+
+    return {
+      ...rest,
+      key: key ?? undefined,
+      mode: mode ?? undefined,
+      samples: formattedSamples,
+      state: encodedState,
+      createdAt: formattedCreatedAt,
+      updatedAt: formattedUpdatedAt,
+    };
   }
 
   private _buildFilters(input: GetProjectInput) {

@@ -1,22 +1,25 @@
-import type { Key, UploadAudioFileFields } from '../domain/audioFile';
+import type { Family, Key, Kind, Mode, UploadAudioFileFields, Visibility } from '../domain/audioFile';
 import { BadRequestError } from '../domain/errors';
-import { Key as KeyEnum, VisibilityType as VisibilityEnum } from '../generated/prisma/enums';
+import {
+  AudioFileKind as KindEnum,
+  Family as FamilyEnum,
+  Key as KeyEnum,
+  Mode as ModeEnum,
+  VisibilityType as VisibilityEnum,
+} from '../generated/prisma/enums';
 
-const visibilityMap: Record<string, VisibilityEnum> = {
-  PRIVATE: 'PRIVATE',
-  PUBLIC: 'PUBLIC',
-  SHARED: 'SHARED',
-} as const;
+const visibilityMap: Record<string, VisibilityEnum> = { ...VisibilityEnum };
+const keyMap: Record<string, KeyEnum> = { ...KeyEnum };
+const modeMap: Record<string, ModeEnum> = { ...ModeEnum };
+const familyMap: Record<string, FamilyEnum> = { ...FamilyEnum };
+const kindMap: Record<string, KindEnum> = { ...KindEnum };
 
-const keyMap: Record<string, KeyEnum> = {
-  A_key: 'A_key',
-  B_key: 'B_key',
-  C_key: 'C_key',
-  D_key: 'D_key',
-  E_key: 'E_key',
-  F_key: 'F_key',
-  G_key: 'G_key',
-};
+const isVisibility = (value: string): value is Visibility =>
+  Object.values(VisibilityEnum).includes(visibilityMap[value]);
+const isKey = (value: string): value is Key => Object.values(KeyEnum).includes(keyMap[value]);
+const isMode = (value: string): value is Mode => Object.values(ModeEnum).includes(modeMap[value]);
+const isFamily = (value: string): value is Family => Object.values(FamilyEnum).includes(familyMap[value]);
+const isKind = (value: string): value is Kind => Object.values(KindEnum).includes(kindMap[value]);
 
 export function parseUploadAudioFileFields(fields: Record<string, unknown>): UploadAudioFileFields {
   const raw = (name: string): string | undefined => {
@@ -26,7 +29,7 @@ export function parseUploadAudioFileFields(fields: Record<string, unknown>): Upl
   };
 
   const visibility = raw('visibility');
-  if (!visibility || !Object.values(VisibilityEnum).includes(visibilityMap[visibility])) {
+  if (!visibility || !isVisibility(visibility)) {
     throw new BadRequestError(`Invalid visibility: ${visibility ?? 'missing'}`);
   }
 
@@ -41,9 +44,30 @@ export function parseUploadAudioFileFields(fields: Record<string, unknown>): Upl
   const keyRaw = raw('key');
   let key: Key | undefined;
   if (keyRaw !== undefined) {
-    if (!Object.values(KeyEnum).includes(keyMap[keyRaw])) throw new BadRequestError(`Invalid key: ${keyRaw}`);
-    key = keyRaw as Key;
+    if (!isKey(keyRaw)) throw new BadRequestError(`Invalid key: ${keyRaw}`);
+    key = keyRaw;
   }
 
-  return { bpm, key, visibility: visibilityMap[visibility] };
+  const modeRaw = raw('mode');
+  let mode: Mode | undefined;
+  if (modeRaw !== undefined) {
+    if (!isMode(modeRaw)) throw new BadRequestError(`Invalid mode: ${modeRaw}`);
+    mode = modeRaw;
+  }
+
+  const familyRaw = raw('family');
+  let family: Family | undefined;
+  if (familyRaw !== undefined) {
+    if (!isFamily(familyRaw)) throw new BadRequestError(`Invalid family: ${familyRaw}`);
+    family = familyRaw;
+  }
+
+  const kindRaw = raw('kind');
+  let kind: Kind | undefined;
+  if (kindRaw !== undefined) {
+    if (!isKind(kindRaw)) throw new BadRequestError(`Invalid kind: ${kindRaw}`);
+    kind = kindRaw;
+  }
+
+  return { bpm, family, key, kind, mode, visibility };
 }

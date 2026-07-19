@@ -1,3 +1,4 @@
+import { formatISO } from '@transcendence/date';
 import type { AudioFile, CreateAudioFileInput, GetAudioFileInput, UpdateAudioFileInput } from '../domain/audioFile';
 import type { AudioFile as PrismaAudioFile, PrismaClient } from '../generated/prisma/client';
 import { prisma } from '../utils/prisma';
@@ -88,18 +89,23 @@ class AudioFileRepository {
     return result._sum.bytes ?? 0;
   }
 
-  private _format(audioFile: PrismaAudioFile) {
+  private _format(audioFile: PrismaAudioFile): AudioFile {
     const { createdAt, updatedAt, ...rest } = audioFile;
 
-    return rest;
+    const formattedCreatedAt = formatISO(createdAt);
+
+    return { ...rest, createdAt: formattedCreatedAt };
   }
 
   private _buildFilters(input: GetAudioFileInput) {
-    const { bpms, ids, keys, ownerIds, visibilities } = input;
+    const { bpms, families, ids, keys, kinds, modes, ownerIds, visibilities } = input;
 
     const idFilter = ids?.length ? { id: { in: ids } } : undefined;
     const bpmFilter = bpms?.length ? { bpm: { in: bpms } } : undefined;
-    const keyFilter = keys?.length ? { Key: { in: keys } } : undefined;
+    const keyFilter = keys?.length ? { key: { in: keys } } : undefined;
+    const modeFilter = modes?.length ? { mode: { in: modes } } : undefined;
+    const familyFilter = families?.length ? { family: { in: families } } : undefined;
+    const kindFilter = kinds?.length ? { kind: { in: kinds } } : undefined;
     const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
     const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
 
@@ -109,6 +115,9 @@ class AudioFileRepository {
       ...idFilter,
       ...bpmFilter,
       ...keyFilter,
+      ...modeFilter,
+      ...familyFilter,
+      ...kindFilter,
     };
   }
 }
