@@ -18,12 +18,13 @@ The path key is `ownerId` (the `Owner` model), not `userId`.
 ## Data model
 
 `AudioFile` (`apps/back/prisma/schema.prisma`) — metadata only: `ownerId`,
-`bpm?`, `key?`, `visibility` (`PRIVATE` / `SHARED` / `PUBLIC`), `url`, `length`,
-`bytes`. There is no `filename` / `mime_type` column; the binary is addressed by
-`ownerId`/`id` on disk.
+`name`, `family?`, `kind?`, `bpm?`, `key?`, `mode?`, `visibility` (`PRIVATE` /
+`SHARED` / `PUBLIC`), `url`, `duration` (ms, `Float`), `bytes`, `createdAt`.
+There is no `mime_type` column; the binary is addressed by `ownerId`/`id` on disk
+(`name` is the client-supplied display label, never the disk path).
 
-`length` (duration) and `bytes` (size) are read from the audio file itself — see
-[wav.md](../wav.md) for how to interpret a `.wav`'s bytes.
+`duration` and `bytes` (size) are derived from the audio file itself server-side
+— see [wav.md](../wav.md) for how to interpret a `.wav`'s bytes.
 
 ## Access control (nginx `auth_request`)
 
@@ -48,9 +49,27 @@ The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
 `authenticate` hook, then allows the file if it is `PUBLIC` / `SHARED` or the
 requester owns it (else 403; 404 if missing).
 
-## Uploads
+## API (`/api/audio`, `routes/audioFile.ts`)
 
-No upload endpoint yet — files arrive via seeds / the prod image unpacking
-`samples/*.zip`. `services/audioStorage.ts` only implements
-`deleteDirectory(ownerId)`. Upload + validation (type, size, filename
-sanitization, quotas) is still to be built.
+All authenticated. Registered with prefix `/api/audio` in `app.ts`.
+
+- `GET /get` — lists the caller's `AudioFile`s **plus** the platform owner's,
+  with optional filters (`ids/bpms/keys/modes/families/kinds/visibilities`).
+- `POST /upload` — `multipart/form-data` (`@fastify/multipart`). Streams the file
+  to disk (`audioStorageService.writeStream`), parses the WAV server-side
+  (`utils/wav.ts` → `duration`, `bytes`), enforces the per-owner quota
+  (`AUDIO_USER_QUOTA_BYTES`, `413` on overflow), then creates the row. Fields
+  (`visibility`, `bpm?`, `key?`, `mode?`, `family?`, `kind?`) are validated in
+  `utils/validation.ts`; `duration` is **never** trusted from the client. On any
+  failure the streamed file is rolled back (`audioStorageService.remove`).
+- `DELETE /delete?id=` — removes the disk file then the row (owner-checked).
+
+Seeds still populate the platform/user samples directly (`scripts/seed/`);
+`seed/meta.ts` derives `family`/`kind`/`bpm` from the filename.
+
+`services/audioStorage.ts` provides `writeStream`, `remove`, and
+`deleteDirectory(ownerId)`.
+
+The on-disk filename is always a server-generated `{uuid}.{ext}` — the client
+filename is stored only as `AudioFile.name`, never used to build the path (no
+`../` path traversal).

@@ -8,14 +8,16 @@ FROM base AS build
 # Copy files required to install dependencies
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 COPY apps/back/package.json apps/back/
+COPY packages/date/package.json packages/date/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/prettier-config/package.json packages/prettier-config/
-# Install deps
-RUN pnpm install --frozen-lockfile --filter @transcendence/back...
+# Install deps (include @transcendence/date's own devDeps so it can be built)
+RUN pnpm install --frozen-lockfile --filter @transcendence/back... --filter @transcendence/date
 # Copy source code and build
 COPY apps/back apps/back
 COPY packages packages
-RUN pnpm --filter @transcendence/back db:generate \
+RUN pnpm --filter @transcendence/date build \
+  && pnpm --filter @transcendence/back db:generate \
   && pnpm --filter @transcendence/back build \
   && pnpm --filter @transcendence/back build:seed
 # Creates a "prod" version with no dev dependencies --> lighter

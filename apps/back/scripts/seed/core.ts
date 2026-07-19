@@ -6,6 +6,7 @@ import { OwnerType } from '../../src/generated/prisma/enums';
 import { prisma } from '../../src/utils/prisma';
 import type { SampleOwner, SeedConfig } from './types';
 import { parseWAV } from '../../src/utils/wav';
+import { deriveSampleMeta } from './meta';
 
 async function walk(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -102,8 +103,9 @@ export async function seed(config: SeedConfig): Promise<void> {
           typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
 
         const { durationMs, size } = await parseWAV(abs);
+        const { bpm, family, kind } = deriveSampleMeta(originalName);
 
-        return { abs, durationMs, id, name, size, url, visibility };
+        return { abs, bpm, durationMs, family, id, kind, name, size, url, visibility };
       }),
     );
 
@@ -111,9 +113,12 @@ export async function seed(config: SeedConfig): Promise<void> {
       for (const sample of samples) {
         await tx.audioFile.create({
           data: {
+            bpm: sample.bpm,
             bytes: sample.size,
             duration: sample.durationMs,
+            family: sample.family,
             id: sample.id,
+            kind: sample.kind,
             name: sample.name,
             ownerId,
             url: sample.url,

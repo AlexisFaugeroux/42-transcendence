@@ -1,10 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 import { audioFileController } from '../controllers/audioFile';
+import { AudioFileKind, Family, Key, Mode, VisibilityType } from '../generated/prisma/enums';
 
 const getAudioFileQuerySchema = {
   additionalProperties: false,
   properties: {
-    bpm: {
+    bpms: {
       items: {
         type: 'integer',
       },
@@ -13,7 +14,17 @@ const getAudioFileQuerySchema = {
       uniqueItems: true,
     },
 
-    id: {
+    families: {
+      items: {
+        enum: Object.values(Family),
+        type: 'string',
+      },
+      minItems: 1,
+      type: 'array',
+      uniqueItems: true,
+    },
+
+    ids: {
       items: {
         type: 'string',
       },
@@ -22,8 +33,9 @@ const getAudioFileQuerySchema = {
       uniqueItems: true,
     },
 
-    key: {
+    keys: {
       items: {
+        enum: Object.values(Key),
         type: 'string',
       },
       minItems: 1,
@@ -31,8 +43,29 @@ const getAudioFileQuerySchema = {
       uniqueItems: true,
     },
 
-    visibility: {
+    kinds: {
       items: {
+        enum: Object.values(AudioFileKind),
+        type: 'string',
+      },
+      minItems: 1,
+      type: 'array',
+      uniqueItems: true,
+    },
+
+    modes: {
+      items: {
+        enum: Object.values(Mode),
+        type: 'string',
+      },
+      minItems: 1,
+      type: 'array',
+      uniqueItems: true,
+    },
+
+    visibilities: {
+      items: {
+        enum: Object.values(VisibilityType),
         type: 'string',
       },
       minItems: 1,

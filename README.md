@@ -128,12 +128,31 @@ erDiagram
   AudioFile {
     string id PK
     string ownerId FK
+    string name
+    Family family "nullable"
+    AudioFileKind kind "nullable"
     int bpm "nullable"
     Key key "nullable"
+    Mode mode "nullable"
     VisibilityType visibility
     string url
-    int length
+    float duration
     int bytes
+    datetime createdAt
+    datetime updatedAt
+  }
+  StudioProject {
+    string id PK
+    string ownerId FK
+    bytes state
+    string name
+    int duration
+    int bpm
+    VisibilityType visibility
+    Key key "nullable"
+    Mode mode "nullable"
+    datetime createdAt
+    datetime updatedAt
   }
   Session {
     string id PK
@@ -141,12 +160,16 @@ erDiagram
     datetime expiresAt
     datetime revokedAt "nullable"
     string userAgent "nullable"
+    datetime createdAt
+    datetime updatedAt
   }
 
   Owner ||--o| User : "owned by"
   Owner ||--o{ AudioFile : owns
+  Owner ||--o{ StudioProject : owns
   User  ||--o{ Session : has
   User  }o--o{ User : follows
+  AudioFile }o--o{ StudioProject : "used in"
 ```
 
 **Tables and relationships:**
@@ -157,12 +180,18 @@ erDiagram
   `password`, profile fields `firstname` / `lastname` / `location` / `bio` /
   `links`, `role` ∈ {`ADMIN`, `ARTIST`}). Linked one-to-one to an `Owner`. Self
   many-to-many relation `UserFollows` (`following` / `followedBy`). Has many `Session`s.
-- **AudioFile** — sample/track metadata: optional `bpm` and `key`, `visibility`
-  (`PRIVATE` / `SHARED` / `PUBLIC`), `url`, `length`, `bytes`. The binary file lives on disk.
+- **AudioFile** — sample/track metadata: `name`, optional `family` / `kind` /
+  `bpm` / `key` / `mode`, `visibility` (`PRIVATE` / `SHARED` / `PUBLIC`), `url`,
+  `duration` (ms) and `bytes` (both derived server-side from the file). The
+  binary itself lives on disk. Many-to-many with `StudioProject`.
+- **StudioProject** — a studio session: serialized `state` (`Bytes`), `name`,
+  `duration`, `bpm`, `visibility`, optional `key` / `mode`. Owned by an `Owner`,
+  references many `AudioFile`s (the samples it uses).
 - **Session** — authentication session for a user (`expiresAt`, optional `revokedAt`,
   `userAgent`); cascades on user deletion.
 
-**Enums:** `Role`, `AudioType`, `Key`, `OwnerType`, `VisibilityType`.
+**Enums:** `Role`, `AudioType`, `Key`, `Mode`, `Family`, `OwnerType`,
+`VisibilityType`, `AudioFileKind`.
 
 ---
 

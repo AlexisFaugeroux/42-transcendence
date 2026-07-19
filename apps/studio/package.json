@@ -36,6 +36,7 @@
     "@opendaw/studio-sdk": "0.0.137",
     "@tanstack/react-query": "5.101.2",
     "@transcendence/auth": "workspace:*",
+    "@transcendence/date": "workspace:*",
     "@transcendence/ui": "workspace:*",
     "clsx": "2.1.1",
     "react": "19.2.6",

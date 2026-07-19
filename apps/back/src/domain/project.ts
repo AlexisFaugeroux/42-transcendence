@@ -1,5 +1,5 @@
 import type { VisibilityType } from '../generated/prisma/enums';
-import type { Key } from './audioFile';
+import type { Key, Mode } from './audioFile';
 
 export interface Project {
   id: string;
@@ -10,8 +10,9 @@ export interface Project {
   duration: number;
   bpm: number;
   key?: Key;
-  createdAt: Date;
-  updatedAt: Date;
+  mode?: Mode;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface SaveProjectBody {
@@ -23,6 +24,7 @@ export interface SaveProjectBody {
   samples: string[];
   state: string; // base64
   key?: Key;
+  mode?: Mode;
 }
 
 export interface UpsertProjectInput {
@@ -35,6 +37,7 @@ export interface UpsertProjectInput {
   bpm: number;
   visibility: VisibilityType;
   key?: Key;
+  mode?: Mode;
 }
 
 export interface GetProjectInput {
