@@ -1,7 +1,14 @@
-import type { Family, Key, Kind, Mode, UploadAudioFileFields, Visibility } from '../domain/audioFile';
+import {
+  type Family,
+  type Key,
+  type Kind,
+  type Mode,
+  type UploadAudioFileFields,
+  USER_KINDS,
+  type Visibility,
+} from '../domain/audioFile';
 import { BadRequestError } from '../domain/errors';
 import {
-  AudioFileKind as KindEnum,
   Family as FamilyEnum,
   Key as KeyEnum,
   Mode as ModeEnum,
@@ -12,14 +19,13 @@ const visibilityMap: Record<string, VisibilityEnum> = { ...VisibilityEnum };
 const keyMap: Record<string, KeyEnum> = { ...KeyEnum };
 const modeMap: Record<string, ModeEnum> = { ...ModeEnum };
 const familyMap: Record<string, FamilyEnum> = { ...FamilyEnum };
-const kindMap: Record<string, KindEnum> = { ...KindEnum };
 
 const isVisibility = (value: string): value is Visibility =>
   Object.values(VisibilityEnum).includes(visibilityMap[value]);
 const isKey = (value: string): value is Key => Object.values(KeyEnum).includes(keyMap[value]);
 const isMode = (value: string): value is Mode => Object.values(ModeEnum).includes(modeMap[value]);
 const isFamily = (value: string): value is Family => Object.values(FamilyEnum).includes(familyMap[value]);
-const isKind = (value: string): value is Kind => Object.values(KindEnum).includes(kindMap[value]);
+const isKind = (value: string): value is Kind => USER_KINDS.some((kind) => kind === value);
 
 export function parseUploadAudioFileFields(fields: Record<string, unknown>): UploadAudioFileFields {
   const raw = (name: string): string | undefined => {

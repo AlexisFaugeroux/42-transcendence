@@ -16,6 +16,7 @@ export interface LoginBody {
 
 export interface AuthUser {
   id: string;
+  ownerId: string;
   artistName: string;
   email: string;
   joined: Date;

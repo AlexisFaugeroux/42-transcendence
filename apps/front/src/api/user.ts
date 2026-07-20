@@ -1,12 +1,8 @@
-import { apiFetch, type AuthResponse, type AuthUser } from '@transcendence/auth';
-import { ApiErrorReponse } from '@auth/src/errors';
-
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { ApiErrorReponse, apiFetch, type AuthResponse, type AuthUser } from '@transcendence/auth';
 
 export async function updateUserProfile(values: AuthUser): Promise<AuthUser> {
-  const res = await apiFetch(`${BASE_URL}/api/user/update/profile`, {
+  const res = await apiFetch('/api/user/update/profile', {
     body: JSON.stringify(values),
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -21,9 +17,8 @@ export async function updateUserProfile(values: AuthUser): Promise<AuthUser> {
 }
 
 export async function updateUserPassword(values: { oldPassword: string; newPassword: string }): Promise<void> {
-  const res = await apiFetch(`${BASE_URL}/api/user/update/password`, {
+  const res = await apiFetch('/api/user/update/password', {
     body: JSON.stringify(values),
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -34,8 +29,7 @@ export async function updateUserPassword(values: { oldPassword: string; newPassw
 }
 
 export async function deleteAccount(): Promise<void> {
-  const res = await apiFetch(`${BASE_URL}/api/user/delete`, {
-    credentials: 'include',
+  const res = await apiFetch('/api/user/delete', {
     method: 'DELETE',
   });
 

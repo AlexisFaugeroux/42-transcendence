@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { AUDIO_USER_QUOTA_BYTES } from '../constants';
-import type { AudioFile, GetAudioFileInput } from '../domain/audioFile';
+import type { AudioFile, AudioStorageUsage, GetAudioFileInput, UpdateAudioFileInput } from '../domain/audioFile';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import { audioFileRepository } from '../repositories/audioFile';
 import { ownerRepository } from '../repositories/owner';
@@ -14,6 +14,18 @@ interface GetAudioFilesRoute extends RouteGenericInterface {
 }
 
 interface UploadAudioFileRoute extends RouteGenericInterface {
+  Reply: AudioFile;
+}
+
+interface StorageAudioFileRoute extends RouteGenericInterface {
+  Reply: AudioStorageUsage;
+}
+
+interface UpdateAudioFileRoute extends RouteGenericInterface {
+  Querystring: {
+    id: string;
+  };
+  Body: UpdateAudioFileInput;
   Reply: AudioFile;
 }
 
@@ -39,6 +51,20 @@ class AudioFileController {
     });
 
     reply.code(200).send(audio);
+  };
+
+  public storage = async (
+    req: FastifyRequest<StorageAudioFileRoute>,
+    reply: FastifyReply<StorageAudioFileRoute>,
+  ): Promise<void> => {
+    const { ownerId } = await userRepository.findById(req.authUser.id);
+
+    const [usedBytes, byFamily] = await Promise.all([
+      audioFileRepository.sumBytes(ownerId),
+      audioFileRepository.sumBytesByFamily(ownerId),
+    ]);
+
+    reply.code(200).send({ byFamily, quotaBytes: AUDIO_USER_QUOTA_BYTES, usedBytes });
   };
 
   public upload = async (
@@ -91,6 +117,22 @@ class AudioFileController {
       await audioStorageService.remove(uuid, ownerId);
       throw error;
     }
+  };
+
+  public update = async (
+    req: FastifyRequest<UpdateAudioFileRoute>,
+    reply: FastifyReply<UpdateAudioFileRoute>,
+  ): Promise<void> => {
+    if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
+
+    const user = await userRepository.findById(req.authUser.id);
+    const audioFile = await audioFileRepository.findById(req.query.id);
+
+    if (audioFile.ownerId !== user.ownerId) throw new ForbiddenError();
+
+    const updatedFile = await audioFileRepository.update(req.query.id, req.body);
+
+    reply.code(200).send(updatedFile);
   };
 
   public delete = async (req: FastifyRequest<DeleteAudioFileRoute>, reply: FastifyReply): Promise<void> => {

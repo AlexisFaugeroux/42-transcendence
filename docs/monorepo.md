@@ -14,6 +14,7 @@ transcendence/
     studio/          DAW studio app (openDAW SDK)
   packages/
     auth/            shared React auth (context + API client)
+    date/            shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   shared ESLint configuration
     prettier-config/ shared Prettier configuration
     ui/              shared UI components
@@ -35,14 +36,22 @@ transcendence/
 
 ### Packages
 
-| Package           | Name                             | Used by           | Description                     |
-| ----------------- | -------------------------------- | ----------------- | ------------------------------- |
-| `auth`            | `@transcendence/auth`            | `front`, `studio` | React auth context + API client |
-| `eslint-config`   | `@transcendence/eslint-config`   | all apps          | Shared ESLint rules             |
-| `prettier-config` | `@transcendence/prettier-config` | all apps          | Shared Prettier config          |
-| `ui`              | `@transcendence/ui`              | `front`, `studio` | Shared UI components            |
+| Package           | Name                             | Used by                   | Description                                      |
+| ----------------- | -------------------------------- | ------------------------- | ------------------------------------------------ |
+| `auth`            | `@transcendence/auth`            | `front`, `studio`         | React auth context + API client                  |
+| `date`            | `@transcendence/date`            | `back`, `front`, `studio` | dayjs helpers on a fixed `Europe/Paris` timezone |
+| `eslint-config`   | `@transcendence/eslint-config`   | all apps                  | Shared ESLint rules                              |
+| `prettier-config` | `@transcendence/prettier-config` | all apps                  | Shared Prettier config                           |
+| `ui`              | `@transcendence/ui`              | `front`, `studio`         | Shared UI components (antd + `Msn*` + `theme`)   |
 
 All packages are scoped `@transcendence/`.
+
+`date` is the only shared package consumed by the **backend** as well as the
+frontends, which is why it ships a `dist` build (esbuild) alongside its sources:
+the Vite apps compile the TypeScript themselves, the bundled Node backend cannot.
+It exports `toAppTime`, `formatDate`, `formatISO` and `APP_TIMEZONE`. Pinning one
+timezone in one place is what keeps a timestamp rendered identically by the API
+and by both frontends — `repositories/*` call `formatISO` when mapping rows out.
 
 ## Referencing packages
 

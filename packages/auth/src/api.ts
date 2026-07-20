@@ -57,6 +57,21 @@ export async function meRequest(): Promise<AuthUser | null> {
   return data.user;
 }
 
+export async function apiError(
+  res: Response,
+  route: string,
+): Promise<ApiErrorReponse> {
+  const body = (await res.json().catch(() => null)) as {
+    error?: string;
+  } | null;
+  const fallback = res.statusText || `HTTP ${String(res.status)}`;
+
+  return new ApiErrorReponse(
+    body?.error ?? `[${route}] ${fallback}`,
+    res.status,
+  );
+}
+
 export async function apiFetch(
   path: string,
   init: RequestInit = {},

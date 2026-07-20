@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button, CheckOutlined, CloseCircleOutlined, Input, Modal, notification } from '@transcendence/ui';
+import { Button, CheckOutlined, CloseCircleOutlined, Input, Modal, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { theme } from '@ui/theme/theme';
 import { deleteAccount } from '../../api/user';
 import styles from './DangerSection.module.scss';
 import { SectionHeader } from './primitives';

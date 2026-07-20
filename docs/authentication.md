@@ -52,7 +52,8 @@ POST /login      (5/min)  verify password (generic 401 on failure) →
 GET  /me         [auth]   return current user (never the hash)
 POST /logout     [auth]   revoke session → clear cookie → 204
 GET  /check-access [auth]  audio ownership/visibility check → 200/403/404
-                          (see audio-file-storage.md for the known nginx mismatch)
+                          (called by nginx's auth_request, not by the browser —
+                          see audio-file-storage.md)
 ```
 
 Rate limiting is opt-in per route (`@fastify/rate-limit`, `global: false`).

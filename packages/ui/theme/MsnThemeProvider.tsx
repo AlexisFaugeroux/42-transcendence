@@ -46,6 +46,16 @@ const msnTheme: ThemeConfig = {
       itemSelectedBg: "var(--color-active)",
       itemSelectedColor: "var(--fg1)",
     },
+    Table: {
+      // Header sits one surface-step darker than the rows, so it reads as the
+      // plane beneath the content (dense DAW look) — not a flat black slab.
+      headerBg: "var(--bg-panel-3)",
+      headerColor: "var(--fg3)", // muted label, not full-bright
+      headerSplitColor: "transparent", // kill the vertical dividers between th
+      borderColor: "var(--line-soft)",
+      rowHoverBg: "var(--bg-panel-3)", // subtle darker hover, matches side rail
+      colorBgContainer: "transparent", // let the surrounding panel show through
+    },
     Typography: {
       titleMarginBottom: 0,
       titleMarginTop: 0,

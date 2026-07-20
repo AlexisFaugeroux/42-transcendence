@@ -42,19 +42,34 @@ client is committed under `apps/back/src/generated/prisma/` (see
 
 `apps/back/prisma/schema.prisma`:
 
-| Model       | Purpose                                                                                         |
-| ----------- | ----------------------------------------------------------------------------------------------- |
-| `Owner`     | Owns audio files. `type` = `PLATEFORM` or `USER`. Optionally maps to one `User`.                |
-| `User`      | Account: `email` / `handle` / `artistName` (unique), hashed `password`, profile fields, `role`. |
-| `AudioFile` | Metadata: `bpm?`, `key?`, `visibility`, `url`, `length`, `bytes`. Belongs to an `Owner`.        |
-| `Session`   | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                 |
+| Model           | Purpose                                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Owner`         | Owns audio files and projects. `type` = `PLATEFORM` or `USER`. Optionally maps to one `User`.                                                         |
+| `User`          | Account: `email` / `handle` / `artistName` (unique), hashed `password`, profile fields, `role`.                                                       |
+| `AudioFile`     | Metadata: `name`, `visibility`, `url`, `duration` (ms, `Float`), `bytes`, optional `bpm` / `key` / `mode` / `family` / `kind`. Belongs to an `Owner`. |
+| `StudioProject` | A studio session: serialized `state` (`Bytes`), `name`, `duration`, `bpm`, `visibility`, optional `key` / `mode`. Belongs to an `Owner`.              |
+| `Session`       | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                                                                       |
 
-Relationships: `User` 1–1 `Owner`; `Owner` 1–N `AudioFile`; `User` 1–N
-`Session`; `User` N–N `User` (follow graph `UserFollows`).
+Relationships: `User` 1–1 `Owner`; `Owner` 1–N `AudioFile`; `Owner` 1–N
+`StudioProject`; `AudioFile` N–N `StudioProject` (the samples a project uses);
+`User` 1–N `Session`; `User` N–N `User` (follow graph `UserFollows`).
 
-Enums: `Role` (`ADMIN`, `ARTIST`), `OwnerType` (`PLATEFORM`, `USER`),
-`VisibilityType` (`PRIVATE`, `SHARED`, `PUBLIC`), `Key` (`A_key`…`G_key`),
-`AudioType` (`SAMPLE`, `TRACK`).
+Enums:
+
+| Enum             | Values                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Role`           | `ADMIN`, `ARTIST`                                                                                                                                                  |
+| `OwnerType`      | `PLATEFORM`, `USER`                                                                                                                                                |
+| `VisibilityType` | `PRIVATE`, `SHARED`, `PUBLIC`                                                                                                                                      |
+| `Key`            | 17 values, naturals plus sharps and flats: `A_key`, `A_sharp_key`, `B_flat_key`, … `A_flat_key`                                                                    |
+| `Mode`           | `MAJOR`, `MINOR`                                                                                                                                                   |
+| `Family`         | 18 values: `KICK`, `SNARE`, `CLAP`, `HAT`, `TOM`, `PERC`, `CYMBAL`, `BASS`, `SYNTH`, `LEAD`, `PAD`, `KEYS`, `PLUCK`, `STRINGS`, `BRASS`, `VOCAL`, `FX`, `AMBIENCE` |
+| `AudioFileKind`  | `ONE_SHOT`, `LOOP`, `TRACK`                                                                                                                                        |
+| `AudioType`      | `SAMPLE`, `TRACK` — legacy, not referenced by any model                                                                                                            |
+
+`Key`'s members carry a `_key` suffix and spell out accidentals (`C_sharp_key`)
+because `C#` is not a valid identifier. Frontends map them to display labels
+rather than showing the raw value.
 
 ## Migrations & scripts
 

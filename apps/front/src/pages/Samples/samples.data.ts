@@ -1,321 +1,102 @@
-import { theme } from '@ui/theme/theme';
+import { theme } from '@transcendence/ui';
+import {
+  type AudioFile,
+  FAMILIES,
+  type Family,
+  type Key,
+  KEYS,
+  type Kind,
+  type Mode,
+  MODES,
+  USER_KINDS,
+  VISIBILITIES,
+  type Visibility,
+} from '../../types/audioFile';
 
-export type SampleFamily = 'drums' | 'bass' | 'synth' | 'vocal' | 'fx' | 'perc' | 'texture';
-export type SampleKind = 'one-shot' | 'loop' | 'field' | 'vocal' | 'stem';
+export type FamilyGroup = 'KICKS' | 'DRUMS' | 'BASS' | 'SYNTH' | 'VOCAL' | 'FX' | 'AMBIENCE' | 'OTHER';
 
-export interface Sample {
-  id: number;
-  name: string;
-  family: SampleFamily;
-  kind: SampleKind;
-  bpm: number | null;
-  key: string | null;
-  dur: string;
-  size: number; // MB
-  pack: string;
-  added: string;
-  tags: string[];
-  fav: boolean;
-  seed: string;
-}
+export type SortKey = 'recent' | 'name' | 'duration' | 'size' | 'bpm';
 
-export const SAMPLE_FAMILIES: SampleFamily[] = ['drums', 'bass', 'synth', 'vocal', 'fx', 'perc', 'texture'];
-export const SAMPLE_KINDS: SampleKind[] = ['one-shot', 'loop', 'field', 'vocal', 'stem'];
-
-export const STORAGE_LIMIT_GB = 4;
-export const STORAGE_LIMIT_MB = STORAGE_LIMIT_GB * 1024;
-
-export const SAMPLES: Sample[] = [
-  {
-    added: '2h ago',
-    bpm: null,
-    dur: '0:01',
-    family: 'drums',
-    fav: true,
-    id: 1,
-    key: null,
-    kind: 'one-shot',
-    name: 'kick_garage_07.wav',
-    pack: 'Cassette Drums',
-    seed: 'kick07',
-    size: 2.3,
-    tags: ['punchy', '808'],
-  },
-  {
-    added: 'yesterday',
-    bpm: 124,
-    dur: '0:08',
-    family: 'drums',
-    fav: false,
-    id: 2,
-    key: 'C min',
-    kind: 'loop',
-    name: 'loop_house_124_C.wav',
-    pack: 'Garage Tape Vol.2',
-    seed: 'loop124',
-    size: 4.1,
-    tags: ['house', 'groove'],
-  },
-  {
-    added: '3d ago',
-    bpm: 140,
-    dur: '0:02',
-    family: 'bass',
-    fav: true,
-    id: 3,
-    key: 'F min',
-    kind: 'one-shot',
-    name: 'subbass_140_F.wav',
-    pack: 'Modular Cells',
-    seed: 'sub140',
-    size: 1.8,
-    tags: ['sub', 'clean'],
-  },
-  {
-    added: '3d ago',
-    bpm: null,
-    dur: '0:14',
-    family: 'vocal',
-    fav: false,
-    id: 4,
-    key: 'A maj',
-    kind: 'vocal',
-    name: 'vox_breath_long.wav',
-    pack: 'Vocal Chops 03',
-    seed: 'voxlong',
-    size: 7.2,
-    tags: ['airy', 'texture'],
-  },
-  {
-    added: '5d ago',
-    bpm: null,
-    dur: '1:42',
-    family: 'texture',
-    fav: false,
-    id: 5,
-    key: null,
-    kind: 'field',
-    name: 'field_cafe_lyon_03.flac',
-    pack: 'Field Lyon 04',
-    seed: 'fieldcafe',
-    size: 38.4,
-    tags: ['ambience', 'city'],
-  },
-  {
-    added: '1w ago',
-    bpm: null,
-    dur: '0:01',
-    family: 'drums',
-    fav: false,
-    id: 6,
-    key: null,
-    kind: 'one-shot',
-    name: 'snare_room_dust.wav',
-    pack: 'Cassette Drums',
-    seed: 'snareroom',
-    size: 1.6,
-    tags: ['dusty', 'mid'],
-  },
-  {
-    added: '1w ago',
-    bpm: 88,
-    dur: '0:32',
-    family: 'synth',
-    fav: true,
-    id: 7,
-    key: 'C min',
-    kind: 'loop',
-    name: 'pad_granular_Cmin.wav',
-    pack: 'Granular Pads',
-    seed: 'padgran',
-    size: 12.7,
-    tags: ['pad', 'airy'],
-  },
-  {
-    added: '1w ago',
-    bpm: 120,
-    dur: '0:04',
-    family: 'perc',
-    fav: false,
-    id: 8,
-    key: null,
-    kind: 'loop',
-    name: 'perc_shaker_off.wav',
-    pack: 'Garage Tape Vol.2',
-    seed: 'shakeroff',
-    size: 2.0,
-    tags: ['off-grid'],
-  },
-  {
-    added: '2w ago',
-    bpm: null,
-    dur: '0:06',
-    family: 'fx',
-    fav: false,
-    id: 9,
-    key: null,
-    kind: 'one-shot',
-    name: 'fx_riser_long.wav',
-    pack: 'Personal',
-    seed: 'fxriser',
-    size: 3.4,
-    tags: ['riser', 'build'],
-  },
-  {
-    added: '2w ago',
-    bpm: 92,
-    dur: '0:03',
-    family: 'vocal',
-    fav: true,
-    id: 10,
-    key: 'A maj',
-    kind: 'vocal',
-    name: 'vox_chop_amaj_03.wav',
-    pack: 'Vocal Chops 03',
-    seed: 'voxchop',
-    size: 2.2,
-    tags: ['chop', 'wet'],
-  },
-  {
-    added: '2w ago',
-    bpm: null,
-    dur: '0:01',
-    family: 'drums',
-    fav: false,
-    id: 11,
-    key: null,
-    kind: 'one-shot',
-    name: 'hat_open_brushed.wav',
-    pack: 'Cassette Drums',
-    seed: 'hatopen',
-    size: 1.1,
-    tags: ['brush', 'bright'],
-  },
-  {
-    added: '3w ago',
-    bpm: 96,
-    dur: '2:14',
-    family: 'synth',
-    fav: false,
-    id: 12,
-    key: 'G min',
-    kind: 'stem',
-    name: 'stem_rhodes_take2.wav',
-    pack: 'Personal',
-    seed: 'rhodes2',
-    size: 48.6,
-    tags: ['rhodes', 'warm'],
-  },
-  {
-    added: '3w ago',
-    bpm: null,
-    dur: '0:48',
-    family: 'texture',
-    fav: false,
-    id: 13,
-    key: null,
-    kind: 'field',
-    name: 'field_train_st.flac',
-    pack: 'Field Lyon 04',
-    seed: 'fieldtrain',
-    size: 22.1,
-    tags: ['transport'],
-  },
-  {
-    added: '4w ago',
-    bpm: null,
-    dur: '0:01',
-    family: 'bass',
-    fav: false,
-    id: 14,
-    key: 'E min',
-    kind: 'one-shot',
-    name: 'bass_slap_one.wav',
-    pack: 'Modular Cells',
-    seed: 'bassslap',
-    size: 0.8,
-    tags: ['slap', 'short'],
-  },
-  {
-    added: '5w ago',
-    bpm: 172,
-    dur: '0:05',
-    family: 'drums',
-    fav: true,
-    id: 15,
-    key: null,
-    kind: 'loop',
-    name: 'loop_breakbeat_172.wav',
-    pack: 'Cassette Drums',
-    seed: 'break172',
-    size: 2.7,
-    tags: ['jungle', 'break'],
-  },
-  {
-    added: '6w ago',
-    bpm: null,
-    dur: '0:09',
-    family: 'fx',
-    fav: false,
-    id: 16,
-    key: null,
-    kind: 'one-shot',
-    name: 'fx_swell_dark.wav',
-    pack: 'Personal',
-    seed: 'fxswell',
-    size: 4.6,
-    tags: ['swell', 'dark'],
-  },
-  {
-    added: '8w ago',
-    bpm: null,
-    dur: '0:01',
-    family: 'perc',
-    fav: false,
-    id: 17,
-    key: null,
-    kind: 'one-shot',
-    name: 'perc_woodblock_a.wav',
-    pack: 'Garage Tape Vol.2',
-    seed: 'wood_a',
-    size: 0.4,
-    tags: ['wood', 'tight'],
-  },
-  {
-    added: '9w ago',
-    bpm: 140,
-    dur: '0:11',
-    family: 'synth',
-    fav: false,
-    id: 18,
-    key: 'D min',
-    kind: 'loop',
-    name: 'synth_arp_140_Dmin.wav',
-    pack: 'Modular Cells',
-    seed: 'arp140',
-    size: 5.3,
-    tags: ['arp', 'driving'],
-  },
-];
-
-// The seven families map 1:1 onto the seven brand hues — reference the theme, don't restate raw hsl().
-export const FAMILY_COLOR: Record<SampleFamily, string> = {
-  bass: theme.red,
-  drums: theme.orange,
-  fx: theme.purple,
-  perc: theme.green,
-  synth: theme.blue,
-  texture: theme.cyan,
-  vocal: theme.yellow,
+export const FAMILY_GROUPS: Record<FamilyGroup, Family[]> = {
+  AMBIENCE: ['AMBIENCE'],
+  BASS: ['BASS'],
+  DRUMS: ['SNARE', 'CLAP', 'HAT', 'CYMBAL', 'TOM', 'PERC'],
+  FX: ['FX'],
+  KICKS: ['KICK'],
+  OTHER: [],
+  SYNTH: ['SYNTH', 'LEAD', 'PAD', 'KEYS', 'PLUCK', 'STRINGS', 'BRASS'],
+  VOCAL: ['VOCAL'],
 };
 
-export function formatMB(mb: number): string {
+export const FAMILY_COLOR: Record<FamilyGroup, string> = {
+  AMBIENCE: theme.blue,
+  BASS: theme.purple,
+  DRUMS: theme.yellow,
+  FX: theme.fg1,
+  KICKS: theme.red,
+  OTHER: theme.lineHover,
+  SYNTH: theme.orange,
+  VOCAL: theme.cyan,
+};
+
+const GROUP_BY_FAMILY = Object.entries(FAMILY_GROUPS).reduce<Partial<Record<Family, FamilyGroup>>>(
+  (acc, [group, families]) => {
+    for (const family of families) acc[family] = group as FamilyGroup;
+    return acc;
+  },
+  {},
+);
+
+export const SAMPLE_COMPARATORS: Record<SortKey, (a: AudioFile, b: AudioFile) => number> = {
+  bpm: (a, b) => (a.bpm ?? Number.POSITIVE_INFINITY) - (b.bpm ?? Number.POSITIVE_INFINITY),
+  duration: (a, b) => a.duration - b.duration,
+  name: (a, b) => a.name.localeCompare(b.name),
+  recent: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  size: (a, b) => b.bytes - a.bytes,
+};
+
+export function familyGroup(family: Family | null): FamilyGroup {
+  if (!family) return 'OTHER';
+  return GROUP_BY_FAMILY[family] ?? 'OTHER';
+}
+
+export function familyColor(family: Family | null): string {
+  return FAMILY_COLOR[familyGroup(family)];
+}
+
+export function formatDuration(durationMs: number): string {
+  const seconds = Math.floor(durationMs / 1000);
+  const milliseconds = Math.round(durationMs % 1000);
+
+  return `${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
+}
+
+export function formatBytes(bytes: number): string {
+  const mb = bytes / (1024 * 1024);
   if (mb >= 1024) return `${(mb / 1024).toFixed(2)} GB`;
-  if (mb < 1) return `${Math.round(mb * 1000)} KB`;
+  if (mb < 1) return `${Math.round(mb * 1024).toString()} KB`;
   return `${mb.toFixed(1)} MB`;
 }
 
-export function parseDur(d: string): number {
-  const [m, s] = d.split(':').map(Number);
-  return (m || 0) * 60 + (s || 0);
+// 'A_sharp_key' → 'A♯', 'B_flat_key' → 'B♭', 'C_key' → 'C'
+export function formatKey(key: Key): string {
+  return key.replace(/_key$/, '').replace('_sharp', '♯').replace('_flat', '♭');
 }
+
+export function formatKind(kind: Kind): string {
+  return kind === 'ONE_SHOT' ? 'ONE-SHOT' : kind;
+}
+
+interface Option<T> {
+  label: string;
+  value: T;
+}
+
+export const FAMILY_OPTIONS: Option<Family>[] = FAMILIES.map((family) => ({ label: family, value: family }));
+export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({ label: formatKind(kind), value: kind }));
+export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({ label: formatKey(key), value: key }));
+export const MODE_OPTIONS: Option<Mode>[] = MODES.map((mode) => ({ label: mode, value: mode }));
+export const VISIBILITY_OPTIONS: Option<Visibility>[] = VISIBILITIES.map((visibility) => ({
+  label: visibility,
+  value: visibility,
+}));

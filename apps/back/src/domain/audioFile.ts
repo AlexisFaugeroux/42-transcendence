@@ -41,6 +41,8 @@ export type Family =
 
 export type Kind = 'ONE_SHOT' | 'LOOP' | 'TRACK';
 
+export const USER_KINDS: Kind[] = ['ONE_SHOT', 'LOOP'];
+
 export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
 
 export interface AudioFile {
@@ -86,6 +88,7 @@ export interface GetAudioFileInput {
 }
 
 export interface UpdateAudioFileInput {
+  name?: string;
   visibility?: Visibility;
   url?: string;
   duration?: number;
@@ -95,6 +98,17 @@ export interface UpdateAudioFileInput {
   mode?: Mode | null;
   family?: Family | null;
   kind?: Kind | null;
+}
+
+export interface FamilyUsage {
+  family: Family | null;
+  bytes: number;
+}
+
+export interface AudioStorageUsage {
+  usedBytes: number;
+  quotaBytes: number;
+  byFamily: FamilyUsage[];
 }
 
 export interface UploadAudioFileFields {

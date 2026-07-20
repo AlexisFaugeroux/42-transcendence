@@ -1,6 +1,5 @@
-import { Input, Segmented, Select } from '@transcendence/ui';
+import { Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { SESS_GENRES, SESS_TYPES, TYPE_ICON } from './sessions.data';
 import styles from './SessToolbar.module.scss';
 

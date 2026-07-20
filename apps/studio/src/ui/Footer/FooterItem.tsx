@@ -1,5 +1,5 @@
+import { theme } from '@transcendence/ui';
 import type { JSX, ReactNode } from 'react';
-import { theme } from '@ui/theme/theme';
 import styles from './FooterItem.module.scss';
 
 interface FooterItemProps {

@@ -1,5 +1,5 @@
+import { MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './DeepDiveRow.module.scss';
 import { ImagePlaceholder } from './ImagePlaceholder';
 import type { DeepDive } from './landing.data';

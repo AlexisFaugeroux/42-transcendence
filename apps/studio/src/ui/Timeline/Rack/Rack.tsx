@@ -1,10 +1,6 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
-import { Dropdown } from '@transcendence/ui';
+import { Dropdown, IconBtn, MsnKnob, MsnPill, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
-import { IconBtn } from '@ui/components/IconBtn/IconBtn';
-import { MsnKnob } from '@ui/components/MsnKnob/MsnKnob';
-import { MsnPill } from '@ui/components/MsnPill/MsnPill';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
 import type { Track } from '../../../lib/types';

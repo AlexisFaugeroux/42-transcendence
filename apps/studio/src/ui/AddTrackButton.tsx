@@ -1,6 +1,5 @@
-import { Dropdown, type MenuProps } from '@transcendence/ui';
+import { Dropdown, type MenuProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { theme } from '@ui/theme/theme';
 import type { InstrumentType } from '../lib/arrangementFactory';
 import { StudioIcon } from './components/StudioIcon/StudioIcon';
 

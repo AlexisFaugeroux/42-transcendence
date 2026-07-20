@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { useUser } from '@auth/src';
+import { useAuthUser } from '@transcendence/auth';
 import { getlistAudioFile } from '../api/audiofile';
 import type { Sample } from '../lib/types';
 
 export function useSamples() {
-  const { user } = useUser();
+  const user = useAuthUser();
 
   return useQuery<Sample[]>({
     enabled: !!user,
     queryFn: () => getlistAudioFile(),
-    queryKey: ['samples', user?.id],
+    queryKey: ['samples', user.id],
   });
 }

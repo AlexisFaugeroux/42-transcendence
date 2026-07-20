@@ -1,6 +1,5 @@
+import { ConfigProvider, Table, type TableColumnsType, theme } from '@transcendence/ui';
 import { type DragEvent, type JSX, useState } from 'react';
-import { ConfigProvider, Table, type TableColumnsType } from '@ui/index';
-import { theme } from '@ui/theme/theme';
 import { useSamples } from '../../../hooks/useSamples';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
 import styles from './Samples.module.scss';

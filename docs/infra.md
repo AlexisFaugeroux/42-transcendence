@@ -30,6 +30,17 @@ The override publishes `db` on `localhost:5432` and `nginx-audio` on
 `host.docker.internal:8080`, i.e. the host-run backend) and `infra/audio_data`
 (rw), and adds `extra_hosts: host.docker.internal:host-gateway`.
 
+Each Vite dev server proxies the paths the reverse proxy owns in prod, so app
+code can use relative URLs in both environments and never has to know a host:
+
+| Path     | front (`:5173`)         | studio (`:5174`)               |
+| -------- | ----------------------- | ------------------------------ |
+| `/api`   | → `localhost:8080` back | → `localhost:8080` back        |
+| `/audio` | —                       | → `localhost:8081` nginx-audio |
+
+The studio is the only app that fetches sample audio, hence the extra `/audio`
+route. Add it to the front's proxy too the day it plays audio itself.
+
 Teardown: `pnpm services:down` (keep data) or `pnpm services:kill` (remove
 volumes/orphans — wipes data).
 

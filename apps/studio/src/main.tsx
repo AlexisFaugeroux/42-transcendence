@@ -2,10 +2,10 @@ import './main.scss';
 import '@transcendence/ui/styles/colors_and_type.css';
 import { QueryClient } from '@tanstack/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from '@transcendence/auth';
 import { MsnThemeProvider } from '@transcendence/ui';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AuthProvider } from '@auth/src/AuthContext';
 import App from './App.tsx';
 
 const root = document.getElementById('root');

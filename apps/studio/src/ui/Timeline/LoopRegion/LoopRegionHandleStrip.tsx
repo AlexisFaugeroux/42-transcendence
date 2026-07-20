@@ -1,6 +1,6 @@
 import { PPQN } from '@opendaw/lib-dsp';
+import { theme } from '@transcendence/ui';
 import { type JSX, type MouseEvent as ReactMouseEvent, useEffect, useState } from 'react';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { PIXELS_PER_PULSE } from '../constants';
 import styles from './LoopRegionHandleStrip.module.scss';

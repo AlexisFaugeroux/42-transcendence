@@ -1,13 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
-import { Button, CheckOutlined, Form, Input, notification } from '@transcendence/ui';
+import { Button, CheckOutlined, Form, Input, MsnIcon, MsnWordmark, notification, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
-import { theme } from '@ui/theme/theme';
-import { registerRequest } from '../../api/auth';
-import type { RegisterBody } from '../../api/types';
+import { registerRequest } from '../../api/auth/auth';
+import type { RegisterBody } from '../../api/auth/types';
 import { PasswordStrength } from './PasswordStrength';
 import styles from './Register.module.scss';
 

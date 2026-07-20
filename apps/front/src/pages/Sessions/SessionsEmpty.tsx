@@ -1,7 +1,5 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { theme } from '@ui/theme/theme';
 import styles from './SessionsEmpty.module.scss';
 
 // Shown when a bucket has no sessions at all.

@@ -19,6 +19,7 @@ transcendence/
     back/         Backend server (Fastify + Prisma + PostgreSQL)
   packages/
     auth/            Shared React auth (context + API client)
+    date/            Shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   Shared ESLint rules (base + React configs)
     prettier-config/ Shared Prettier rules
     ui/              Shared UI components (@transcendence/ui)

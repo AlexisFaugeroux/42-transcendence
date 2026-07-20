@@ -1,8 +1,6 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon, MsnWordmark } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import styles from './TopNav.module.scss';
 
 // No pages for these yet — placeholder anchors until those sections exist.

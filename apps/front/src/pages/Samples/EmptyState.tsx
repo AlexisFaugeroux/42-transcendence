@@ -1,7 +1,5 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { theme } from '@ui/theme/theme';
 import styles from './EmptyState.module.scss';
 
 export function EmptyState({ onClear }: { onClear: () => void }): JSX.Element {

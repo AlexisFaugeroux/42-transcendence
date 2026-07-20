@@ -1,6 +1,5 @@
+import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, TeamOutlined, theme } from '@transcendence/ui';
 import type { Dispatch, JSX, SetStateAction } from 'react';
-import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, TeamOutlined } from '@ui/index';
-import { theme } from '@ui/theme/theme';
 import type { SampleLibrary } from './Samples';
 
 interface SamplesSearchProps {

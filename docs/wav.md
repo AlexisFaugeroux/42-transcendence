@@ -23,11 +23,11 @@ The same bytes mean different things depending on how you read them.
   `"RIFF"`. These 4-letter labels mark the sections of the file.
 
   ```ts
-  buf.toString('ascii', 0, 4); // "RIFF"
+  buf.toString("ascii", 0, 4); // "RIFF"
   ```
 
 - **Numbers, little-endian.** Multi-byte integers are stored **least-significant
-  byte first**, so you read them *backwards*: the bytes `f6 d0 0f 00` are the
+  byte first**, so you read them _backwards_: the bytes `f6 d0 0f 00` are the
   number `0x000fd0f6` = `1036534`, not `0xf6d00f00`. The `LE` helpers reverse it
   for you:
 
@@ -38,18 +38,18 @@ The same bytes mean different things depending on how you read them.
 
 ## WAV = a RIFF container of chunks
 
-- **RIFF** (*Resource Interchange File Format*) is a generic container: the file
+- **RIFF** (_Resource Interchange File Format_) is a generic container: the file
   is a list of **chunks**, each starting with a 4-byte label + a 4-byte
   little-endian size, followed by that many bytes of content. RIFF says nothing
   about the content — `.avi` uses the same container.
 - A **WAV** is a RIFF file whose content is audio: the outer `RIFF` chunk is
   followed by the tag `WAVE`, then the audio chunks.
-- **`fmt `** (*format*, padded to 4 chars with a trailing space) describes **how
+- **`fmt `** (_format_, padded to 4 chars with a trailing space) describes **how
   the audio is encoded**: channels, sample rate, bit depth.
 - **`data`** holds the raw audio samples.
 - Other chunks may appear (`LIST` = metadata like track name/author, `PAD ` =
   alignment padding). You skip the ones you don't care about.
-- **PCM** (*Pulse-Code Modulation*) is the simplest encoding: raw uncompressed
+- **PCM** (_Pulse-Code Modulation_) is the simplest encoding: raw uncompressed
   amplitude samples. `fmt.audioFormat == 1` means PCM.
 
 Every chunk has the same anatomy, and the file is just chunks back to back:
@@ -78,14 +78,14 @@ why you walk the list instead of assuming offsets (see below).
 
 The `fmt ` chunk body (right after its 8-byte header) is:
 
-| Body offset | Size | Field           | Meaning                                  |
-| ----------- | ---- | --------------- | ---------------------------------------- |
-| 0           | 2    | `audioFormat`   | 1 = PCM                                  |
-| 2           | 2    | `numChannels`   | 1 = mono, 2 = stereo                     |
-| 4           | 4    | `sampleRate`    | samples per second (e.g. 44100)          |
-| 8           | 4    | `byteRate`      | audio bytes per second                   |
-| 12          | 2    | `blockAlign`    | bytes per sample frame (all channels)    |
-| 14          | 2    | `bitsPerSample` | bit depth (16, 24, …)                    |
+| Body offset | Size | Field           | Meaning                               |
+| ----------- | ---- | --------------- | ------------------------------------- |
+| 0           | 2    | `audioFormat`   | 1 = PCM                               |
+| 2           | 2    | `numChannels`   | 1 = mono, 2 = stereo                  |
+| 4           | 4    | `sampleRate`    | samples per second (e.g. 44100)       |
+| 8           | 4    | `byteRate`      | audio bytes per second                |
+| 12          | 2    | `blockAlign`    | bytes per sample frame (all channels) |
+| 14          | 2    | `bitsPerSample` | bit depth (16, 24, …)                 |
 
 `byteRate == sampleRate * numChannels * bitsPerSample / 8`.
 
@@ -95,12 +95,12 @@ Now that the fields are named, here is which helper reads each. The `read…LE`
 name encodes two independent choices — **how many bytes** (16 = 2, 32 = 4) and
 **signed or not** (`Int` = can be negative, `UInt` = always ≥ 0):
 
-| Function       | Bytes | Signed | Range            | Where it's used in a WAV                                                    |
-| -------------- | ----- | ------ | ---------------- | --------------------------------------------------------------------------- |
-| `readUInt16LE` | 2     | no     | 0 … 65 535       | `fmt ` fields: `audioFormat`, `numChannels`, `blockAlign`, `bitsPerSample`  |
-| `readUInt32LE` | 4     | no     | 0 … ~4.29e9      | chunk sizes, `sampleRate`, `byteRate`                                       |
-| `readInt16LE`  | 2     | yes    | −32 768 … 32 767 | audio samples of a **16-bit** PCM file (the common case)                    |
-| `readInt32LE`  | 4     | yes    | ±2.15e9          | audio samples of a **32-bit** PCM file                                      |
+| Function       | Bytes | Signed | Range            | Where it's used in a WAV                                                   |
+| -------------- | ----- | ------ | ---------------- | -------------------------------------------------------------------------- |
+| `readUInt16LE` | 2     | no     | 0 … 65 535       | `fmt ` fields: `audioFormat`, `numChannels`, `blockAlign`, `bitsPerSample` |
+| `readUInt32LE` | 4     | no     | 0 … ~4.29e9      | chunk sizes, `sampleRate`, `byteRate`                                      |
+| `readInt16LE`  | 2     | yes    | −32 768 … 32 767 | audio samples of a **16-bit** PCM file (the common case)                   |
+| `readInt32LE`  | 4     | yes    | ±2.15e9          | audio samples of a **32-bit** PCM file                                     |
 
 Rules of thumb:
 

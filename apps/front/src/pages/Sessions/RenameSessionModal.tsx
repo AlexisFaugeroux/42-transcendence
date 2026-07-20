@@ -1,6 +1,5 @@
-import { Input, Modal } from '@transcendence/ui';
+import { Input, Modal, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
-import { theme } from '@ui/theme/theme';
 import type { Session } from './sessions.data';
 
 interface RenameSessionModalProps {

@@ -1,7 +1,6 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './Cta.module.scss';
 
 export function Cta(): JSX.Element {

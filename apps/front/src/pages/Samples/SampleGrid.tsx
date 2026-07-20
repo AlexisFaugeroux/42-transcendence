@@ -1,19 +1,20 @@
-import { Button, Tag } from '@transcendence/ui';
+import { Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { theme } from '@ui/theme/theme';
+import type { AudioFile } from '../../types/audioFile';
 import styles from './SampleGrid.module.scss';
-import { FAMILY_COLOR, formatMB, type Sample } from './samples.data';
+import { familyColor, formatBytes, formatDuration, formatKey } from './samples.data';
 import { WaveformPlaceholder } from './WaveformPlaceholder';
 
 interface SampleGridProps {
-  rows: Sample[];
-  playingId: number | null;
-  onPlay: (id: number) => void;
-  onDelete: (sample: Sample) => void;
+  rows: AudioFile[];
+  ownerId: string;
+  playingId: string | null;
+  onPlay: (id: string) => void;
+  onEdit: (sample: AudioFile) => void;
+  onDelete: (sample: AudioFile) => void;
 }
 
-export function SampleGrid({ onDelete, onPlay, playingId, rows }: SampleGridProps): JSX.Element {
+export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows }: SampleGridProps): JSX.Element {
   return (
     <div className={styles.grid}>
       {rows.map((row) => (
@@ -21,12 +22,18 @@ export function SampleGrid({ onDelete, onPlay, playingId, rows }: SampleGridProp
           <div className={styles.top}>
             <div className={styles.nameBox}>
               <div className={styles.nameLine}>
-                {row.fav ? <MsnIcon name="heart" size="11px" color={theme.orange} /> : null}
                 <span className={styles.name}>{row.name}</span>
               </div>
-              <div className={styles.pack}>{row.pack}</div>
             </div>
-            <Tag color={FAMILY_COLOR[row.family]}>{row.family}</Tag>
+            <Tag
+              color={familyColor(row.family)}
+              style={{
+                backgroundColor: theme.void,
+                borderColor: familyColor(row.family),
+              }}
+            >
+              {row.family ?? '—'}
+            </Tag>
           </div>
 
           <div className={styles.player}>
@@ -39,36 +46,37 @@ export function SampleGrid({ onDelete, onPlay, playingId, rows }: SampleGridProp
             >
               <MsnIcon name={playingId === row.id ? 'list' : 'play'} size="11px" />
             </button>
-            <WaveformPlaceholder seed={row.seed} color={FAMILY_COLOR[row.family]} height={36} />
+            <WaveformPlaceholder seed={row.id} color={theme.fg1} height={36} />
           </div>
 
           <div className={styles.meta}>
-            <span>{row.dur}</span>
-            <span>· {formatMB(row.size)}</span>
+            <span>{formatDuration(row.duration)}</span>
+            <span>· {formatBytes(row.bytes)}</span>
             {row.bpm ? <span>· {row.bpm} BPM</span> : null}
-            {row.key ? <span className={styles.muted}>{row.key}</span> : null}
+            {row.key ? <span className={styles.muted}>{formatKey(row.key)}</span> : null}
           </div>
 
-          <div className={styles.tags}>
-            {row.tags.map((t) => (
-              <Tag key={t}>#{t}</Tag>
-            ))}
-          </div>
-
-          <div className={styles.actions}>
-            <Button size="small">
-              <MsnIcon name="plus" size="11px" /> To session
-            </Button>
-            <Button
-              size="small"
-              danger
-              onClick={() => {
-                onDelete(row);
-              }}
-            >
-              Delete
-            </Button>
-          </div>
+          {row.ownerId === ownerId ? (
+            <div className={styles.actions}>
+              <Button
+                size="small"
+                onClick={() => {
+                  onEdit(row);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                size="small"
+                danger
+                onClick={() => {
+                  onDelete(row);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          ) : null}
         </div>
       ))}
     </div>

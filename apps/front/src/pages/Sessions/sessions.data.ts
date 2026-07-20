@@ -1,5 +1,5 @@
-import type { MsnIconLabel } from '@ui/components/MsnIcon/types';
-import { theme } from '@ui/theme/theme';
+import { theme } from '@transcendence/ui';
+import type { MsnIconLabel } from '@transcendence/ui';
 
 export type SessionType = 'production' | 'recording' | 'mixing';
 

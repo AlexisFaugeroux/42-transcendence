@@ -1,1 +1,5 @@
-{"sections":{"home":{"labels":{"home":"Home — sidebar nav, orange-led"}}}}
+{
+  "sections": {
+    "home": { "labels": { "home": "Home — sidebar nav, orange-led" } }
+  }
+}

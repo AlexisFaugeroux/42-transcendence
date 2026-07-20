@@ -221,6 +221,22 @@ Then set the values:
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                     |
 | `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod` |
 | `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                        |
+| `AUDIO_ROOT`                                        | Directory holding the audio files. **Dev:** `infra/audio_data`. **Prod:** `/var/www/audio` (the `audio_data` volume)           |
+
+`POSTGRES_URL` and `JWT_SECRET` are validated at boot — the backend refuses to
+start without them rather than falling back to a default.
+
+The two frontends read their own git-ignored env files:
+
+```sh
+cp apps/front/.env.example  apps/front/.env
+cp apps/studio/.env.example apps/studio/.env
+```
+
+| Variable          | App           | Notes                                                                                       |
+| ----------------- | ------------- | ------------------------------------------------------------------------------------------- |
+| `VITE_API_URL`    | front, studio | Base URL prepended to every API call. **Leave empty in dev** — the Vite proxy routes `/api` |
+| `VITE_STUDIO_URL` | front         | Where the "open the studio" links point (`http://localhost:5174/studio/` in dev)            |
 
 > Two databases live in a single Postgres instance: `transcendence_dev` and
 > `transcendence_prod` (created by `infra/postgres/init_databases.sql`). Each environment
