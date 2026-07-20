@@ -1,6 +1,5 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { ONLINE } from './home.data';
 import styles from './RightRail.module.scss';
 import { LiveUserRow, OnlineUserRow } from './UserRows';

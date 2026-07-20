@@ -1,6 +1,5 @@
-import { Tag } from '@transcendence/ui';
+import { MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import type { SessionType } from './home.data';
 import styles from './SessionCard.module.scss';
 

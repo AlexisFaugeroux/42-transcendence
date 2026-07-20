@@ -1,6 +1,5 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';

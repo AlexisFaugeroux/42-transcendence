@@ -1,5 +1,5 @@
+import { useAuthUser } from '@transcendence/auth';
 import type { JSX } from 'react';
-import { useAuthUser } from '@auth/src';
 import styles from './Greeting.module.scss';
 import { SESSION_TYPES } from './home.data';
 import { SessionCard } from './SessionCard';

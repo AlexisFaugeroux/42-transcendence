@@ -1,6 +1,6 @@
+import { MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './NavItem.module.scss';
 import type { NavItemDef } from './navItems';
 

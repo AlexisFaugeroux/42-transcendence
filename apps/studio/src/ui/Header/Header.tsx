@@ -1,9 +1,5 @@
+import { IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { IconBtn } from '@ui/components/IconBtn/IconBtn';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
-import { Separator } from '@ui/components/Separator/Separator';
-import { theme } from '@ui/theme/theme';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './Header.module.scss';
 import { Meter } from './Meter/Meter';

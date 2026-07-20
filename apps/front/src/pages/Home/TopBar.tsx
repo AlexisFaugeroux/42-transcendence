@@ -10,14 +10,14 @@ import {
   Input,
   LogoutOutlined,
   type MenuProps,
+  MsnIcon,
+  MsnWordmark,
   notification,
   SettingOutlined,
+  theme,
 } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
-import { theme } from '@ui/theme/theme';
 import { HeaderIconButton } from '../../components/HeaderIconButton/HeaderIconButton';
 import { UserChip } from '../../components/UserChip/UserChip';
 import styles from './TopBar.module.scss';

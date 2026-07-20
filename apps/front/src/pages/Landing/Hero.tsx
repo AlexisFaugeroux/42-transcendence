@@ -1,8 +1,6 @@
-import { Avatar, Button, Tag } from '@transcendence/ui';
+import { Avatar, Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { theme } from '@ui/theme/theme';
 import styles from './Hero.module.scss';
 import { ImagePlaceholder } from './ImagePlaceholder';
 

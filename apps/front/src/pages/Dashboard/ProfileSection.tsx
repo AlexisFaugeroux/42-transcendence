@@ -1,7 +1,6 @@
 import type { AuthUser } from '@transcendence/auth';
-import { Avatar, Button, Tag } from '@transcendence/ui';
+import { Avatar, Button, MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import type { ProfileErrors } from './dashboard.data';
 import { FieldArea, FieldText } from './Field';
 import { Card, Hr, Row, SectionHeader } from './primitives';

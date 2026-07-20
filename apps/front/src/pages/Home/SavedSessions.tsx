@@ -1,6 +1,5 @@
-import { Carousel } from '@transcendence/ui';
+import { Carousel, MsnIcon } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import { SAVED_SESSIONS } from './home.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';

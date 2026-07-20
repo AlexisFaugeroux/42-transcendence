@@ -1,5 +1,5 @@
+import { theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../contexts/ProjectContext';
 import styles from './Footer.module.scss';
 import { FooterItem } from './FooterItem';

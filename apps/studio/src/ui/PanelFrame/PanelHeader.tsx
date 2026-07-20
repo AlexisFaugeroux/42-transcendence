@@ -1,5 +1,5 @@
+import { theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { theme } from '@ui/theme/theme';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import type { PanelHeaderProps } from '../PanelFrame/panels';
 import styles from './PanelHeader.module.scss';

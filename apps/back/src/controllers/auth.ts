@@ -111,6 +111,7 @@ class AuthController {
       lastname: user.lastname,
       links: toLinks(user.links),
       location: user.location ?? undefined,
+      ownerId: user.ownerId,
       role: user.role,
     };
   }

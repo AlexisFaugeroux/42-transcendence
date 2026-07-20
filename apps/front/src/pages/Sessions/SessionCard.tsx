@@ -1,6 +1,5 @@
-import { Button, Dropdown, type MenuProps, Tag } from '@transcendence/ui';
+import { Button, Dropdown, type MenuProps, MsnIcon, Tag } from '@transcendence/ui';
 import type { CSSProperties, JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './SessionCard.module.scss';
 import { formatSize, type Session, TYPE_COLOR, TYPE_ICON } from './sessions.data';
 

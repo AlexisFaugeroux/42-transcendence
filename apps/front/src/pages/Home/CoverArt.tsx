@@ -1,6 +1,6 @@
+import { MsnIcon } from '@transcendence/ui';
+import type { MsnIconLabel } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import type { MsnIconLabel } from '@ui/components/MsnIcon/types';
 
 interface CoverArtProps {
   size?: number;

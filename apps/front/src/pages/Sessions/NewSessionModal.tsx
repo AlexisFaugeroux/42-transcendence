@@ -1,6 +1,5 @@
-import { Input, Modal } from '@transcendence/ui';
+import { Input, Modal, MsnIcon } from '@transcendence/ui';
 import { type CSSProperties, type JSX, useState } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './NewSessionModal.module.scss';
 import { SESS_TYPES, type SessionType, TYPE_COLOR, TYPE_ICON } from './sessions.data';
 

@@ -1,5 +1,5 @@
+import { theme } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
 import { PIXELS_PER_PULSE, ROW_HEIGTH } from '../constants';

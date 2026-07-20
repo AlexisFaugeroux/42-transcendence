@@ -1,1 +1,473 @@
-{"namespace":"OpenDAWDesignSystem_019dce","components":[{"name":"Avatar","sourcePath":"components/Avatar.jsx"},{"name":"Button","sourcePath":"components/Button.jsx"},{"name":"Icon","sourcePath":"components/Icon.jsx"},{"name":"Knob","sourcePath":"components/Knob.jsx"},{"name":"PeakMeter","sourcePath":"components/PeakMeter.jsx"},{"name":"Pill","sourcePath":"components/Pill.jsx"},{"name":"Separator","sourcePath":"components/Separator.jsx"},{"name":"Tag","sourcePath":"components/Tag.jsx"},{"name":"Waveform","sourcePath":"components/Waveform.jsx"},{"name":"Wordmark","sourcePath":"components/Wordmark.jsx"}],"startingPoints":[],"cards":[{"path":"MakeSomeNoise Dashboard.html","group":"Brand","viewport":"1280x1400","subtitle":"Profile + Account + Danger zone · edit toggle · dirty banner · delete-account modal · state switcher","name":"MakeSomeNoise Dashboard"},{"path":"MakeSomeNoise Home.html","group":"Brand","viewport":"1600x1100","subtitle":"Variant A only — master meter removed, waveforms removed from saved sessions, list layout","name":"MakeSomeNoise Home"},{"path":"MakeSomeNoise Landing.html","group":"Brand","viewport":"1440x1200","subtitle":"Hero, features, deep-dives, community, CTA, footer with legal mentions","name":"MakeSomeNoise Landing"},{"path":"MakeSomeNoise Login.html","group":"Brand","viewport":"1280x900","subtitle":"Centered card · email+password · forgot password · state switcher (default/filled/error/loading)","name":"MakeSomeNoise Login"},{"path":"MakeSomeNoise Samples.html","group":"Brand","viewport":"1280x1400","subtitle":"Sample library · 4GB storage bar · waveform list/grid · search/filter/sort · upload + delete modals","name":"MakeSomeNoise Samples"},{"path":"MakeSomeNoise Sessions.html","group":"Brand","viewport":"1280x1400","subtitle":"Owned/Archived tabs · grid of cover cards · type+genre filters · sort · new-session picker · delete/rename modals · empty state toggle","name":"MakeSomeNoise Sessions"},{"path":"MakeSomeNoise SignUp.html","group":"Brand","viewport":"1280x1100","subtitle":"Centered card · email/handle/alias/password · password strength meter · state switcher","name":"MakeSomeNoise SignUp"},{"path":"MakeSomeNoise Studio.html","group":"Brand","viewport":"1680x1080","subtitle":"DAW session: header transport · browser · timeline · piano roll · devices · master","name":"MakeSomeNoise Studio"},{"path":"components/avatar.html","group":"Components","viewport":"520x160","subtitle":"Initials tile with live/online/idle status","name":"Avatar"},{"path":"components/button.html","group":"Components","viewport":"520x200","subtitle":"Framed & solid, 3 sizes, accent colors","name":"Button"},{"path":"components/icon.html","group":"Components","viewport":"420x160","subtitle":"Bespoke MSN glyph set (currentColor)","name":"Icon"},{"path":"components/knob.html","group":"Components","viewport":"420x180","subtitle":"Draggable instrument-panel knob (double-click resets)","name":"Knob"},{"path":"components/peakmeter.html","group":"Components","viewport":"420x160","subtitle":"Green/yellow/red stereo level meter","name":"PeakMeter"},{"path":"components/pill.html","group":"Components","viewport":"420x140","subtitle":"Tiny mute/solo/arm toggle","name":"Pill"},{"path":"components/separator.html","group":"Components","viewport":"300x120","subtitle":"Vertical hairline divider for toolbars","name":"Separator"},{"path":"components/tag.html","group":"Components","viewport":"520x140","subtitle":"Uppercase pill in any accent","name":"Tag"},{"path":"components/waveform.html","group":"Components","viewport":"520x160","subtitle":"Deterministic sample/track waveform with progress","name":"Waveform"},{"path":"components/wordmark.html","group":"Components","viewport":"420x140","subtitle":"MakeSomeNoise logotype in Rubik","name":"Wordmark"}],"templates":[],"hasThumbnailHtml":true,"globalCssPaths":["colors_and_type.css","styles.css"],"tokens":[{"name":"--color-blue","value":"hsl(210, 90%, 50%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-green","value":"hsl(140, 65%, 45%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-orange","value":"hsl(25,  90%, 55%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-yellow","value":"hsl(45,  95%, 55%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-red","value":"hsl(8,   85%, 55%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-purple","value":"hsl(280, 65%, 60%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-cyan","value":"hsl(190, 75%, 50%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-bright","value":"hsl(0, 0%, 92%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-gray","value":"hsl(0, 0%, 56%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-dark","value":"hsl(0, 0%, 38%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-shadow","value":"hsl(197, 14%, 12%)","kind":"shadow","definedIn":"colors_and_type.css"},{"name":"--color-black","value":"hsl(197, 14%, 8%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-void","value":"hsl(197, 14%, 3%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-app","value":"var(--color-void)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-panel","value":"var(--color-black)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-panel-2","value":"hsl(197, 14%, 8%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-panel-3","value":"hsl(197, 14%, 6%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-card","value":"var(--color-shadow)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--bg-elevated","value":"hsl(197, 14%, 16%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--line-faint","value":"rgba(255, 255, 255, 0.04)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--line-soft","value":"rgba(255, 255, 255, 0.07)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--line-hover","value":"rgba(255, 255, 255, 0.12)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--fg1","value":"var(--color-bright)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--fg2","value":"var(--color-gray)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--fg3","value":"var(--color-dark)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-active","value":"hsl(210, 90%, 30%)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--color-active-parent","value":"hsla(210, 90%, 30%, 0.5)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--font-display","value":"\"Rubik\", system-ui, sans-serif","kind":"font","definedIn":"colors_and_type.css"},{"name":"--font-body","value":"\"Open Sans\", system-ui, sans-serif","kind":"font","definedIn":"colors_and_type.css"},{"name":"--font-mono","value":"ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, monospace","kind":"font","definedIn":"colors_and_type.css"},{"name":"--fs-10","value":"10px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-11","value":"11px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-12","value":"12px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-13","value":"13px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-14","value":"14px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-18","value":"18px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-22","value":"22px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--fs-36","value":"36px","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--radius-1","value":"2px","kind":"radius","definedIn":"colors_and_type.css"},{"name":"--radius-2","value":"4px","kind":"radius","definedIn":"colors_and_type.css"},{"name":"--radius-3","value":"6px","kind":"radius","definedIn":"colors_and_type.css"},{"name":"--radius-4","value":"8px","kind":"radius","definedIn":"colors_and_type.css"},{"name":"--glow-active","value":"0 0 3px -1px var(--color-active)","kind":"color","definedIn":"colors_and_type.css"},{"name":"--glow-frame","value":"0 0 3px -1px currentColor","kind":"shadow","definedIn":"colors_and_type.css","annotation":"shadow"},{"name":"--shadow-floating","value":"0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)","kind":"shadow","definedIn":"colors_and_type.css"},{"name":"--gap-1","value":"0.25em","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--gap-2","value":"0.5em","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--gap-3","value":"0.75em","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--gap-4","value":"1em","kind":"spacing","definedIn":"colors_and_type.css"},{"name":"--gap-6","value":"1.5em","kind":"spacing","definedIn":"colors_and_type.css"}],"themes":[],"fonts":[],"brandFonts":[{"family":"Rubik","status":"ok","tokens":["--font-display"],"path":"colors_and_type.css"},{"family":"Open Sans","status":"ok","tokens":["--font-body"],"path":"colors_and_type.css"},{"family":"JetBrains Mono","status":"no-face","tokens":["--font-mono"],"path":"colors_and_type.css"}],"source":"spa"}
+{
+  "namespace": "OpenDAWDesignSystem_019dce",
+  "components": [
+    { "name": "Avatar", "sourcePath": "components/Avatar.jsx" },
+    { "name": "Button", "sourcePath": "components/Button.jsx" },
+    { "name": "Icon", "sourcePath": "components/Icon.jsx" },
+    { "name": "Knob", "sourcePath": "components/Knob.jsx" },
+    { "name": "PeakMeter", "sourcePath": "components/PeakMeter.jsx" },
+    { "name": "Pill", "sourcePath": "components/Pill.jsx" },
+    { "name": "Separator", "sourcePath": "components/Separator.jsx" },
+    { "name": "Tag", "sourcePath": "components/Tag.jsx" },
+    { "name": "Waveform", "sourcePath": "components/Waveform.jsx" },
+    { "name": "Wordmark", "sourcePath": "components/Wordmark.jsx" }
+  ],
+  "startingPoints": [],
+  "cards": [
+    {
+      "path": "MakeSomeNoise Dashboard.html",
+      "group": "Brand",
+      "viewport": "1280x1400",
+      "subtitle": "Profile + Account + Danger zone · edit toggle · dirty banner · delete-account modal · state switcher",
+      "name": "MakeSomeNoise Dashboard"
+    },
+    {
+      "path": "MakeSomeNoise Home.html",
+      "group": "Brand",
+      "viewport": "1600x1100",
+      "subtitle": "Variant A only — master meter removed, waveforms removed from saved sessions, list layout",
+      "name": "MakeSomeNoise Home"
+    },
+    {
+      "path": "MakeSomeNoise Landing.html",
+      "group": "Brand",
+      "viewport": "1440x1200",
+      "subtitle": "Hero, features, deep-dives, community, CTA, footer with legal mentions",
+      "name": "MakeSomeNoise Landing"
+    },
+    {
+      "path": "MakeSomeNoise Login.html",
+      "group": "Brand",
+      "viewport": "1280x900",
+      "subtitle": "Centered card · email+password · forgot password · state switcher (default/filled/error/loading)",
+      "name": "MakeSomeNoise Login"
+    },
+    {
+      "path": "MakeSomeNoise Samples.html",
+      "group": "Brand",
+      "viewport": "1280x1400",
+      "subtitle": "Sample library · 4GB storage bar · waveform list/grid · search/filter/sort · upload + delete modals",
+      "name": "MakeSomeNoise Samples"
+    },
+    {
+      "path": "MakeSomeNoise Sessions.html",
+      "group": "Brand",
+      "viewport": "1280x1400",
+      "subtitle": "Owned/Archived tabs · grid of cover cards · type+genre filters · sort · new-session picker · delete/rename modals · empty state toggle",
+      "name": "MakeSomeNoise Sessions"
+    },
+    {
+      "path": "MakeSomeNoise SignUp.html",
+      "group": "Brand",
+      "viewport": "1280x1100",
+      "subtitle": "Centered card · email/handle/alias/password · password strength meter · state switcher",
+      "name": "MakeSomeNoise SignUp"
+    },
+    {
+      "path": "MakeSomeNoise Studio.html",
+      "group": "Brand",
+      "viewport": "1680x1080",
+      "subtitle": "DAW session: header transport · browser · timeline · piano roll · devices · master",
+      "name": "MakeSomeNoise Studio"
+    },
+    {
+      "path": "components/avatar.html",
+      "group": "Components",
+      "viewport": "520x160",
+      "subtitle": "Initials tile with live/online/idle status",
+      "name": "Avatar"
+    },
+    {
+      "path": "components/button.html",
+      "group": "Components",
+      "viewport": "520x200",
+      "subtitle": "Framed & solid, 3 sizes, accent colors",
+      "name": "Button"
+    },
+    {
+      "path": "components/icon.html",
+      "group": "Components",
+      "viewport": "420x160",
+      "subtitle": "Bespoke MSN glyph set (currentColor)",
+      "name": "Icon"
+    },
+    {
+      "path": "components/knob.html",
+      "group": "Components",
+      "viewport": "420x180",
+      "subtitle": "Draggable instrument-panel knob (double-click resets)",
+      "name": "Knob"
+    },
+    {
+      "path": "components/peakmeter.html",
+      "group": "Components",
+      "viewport": "420x160",
+      "subtitle": "Green/yellow/red stereo level meter",
+      "name": "PeakMeter"
+    },
+    {
+      "path": "components/pill.html",
+      "group": "Components",
+      "viewport": "420x140",
+      "subtitle": "Tiny mute/solo/arm toggle",
+      "name": "Pill"
+    },
+    {
+      "path": "components/separator.html",
+      "group": "Components",
+      "viewport": "300x120",
+      "subtitle": "Vertical hairline divider for toolbars",
+      "name": "Separator"
+    },
+    {
+      "path": "components/tag.html",
+      "group": "Components",
+      "viewport": "520x140",
+      "subtitle": "Uppercase pill in any accent",
+      "name": "Tag"
+    },
+    {
+      "path": "components/waveform.html",
+      "group": "Components",
+      "viewport": "520x160",
+      "subtitle": "Deterministic sample/track waveform with progress",
+      "name": "Waveform"
+    },
+    {
+      "path": "components/wordmark.html",
+      "group": "Components",
+      "viewport": "420x140",
+      "subtitle": "MakeSomeNoise logotype in Rubik",
+      "name": "Wordmark"
+    }
+  ],
+  "templates": [],
+  "hasThumbnailHtml": true,
+  "globalCssPaths": ["colors_and_type.css", "styles.css"],
+  "tokens": [
+    {
+      "name": "--color-blue",
+      "value": "hsl(210, 90%, 50%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-green",
+      "value": "hsl(140, 65%, 45%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-orange",
+      "value": "hsl(25,  90%, 55%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-yellow",
+      "value": "hsl(45,  95%, 55%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-red",
+      "value": "hsl(8,   85%, 55%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-purple",
+      "value": "hsl(280, 65%, 60%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-cyan",
+      "value": "hsl(190, 75%, 50%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-bright",
+      "value": "hsl(0, 0%, 92%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-gray",
+      "value": "hsl(0, 0%, 56%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-dark",
+      "value": "hsl(0, 0%, 38%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-shadow",
+      "value": "hsl(197, 14%, 12%)",
+      "kind": "shadow",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-black",
+      "value": "hsl(197, 14%, 8%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-void",
+      "value": "hsl(197, 14%, 3%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-app",
+      "value": "var(--color-void)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-panel",
+      "value": "var(--color-black)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-panel-2",
+      "value": "hsl(197, 14%, 8%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-panel-3",
+      "value": "hsl(197, 14%, 6%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-card",
+      "value": "var(--color-shadow)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--bg-elevated",
+      "value": "hsl(197, 14%, 16%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--line-faint",
+      "value": "rgba(255, 255, 255, 0.04)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--line-soft",
+      "value": "rgba(255, 255, 255, 0.07)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--line-hover",
+      "value": "rgba(255, 255, 255, 0.12)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fg1",
+      "value": "var(--color-bright)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fg2",
+      "value": "var(--color-gray)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fg3",
+      "value": "var(--color-dark)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-active",
+      "value": "hsl(210, 90%, 30%)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--color-active-parent",
+      "value": "hsla(210, 90%, 30%, 0.5)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--font-display",
+      "value": "\"Rubik\", system-ui, sans-serif",
+      "kind": "font",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--font-body",
+      "value": "\"Open Sans\", system-ui, sans-serif",
+      "kind": "font",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--font-mono",
+      "value": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, monospace",
+      "kind": "font",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-10",
+      "value": "10px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-11",
+      "value": "11px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-12",
+      "value": "12px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-13",
+      "value": "13px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-14",
+      "value": "14px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-18",
+      "value": "18px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-22",
+      "value": "22px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--fs-36",
+      "value": "36px",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--radius-1",
+      "value": "2px",
+      "kind": "radius",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--radius-2",
+      "value": "4px",
+      "kind": "radius",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--radius-3",
+      "value": "6px",
+      "kind": "radius",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--radius-4",
+      "value": "8px",
+      "kind": "radius",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--glow-active",
+      "value": "0 0 3px -1px var(--color-active)",
+      "kind": "color",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--glow-frame",
+      "value": "0 0 3px -1px currentColor",
+      "kind": "shadow",
+      "definedIn": "colors_and_type.css",
+      "annotation": "shadow"
+    },
+    {
+      "name": "--shadow-floating",
+      "value": "0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
+      "kind": "shadow",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--gap-1",
+      "value": "0.25em",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--gap-2",
+      "value": "0.5em",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--gap-3",
+      "value": "0.75em",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--gap-4",
+      "value": "1em",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    },
+    {
+      "name": "--gap-6",
+      "value": "1.5em",
+      "kind": "spacing",
+      "definedIn": "colors_and_type.css"
+    }
+  ],
+  "themes": [],
+  "fonts": [],
+  "brandFonts": [
+    {
+      "family": "Rubik",
+      "status": "ok",
+      "tokens": ["--font-display"],
+      "path": "colors_and_type.css"
+    },
+    {
+      "family": "Open Sans",
+      "status": "ok",
+      "tokens": ["--font-body"],
+      "path": "colors_and_type.css"
+    },
+    {
+      "family": "JetBrains Mono",
+      "status": "no-face",
+      "tokens": ["--font-mono"],
+      "path": "colors_and_type.css"
+    }
+  ],
+  "source": "spa"
+}

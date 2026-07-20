@@ -1,8 +1,7 @@
 import { type UseMutateFunction, useMutation } from '@tanstack/react-query';
-import { Button, CheckOutlined, CloseCircleOutlined, Form, Input, notification } from '@transcendence/ui';
+import type { AuthUser } from '@transcendence/auth';
+import { Button, CheckOutlined, CloseCircleOutlined, Form, Input, notification, theme } from '@transcendence/ui';
 import { type Dispatch, type JSX, type SetStateAction, useState } from 'react';
-import type { AuthUser } from '@auth/src';
-import { theme } from '@ui/theme/theme';
 import { updateUserPassword } from '../../api/user';
 import { PasswordStrength } from '../Register/PasswordStrength';
 import styles from './AccountSection.module.scss';

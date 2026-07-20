@@ -1,7 +1,6 @@
+import { MsnIcon, MsnWordmark } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { MsnWordmark } from '@ui/components/MsnWordmark/MsnWordmark';
 import styles from './SiteFooter.module.scss';
 
 interface FooterCol {

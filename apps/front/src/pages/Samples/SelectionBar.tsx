@@ -1,6 +1,5 @@
-import { Button } from '@transcendence/ui';
+import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './SelectionBar.module.scss';
 
 interface SelectionBarProps {
@@ -19,9 +18,6 @@ export function SelectionBar({ count, onClear, onDelete }: SelectionBarProps): J
         </button>
       </div>
       <div className={styles.actions}>
-        <Button size="small">
-          <MsnIcon name="folder" size="11px" /> Move to…
-        </Button>
         <Button size="small">
           <MsnIcon name="download" size="11px" /> Download
         </Button>

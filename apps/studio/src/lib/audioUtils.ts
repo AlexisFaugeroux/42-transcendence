@@ -1,7 +1,6 @@
 import { PPQN } from '@opendaw/lib-dsp';
 import type { Project } from '@opendaw/studio-core';
-import { apiFetch } from '@auth/src';
-import { ApiErrorReponse } from '@auth/src/errors';
+import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
 import type { BarInfo } from './types';
 
 export async function loadAudioFile(
@@ -15,8 +14,11 @@ export async function loadAudioFile(
       sampleId: uuid,
       userId,
     });
-    const fullPath = `${import.meta.env.VITE_NGINX_URL}/audio/${url}?${queryString.toString()}`;
-    const response = await apiFetch(fullPath);
+    // Relative path on purpose: nginx routes /audio/ to the audio server in prod
+    // (infra/nginx/reverse-proxy.conf), the Vite proxy does the same in dev. Going
+    // through apiFetch keeps the cookie (nginx authorizes each file via auth_request)
+    // and the global logout on 401.
+    const response = await apiFetch(`/audio/${url}?${queryString.toString()}`);
     if (!response.ok) throw new ApiErrorReponse();
 
     const arrayBuffer = await response.arrayBuffer();

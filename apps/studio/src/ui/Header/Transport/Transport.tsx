@@ -1,6 +1,5 @@
+import { IconBtn, theme } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
-import { IconBtn } from '@ui/components/IconBtn/IconBtn';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
 import styles from './Transport.module.scss';

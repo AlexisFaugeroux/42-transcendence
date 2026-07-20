@@ -12,6 +12,7 @@ export interface RegisterBody {
 export interface AuthUser {
   email: string;
   id: string;
+  ownerId: string;
   artistName: string;
   firstname: string;
   lastname: string;

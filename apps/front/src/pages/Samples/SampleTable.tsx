@@ -1,29 +1,41 @@
-import { Button, DeleteOutlined, Table, type TableColumnsType, Tag } from '@transcendence/ui';
+import {
+  Button,
+  DeleteOutlined,
+  EditOutlined,
+  MsnIcon,
+  Table,
+  type TableColumnsType,
+  Tag,
+  theme,
+} from '@transcendence/ui';
 import type { JSX, Key } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { theme } from '@ui/theme/theme';
-import { FAMILY_COLOR, formatMB, type Sample } from './samples.data';
+import type { AudioFile } from '../../types/audioFile';
+import { familyColor, formatBytes, formatDuration, formatKey, formatKind } from './helpers';
 import styles from './SampleTable.module.scss';
 import { WaveformPlaceholder } from './WaveformPlaceholder';
 
 interface SampleTableProps {
-  rows: Sample[];
+  rows: AudioFile[];
+  ownerId: string;
   selectedKeys: Key[];
   onSelectionChange: (keys: Key[]) => void;
-  playingId: number | null;
-  onPlay: (id: number) => void;
-  onDelete: (sample: Sample) => void;
+  playingId: string | null;
+  onPlay: (id: string) => void;
+  onEdit: (sample: AudioFile) => void;
+  onDelete: (sample: AudioFile) => void;
 }
 
 export function SampleTable({
   onDelete,
+  onEdit,
   onPlay,
   onSelectionChange,
+  ownerId,
   playingId,
   rows,
   selectedKeys,
 }: SampleTableProps): JSX.Element {
-  const columns: TableColumnsType<Sample> = [
+  const columns: TableColumnsType<AudioFile> = [
     {
       key: 'play',
       render: (_, row) => (
@@ -45,13 +57,18 @@ export function SampleTable({
       render: (_, row) => (
         <div>
           <div className={styles.nameLine}>
-            {row.fav ? <MsnIcon name="heart" size="11px" color={theme.orange} /> : null}
             <span className={styles.name}>{row.name}</span>
           </div>
           <div className={styles.meta}>
-            <Tag color={FAMILY_COLOR[row.family]}>{row.family}</Tag>
-            <span>{row.pack}</span>
-            <span>· added {row.added}</span>
+            <Tag
+              color={familyColor(row.family)}
+              style={{
+                backgroundColor: theme.void,
+                borderColor: familyColor(row.family),
+              }}
+            >
+              {row.family ?? '—'}
+            </Tag>
           </div>
         </div>
       ),
@@ -59,51 +76,78 @@ export function SampleTable({
     },
     {
       key: 'waveform',
-      render: (_, row) => <WaveformPlaceholder seed={row.seed} color={FAMILY_COLOR[row.family]} />,
+      render: (_, row) => <WaveformPlaceholder seed={row.id} color={theme.fg1} />,
       title: 'Waveform',
       width: 220,
     },
     {
-      key: 'bpmKey',
+      key: 'bpm',
+      render: (_, row) => <span className={styles.mono}>{row.bpm ?? '—'}</span>,
+      title: 'BPM',
+      width: 70,
+    },
+    {
+      key: 'key',
       render: (_, row) => (
         <span className={styles.mono}>
-          {row.bpm ?? '—'}
-          {row.key ? <span className={styles.muted}> · {row.key}</span> : null}
+          {row.key ? formatKey(row.key) : '—'}
+          {row.key && row.mode ? <span className={styles.muted}> {row.mode === 'MAJOR' ? 'maj' : 'min'}</span> : null}
         </span>
       ),
-      title: 'BPM / Key',
-      width: 110,
+      title: 'Key',
+      width: 90,
     },
-    { dataIndex: 'dur', render: (v: string) => <span className={styles.mono}>{v}</span>, title: 'Length', width: 80 },
     {
-      key: 'size',
-      render: (_, row) => <span className={styles.mono}>{formatMB(row.size)}</span>,
+      key: 'duration',
+      render: (_, row) => <span className={styles.mono}>{formatDuration(row.duration)}</span>,
+      title: 'Length',
+      width: 80,
+    },
+    {
+      key: 'bytes',
+      render: (_, row) => <span className={styles.mono}>{formatBytes(row.bytes)}</span>,
       title: 'Size',
       width: 90,
     },
-    { dataIndex: 'kind', render: (v: string) => <Tag>{v}</Tag>, title: 'Type', width: 90 },
+    {
+      key: 'kind',
+      render: (_, row) => <Tag>{row.kind ? formatKind(row.kind) : '—'}</Tag>,
+      title: 'Type',
+      width: 90,
+    },
     {
       align: 'right',
       key: 'actions',
       render: (_, row) => (
         <div className={styles.actions}>
-          <Button type="text" size="small" title="Add to session">
-            <MsnIcon name="plus" size="12px" />
-          </Button>
+          {row.ownerId === ownerId ? (
+            <Button
+              type="text"
+              size="small"
+              title="Edit"
+              onClick={() => {
+                onEdit(row);
+              }}
+            >
+              <EditOutlined />
+            </Button>
+          ) : null}
           <Button type="text" size="small" title="Download">
             <MsnIcon name="download" size="12px" />
           </Button>
-          <Button
-            type="text"
-            size="small"
-            danger
-            title="Delete"
-            onClick={() => {
-              onDelete(row);
-            }}
-          >
-            <DeleteOutlined />
-          </Button>
+          {row.ownerId === ownerId ? (
+            <Button
+              type="text"
+              size="small"
+              danger
+              title="Delete"
+              onClick={() => {
+                onDelete(row);
+              }}
+            >
+              <DeleteOutlined />
+            </Button>
+          ) : null}
         </div>
       ),
       title: 'Actions',
@@ -113,12 +157,17 @@ export function SampleTable({
 
   return (
     <Table
+      className={styles.table}
       rowKey="id"
       columns={columns}
       dataSource={rows}
       pagination={false}
       size="small"
-      rowSelection={{ onChange: onSelectionChange, selectedRowKeys: selectedKeys }}
+      rowSelection={{
+        getCheckboxProps: (row) => ({ disabled: row.ownerId !== ownerId }),
+        onChange: onSelectionChange,
+        selectedRowKeys: selectedKeys,
+      }}
     />
   );
 }

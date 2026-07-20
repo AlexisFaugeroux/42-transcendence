@@ -1,7 +1,7 @@
 import { UUID } from '@opendaw/lib-std';
+import { useUser } from '@transcendence/auth';
+import { theme } from '@transcendence/ui';
 import { type DragEvent, type JSX, useEffect, useRef, useState } from 'react';
-import { useUser } from '@auth/src';
-import { theme } from '@ui/theme/theme';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';

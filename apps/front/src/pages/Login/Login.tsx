@@ -1,12 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useUser } from '@transcendence/auth';
 import type { LoginBody } from '@transcendence/auth';
-import { Button, Form, Input } from '@transcendence/ui';
-import { theme } from '@transcendence/ui/theme';
+import { Button, Form, Input, MsnIcon, MsnWordmark, theme } from '@transcendence/ui';
 import { type JSX } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MsnIcon } from '@transcendence/ui/components/MsnIcon/MsnIcon.js';
-import { MsnWordmark } from '@transcendence/ui/components/MsnWordmark/MsnWordmark.js';
 import { safeRedirect } from './helpers.ts';
 import styles from './Login.module.scss';
 

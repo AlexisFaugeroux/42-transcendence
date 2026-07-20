@@ -1,6 +1,5 @@
+import { ConfigProvider, Tabs, type TabsProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { ConfigProvider, Tabs, type TabsProps } from '@ui/index';
-import { theme } from '@ui/theme/theme';
 import styles from './Browser.module.scss';
 import { Samples } from './Samples/Samples';
 

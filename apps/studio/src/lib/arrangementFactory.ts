@@ -3,7 +3,7 @@ import { UUID } from '@opendaw/lib-std';
 import { InstrumentFactories, type InstrumentFactory } from '@opendaw/studio-adapters';
 import { AudioFileBox, AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 import type { Project, ProjectApi } from '@opendaw/studio-core';
-import { theme } from '@ui/theme/theme';
+import { theme } from '@transcendence/ui';
 import { loadAudioFile } from './audioUtils';
 import type { Clip, Track } from './types';
 

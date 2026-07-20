@@ -1,19 +1,19 @@
-import { Button, Input, Segmented, Select } from '@transcendence/ui';
+import { Button, Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
-import { SAMPLE_FAMILIES, SAMPLE_KINDS } from './samples.data';
+import type { Family, Kind } from '../../types/audioFile';
+import { FAMILY_OPTIONS, KIND_OPTIONS } from './helpers';
 import styles from './Toolbar.module.scss';
+import type { SortKey } from './types';
 
-export type SortKey = 'recent' | 'name' | 'duration' | 'size' | 'bpm';
 export type ViewMode = 'list' | 'grid';
 
 interface ToolbarProps {
   query: string;
   setQuery: (v: string) => void;
-  family: string;
-  setFamily: (v: string) => void;
-  kind: string;
-  setKind: (v: string) => void;
+  families: Family[];
+  setFamilies: (v: Family[]) => void;
+  kinds: Kind[];
+  setKinds: (v: Kind[]) => void;
   favOnly: boolean;
   setFavOnly: (v: boolean) => void;
   sort: SortKey;
@@ -26,13 +26,13 @@ interface ToolbarProps {
 
 export function Toolbar(props: ToolbarProps): JSX.Element {
   const {
-    family,
+    families,
     favOnly,
-    kind,
+    kinds,
     query,
-    setFamily,
+    setFamilies,
     setFavOnly,
-    setKind,
+    setKinds,
     setQuery,
     setSort,
     setView,
@@ -48,7 +48,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
         className={styles.search}
         allowClear
         prefix={<MsnIcon name="search" size="13px" />}
-        placeholder="Search by name, pack, tag…"
+        placeholder="Search by name…"
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
@@ -56,17 +56,25 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
       />
 
       <Select
-        value={family}
-        onChange={setFamily}
-        options={[{ label: 'All families', value: 'all' }, ...SAMPLE_FAMILIES.map((f) => ({ label: f, value: f }))]}
-        style={{ width: 150 }}
+        mode="multiple"
+        allowClear
+        maxTagCount="responsive"
+        placeholder="All families"
+        value={families}
+        onChange={setFamilies}
+        options={FAMILY_OPTIONS}
+        style={{ width: 200 }}
       />
 
       <Select
-        value={kind}
-        onChange={setKind}
-        options={[{ label: 'All types', value: 'all' }, ...SAMPLE_KINDS.map((k) => ({ label: k, value: k }))]}
-        style={{ width: 140 }}
+        mode="multiple"
+        allowClear
+        maxTagCount="responsive"
+        placeholder="All types"
+        value={kinds}
+        onChange={setKinds}
+        options={KIND_OPTIONS}
+        style={{ width: 180 }}
       />
 
       <Button

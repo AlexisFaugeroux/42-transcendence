@@ -1,81 +1,154 @@
-import { Button } from '@transcendence/ui';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthUser } from '@transcendence/auth';
+import {
+  Button,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  MsnIcon,
+  notification,
+  Result,
+  Spin,
+  theme,
+} from '@transcendence/ui';
 import { type JSX, type Key, useMemo, useState } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
+import { deleteSample, getSamples, getStorageUsage } from '../../api/audioFile/audioFile';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
+import type { AudioFile, Family, Kind } from '../../types/audioFile';
+import { SAMPLE_COMPARATORS } from './constants';
 import { DeleteSampleModal, type DeleteTarget } from './DeleteSampleModal';
+import { EditSampleModal } from './EditSampleModal';
 import { EmptyState } from './EmptyState';
+import { formatBytes } from './helpers';
 import { SampleGrid } from './SampleGrid';
-import { parseDur, SAMPLES, STORAGE_LIMIT_GB } from './samples.data';
 import styles from './Samples.module.scss';
 import { SampleTable } from './SampleTable';
 import { SelectionBar } from './SelectionBar';
 import { StorageBar } from './StorageBar';
-import { type SortKey, Toolbar, type ViewMode } from './Toolbar';
+import { Toolbar, type ViewMode } from './Toolbar';
+import type { SortKey } from './types';
 import { UploadModal } from './UploadModal';
 
 export function Samples(): JSX.Element {
+  const user = useAuthUser();
+  const queryClient = useQueryClient();
+  const [notificationApi, notificationContext] = notification.useNotification();
+
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
-  const [playingId, setPlayingId] = useState<number | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [family, setFamily] = useState('all');
-  const [kind, setKind] = useState('all');
+  const [families, setFamilies] = useState<Family[]>([]);
+  const [kinds, setKinds] = useState<Kind[]>([]);
   const [favOnly, setFavOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>('recent');
   const [view, setView] = useState<ViewMode>('list');
   const [confirmDelete, setConfirmDelete] = useState<DeleteTarget>(null);
+  const [editTarget, setEditTarget] = useState<AudioFile | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
 
-  const usedMB = Math.round(SAMPLES.reduce((acc, s) => acc + s.size, 0));
+  const notifySuccess = (message: string, description: string): void => {
+    notificationApi.open({
+      description,
+      duration: 5,
+      icon: <CheckCircleOutlined style={{ color: theme.green }} />,
+      message,
+    });
+  };
+
+  const notifyError = (message: string, description: string): void => {
+    notificationApi.open({
+      description,
+      duration: 5,
+      icon: <CloseCircleOutlined style={{ color: theme.red }} />,
+      message,
+    });
+  };
+
+  const samplesQuery = useQuery({
+    queryFn: () => getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }),
+    queryKey: ['samples', user.id],
+  });
+
+  const storageQuery = useQuery({
+    queryFn: getStorageUsage,
+    queryKey: ['audio-storage', user.id],
+  });
+
+  const samples = useMemo(
+    () => (samplesQuery.data ?? []).filter((sample) => sample.kind !== 'TRACK'),
+    [samplesQuery.data],
+  );
+  const storage = storageQuery.data;
 
   const filtered = useMemo(() => {
-    let rows = SAMPLES.slice();
-    const q = query.trim().toLowerCase();
-    if (q) {
-      rows = rows.filter(
-        (r) =>
-          r.name.toLowerCase().includes(q) || r.pack.toLowerCase().includes(q) || r.tags.some((t) => t.includes(q)),
-      );
-    }
-    if (family !== 'all') rows = rows.filter((r) => r.family === family);
-    if (kind !== 'all') rows = rows.filter((r) => r.kind === kind);
-    if (favOnly) rows = rows.filter((r) => r.fav);
+    const needle = query.trim().toLowerCase();
 
-    rows.sort((a, b) => {
-      switch (sort) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'duration':
-          return parseDur(a.dur) - parseDur(b.dur);
-        case 'size':
-          return b.size - a.size;
-        case 'bpm':
-          return (a.bpm ?? 999) - (b.bpm ?? 999);
-        default:
-          return SAMPLES.indexOf(a) - SAMPLES.indexOf(b); // 'recent'
+    return samples
+      .filter((sample) => !families.length || (sample.family !== null && families.includes(sample.family)))
+      .filter((sample) => !kinds.length || (sample.kind !== null && kinds.includes(sample.kind)))
+      .filter((sample) => !needle || sample.name.toLowerCase().includes(needle))
+      .sort(SAMPLE_COMPARATORS[sort]);
+  }, [samples, families, kinds, query, sort]);
+
+  const invalidateLibrary = async (): Promise<void> => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['samples', user.id] }),
+      queryClient.invalidateQueries({ queryKey: ['audio-storage', user.id] }),
+    ]);
+  };
+
+  const { isPending: isDeleting, mutate: deleteSamples } = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const results = await Promise.allSettled(ids.map((id) => deleteSample(id)));
+
+      return ids.filter((_, index) => results[index].status === 'rejected');
+    },
+    onError: (error) => {
+      notifyError('Deletion failed', error.message);
+    },
+    onSettled: invalidateLibrary,
+    onSuccess: (failedIds, ids) => {
+      if (failedIds.length) {
+        setSelectedKeys(failedIds);
+        notifyError('Deletion failed', `${failedIds.length.toString()} of ${ids.length.toString()} samples were kept`);
+        return;
       }
-    });
-    return rows;
-  }, [query, family, kind, favOnly, sort]);
 
-  const togglePlay = (id: number): void => {
+      setSelectedKeys([]);
+      notifySuccess('Samples deleted', `${ids.length.toString()} sample(s) removed from your library`);
+    },
+  });
+
+  const togglePlay = (id: string): void => {
     setPlayingId((prev) => (prev === id ? null : id));
   };
 
   const clearFilters = (): void => {
     setQuery('');
-    setFamily('all');
-    setKind('all');
+    setFamilies([]);
+    setKinds([]);
     setFavOnly(false);
   };
 
   const confirmDeletion = (): void => {
-    // TODO (backend): delete the file(s) here.
+    if (confirmDelete === null) return;
+
+    const ids = confirmDelete === 'selection' ? selectedKeys.map((key) => String(key)) : [confirmDelete.id];
+
     setConfirmDelete(null);
-    setSelectedKeys([]);
+    if (ids.length) deleteSamples(ids);
   };
+
+  const retry = (): void => {
+    void samplesQuery.refetch();
+    void storageQuery.refetch();
+  };
+
+  const isLoading = samplesQuery.isLoading || storageQuery.isLoading;
+  const error = samplesQuery.error ?? storageQuery.error;
 
   return (
     <div className={styles.page}>
+      {notificationContext}
       <AppHeader active="library" />
       <div className={styles.container}>
         <div className={styles.titleRow}>
@@ -83,18 +156,19 @@ export function Samples(): JSX.Element {
             <div className={styles.eyebrow}>Library</div>
             <h1 className={styles.title}>Samples</h1>
             <p className={styles.subtitle}>
-              {SAMPLES.length} sounds · {usedMB} MB used of {STORAGE_LIMIT_GB} GB
+              {samples.length} sounds
+              {storage ? ` · ${formatBytes(storage.usedBytes)} used of ${formatBytes(storage.quotaBytes)}` : null}
             </p>
           </div>
           <div className={styles.actions}>
-            <Button size="large">
-              <MsnIcon name="folder" size="13px" /> New folder
-            </Button>
             <Button
               type="primary"
               size="large"
               onClick={() => {
                 setUploadOpen(true);
+              }}
+              style={{
+                backgroundColor: theme.orange,
               }}
             >
               <MsnIcon name="plus" size="13px" /> Add sample
@@ -102,76 +176,109 @@ export function Samples(): JSX.Element {
           </div>
         </div>
 
-        <StorageBar />
-
-        <Toolbar
-          query={query}
-          setQuery={setQuery}
-          family={family}
-          setFamily={setFamily}
-          kind={kind}
-          setKind={setKind}
-          favOnly={favOnly}
-          setFavOnly={setFavOnly}
-          sort={sort}
-          setSort={setSort}
-          view={view}
-          setView={setView}
-          shownCount={filtered.length}
-          totalCount={SAMPLES.length}
-        />
-
-        {selectedKeys.length > 0 && (
-          <SelectionBar
-            count={selectedKeys.length}
-            onClear={() => {
-              setSelectedKeys([]);
-            }}
-            onDelete={() => {
-              setConfirmDelete('selection');
-            }}
-          />
-        )}
-
-        {filtered.length === 0 ? (
-          <EmptyState onClear={clearFilters} />
-        ) : view === 'list' ? (
-          <SampleTable
-            rows={filtered}
-            selectedKeys={selectedKeys}
-            onSelectionChange={setSelectedKeys}
-            playingId={playingId}
-            onPlay={togglePlay}
-            onDelete={(sample) => {
-              setConfirmDelete(sample);
-            }}
+        {isLoading ? (
+          <Spin size="large" />
+        ) : error ? (
+          <Result
+            status="error"
+            title="Failed to load samples"
+            subTitle={error.message}
+            extra={
+              <Button type="primary" onClick={retry}>
+                Retry
+              </Button>
+            }
           />
         ) : (
-          <SampleGrid
-            rows={filtered}
-            playingId={playingId}
-            onPlay={togglePlay}
-            onDelete={(sample) => {
-              setConfirmDelete(sample);
-            }}
-          />
+          <>
+            {storage ? <StorageBar usage={storage} /> : null}
+
+            <Toolbar
+              query={query}
+              setQuery={setQuery}
+              families={families}
+              setFamilies={setFamilies}
+              kinds={kinds}
+              setKinds={setKinds}
+              favOnly={favOnly}
+              setFavOnly={setFavOnly}
+              sort={sort}
+              setSort={setSort}
+              view={view}
+              setView={setView}
+              shownCount={filtered.length}
+              totalCount={samples.length}
+            />
+
+            {selectedKeys.length > 0 && (
+              <SelectionBar
+                count={selectedKeys.length}
+                onClear={() => {
+                  setSelectedKeys([]);
+                }}
+                onDelete={() => {
+                  setConfirmDelete('selection');
+                }}
+              />
+            )}
+
+            {filtered.length === 0 ? (
+              <EmptyState onClear={clearFilters} />
+            ) : view === 'list' ? (
+              <SampleTable
+                rows={filtered}
+                ownerId={user.ownerId}
+                selectedKeys={selectedKeys}
+                onSelectionChange={setSelectedKeys}
+                playingId={playingId}
+                onPlay={togglePlay}
+                onEdit={setEditTarget}
+                onDelete={(sample) => {
+                  setConfirmDelete(sample);
+                }}
+              />
+            ) : (
+              <SampleGrid
+                rows={filtered}
+                ownerId={user.ownerId}
+                playingId={playingId}
+                onPlay={togglePlay}
+                onEdit={setEditTarget}
+                onDelete={(sample) => {
+                  setConfirmDelete(sample);
+                }}
+              />
+            )}
+          </>
         )}
       </div>
 
       <DeleteSampleModal
         target={confirmDelete}
         selectedCount={selectedKeys.length}
+        confirmLoading={isDeleting}
         onCancel={() => {
           setConfirmDelete(null);
         }}
         onConfirm={confirmDeletion}
+      />
+      <EditSampleModal
+        target={editTarget}
+        onCancel={() => {
+          setEditTarget(null);
+        }}
+        onSaved={invalidateLibrary}
+        notifySuccess={notifySuccess}
+        notifyError={notifyError}
       />
       <UploadModal
         open={uploadOpen}
         onClose={() => {
           setUploadOpen(false);
         }}
-        usedMB={usedMB}
+        onUploaded={invalidateLibrary}
+        usedBytes={storage?.usedBytes ?? 0}
+        quotaBytes={storage?.quotaBytes ?? 0}
       />
     </div>
   );

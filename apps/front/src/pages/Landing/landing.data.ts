@@ -1,4 +1,4 @@
-import type { MsnIconLabel } from '@ui/components/MsnIcon/types';
+import type { MsnIconLabel } from '@transcendence/ui';
 
 export interface Feature {
   icon: MsnIconLabel;

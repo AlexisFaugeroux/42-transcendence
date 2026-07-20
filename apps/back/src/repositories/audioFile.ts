@@ -1,5 +1,11 @@
 import { formatISO } from '@transcendence/date';
-import type { AudioFile, CreateAudioFileInput, GetAudioFileInput, UpdateAudioFileInput } from '../domain/audioFile';
+import type {
+  AudioFile,
+  CreateAudioFileInput,
+  FamilyUsage,
+  GetAudioFileInput,
+  UpdateAudioFileInput,
+} from '../domain/audioFile';
 import type { AudioFile as PrismaAudioFile, PrismaClient } from '../generated/prisma/client';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
@@ -87,6 +93,16 @@ class AudioFileRepository {
     });
 
     return result._sum.bytes ?? 0;
+  }
+
+  public async sumBytesByFamily(ownerId: string): Promise<FamilyUsage[]> {
+    const rows = await this.prisma.audioFile.groupBy({
+      _sum: { bytes: true },
+      by: ['family'],
+      where: { ownerId },
+    });
+
+    return rows.map((row) => ({ bytes: row._sum.bytes ?? 0, family: row.family }));
   }
 
   private _format(audioFile: PrismaAudioFile): AudioFile {

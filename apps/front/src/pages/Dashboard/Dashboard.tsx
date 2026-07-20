@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { type AuthUser, useAuthUser, useUser } from '@transcendence/auth';
-import { CheckOutlined, CloseCircleOutlined, notification } from '@transcendence/ui';
+import { CheckOutlined, CloseCircleOutlined, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
-import { theme } from '@ui/theme/theme';
 import { updateUserProfile } from '../../api/user';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { AccountSection } from './AccountSection';

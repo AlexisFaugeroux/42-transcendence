@@ -1,6 +1,5 @@
-import { Tag } from '@transcendence/ui';
+import { MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { MsnIcon } from '@ui/components/MsnIcon/MsnIcon';
 import styles from './FeatureCard.module.scss';
 import type { Feature } from './landing.data';
 

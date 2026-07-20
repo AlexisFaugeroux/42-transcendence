@@ -1,8 +1,5 @@
 {
-  "plugins": [
-    "react",
-    "import"
-  ],
+  "plugins": ["react", "import"],
   "rules": {
     "react/forbid-elements": [
       "warn",
@@ -106,9 +103,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/index.js"
-      ],
+      "files": ["**/index.js"],
       "rules": {
         "no-restricted-imports": "off"
       }
@@ -251,9 +246,6 @@
       "--gap-4": "spacing",
       "--gap-6": "spacing"
     },
-    "fontFamilies": [
-      "Open Sans",
-      "Rubik"
-    ]
+    "fontFamilies": ["Open Sans", "Rubik"]
   }
 }

@@ -1,4 +1,4 @@
-import { ApiErrorReponse } from '@auth/src/errors.ts';
+import { ApiErrorReponse } from '@transcendence/auth';
 import type { RegisterBody, RegisterResponse } from './types.ts';
 
 const BASE_URL = import.meta.env.VITE_API_URL;

@@ -14,10 +14,6 @@
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {
-      "@auth/*": ["../../packages/auth/*"],
-      "@ui/*": ["../../packages/ui/*"]
-    },
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "skipLibCheck": true,
     "target": "es2024",
