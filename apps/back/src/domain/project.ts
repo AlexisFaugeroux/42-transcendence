@@ -21,7 +21,7 @@ export interface SaveProjectBody {
   bpm: number;
   duration: number;
   visibility: VisibilityType;
-  samples: string[];
+  samples: string[] | null;
   state: string; // base64
   key?: Key;
   mode?: Mode;
@@ -30,7 +30,7 @@ export interface SaveProjectBody {
 export interface UpsertProjectInput {
   id: string;
   state: Uint8Array<ArrayBuffer>;
-  samples: string[];
+  samples: string[] | null;
   ownerId: string;
   name: string;
   duration: number;
