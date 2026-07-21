@@ -2,6 +2,7 @@ import type { Project } from '@opendaw/studio-core';
 import { useTranslation } from '@transcendence/i18n';
 import { createContext, type JSX, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { initializeOpenDaw } from '../lib/projectSetup';
+import type { ProjectProperties } from '../lib/types'
 
 interface ProjectContextValue {
   audioContext: AudioContext;
@@ -11,18 +12,35 @@ interface ProjectContextValue {
 
 const projectContext = createContext<ProjectContextValue | null>(null);
 
+
 export function ProjectProvider({ children }: { children: ReactNode }): JSX.Element {
   const [value, setValue] = useState<ProjectContextValue | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
-  const { t } = useTranslation();
-
+  
+  const query = new URLSearchParams();
+  
+  const properties : ProjectProperties = {
+    id : query.get('projectId'),
+    name : query.get('name'),
+    bpm : Number ( query.get('bpm') ),
+    duration : 0,
+    visibility : 'PRIVATE',
+    samples : null,
+    state : "",
+    key : "",
+    mode : "",
+  }
+ 
   useEffect(() => {
     let mounted = true;
 
     void (async () => {
-      const { audioContext, project } = await initializeOpenDaw({
-        localAudioBuffers: localAudioBuffersRef.current,
-      });
+      const { audioContext, project } = await initializeOpenDaw(
+        {
+          localAudioBuffers: localAudioBuffersRef.current,
+        },
+        properties
+      );
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
       setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project });
