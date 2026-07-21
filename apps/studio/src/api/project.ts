@@ -7,10 +7,14 @@ const BACK_URL = import.meta.env.VITE_API_URL;
 
 export async function saveProject( properties : ProjectProperties) {
 
+    console.log( properties );
     const res = await apiFetch(`${BACK_URL}/api/project/save`,{
         method: "PUT",
+        headers : {
+            "Content-Type": "application/json",
+        },
         body : JSON.stringify({
-            properties
+            ...properties
         })
     }
   );

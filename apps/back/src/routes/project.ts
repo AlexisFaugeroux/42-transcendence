@@ -32,7 +32,7 @@ const saveProjectSchema = {
       },
       mode: { enum: ['MAJOR', 'MINOR'], type: 'string' },
       name: { maxLength: 128, minLength: 1, type: 'string' },
-      samples: { items: { type: 'string' }, type: 'array', uniqueItems: true },
+      samples: { items: { type: 'string' }, type: 'array', uniqueItems: true},
       state: { contentEncoding: 'base64', minLength: 1, type: 'string' },
       visibility: { enum: ['PRIVATE', 'SHARED', 'PUBLIC'], type: 'string' },
     },

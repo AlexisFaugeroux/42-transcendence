@@ -8,6 +8,14 @@ interface ProjectContextValue {
   audioContext: AudioContext;
   project: Project;
   localAudioBuffers: Map<string, AudioBuffer>;
+  meta : {
+    id : string | null,
+    name : string | null,
+    visibility : string,
+    key : string,
+    mode : string,
+    duration : number,
+  }
 }
 
 const projectContext = createContext<ProjectContextValue | null>(null);
@@ -17,25 +25,28 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
   const [value, setValue] = useState<ProjectContextValue | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
   
-  const query = new URLSearchParams();
-  
-  const properties : ProjectProperties = {
+  const query = new URLSearchParams( window.location.search);
+  const meta = {
     id : query.get('projectId'),
     name : query.get('name'),
-    bpm : Number ( query.get('bpm') ),
+    key : "A_key",
+    mode : "MAJOR",
     duration : 0,
     visibility : 'PRIVATE',
-    samples : null,
-    state : "",
-    key : "",
-    mode : "",
   }
- 
+
+  const properties : ProjectProperties = {
+    ...meta,
+    bpm : Number ( query.get('bpm') ),
+    samples : null,
+    state : ""
+  }
+
   useEffect(() => {
     let mounted = true;
 
     void (async () => {
-      const { audioContext, project } = await initializeOpenDaw(
+      const { audioContext, project, id } = await initializeOpenDaw(
         {
           localAudioBuffers: localAudioBuffersRef.current,
         },
@@ -43,7 +54,8 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       );
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
-      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project });
+      meta.id = id;
+      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project, meta });
     })();
 
     return () => {

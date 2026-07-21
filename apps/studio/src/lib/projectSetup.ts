@@ -21,7 +21,6 @@ import {
 import OfflineEngineUrl from '@opendaw/studio-core/offline-engine.js?worker&url';
 import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
-import { promiseHooks } from 'v8';
 import { saveProject, loadProject } from '../api/project';
 import type { ProjectProperties } from "../lib/types";
 
@@ -73,6 +72,7 @@ export interface ProjectSetupOptions {
 export interface ProjectSetupResult {
   project: Project;
   audioContext: AudioContext;
+  id : string;
 }
 
 let _initPromise: Promise<ProjectSetupResult> | null = null;
@@ -248,7 +248,8 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
     }
     , buffer );
   }
-
+  if (!projectPropeties.id) throw new Error("ProjectId missing");
+  const id : string = projectPropeties.id;
 
   // Set BPM if custom value provided
   if (bpm && bpm !== 120) {
@@ -275,5 +276,5 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
     document.addEventListener('click', resume);
     document.addEventListener('keydown', resume);
   }
-  return { audioContext, project };
+  return { audioContext, project, id };
 }
