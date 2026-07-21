@@ -3,7 +3,7 @@ import { AudioData } from '@opendaw/lib-dsp';
 import { Promises } from '@opendaw/lib-runtime';
 import type { Progress } from '@opendaw/lib-std';
 import { assert, requireProperty, UUID } from '@opendaw/lib-std';
-import type { SampleMetaData, SoundfontMetaData } from '@opendaw/studio-adapters';
+import { PlayfieldSampleBoxAdapter, type SampleMetaData, type SoundfontMetaData } from '@opendaw/studio-adapters';
 import type { SoundfontService } from '@opendaw/studio-core';
 import {
   AudioWorklets,
@@ -21,6 +21,9 @@ import {
 import OfflineEngineUrl from '@opendaw/studio-core/offline-engine.js?worker&url';
 import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
+import { promiseHooks } from 'v8';
+import { saveProject, loadProject } from '../api/project';
+import type { ProjectProperties } from "../lib/types";
 
 function testFeatures() {
   requireProperty(Promise, 'withResolvers');
@@ -74,8 +77,8 @@ export interface ProjectSetupResult {
 
 let _initPromise: Promise<ProjectSetupResult> | null = null;
 
-export function initializeOpenDaw(options: ProjectSetupOptions = {}): Promise<ProjectSetupResult> {
-  _initPromise ??= _doInitializeOpenDaw(options);
+export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectPropeties : ProjectProperties ): Promise<ProjectSetupResult> {
+  _initPromise ??= _doInitializeOpenDaw(options, projectPropeties);
   return _initPromise;
 }
 
@@ -93,7 +96,7 @@ export function initializeOpenDaw(options: ProjectSetupOptions = {}): Promise<Pr
  * @returns Promise resolving to initialized Project and AudioContext
  * @throws Error if initialization fails or features are not supported
  */
-export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): Promise<ProjectSetupResult> {
+export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, projectPropeties : ProjectProperties ): Promise<ProjectSetupResult> {
   const { bpm, localAudioBuffers, onStatusUpdate } = options;
 
   console.log('========================================');
@@ -212,14 +215,40 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
 
   // Create project
   const audioWorklets = AudioWorklets.get(audioContext);
-  const project = Project.new({
-    audioContext,
-    audioWorklets,
-    sampleManager,
-    sampleService,
-    soundfontManager,
-    soundfontService,
-  });
+  let project : Project;
+  if (!projectPropeties.id)
+  {
+      const decoder = new TextDecoder();
+      project = Project.new({
+      audioContext,
+      audioWorklets,
+      sampleManager,
+      sampleService,
+      soundfontManager,
+      soundfontService,
+    });
+
+    projectPropeties.id = UUID.generate().toString();
+    projectPropeties.state = decoder.decode(project.boxGraph.toArrayBuffer());
+    await saveProject( projectPropeties );
+
+  }
+  else
+  {
+    const encoder = new TextEncoder();
+    projectPropeties = await loadProject( projectPropeties.id );
+    const buffer = encoder.encode( projectPropeties.state ).buffer;
+    project = Project.load({     
+      audioContext,
+      audioWorklets,
+      sampleManager,
+      sampleService,
+      soundfontManager,
+      soundfontService
+    }
+    , buffer );
+  }
+
 
   // Set BPM if custom value provided
   if (bpm && bpm !== 120) {
@@ -246,6 +275,5 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}): P
     document.addEventListener('click', resume);
     document.addEventListener('keydown', resume);
   }
-
   return { audioContext, project };
 }

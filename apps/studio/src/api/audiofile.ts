@@ -12,3 +12,4 @@ export async function getlistAudioFile(): Promise<Sample[]> {
   const data = (await res.json()) as Sample[];
   return data;
 }
+

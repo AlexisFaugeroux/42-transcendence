@@ -11,18 +11,17 @@ interface NewSessionModalProps {
 
 export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.Element {
   const [picked, setPicked] = useState<SessionType>('production');
-  const { t } = useTranslation();
+  const [name, setName] = useState<string>('Untitled');
+  const [bpm, setBpm] = useState<number>(120);
+
+  const openNewSession = () => {
+    onClose;
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio?name=${name}&bpm=${bpm}`;
+  }
 
   return (
-    <Modal
-      open={open}
-      title={t('sessions.new.title')}
-      width={560}
-      okText={t('sessions.new.submit')}
-      onOk={onClose}
-      onCancel={onClose}
-    >
-      <p className={styles.lead}>{t('sessions.new.lead')}</p>
+    <Modal open={open} title="Start a new session" width={560} okText="Create & open" onOk={openNewSession} onCancel={onClose}>
+      <p className={styles.lead}>Pick the kind of session, then we&apos;ll set up the right workspace.</p>
 
       <div className={styles.types}>
         {SESS_TYPES.map((type) => (
@@ -46,12 +45,12 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
 
       <div className={styles.fields}>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>{t('sessions.new.titleField')}</span>
-          <Input placeholder={t('sessions.new.titlePlaceholder')} />
+          <span className={styles.fieldLabel}>Title</span>
+          <Input placeholder="Untitled session" onChange={ e => { setName(e.target.value) }} />
         </label>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>{t('sessions.new.bpmField')}</span>
-          <Input placeholder="120" />
+          <span className={styles.fieldLabel}>BPM</span>
+          <Input placeholder="120" onChange={ e => { setBpm(e.target.valueAsNumber) }} />
         </label>
       </div>
     </Modal>
