@@ -1,21 +1,24 @@
+import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './FeatureCard.module.scss';
 import type { Feature } from './landing.data';
 
-export function FeatureCard({ bullets, color, desc, icon, title }: Feature): JSX.Element {
+export function FeatureCard({ bulletKeys, color, descKey, icon, titleKey }: Feature): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.card}>
       <div className={styles.iconBox} style={{ color }}>
         <MsnIcon name={icon} size="22px" />
       </div>
       <div>
-        <div className={styles.title}>{title}</div>
-        <p className={styles.desc}>{desc}</p>
+        <div className={styles.title}>{t(titleKey)}</div>
+        <p className={styles.desc}>{t(descKey)}</p>
       </div>
       <div className={styles.bullets}>
-        {bullets.map((b) => (
-          <Tag key={b}>{b}</Tag>
+        {bulletKeys.map((bulletKey) => (
+          <Tag key={bulletKey}>{t(bulletKey)}</Tag>
         ))}
       </div>
     </div>

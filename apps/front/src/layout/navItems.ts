@@ -1,24 +1,25 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
 
 export interface NavItemDef {
   icon: MsnIconLabel;
-  label: string;
+  labelKey: TranslationKey;
   to: string;
   badge?: string;
   badgeColor?: string;
 }
 
 export const WORKSPACE_ITEMS: NavItemDef[] = [
-  { icon: 'home', label: 'Home', to: '/home' },
-  { badge: '14', icon: 'folder', label: 'My Sessions', to: '/sessions' },
-  { badge: '32', icon: 'music', label: 'Tracks', to: '/tracks' },
-  { icon: 'waveform', label: 'Library', to: '/library' },
-  { icon: 'download', label: 'Exports', to: '/exports' },
+  { icon: 'home', labelKey: 'nav.home', to: '/home' },
+  { badge: '14', icon: 'folder', labelKey: 'nav.mySessions', to: '/sessions' },
+  { badge: '32', icon: 'music', labelKey: 'nav.tracks', to: '/tracks' },
+  { icon: 'waveform', labelKey: 'nav.library', to: '/library' },
+  { icon: 'download', labelKey: 'nav.exports', to: '/exports' },
 ];
 
 export const SOCIAL_ITEMS: NavItemDef[] = [
-  { badge: '58', icon: 'users', label: 'Following', to: '/following' },
-  { badge: '2', badgeColor: 'var(--color-red)', icon: 'chat', label: 'Messages', to: '/messages' },
-  { icon: 'heart', label: 'Liked', to: '/liked' },
-  { icon: 'list', label: 'Playlists', to: '/playlists' },
+  { badge: '58', icon: 'users', labelKey: 'nav.following', to: '/following' },
+  { badge: '2', badgeColor: 'var(--color-red)', icon: 'chat', labelKey: 'nav.messages', to: '/messages' },
+  { icon: 'heart', labelKey: 'nav.liked', to: '/liked' },
+  { icon: 'list', labelKey: 'nav.playlists', to: '/playlists' },
 ];

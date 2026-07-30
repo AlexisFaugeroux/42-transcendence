@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useUser } from '@transcendence/auth';
 import type { LoginBody } from '@transcendence/auth';
+import { useTranslation } from '@transcendence/i18n';
 import { Button, Form, Input, MsnIcon, MsnWordmark, theme } from '@transcendence/ui';
 import { type JSX } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -12,13 +13,14 @@ export default function Login(): JSX.Element {
   const [form] = Form.useForm<LoginBody>();
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { isPending, mutate: loginMutation } = useMutation({
     mutationFn: login,
     onError: () => {
       form.setFields([
-        { errors: ['Invalid email or password.'], name: 'email' },
-        { errors: ['Invalid email or password.'], name: 'password' },
+        { errors: [t('auth.login.invalidCredentials')], name: 'email' },
+        { errors: [t('auth.login.invalidCredentials')], name: 'password' },
       ]);
     },
     onSuccess: () => {
@@ -44,49 +46,49 @@ export default function Login(): JSX.Element {
 
       <main className={styles.main}>
         <div className={styles.cardWrap}>
-          <div className={styles.eyebrow}>Welcome back</div>
-          <h1 className={styles.title}>Log in to MakeSomeNoise</h1>
-          <p className={styles.subtitle}>Pick up your session, your friends, your beats.</p>
+          <div className={styles.eyebrow}>{t('auth.login.eyebrow')}</div>
+          <h1 className={styles.title}>{t('auth.login.title')}</h1>
+          <p className={styles.subtitle}>{t('auth.login.subtitle')}</p>
 
           <div className={styles.card}>
             <Form form={form} layout="vertical" requiredMark={false} onFinish={onFinish}>
               <Form.Item
-                label="Email"
+                label={t('auth.fields.email')}
                 name="email"
                 rules={[
-                  { message: 'Please enter your email.', required: true },
-                  { message: "That doesn't look like a valid email.", type: 'email' },
+                  { message: t('auth.validation.emailRequired'), required: true },
+                  { message: t('auth.validation.emailInvalid'), type: 'email' },
                 ]}
               >
                 <Input size="large" placeholder="you@example.com" autoFocus autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="Password"
+                label={t('auth.fields.password')}
                 name="password"
-                rules={[{ message: 'Please enter your password.', required: true }]}
+                rules={[{ message: t('auth.validation.passwordRequired'), required: true }]}
               >
-                <Input.Password size="large" placeholder="Your password" />
+                <Input.Password size="large" placeholder={t('auth.login.passwordPlaceholder')} />
               </Form.Item>
 
               <div className={styles.forgotRow}>
                 <a className={styles.link} href="#">
-                  Forgot password?
+                  {t('auth.login.forgotPassword')}
                 </a>
               </div>
 
               <Form.Item>
                 <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={isPending}>
-                  {isPending ? 'SIGNING IN…' : 'LOG IN →'}
+                  {isPending ? t('auth.login.submitting') : t('auth.login.submit')}
                 </Button>
               </Form.Item>
             </Form>
           </div>
 
           <div className={styles.footer}>
-            New here?{' '}
+            {t('auth.login.newHere')}{' '}
             <a className={styles.link} href="/register">
-              Create an account →
+              {t('auth.login.createAccount')}
             </a>
           </div>
         </div>

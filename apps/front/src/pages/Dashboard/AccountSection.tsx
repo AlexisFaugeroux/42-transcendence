@@ -1,5 +1,6 @@
 import { type UseMutateFunction, useMutation } from '@tanstack/react-query';
 import type { AuthUser } from '@transcendence/auth';
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, CheckOutlined, CloseCircleOutlined, Form, Input, notification, theme } from '@transcendence/ui';
 import { type Dispatch, type JSX, type SetStateAction, useState } from 'react';
 import { updateUserPassword } from '../../api/user';
@@ -20,23 +21,26 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [passwordForm] = Form.useForm<{ oldPassword: string; newPassword: string }>();
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   // Live value for the strength meter, same pattern as Register.tsx.
   const newPassword = Form.useWatch('newPassword', passwordForm) || '';
 
-  const openSuccessNotification = (field: string) => {
+  // A key per field rather than an interpolated noun: "Your {{field}} has been
+  // updated" cannot be translated correctly for arbitrary nouns.
+  const openSuccessNotification = (titleKey: TranslationKey) => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
       duration: 3,
       icon: <CheckOutlined color={theme.green} />,
       key,
-      title: `Your ${field} has been updated`,
+      title: t(titleKey),
     });
   };
 
-  const openErrorNotification = (error: Error, field: string) => {
+  const openErrorNotification = (error: Error, titleKey: TranslationKey) => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
@@ -44,19 +48,19 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: `Your ${field} could not be updated`,
+      title: t(titleKey),
     });
   };
 
   const { mutate: updateUserPasswordMutation } = useMutation({
     mutationFn: updateUserPassword,
     onError: (error) => {
-      openErrorNotification(error, 'password');
+      openErrorNotification(error, 'settings.account.passwordUpdateFailed');
     },
     onSuccess: () => {
       passwordForm.resetFields();
       setIsEditingPassword(false);
-      openSuccessNotification('password');
+      openSuccessNotification('settings.account.passwordUpdated');
     },
   });
 
@@ -74,7 +78,7 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
     saveProfile(form, {
       onSuccess: () => {
         setIsEditingEmail(false);
-        openSuccessNotification('email');
+        openSuccessNotification('settings.account.emailUpdated');
       },
     });
   };
@@ -99,10 +103,10 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
   return (
     <div>
       {notificationContext}
-      <SectionHeader title="Account" subtitle="Login credentials and security." />
+      <SectionHeader title={t('settings.account.title')} subtitle={t('settings.account.subtitle')} />
 
       <Card>
-        <Row label="Email">
+        <Row label={t('auth.fields.email')}>
           <div className={styles.line}>
             <FieldText
               editing={isEditingEmail}
@@ -114,22 +118,22 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
             {isEditingEmail ? (
               <>
                 <Button size="small" onClick={saveEmail}>
-                  Save
+                  {t('common.save')}
                 </Button>
                 <Button size="small" danger onClick={cancelEmail}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </>
             ) : (
               <Button size="small" onClick={startEditingEmail}>
-                Change email
+                {t('settings.account.changeEmail')}
               </Button>
             )}
           </div>
         </Row>
         <Hr />
 
-        <Row label="Password">
+        <Row label={t('auth.fields.password')}>
           {isEditingPassword ? (
             <Form
               form={passwordForm}
@@ -139,24 +143,27 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
               style={{ width: '100%' }}
             >
               <Form.Item
-                label="Old password"
+                label={t('settings.account.oldPassword')}
                 name="oldPassword"
                 style={{ marginBottom: 12 }}
-                rules={[{ message: 'Please enter your current password.', required: true }]}
+                rules={[{ message: t('settings.account.oldPasswordRequired'), required: true }]}
               >
-                <Input.Password placeholder="Current password" autoComplete="current-password" />
+                <Input.Password
+                  placeholder={t('settings.account.currentPasswordPlaceholder')}
+                  autoComplete="current-password"
+                />
               </Form.Item>
 
               <Form.Item
-                label="New password"
+                label={t('settings.account.newPassword')}
                 name="newPassword"
                 style={{ marginBottom: 8 }}
                 rules={[
-                  { message: 'Please choose a password.', required: true },
-                  { message: 'At least 10 characters.', min: 10 },
+                  { message: t('auth.validation.passwordChoose'), required: true },
+                  { message: t('auth.validation.minChars', { count: 10 }), min: 10 },
                 ]}
               >
-                <Input.Password placeholder="At least 10 characters" autoComplete="new-password" />
+                <Input.Password placeholder={t('auth.register.passwordPlaceholder')} autoComplete="new-password" />
               </Form.Item>
 
               {/* Same strength meter as the signup page; renders nothing while empty. */}
@@ -164,10 +171,10 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
 
               <div className={styles.line}>
                 <Button size="small" htmlType="submit">
-                  Save
+                  {t('common.save')}
                 </Button>
                 <Button size="small" danger htmlType="button" onClick={cancelPassword}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </div>
             </Form>
@@ -175,14 +182,14 @@ export function AccountSection({ form, saved, saveProfile, setField, setForm }: 
             <div className={styles.line}>
               <FieldText editing={false} value="••••••••••••" />
               <Button size="small" onClick={startEditingPassword}>
-                Change password
+                {t('settings.account.changePassword')}
               </Button>
             </div>
           )}
         </Row>
         <Hr />
 
-        <Row label="Member since">
+        <Row label={t('settings.account.memberSince')}>
           {/* TODO: use Dayjs for date formatting*/}
           <span className={styles.mono}>{saved.joined.toString()}</span>
         </Row>

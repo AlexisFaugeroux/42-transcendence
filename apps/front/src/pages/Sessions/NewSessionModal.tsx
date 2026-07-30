@@ -1,13 +1,8 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Input, Modal, MsnIcon } from '@transcendence/ui';
 import { type CSSProperties, type JSX, useState } from 'react';
 import styles from './NewSessionModal.module.scss';
-import { SESS_TYPES, type SessionType, TYPE_COLOR, TYPE_ICON } from './sessions.data';
-
-const DESCRIPTIONS: Record<SessionType, string> = {
-  mixing: 'Stems in, mix out. Faders, busses, FX chains.',
-  production: 'Full DAW: tracks, MIDI, effects, automation.',
-  recording: 'Get a take down. Multi-mic, punch-in, comp.',
-};
+import { SESS_TYPES, type SessionType, TYPE_COLOR, TYPE_DESCRIPTION, TYPE_ICON, TYPE_LABEL } from './sessions.data';
 
 interface NewSessionModalProps {
   open: boolean;
@@ -16,10 +11,18 @@ interface NewSessionModalProps {
 
 export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.Element {
   const [picked, setPicked] = useState<SessionType>('production');
+  const { t } = useTranslation();
 
   return (
-    <Modal open={open} title="Start a new session" width={560} okText="Create & open" onOk={onClose} onCancel={onClose}>
-      <p className={styles.lead}>Pick the kind of session, then we&apos;ll set up the right workspace.</p>
+    <Modal
+      open={open}
+      title={t('sessions.new.title')}
+      width={560}
+      okText={t('sessions.new.submit')}
+      onOk={onClose}
+      onCancel={onClose}
+    >
+      <p className={styles.lead}>{t('sessions.new.lead')}</p>
 
       <div className={styles.types}>
         {SESS_TYPES.map((type) => (
@@ -34,20 +37,20 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
             }}
           >
             <span className={styles.typeHead}>
-              <MsnIcon name={TYPE_ICON[type]} size="18px" /> {type}
+              <MsnIcon name={TYPE_ICON[type]} size="18px" /> {t(TYPE_LABEL[type])}
             </span>
-            <span className={styles.typeDesc}>{DESCRIPTIONS[type]}</span>
+            <span className={styles.typeDesc}>{t(TYPE_DESCRIPTION[type])}</span>
           </button>
         ))}
       </div>
 
       <div className={styles.fields}>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>Title</span>
-          <Input placeholder="Untitled session" />
+          <span className={styles.fieldLabel}>{t('sessions.new.titleField')}</span>
+          <Input placeholder={t('sessions.new.titlePlaceholder')} />
         </label>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>BPM</span>
+          <span className={styles.fieldLabel}>{t('sessions.new.bpmField')}</span>
           <Input placeholder="120" />
         </label>
       </div>

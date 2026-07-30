@@ -1,86 +1,128 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
 
 export interface Feature {
+  id: string;
   icon: MsnIconLabel;
   color: string;
-  title: string;
-  desc: string;
-  bullets: string[];
+  titleKey: TranslationKey;
+  descKey: TranslationKey;
+  bulletKeys: TranslationKey[];
 }
 
 export const FEATURES: Feature[] = [
   {
-    bullets: ['Step sequencer', 'Loop crates', 'MIDI editor', 'Sample library'],
+    bulletKeys: [
+      'landing.features.beatMaker.bullets.sequencer',
+      'landing.features.beatMaker.bullets.crates',
+      'landing.features.beatMaker.bullets.midi',
+      'landing.features.beatMaker.bullets.library',
+    ],
     color: 'hsl(25, 90%, 55%)',
-    desc: 'Drum scheduler, loops, instrument tracks and a timeline. Build a song in your tab.',
+    descKey: 'landing.features.beatMaker.desc',
     icon: 'produce',
-    title: 'Beat maker',
+    id: 'beatMaker',
+    titleKey: 'landing.features.beatMaker.title',
   },
   {
-    bullets: ['Multitrack', 'Punch-in', 'Latency comp', 'Take comping'],
+    bulletKeys: [
+      'landing.features.recording.bullets.multitrack',
+      'landing.features.recording.bullets.punchIn',
+      'landing.features.recording.bullets.latency',
+      'landing.features.recording.bullets.comping',
+    ],
     color: 'hsl(8, 85%, 55%)',
-    desc: 'Capture vocals, instruments or field audio with monitoring and overdubs.',
+    descKey: 'landing.features.recording.desc',
     icon: 'record',
-    title: 'Recording',
+    id: 'recording',
+    titleKey: 'landing.features.recording.title',
   },
   {
-    bullets: ['Channel strips', 'Sends & busses', 'EQ + comp', 'MP3 / WAV export'],
+    bulletKeys: [
+      'landing.features.mixer.bullets.strips',
+      'landing.features.mixer.bullets.sends',
+      'landing.features.mixer.bullets.eq',
+      'landing.features.mixer.bullets.export',
+    ],
     color: 'hsl(210, 90%, 50%)',
-    desc: 'Channel strips, sends, busses, EQ. Bounce to MP3, WAV, or stream to your profile.',
+    descKey: 'landing.features.mixer.desc',
     icon: 'mix',
-    title: 'Mixer & export',
+    id: 'mixer',
+    titleKey: 'landing.features.mixer.title',
   },
   {
-    bullets: ['Live sessions', 'Synced cursor', 'Listener counts', 'Replay'],
+    bulletKeys: [
+      'landing.features.streaming.bullets.live',
+      'landing.features.streaming.bullets.cursor',
+      'landing.features.streaming.bullets.listeners',
+      'landing.features.streaming.bullets.replay',
+    ],
     color: 'hsl(190, 75%, 50%)',
-    desc: 'Push live takes and finished tracks to listeners with a synced waveform UI.',
+    descKey: 'landing.features.streaming.desc',
     icon: 'waveform',
-    title: 'Waveform streaming',
+    id: 'streaming',
+    titleKey: 'landing.features.streaming.title',
   },
   {
-    bullets: ['Profiles', 'Follows', 'Playlists', 'Re-posts'],
+    bulletKeys: [
+      'landing.features.social.bullets.profiles',
+      'landing.features.social.bullets.follows',
+      'landing.features.social.bullets.playlists',
+      'landing.features.social.bullets.reposts',
+    ],
     color: 'hsl(140, 65%, 45%)',
-    desc: 'Followers, playlists, likes, profiles. Find collaborators and build an audience.',
+    descKey: 'landing.features.social.desc',
     icon: 'users',
-    title: 'Profiles & social',
+    id: 'social',
+    titleKey: 'landing.features.social.title',
   },
   {
-    bullets: ['DMs', 'Group chat', 'Shared sessions', 'Stem swap'],
+    bulletKeys: [
+      'landing.features.chat.bullets.dms',
+      'landing.features.chat.bullets.group',
+      'landing.features.chat.bullets.shared',
+      'landing.features.chat.bullets.stems',
+    ],
     color: 'hsl(280, 65%, 60%)',
-    desc: 'DM another producer or open a shared session. Trade stems without leaving the page.',
+    descKey: 'landing.features.chat.desc',
     icon: 'chat',
-    title: 'Chat & sessions',
+    id: 'chat',
+    titleKey: 'landing.features.chat.title',
   },
 ];
 
 export interface DeepDive {
-  eyebrow: string;
-  title: string;
-  body: string;
+  id: string;
   accent: string;
+  eyebrowKey: TranslationKey;
+  titleKey: TranslationKey;
+  bodyKey: TranslationKey;
   image: string;
 }
 
 export const DEEP_DIVES: DeepDive[] = [
   {
     accent: 'hsl(25, 90%, 55%)',
-    body: 'Schedule beats on a step grid, swap kits with a keystroke, automate any parameter on the fly. Loop crates and a global metronome keep the groove tight.',
-    eyebrow: 'PRODUCTION',
+    bodyKey: 'landing.deepDives.production.body',
+    eyebrowKey: 'landing.deepDives.production.eyebrow',
+    id: 'production',
     image: 'DAW — step sequencer, sampler, drum kit',
-    title: 'A DAW in the browser, accessible anywhere',
+    titleKey: 'landing.deepDives.production.title',
   },
   {
     accent: 'hsl(8, 85%, 55%)',
-    body: 'Go live with one click. Listeners see the same waveform you see, comment on specific bars, and clip their favourite moments. Replays stay in your profile.',
-    eyebrow: 'STREAMING',
+    bodyKey: 'landing.deepDives.streaming.body',
+    eyebrowKey: 'landing.deepDives.streaming.eyebrow',
+    id: 'streaming',
     image: 'STREAM_SCREENSHOT — live session view with listener cursors',
-    title: 'Stream a session. Watch listeners arrive.',
+    titleKey: 'landing.deepDives.streaming.title',
   },
   {
     accent: 'hsl(210, 90%, 50%)',
-    body: 'Pre-built busses, sends to anywhere, EQ and comp on every channel. Master out to your profile or download a clean WAV.',
-    eyebrow: 'MIXING',
+    bodyKey: 'landing.deepDives.mixing.body',
+    eyebrowKey: 'landing.deepDives.mixing.eyebrow',
+    id: 'mixing',
     image: 'MIXER_SCREENSHOT — channel strip mixer with master meter',
-    title: "Channel strips that don't get in your way.",
+    titleKey: 'landing.deepDives.mixing.title',
   },
 ];

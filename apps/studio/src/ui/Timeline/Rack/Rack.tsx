@@ -1,4 +1,5 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
+import { useTranslation } from '@transcendence/i18n';
 import { Dropdown, IconBtn, MsnKnob, MsnPill, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
@@ -14,6 +15,7 @@ interface RackProps {
 export function Rack({ track }: RackProps): JSX.Element {
   const { project } = useProject();
   const { setTracks, tracks } = useTracks();
+  const { t } = useTranslation();
 
   const adapter = project.boxAdapters.adapterFor(track.audioUnitBox, AudioUnitBoxAdapter);
   const volumeParam = adapter.namedParameter.volume;
@@ -131,7 +133,7 @@ export function Rack({ track }: RackProps): JSX.Element {
                   />
                 ),
                 key: 'delete',
-                label: 'Delete',
+                label: t('common.delete'),
                 style: {
                   fontSize: '10px',
                 },

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { Trans, useTranslation } from '@transcendence/i18n';
 import { Button, CheckOutlined, CloseCircleOutlined, Input, Modal, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,18 +16,18 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState('');
   const [reason, setReason] = useState('');
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const openSuccessNotification = () => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
-      description:
-        " We're sorry to see you leave. All your data were deleted. That includes your projects, tracks and samples.",
+      description: t('settings.danger.deletedDescription'),
       duration: 5,
       icon: <CheckOutlined color={theme.green} />,
       key,
-      title: 'Your account has been delete',
+      title: t('settings.danger.deletedTitle'),
     });
   };
 
@@ -38,7 +39,7 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: 'An error occured while deleting you account',
+      title: t('settings.danger.deleteFailed'),
     });
   };
 
@@ -71,17 +72,16 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
     <div>
       {notificationContext}
       <SectionHeader
-        title={<span className={styles.dangerTitle}>Danger zone</span>}
-        subtitle="Irreversible actions. Read carefully."
+        title={<span className={styles.dangerTitle}>{t('settings.danger.title')}</span>}
+        subtitle={t('settings.danger.subtitle')}
       />
 
       <div className={styles.card}>
         <div className={styles.body}>
           <div className={styles.text}>
-            <h3 className={styles.heading}>Delete this account</h3>
+            <h3 className={styles.heading}>{t('settings.danger.heading')}</h3>
             <p className={styles.desc}>
-              Permanently remove your profile, sessions you own, uploads, and history. Collaborators on shared sessions
-              will keep their copies. <strong>This cannot be undone.</strong>
+              <Trans i18nKey="settings.danger.desc" components={{ strong: <strong /> }} />
             </p>
           </div>
           <Button
@@ -90,31 +90,30 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
               setOpen(true);
             }}
           >
-            Delete account
+            {t('settings.danger.action')}
           </Button>
         </div>
       </div>
 
       <Modal
         open={open}
-        title="Delete your account?"
-        okText="Yes, delete forever"
+        title={t('settings.danger.modalTitle')}
+        okText={t('settings.danger.modalConfirm')}
         okButtonProps={{ danger: true, disabled: !matches }}
-        cancelText="Cancel"
+        cancelText={t('common.cancel')}
         onOk={confirmDelete}
         onCancel={close}
       >
         <p className={styles.modalText}>
-          This will <strong>permanently delete</strong> your profile, owned sessions, sounds and history. There is no
-          undo.
+          <Trans i18nKey="settings.danger.modalBody" components={{ strong: <strong /> }} />
         </p>
 
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>Why are you leaving? (optional)</span>
+          <span className={styles.fieldLabel}>{t('settings.danger.reasonLabel')}</span>
           <Input.TextArea
             value={reason}
             rows={2}
-            placeholder="So we can do better next time"
+            placeholder={t('settings.danger.reasonPlaceholder')}
             onChange={(event) => {
               setReason(event.target.value);
             }}
@@ -123,7 +122,11 @@ export function DangerSection({ handle }: DangerSectionProps): JSX.Element {
 
         <label className={styles.field}>
           <span className={styles.fieldLabel}>
-            Type <code className={styles.code}>{handle}</code> to confirm
+            <Trans
+              i18nKey="settings.danger.confirmLabel"
+              components={{ code: <code className={styles.code} /> }}
+              values={{ handle }}
+            />
           </span>
           <Input
             value={typed}

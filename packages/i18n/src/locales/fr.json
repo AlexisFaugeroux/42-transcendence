@@ -1,0 +1,631 @@
+{
+  "auth": {
+    "fields": {
+      "artistName": "Nom d'artiste",
+      "email": "E-mail",
+      "firstname": "Prénom",
+      "handle": "Pseudo",
+      "lastname": "Nom",
+      "password": "Mot de passe"
+    },
+    "login": {
+      "action": "Se connecter",
+      "createAccount": "Créer un compte →",
+      "eyebrow": "Content de vous revoir",
+      "forgotPassword": "Mot de passe oublié ?",
+      "invalidCredentials": "E-mail ou mot de passe incorrect.",
+      "newHere": "Nouveau ici ?",
+      "passwordPlaceholder": "Votre mot de passe",
+      "submit": "Connexion →",
+      "submitting": "Connexion…",
+      "subtitle": "Retrouvez votre session, vos amis, vos beats.",
+      "title": "Connexion à MakeSomeNoise"
+    },
+    "passwordStrength": {
+      "excellent": "Excellent",
+      "good": "Bon",
+      "ok": "Correct",
+      "strong": "Solide",
+      "tooShort": "Trop court",
+      "weak": "Faible"
+    },
+    "register": {
+      "action": "Inscription gratuite",
+      "alreadyTaken": "E-mail, nom d'artiste ou pseudo déjà utilisé.",
+      "artistNameHint": "Votre nom de producteur public. Affiché sur votre profil et vos morceaux.",
+      "eyebrow": "C'est parti",
+      "handleHint": "Utilisé dans l'URL de votre profil : makesomenoise.fm/@…",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Se connecter →",
+      "passwordPlaceholder": "10 caractères minimum",
+      "submit": "Créer le compte",
+      "submitting": "Création du compte…",
+      "subtitle": "Gratuit pendant la bêta. Aucun traçage, aucune carte bancaire.",
+      "successDescription": "Vous allez être redirigé vers la page de connexion dans quelques secondes",
+      "successTitle": "Votre inscription est confirmée !",
+      "termsNotice": "En créant un compte, vous acceptez nos <terms>conditions d'utilisation</terms> et notre <privacy>politique de confidentialité</privacy>.",
+      "title": "Créer votre compte"
+    },
+    "validation": {
+      "artistNameRequired": "Veuillez choisir un nom d'artiste.",
+      "emailInvalid": "Cet e-mail ne semble pas valide.",
+      "emailRequired": "Veuillez saisir votre e-mail.",
+      "firstnameRequired": "Veuillez saisir votre prénom.",
+      "handlePattern": "Uniquement lettres, chiffres, point et tiret bas.",
+      "handleRequired": "Veuillez choisir un pseudo.",
+      "lastnameRequired": "Veuillez saisir votre nom.",
+      "minChars_one": "{{count}} caractère minimum.",
+      "minChars_other": "{{count}} caractères minimum.",
+      "passwordChoose": "Veuillez choisir un mot de passe.",
+      "passwordRequired": "Veuillez saisir votre mot de passe."
+    }
+  },
+  "common": {
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "download": "Télécharger",
+    "edit": "Modifier",
+    "language": "Langue",
+    "loading": "Chargement…",
+    "remove": "Retirer",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "yes": "Oui"
+  },
+  "header": {
+    "home": "Accueil",
+    "library": "Bibliothèque",
+    "logout": "Déconnexion",
+    "logoutError": "Une erreur est survenue lors de la déconnexion",
+    "notifications": "Notifications",
+    "privacyTerms": "Confidentialité",
+    "sessions": "Sessions",
+    "settings": "Paramètres"
+  },
+  "home": {
+    "activity": {
+      "title": "Activité récente"
+    },
+    "greeting": {
+      "startNew": "Démarrer une nouvelle session",
+      "subtitle": "Reprenez où vous en étiez, ou lancez quelque chose de neuf.",
+      "title": "Bonsoir {{name}}."
+    },
+    "kind": {
+      "mixing": "mixage",
+      "production": "production",
+      "recording": "enregistrement"
+    },
+    "rail": {
+      "connected": "Connectés",
+      "invite": "Inviter en session",
+      "liveNow": "En direct",
+      "online": "En ligne",
+      "onlineCount_one": "{{count}} en ligne",
+      "onlineCount_other": "{{count}} en ligne"
+    },
+    "saved": {
+      "bpm": "{{bpm}} BPM",
+      "count_one": "{{count}} session",
+      "count_other": "{{count}} sessions",
+      "noKey": "sans tonalité",
+      "scrollLeft": "Défiler vers la gauche",
+      "scrollRight": "Défiler vers la droite",
+      "title": "Reprendre une session enregistrée",
+      "viewAll": "Tout voir"
+    },
+    "sessionTypes": {
+      "mix": {
+        "blurb": "Ouvrez la table de mixage. EQ, départs, bus et export master.",
+        "meta": {
+          "export": "Export",
+          "sends": "Départs",
+          "strips": "Tranches"
+        },
+        "title": "Session de mixage"
+      },
+      "produce": {
+        "blurb": "Beat maker, séquenceur de batterie, boucles et pistes d'instruments sur la timeline.",
+        "meta": {
+          "beatMaker": "Beat maker",
+          "loops": "Boucles",
+          "midi": "MIDI"
+        },
+        "title": "Production musicale"
+      },
+      "record": {
+        "blurb": "Capturez voix, instruments ou sons de terrain. Multipiste avec écoute et overdubs.",
+        "meta": {
+          "monitor": "Écoute",
+          "multitrack": "Multipiste",
+          "overdub": "Overdub"
+        },
+        "title": "Session d'enregistrement"
+      }
+    },
+    "topBar": {
+      "searchPlaceholder": "Rechercher des sessions, samples, amis…"
+    }
+  },
+  "landing": {
+    "community": {
+      "body": "Diffusez vos sessions en direct. Ajoutez vos morceaux à des playlists partagées. Écrivez à un autre producteur pour échanger des stems. Likes, abonnements et commentaires rattachés à la forme d'onde elle-même — le retour arrive sur la mesure concernée.",
+      "bullets": {
+        "likes": "Likes et commentaires épinglés à un instant",
+        "messaging": "Messages privés et discussions de groupe",
+        "playlists": "Playlists partagées et repartages",
+        "presence": "Profils, abonnements et présence en direct"
+      },
+      "eyebrow": "Communauté",
+      "title": "Un public intégré.",
+      "titleAccent": "Dès le premier beat."
+    },
+    "cta": {
+      "sub": "Gratuit pendant la bêta. Sans carte bancaire. Vos sessions restent les vôtres.",
+      "title": "Appuyez sur rec.",
+      "titleAccent": "Make some noise."
+    },
+    "deepDives": {
+      "learnMore": "En savoir plus",
+      "mixing": {
+        "body": "Bus préconfigurés, départs vers n'importe où, EQ et compression sur chaque canal. Sortez le master vers votre profil ou téléchargez un WAV propre.",
+        "eyebrow": "Mixage",
+        "title": "Des tranches de console qui ne vous gênent pas."
+      },
+      "production": {
+        "body": "Programmez vos beats sur une grille, changez de kit d'une touche, automatisez n'importe quel paramètre à la volée. Les caisses de boucles et un métronome global gardent le groove en place.",
+        "eyebrow": "Production",
+        "title": "Un DAW dans le navigateur, accessible partout"
+      },
+      "streaming": {
+        "body": "Passez en direct d'un clic. Les auditeurs voient la même forme d'onde que vous, commentent des mesures précises et découpent leurs moments préférés. Les rediffusions restent sur votre profil.",
+        "eyebrow": "Diffusion",
+        "title": "Diffusez une session. Regardez les auditeurs arriver."
+      }
+    },
+    "features": {
+      "beatMaker": {
+        "bullets": {
+          "crates": "Caisses de boucles",
+          "library": "Bibliothèque de samples",
+          "midi": "Éditeur MIDI",
+          "sequencer": "Séquenceur pas à pas"
+        },
+        "desc": "Séquenceur de batterie, boucles, pistes d'instruments et timeline. Composez un morceau dans votre onglet.",
+        "title": "Beat maker"
+      },
+      "chat": {
+        "bullets": {
+          "dms": "Messages privés",
+          "group": "Discussions de groupe",
+          "shared": "Sessions partagées",
+          "stems": "Échange de stems"
+        },
+        "desc": "Écrivez à un autre producteur ou ouvrez une session partagée. Échangez des stems sans quitter la page.",
+        "title": "Chat & sessions"
+      },
+      "eyebrow": "Ce que ça fait",
+      "mixer": {
+        "bullets": {
+          "eq": "EQ + compression",
+          "export": "Export MP3 / WAV",
+          "sends": "Départs & bus",
+          "strips": "Tranches de console"
+        },
+        "desc": "Tranches de console, départs, bus, EQ. Exportez en MP3, WAV, ou diffusez sur votre profil.",
+        "title": "Mixage & export"
+      },
+      "recording": {
+        "bullets": {
+          "comping": "Montage de prises",
+          "latency": "Compensation de latence",
+          "multitrack": "Multipiste",
+          "punchIn": "Punch-in"
+        },
+        "desc": "Capturez voix, instruments ou sons de terrain avec écoute et overdubs.",
+        "title": "Enregistrement"
+      },
+      "social": {
+        "bullets": {
+          "follows": "Abonnements",
+          "playlists": "Playlists",
+          "profiles": "Profils",
+          "reposts": "Repartages"
+        },
+        "desc": "Abonnés, playlists, likes, profils. Trouvez des collaborateurs et construisez votre audience.",
+        "title": "Profils & social"
+      },
+      "streaming": {
+        "bullets": {
+          "cursor": "Curseur synchronisé",
+          "listeners": "Compteur d'auditeurs",
+          "live": "Sessions en direct",
+          "replay": "Rediffusion"
+        },
+        "desc": "Envoyez vos prises en direct et vos morceaux finis aux auditeurs avec une forme d'onde synchronisée.",
+        "title": "Diffusion en forme d'onde"
+      },
+      "sub": "Tous les outils pour passer de l'idée à la sortie, plus un public en direct qui l'entend avant tout le monde.",
+      "title": "Un studio, une scène et une communauté — dans un seul onglet."
+    },
+    "footer": {
+      "community": {
+        "discord": "Discord",
+        "discover": "Découvrir",
+        "liveNow": "En direct",
+        "newsletter": "Newsletter",
+        "playlists": "Playlists",
+        "title": "Communauté"
+      },
+      "company": {
+        "about": "À propos",
+        "contact": "Contact",
+        "press": "Kit presse",
+        "title": "Entreprise"
+      },
+      "copyright": "© {{year}} MakeSomeNoise. Fait avec ♥.",
+      "product": {
+        "beatMaker": "Beat maker",
+        "features": "Fonctionnalités",
+        "mixer": "Mixage",
+        "recording": "Enregistrement",
+        "stream": "Diffusion",
+        "title": "Produit"
+      },
+      "resources": {
+        "changelog": "Journal des versions",
+        "manuals": "Manuels",
+        "roadmap": "Feuille de route",
+        "status": "État du service",
+        "title": "Ressources",
+        "tutorials": "Tutoriels"
+      },
+      "tagline": "Un studio dans le navigateur avec un public intégré. Sans installation, sans traçage."
+    },
+    "hero": {
+      "badge": "Bêta · accès ouvert",
+      "lead": "MakeSomeNoise est un studio dans le navigateur pour produire des beats, enregistrer des sessions et mixer des morceaux — avec un public intégré. Diffusez en direct, partagez vos formes d'onde et échangez avec d'autres producteurs sans quitter la page.",
+      "noInstall": "Aucune installation. Tout tourne dans le navigateur.",
+      "producers": "<strong>{{total, number}}+ producteurs</strong> font déjà du bruit",
+      "titleLine1": "Faites des beats.",
+      "titleLine2": "Enregistrez vos prises.",
+      "titleLine3": "Make some noise.",
+      "watchDemo": "Voir une démo"
+    },
+    "nav": {
+      "community": "Communauté",
+      "features": "Fonctionnalités",
+      "makeBeats": "Faire des beats",
+      "manuals": "Manuels",
+      "stream": "Diffuser"
+    },
+    "stats": {
+      "downloads": "téléchargement requis",
+      "inBrowser": "audio dans le navigateur",
+      "producers": "producteurs actifs",
+      "streamed": "morceaux diffusés"
+    }
+  },
+  "legal": {
+    "cookies": {
+      "navLabel": "Cookies"
+    },
+    "mentions": {
+      "navLabel": "Mentions légales"
+    },
+    "privacy": {
+      "navLabel": "Confidentialité"
+    },
+    "terms": {
+      "navLabel": "CGU"
+    }
+  },
+  "nav": {
+    "exports": "Exports",
+    "following": "Abonnements",
+    "home": "Accueil",
+    "library": "Bibliothèque",
+    "liked": "Favoris",
+    "messages": "Messages",
+    "mySessions": "Mes sessions",
+    "playlists": "Playlists",
+    "social": "Social",
+    "storage": "Stockage",
+    "storageUsage": "{{used, number}} / {{total, number}} Go",
+    "tracks": "Morceaux",
+    "workspace": "Espace de travail"
+  },
+  "samples": {
+    "addSample": "Ajouter un sample",
+    "bpm": "{{bpm}} BPM",
+    "delete": {
+      "bodyMulti": "Ces fichiers seront retirés de votre bibliothèque. Les sessions qui les utilisent risquent de planter.",
+      "bodyOne": "Le fichier <code>{{name}}</code> sera retiré de votre bibliothèque. Les sessions qui l'utilisent risquent de planter",
+      "failedTitle": "Suppression échouée",
+      "partialFailure": "{{kept}} sample(s) sur {{total}} ont été conservés",
+      "successDescription_one": "{{count}} sample retiré de votre bibliothèque",
+      "successDescription_other": "{{count}} samples retirés de votre bibliothèque",
+      "successTitle": "Samples supprimés",
+      "titleMulti_one": "Supprimer {{count}} sample ?",
+      "titleMulti_other": "Supprimer {{count}} samples ?",
+      "titleOne": "Supprimer ce sample ?"
+    },
+    "edit": {
+      "errorTitle": "Impossible d'enregistrer le sample",
+      "successDescription": "{{name}} a été enregistré",
+      "successTitle": "Sample mis à jour",
+      "title": "Modifier le sample"
+    },
+    "empty": {
+      "clearFilters": "Réinitialiser les filtres",
+      "text": "Essayez de réinitialiser les filtres ou de chercher un autre terme.",
+      "title": "Aucun sample ne correspond à ces filtres"
+    },
+    "eyebrow": "Bibliothèque",
+    "fields": {
+      "bpm": "BPM",
+      "family": "Famille",
+      "key": "Tonalité",
+      "kind": "Type",
+      "mode": "Mode",
+      "name": "Nom",
+      "visibility": "Visibilité"
+    },
+    "loadError": "Impossible de charger les samples",
+    "mode": {
+      "major": "Majeur",
+      "minor": "Mineur"
+    },
+    "modeAbbr": {
+      "major": "maj",
+      "minor": "min"
+    },
+    "selection": {
+      "clear": "effacer",
+      "count_one": "{{count}} sélectionné",
+      "count_other": "{{count}} sélectionnés"
+    },
+    "sort": {
+      "bpm": "BPM",
+      "duration": "Durée",
+      "name": "Nom (A→Z)",
+      "recent": "Ajout récent",
+      "size": "Taille"
+    },
+    "soundCount_one": "{{count}} son",
+    "soundCount_other": "{{count}} sons",
+    "storage": {
+      "free": "({{percent}} % — {{free}} libres)",
+      "label": "Stockage"
+    },
+    "storageSummary": "{{used}} utilisés sur {{quota}}",
+    "table": {
+      "actions": "Actions",
+      "bpm": "BPM",
+      "key": "Tonalité",
+      "length": "Durée",
+      "name": "Nom",
+      "size": "Taille",
+      "type": "Type",
+      "waveform": "Forme d'onde"
+    },
+    "title": "Samples",
+    "toolbar": {
+      "allFamilies": "Toutes les familles",
+      "allTypes": "Tous les types",
+      "favorites": "Favoris",
+      "searchPlaceholder": "Rechercher par nom…"
+    },
+    "upload": {
+      "afterUpload": "Après l'envoi",
+      "dropTitle": "Déposez vos fichiers audio ici",
+      "errorTitle": "Envoi échoué",
+      "partialFailure": "{{failed}} fichier(s) sur {{total}} n'ont pas pu être envoyés",
+      "queue_one": "File · {{count}} fichier · {{size}}",
+      "queue_other": "File · {{count}} fichiers · {{size}}",
+      "status": {
+        "error": "erreur",
+        "queued": "en attente",
+        "uploading": "envoi"
+      },
+      "submit_one": "Envoyer {{count}} fichier",
+      "submit_other": "Envoyer {{count}} fichiers",
+      "successDescription_one": "{{count}} sample est désormais disponible dans votre bibliothèque",
+      "successDescription_other": "{{count}} samples sont désormais disponibles dans votre bibliothèque",
+      "successTitle": "Envoi terminé",
+      "title": "Ajouter des samples"
+    },
+    "visibility": {
+      "private": "Privé",
+      "public": "Public",
+      "shared": "Partagé"
+    }
+  },
+  "sessions": {
+    "card": {
+      "actions": "Actions de la session",
+      "archive": "Archiver",
+      "archivedRibbon": "archivée",
+      "bpm": "{{bpm}} BPM",
+      "edited": "Modifiée {{when}}",
+      "exportBounce": "Exporter le bounce",
+      "noBpm": "— BPM",
+      "open": "Ouvrir",
+      "openInEditor": "Ouvrir dans l'éditeur",
+      "rename": "Renommer",
+      "restore": "Restaurer",
+      "unarchive": "Désarchiver"
+    },
+    "counts": "{{active}} active(s) · {{archived}} archivée(s)",
+    "delete": {
+      "body": "<code>{{title}}</code> et toutes ses pistes, automations et modifications seront supprimées définitivement. Les samples référencés depuis votre bibliothèque sont conservés.",
+      "submit": "Supprimer la session",
+      "title": "Supprimer cette session ?"
+    },
+    "emptyArchived": {
+      "text": "Les sessions archivées apparaîtront ici quand vous en aurez terminé avec elles.",
+      "title": "Rien d'archivé"
+    },
+    "emptyOwned": {
+      "action": "Créer votre première session",
+      "text": "Les sessions sont l'endroit où vous enregistrez, produisez et mixez. Lancez la première — ça prend environ trois secondes.",
+      "title": "Aucune session pour l'instant"
+    },
+    "new": {
+      "bpmField": "BPM",
+      "lead": "Choisissez le type de session, puis nous préparerons l'espace de travail adapté.",
+      "submit": "Créer & ouvrir",
+      "title": "Démarrer une nouvelle session",
+      "titleField": "Titre",
+      "titlePlaceholder": "Session sans titre"
+    },
+    "newSession": "Nouvelle session",
+    "noMatches": {
+      "clearFilters": "Réinitialiser les filtres",
+      "text": "Essayez de modifier vos filtres ou de les réinitialiser.",
+      "title": "Aucune session ne correspond à ces filtres"
+    },
+    "rename": {
+      "title": "Renommer la session"
+    },
+    "sort": {
+      "bpm": "BPM",
+      "edited": "Dernière modification",
+      "name": "Nom (A→Z)"
+    },
+    "tabs": {
+      "archived": "Archivées",
+      "owned": "Les miennes"
+    },
+    "title": "Mes sessions",
+    "toolbar": {
+      "all": "Toutes",
+      "allGenres": "Tous les genres",
+      "searchPlaceholder": "Rechercher par titre…"
+    },
+    "type": {
+      "mixing": "mixage",
+      "production": "production",
+      "recording": "enregistrement"
+    },
+    "typeDescription": {
+      "mixing": "Stems en entrée, mix en sortie. Faders, bus, chaînes d'effets.",
+      "production": "DAW complet : pistes, MIDI, effets, automation.",
+      "recording": "Capturez une prise. Multi-micro, punch-in, montage."
+    }
+  },
+  "settings": {
+    "account": {
+      "changeEmail": "Changer d'e-mail",
+      "changePassword": "Changer de mot de passe",
+      "currentPasswordPlaceholder": "Mot de passe actuel",
+      "emailUpdateFailed": "Votre e-mail n'a pas pu être mis à jour",
+      "emailUpdated": "Votre e-mail a été mis à jour",
+      "memberSince": "Membre depuis",
+      "newPassword": "Nouveau mot de passe",
+      "oldPassword": "Ancien mot de passe",
+      "oldPasswordRequired": "Veuillez saisir votre mot de passe actuel.",
+      "passwordUpdateFailed": "Votre mot de passe n'a pas pu être mis à jour",
+      "passwordUpdated": "Votre mot de passe a été mis à jour",
+      "subtitle": "Identifiants de connexion et sécurité.",
+      "title": "Compte"
+    },
+    "danger": {
+      "action": "Supprimer le compte",
+      "confirmLabel": "Saisissez <code>{{handle}}</code> pour confirmer",
+      "deleteFailed": "Une erreur est survenue lors de la suppression de votre compte",
+      "deletedDescription": "Désolés de vous voir partir. Toutes vos données ont été supprimées, y compris vos projets, morceaux et samples.",
+      "deletedTitle": "Votre compte a été supprimé",
+      "desc": "Supprime définitivement votre profil, les sessions dont vous êtes propriétaire, vos envois et votre historique. Les collaborateurs des sessions partagées conservent leurs copies. <strong>Cette action est irréversible.</strong>",
+      "heading": "Supprimer ce compte",
+      "modalBody": "Cette action va <strong>supprimer définitivement</strong> votre profil, vos sessions, vos sons et votre historique. Il n'y a pas de retour en arrière.",
+      "modalConfirm": "Oui, supprimer définitivement",
+      "modalTitle": "Supprimer votre compte ?",
+      "reasonLabel": "Pourquoi partez-vous ? (facultatif)",
+      "reasonPlaceholder": "Pour que nous fassions mieux la prochaine fois",
+      "subtitle": "Actions irréversibles. À lire attentivement.",
+      "title": "Zone dangereuse"
+    },
+    "dirty": {
+      "discard": "Abandonner",
+      "fixFields": "Corrigez les champs signalés avant d'enregistrer.",
+      "unsaved": "Vous avez des modifications non enregistrées."
+    },
+    "nav": {
+      "account": "Compte",
+      "danger": "Zone dangereuse",
+      "label": "Paramètres",
+      "profile": "Profil"
+    },
+    "profile": {
+      "addLink": "Ajouter un lien",
+      "alias": "Nom de producteur",
+      "aliasPlaceholder": "Votre nom d'artiste",
+      "avatar": "Avatar",
+      "bio": "Bio",
+      "bioHint_one": "Jusqu'à {{count}} caractère",
+      "bioHint_other": "Jusqu'à {{count}} caractères",
+      "edit": "Modifier le profil",
+      "editing": "Modification",
+      "handle": "Pseudo",
+      "handleError": "Un pseudo ne peut contenir que des lettres, des chiffres, un point et un tiret bas.",
+      "handleHint": "Utilisé dans votre URL : makesomenoise.fm/@…",
+      "links": "Liens",
+      "linksHint": "Site, SoundCloud, Bandcamp, etc.",
+      "location": "Localisation",
+      "locationPlaceholder": "Ville, pays",
+      "subtitle": "Informations publiques affichées sur votre page de producteur.",
+      "title": "Profil",
+      "updateFailed": "Votre profil n'a pas pu être mis à jour",
+      "updated": "Votre profil a été mis à jour",
+      "uploadImage": "Envoyer une image"
+    },
+    "saveChanges": "Enregistrer les modifications"
+  },
+  "studio": {
+    "addTrack": {
+      "label": "Ajouter une piste",
+      "nano": "Sampler (Nano)",
+      "tape": "Audio (Tape)",
+      "vaporisateur": "Synthé (Vaporisateur)"
+    },
+    "browser": {
+      "devices": "Appareils",
+      "myLibrary": "Ma bibliothèque",
+      "samples": "Samples",
+      "searchPlaceholder": "Chercher un sample",
+      "sharedLibrary": "Bibliothèque partagée",
+      "table": {
+        "bpm": "Bpm",
+        "key": "Tonalité",
+        "name": "Nom"
+      }
+    },
+    "footer": {
+      "latency": "Latence",
+      "latencyValue": "{{ms}} ms",
+      "live_one": "{{count}} en direct",
+      "live_other": "{{count}} en direct",
+      "online": "En ligne",
+      "users": "Utilisateurs"
+    },
+    "header": {
+      "project": "Projet",
+      "redo": "Rétablir",
+      "saved": "enregistré",
+      "undo": "Annuler"
+    },
+    "metrics": {
+      "bar": "mes.",
+      "beat": "temps",
+      "bpm": "bpm",
+      "meter": "mesure"
+    },
+    "panels": {
+      "browser": "Navigateur",
+      "devices": "Appareils",
+      "editor": "Éditeur",
+      "timeline": "Timeline"
+    }
+  }
+}

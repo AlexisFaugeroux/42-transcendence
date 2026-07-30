@@ -13,7 +13,8 @@
     "dev": "vite",
     "fix": "prettier --write . && eslint --fix .",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit"
   },
   "prettier": "@transcendence/prettier-config",
   "dependencies": {
@@ -35,6 +36,7 @@
     "@tanstack/react-query": "5.101.2",
     "@transcendence/auth": "workspace:*",
     "@transcendence/date": "workspace:*",
+    "@transcendence/i18n": "workspace:*",
     "@transcendence/ui": "workspace:*",
     "clsx": "2.1.1",
     "react": "19.2.6",

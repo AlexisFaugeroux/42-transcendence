@@ -1,11 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from '@transcendence/i18n';
 import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { updateSample } from '../../api/audioFile/audioFile';
 import type { UpdateSampleFields } from '../../api/audioFile/types';
+import { MODES, VISIBILITIES } from '../../types/audioFile';
 import type { AudioFile, Family, Key, Kind, Mode } from '../../types/audioFile';
+import { MODE_LABEL, VISIBILITY_LABEL } from './constants';
 import styles from './EditSampleModal.module.scss';
-import { FAMILY_OPTIONS, KEY_OPTIONS, KIND_OPTIONS, MODE_OPTIONS, VISIBILITY_OPTIONS } from './helpers';
+import { FAMILY_OPTIONS, KEY_OPTIONS, KIND_OPTIONS } from './helpers';
 
 interface EditSampleModalProps {
   target: AudioFile | null;
@@ -44,6 +47,7 @@ export function EditSampleModal({
   target,
 }: EditSampleModalProps): JSX.Element {
   const [draft, setDraft] = useState<Draft | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setDraft(target ? toDraft(target) : null);
@@ -57,10 +61,10 @@ export function EditSampleModal({
       return updated;
     },
     onError: (error) => {
-      notifyError('Could not save the sample', error.message);
+      notifyError(t('samples.edit.errorTitle'), error.message);
     },
     onSuccess: (updated) => {
-      notifySuccess('Sample updated', `${updated.name} has been saved`);
+      notifySuccess(t('samples.edit.successTitle'), t('samples.edit.successDescription', { name: updated.name }));
       onCancel();
     },
   });
@@ -78,11 +82,11 @@ export function EditSampleModal({
   return (
     <Modal
       open={target !== null}
-      title="Edit sample"
-      okText="Save"
+      title={t('samples.edit.title')}
+      okText={t('common.save')}
       okButtonProps={{ disabled: !hasChanges || nameIsEmpty }}
       confirmLoading={isPending}
-      cancelText="Cancel"
+      cancelText={t('common.cancel')}
       onOk={() => {
         if (target && hasChanges) save({ fields: changes, id: target.id });
       }}
@@ -92,7 +96,7 @@ export function EditSampleModal({
       {draft ? (
         <div className={styles.form}>
           <label className={styles.field}>
-            <span className={styles.fieldLabel}>Name</span>
+            <span className={styles.fieldLabel}>{t('samples.fields.name')}</span>
             <Input
               value={draft.name}
               status={nameIsEmpty ? 'error' : undefined}
@@ -104,7 +108,7 @@ export function EditSampleModal({
 
           <div className={styles.row}>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>BPM</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.bpm')}</span>
               <InputNumber
                 min={1}
                 max={999}
@@ -118,7 +122,7 @@ export function EditSampleModal({
               />
             </label>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Key</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.key')}</span>
               <Select
                 allowClear
                 placeholder="—"
@@ -130,11 +134,11 @@ export function EditSampleModal({
               />
             </label>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Mode</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.mode')}</span>
               <Select
                 allowClear
                 placeholder="—"
-                options={MODE_OPTIONS}
+                options={MODES.map((mode) => ({ label: t(MODE_LABEL[mode]), value: mode }))}
                 value={draft.mode}
                 onChange={(value: Mode | undefined) => {
                   patch({ mode: value ?? null });
@@ -145,7 +149,7 @@ export function EditSampleModal({
 
           <div className={styles.row}>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Family</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.family')}</span>
               <Select
                 allowClear
                 placeholder="—"
@@ -157,7 +161,7 @@ export function EditSampleModal({
               />
             </label>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Kind</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.kind')}</span>
               <Select
                 allowClear
                 placeholder="—"
@@ -169,9 +173,12 @@ export function EditSampleModal({
               />
             </label>
             <label className={styles.field}>
-              <span className={styles.fieldLabel}>Visibility</span>
+              <span className={styles.fieldLabel}>{t('samples.fields.visibility')}</span>
               <Select
-                options={VISIBILITY_OPTIONS}
+                options={VISIBILITIES.map((visibility) => ({
+                  label: t(VISIBILITY_LABEL[visibility]),
+                  value: visibility,
+                }))}
                 value={draft.visibility}
                 onChange={(value) => {
                   patch({ visibility: value });

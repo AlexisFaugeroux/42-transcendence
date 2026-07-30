@@ -1,6 +1,8 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Button, Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { Family, Kind } from '../../types/audioFile';
+import { SORT_LABEL } from './constants';
 import { FAMILY_OPTIONS, KIND_OPTIONS } from './helpers';
 import styles from './Toolbar.module.scss';
 import type { SortKey } from './types';
@@ -24,6 +26,8 @@ interface ToolbarProps {
   totalCount: number;
 }
 
+const SORT_ORDER: SortKey[] = ['recent', 'name', 'duration', 'size', 'bpm'];
+
 export function Toolbar(props: ToolbarProps): JSX.Element {
   const {
     families,
@@ -41,6 +45,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
     totalCount,
     view,
   } = props;
+  const { t } = useTranslation();
 
   return (
     <div className={styles.toolbar}>
@@ -48,7 +53,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
         className={styles.search}
         allowClear
         prefix={<MsnIcon name="search" size="13px" />}
-        placeholder="Search by name…"
+        placeholder={t('samples.toolbar.searchPlaceholder')}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
@@ -59,7 +64,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
         mode="multiple"
         allowClear
         maxTagCount="responsive"
-        placeholder="All families"
+        placeholder={t('samples.toolbar.allFamilies')}
         value={families}
         onChange={setFamilies}
         options={FAMILY_OPTIONS}
@@ -70,7 +75,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
         mode="multiple"
         allowClear
         maxTagCount="responsive"
-        placeholder="All types"
+        placeholder={t('samples.toolbar.allTypes')}
         value={kinds}
         onChange={setKinds}
         options={KIND_OPTIONS}
@@ -83,7 +88,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
           setFavOnly(!favOnly);
         }}
       >
-        <MsnIcon name="heart" size="11px" /> Favorites
+        <MsnIcon name="heart" size="11px" /> {t('samples.toolbar.favorites')}
       </Button>
 
       <span className={styles.count}>
@@ -93,13 +98,7 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
       <Select
         value={sort}
         onChange={setSort}
-        options={[
-          { label: 'Recently added', value: 'recent' },
-          { label: 'Name (A→Z)', value: 'name' },
-          { label: 'Duration', value: 'duration' },
-          { label: 'Size', value: 'size' },
-          { label: 'BPM', value: 'bpm' },
-        ]}
+        options={SORT_ORDER.map((key) => ({ label: t(SORT_LABEL[key]), value: key }))}
         style={{ width: 160 }}
       />
 

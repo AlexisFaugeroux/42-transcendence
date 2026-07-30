@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './SelectionBar.module.scss';
@@ -9,20 +10,22 @@ interface SelectionBarProps {
 }
 
 export function SelectionBar({ count, onClear, onDelete }: SelectionBarProps): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.bar}>
       <div className={styles.left}>
-        <span className={styles.count}>{count} selected</span>
+        <span className={styles.count}>{t('samples.selection.count', { count })}</span>
         <button className={styles.clear} onClick={onClear}>
-          clear
+          {t('samples.selection.clear')}
         </button>
       </div>
       <div className={styles.actions}>
         <Button size="small">
-          <MsnIcon name="download" size="11px" /> Download
+          <MsnIcon name="download" size="11px" /> {t('common.download')}
         </Button>
         <Button size="small" danger onClick={onDelete}>
-          Delete
+          {t('common.delete')}
         </Button>
       </div>
     </div>

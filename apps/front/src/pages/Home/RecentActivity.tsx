@@ -1,12 +1,15 @@
+import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { ACTIVITY } from './home.data';
 import styles from './RecentActivity.module.scss';
 import { StatusAvatar } from './StatusAvatar';
 
 export function RecentActivity(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <section>
-      <h3 className={styles.title}>Recent activity</h3>
+      <h3 className={styles.title}>{t('home.activity.title')}</h3>
       <div className={styles.strip}>
         {ACTIVITY.map((item) => (
           <div key={`${item.who}-${item.when}`} className={styles.cell}>

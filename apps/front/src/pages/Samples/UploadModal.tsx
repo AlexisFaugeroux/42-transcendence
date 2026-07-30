@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from '@transcendence/i18n';
 import {
   Button,
   CheckCircleOutlined,
@@ -15,7 +16,9 @@ import {
 import { type JSX, useState } from 'react';
 import { uploadSample } from '../../api/audioFile/audioFile';
 import type { UploadSampleFields } from '../../api/audioFile/types';
-import { FAMILY_OPTIONS, formatBytes, KEY_OPTIONS, KIND_OPTIONS, VISIBILITY_OPTIONS } from './helpers';
+import { VISIBILITIES } from '../../types/audioFile';
+import { UPLOAD_STATUS_LABEL, VISIBILITY_LABEL } from './constants';
+import { FAMILY_OPTIONS, formatBytes, KEY_OPTIONS, KIND_OPTIONS } from './helpers';
 import styles from './UploadModal.module.scss';
 
 type ItemStatus = 'queued' | 'uploading' | 'error';
@@ -38,6 +41,8 @@ interface UploadModalProps {
 
 export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }: UploadModalProps): JSX.Element {
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const { i18n, t } = useTranslation();
+  const locale = i18n.language;
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const addToQueue = (file: File): void => {
@@ -68,14 +73,17 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
           await uploadSample(item.file, item.fields);
           deleteFromQueue(item.uuid);
         } catch (error) {
-          patch(item.uuid, { error: error instanceof Error ? error.message : 'Upload failed', status: 'error' });
+          patch(item.uuid, {
+            error: error instanceof Error ? error.message : t('samples.upload.errorTitle'),
+            status: 'error',
+          });
           failed += 1;
         }
       }
 
       await onUploaded();
 
-      if (failed) throw new Error(`${failed.toString()} of ${pending.length.toString()} files could not be uploaded`);
+      if (failed) throw new Error(t('samples.upload.partialFailure', { failed, total: pending.length }));
 
       return pending.length;
     },
@@ -84,15 +92,15 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
         description: error.message,
         duration: 5,
         icon: <CloseCircleOutlined style={{ color: theme.red }} />,
-        message: 'Upload failed',
+        message: t('samples.upload.errorTitle'),
       });
     },
     onSuccess: (count) => {
       notificationApi.open({
-        description: `${count.toString()} sample(s) are now available in your library`,
+        description: t('samples.upload.successDescription', { count }),
         duration: 5,
         icon: <CheckCircleOutlined style={{ color: theme.green }} />,
-        message: 'Upload complete',
+        message: t('samples.upload.successTitle'),
       });
       onClose();
     },
@@ -104,12 +112,12 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
   return (
     <Modal
       open={open}
-      title="Add samples"
+      title={t('samples.upload.title')}
       onCancel={onClose}
       width={700}
       footer={[
         <Button key="cancel" onClick={onClose}>
-          Cancel
+          {t('common.cancel')}
         </Button>,
         <Button
           key="upload"
@@ -121,7 +129,7 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
             startUpload();
           }}
         >
-          Upload {uploadableCount} files
+          {t('samples.upload.submit', { count: uploadableCount })}
         </Button>,
       ]}
     >
@@ -138,25 +146,25 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
         <p className={styles.dropIcon}>
           <MsnIcon name="download" size="22px" color={theme.orange} style={{ transform: 'rotate(180deg)' }} />
         </p>
-        <p className={styles.dropTitle}>Drop audio files here</p>
+        <p className={styles.dropTitle}>{t('samples.upload.dropTitle')}</p>
         <p className={styles.dropHint}>.wav</p>
       </Upload.Dragger>
 
       <div className={styles.queueLabel}>
-        Queue · {queue.length} files · {formatBytes(queueTotal)}
+        {t('samples.upload.queue', { count: queue.length, size: formatBytes(queueTotal, locale) })}
       </div>
       <div className={styles.queue}>
         {queue.map(({ error, fields, file, status, uuid }) => (
           <div key={uuid} className={styles.queueRow}>
             <div className={styles.topLine}>
               <span className={styles.fileName}>{file.name}</span>
-              <span className={styles.mono}>{formatBytes(file.size)}</span>
-              <span className={styles.status}>{status}</span>
+              <span className={styles.mono}>{formatBytes(file.size, locale)}</span>
+              <span className={styles.status}>{t(UPLOAD_STATUS_LABEL[status])}</span>
               <Button
                 type="text"
                 size="small"
                 danger
-                title="Remove"
+                title={t('common.remove')}
                 disabled={status === 'uploading'}
                 onClick={() => {
                   deleteFromQueue(uuid);
@@ -168,11 +176,14 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
             {error ? <div className={styles.error}>{error}</div> : null}
             <div className={styles.selects}>
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>Visibility</span>
+                <span className={styles.fieldLabel}>{t('samples.fields.visibility')}</span>
                 <Select
                   size="small"
-                  placeholder="visibility"
-                  options={VISIBILITY_OPTIONS}
+                  placeholder={t('samples.fields.visibility')}
+                  options={VISIBILITIES.map((visibility) => ({
+                    label: t(VISIBILITY_LABEL[visibility]),
+                    value: visibility,
+                  }))}
                   value={fields.visibility}
                   onChange={(value) => {
                     patchFields(uuid, { visibility: value });
@@ -180,10 +191,10 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
                 />
               </label>
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>Family</span>
+                <span className={styles.fieldLabel}>{t('samples.fields.family')}</span>
                 <Select
                   size="small"
-                  placeholder="family"
+                  placeholder={t('samples.fields.family')}
                   options={FAMILY_OPTIONS}
                   value={fields.family}
                   onChange={(value) => {
@@ -192,10 +203,10 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
                 />
               </label>
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>Kind</span>
+                <span className={styles.fieldLabel}>{t('samples.fields.kind')}</span>
                 <Select
                   size="small"
-                  placeholder="kind"
+                  placeholder={t('samples.fields.kind')}
                   options={KIND_OPTIONS}
                   value={fields.kind}
                   onChange={(value) => {
@@ -204,10 +215,10 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
                 />
               </label>
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>BPM</span>
+                <span className={styles.fieldLabel}>{t('samples.fields.bpm')}</span>
                 <InputNumber
                   size="small"
-                  placeholder="bpm"
+                  placeholder={t('samples.fields.bpm')}
                   min={40}
                   max={300}
                   step={1}
@@ -219,10 +230,10 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
                 />
               </label>
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>Key</span>
+                <span className={styles.fieldLabel}>{t('samples.fields.key')}</span>
                 <Select
                   size="small"
-                  placeholder="key"
+                  placeholder={t('samples.fields.key')}
                   options={KEY_OPTIONS}
                   value={fields.key}
                   onChange={(value) => {
@@ -236,9 +247,10 @@ export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }
       </div>
 
       <div className={styles.after}>
-        <span>After upload</span>
+        <span>{t('samples.upload.afterUpload')}</span>
         <span>
-          <span className={styles.accent}>{formatBytes(usedBytes + queueTotal)}</span> / {formatBytes(quotaBytes)}
+          <span className={styles.accent}>{formatBytes(usedBytes + queueTotal, locale)}</span> /{' '}
+          {formatBytes(quotaBytes, locale)}
         </span>
       </div>
     </Modal>

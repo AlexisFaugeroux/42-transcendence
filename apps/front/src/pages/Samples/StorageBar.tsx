@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { AudioStorageUsage } from '../../api/audioFile/types';
@@ -23,6 +24,8 @@ const EMPTY_GROUPS: Record<FamilyGroup, number> = {
 
 export function StorageBar({ usage }: StorageBarProps): JSX.Element {
   const { byFamily, quotaBytes, usedBytes } = usage;
+  const { i18n, t } = useTranslation();
+  const locale = i18n.language;
 
   const byGroup = byFamily.reduce<Record<FamilyGroup, number>>(
     (acc, { bytes, family }) => {
@@ -42,13 +45,13 @@ export function StorageBar({ usage }: StorageBarProps): JSX.Element {
     <div className={styles.box}>
       <div className={styles.head}>
         <div className={styles.headLeft}>
-          <span className={styles.label}>Storage</span>
+          <span className={styles.label}>{t('samples.storage.label')}</span>
           <span className={styles.mono}>
-            <span style={{ color: warn ? theme.yellow : theme.orange }}>{formatBytes(usedBytes)}</span>
-            <span className={styles.muted}> / {formatBytes(quotaBytes)}</span>
+            <span style={{ color: warn ? theme.yellow : theme.orange }}>{formatBytes(usedBytes, locale)}</span>
+            <span className={styles.muted}> / {formatBytes(quotaBytes, locale)}</span>
           </span>
           <span className={styles.muted}>
-            ({Math.round(pct * 100)}% — {formatBytes(remaining)} free)
+            {t('samples.storage.free', { free: formatBytes(remaining, locale), percent: Math.round(pct * 100) })}
           </span>
         </div>
       </div>
@@ -60,7 +63,7 @@ export function StorageBar({ usage }: StorageBarProps): JSX.Element {
           return (
             <div
               key={group}
-              title={`${group} — ${formatBytes(byGroup[group])}`}
+              title={`${group} — ${formatBytes(byGroup[group], locale)}`}
               style={{ background: FAMILY_COLOR[group], width: `${(width * 100).toString()}%` }}
             />
           );
@@ -74,7 +77,7 @@ export function StorageBar({ usage }: StorageBarProps): JSX.Element {
             <span key={group} className={styles.legendItem}>
               <span className={styles.swatch} style={{ background: FAMILY_COLOR[group] }} />
               {group}
-              <span className={styles.muted}>{formatBytes(byGroup[group])}</span>
+              <span className={styles.muted}>{formatBytes(byGroup[group], locale)}</span>
             </span>
           ))}
       </div>

@@ -1,3 +1,4 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import type { FC } from 'react';
 import { Browser } from '../Browser/Browser';
 import type { StudioIconLabel } from '../components/StudioIcon/types';
@@ -9,21 +10,21 @@ import { PanelHeader } from './PanelHeader';
 export interface PanelHeaderProps {
   icon: StudioIconLabel;
   id: Panel['id'];
-  label: string;
+  labelKey: TranslationKey;
   onToggle: (id: Panel['id']) => void;
   isVisible: (id: Panel['id']) => boolean;
 }
 
 export interface Panel {
   id: 'timeline' | 'browser' | 'devices' | 'editor';
-  label: string;
+  labelKey: TranslationKey;
   header: FC<PanelHeaderProps>;
   main: FC;
 }
 
 export const panels: Record<Panel['id'], Panel> = {
-  browser: { header: PanelHeader, id: 'browser', label: 'Browser', main: Browser },
-  devices: { header: PanelHeader, id: 'devices', label: 'Devices', main: Devices },
-  editor: { header: PanelHeader, id: 'editor', label: 'Editor', main: Editor },
-  timeline: { header: PanelHeader, id: 'timeline', label: 'Timeline', main: Timeline },
+  browser: { header: PanelHeader, id: 'browser', labelKey: 'studio.panels.browser', main: Browser },
+  devices: { header: PanelHeader, id: 'devices', labelKey: 'studio.panels.devices', main: Devices },
+  editor: { header: PanelHeader, id: 'editor', labelKey: 'studio.panels.editor', main: Editor },
+  timeline: { header: PanelHeader, id: 'timeline', labelKey: 'studio.panels.timeline', main: Timeline },
 };

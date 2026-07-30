@@ -1,4 +1,5 @@
 import type { AuthUser } from '@transcendence/auth';
+import { useTranslation } from '@transcendence/i18n';
 import { Avatar, Button, MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { ProfileErrors } from './dashboard.data';
@@ -25,31 +26,33 @@ export function ProfileSection({
   onSave,
   setField,
 }: ProfileSectionProps): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div>
       <SectionHeader
-        title="Profile"
-        subtitle="Public information shown on your producer page."
+        title={t('settings.profile.title')}
+        subtitle={t('settings.profile.subtitle')}
         right={
           isEditing ? (
-            <span className={styles.editingTag}>● Editing</span>
+            <span className={styles.editingTag}>● {t('settings.profile.editing')}</span>
           ) : (
             <Button onClick={onEdit}>
-              <MsnIcon name="settings" size="11px" /> Edit profile
+              <MsnIcon name="settings" size="11px" /> {t('settings.profile.edit')}
             </Button>
           )
         }
       />
 
       <Card>
-        <Row label="Avatar">
+        <Row label={t('settings.profile.avatar')}>
           <div className={styles.avatarRow}>
             <Avatar size={64}>{form.artistName.slice(0, 2).toUpperCase()}</Avatar>
             {isEditing ? (
               <div className={styles.avatarActions}>
-                <Button size="small">Upload image</Button>
+                <Button size="small">{t('settings.profile.uploadImage')}</Button>
                 <Button size="small" danger>
-                  Remove
+                  {t('common.remove')}
                 </Button>
               </div>
             ) : null}
@@ -57,19 +60,19 @@ export function ProfileSection({
         </Row>
         <Hr />
 
-        <Row label="Producer alias">
+        <Row label={t('settings.profile.alias')}>
           <FieldText
             editing={isEditing}
             value={form.artistName}
             onChange={(v) => {
               setField('artistName', v);
             }}
-            placeholder="Your artist name"
+            placeholder={t('settings.profile.aliasPlaceholder')}
           />
         </Row>
         <Hr />
 
-        <Row label="Handle" hint="Used in your URL: makesomenoise.fm/@…">
+        <Row label={t('settings.profile.handle')} hint={t('settings.profile.handleHint')}>
           <FieldText
             editing={isEditing}
             value={form.handle}
@@ -77,24 +80,24 @@ export function ProfileSection({
               setField('handle', v);
             }}
             prefix="@"
-            error={errors.handle}
+            error={errors.handle ? t(errors.handle) : undefined}
           />
         </Row>
         <Hr />
 
-        <Row label="Location">
+        <Row label={t('settings.profile.location')}>
           <FieldText
             editing={isEditing}
             value={form.location ?? ''}
             onChange={(v) => {
               setField('location', v);
             }}
-            placeholder="City, country"
+            placeholder={t('settings.profile.locationPlaceholder')}
           />
         </Row>
         <Hr />
 
-        <Row label="Bio" hint="Up to 240 characters">
+        <Row label={t('settings.profile.bio')} hint={t('settings.profile.bioHint', { count: 240 })}>
           <FieldArea
             editing={isEditing}
             value={form.bio ?? ''}
@@ -106,7 +109,7 @@ export function ProfileSection({
         </Row>
         <Hr />
 
-        <Row label="Links" hint="Site, SoundCloud, Bandcamp, etc.">
+        <Row label={t('settings.profile.links')} hint={t('settings.profile.linksHint')}>
           <div className={styles.links}>
             {form.links?.map((link, index) => (
               <div key={index} className={styles.linkRow}>
@@ -150,7 +153,7 @@ export function ProfileSection({
                   }
                 }}
               >
-                <MsnIcon name="plus" size="11px" /> Add link
+                <MsnIcon name="plus" size="11px" /> {t('settings.profile.addLink')}
               </Button>
             ) : null}
           </div>
@@ -159,9 +162,9 @@ export function ProfileSection({
 
       {isEditing ? (
         <div className={styles.actions}>
-          <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onCancel}>{t('common.cancel')}</Button>
           <Button type="primary" onClick={onSave}>
-            Save changes
+            {t('settings.saveChanges')}
           </Button>
         </div>
       ) : null}

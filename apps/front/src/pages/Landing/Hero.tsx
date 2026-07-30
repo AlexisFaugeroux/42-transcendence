@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from '@transcendence/i18n';
 import { Avatar, Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
@@ -15,36 +16,35 @@ const PRODUCERS = [
 ];
 
 export function Hero(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
         <div className={styles.copy}>
           <div className={styles.eyebrow}>
-            <Tag color="orange">Beta · open access</Tag>
-            <span className={styles.muted}>No install. Runs in the browser.</span>
+            <Tag color="orange">{t('landing.hero.badge')}</Tag>
+            <span className={styles.muted}>{t('landing.hero.noInstall')}</span>
           </div>
 
           <h1 className={styles.title}>
-            Make beats.
+            {t('landing.hero.titleLine1')}
             <br />
-            Record takes.
+            {t('landing.hero.titleLine2')}
             <br />
-            <span className={styles.accent}>Make some noise.</span>
+            <span className={styles.accent}>{t('landing.hero.titleLine3')}</span>
           </h1>
 
-          <p className={styles.lead}>
-            MakeSomeNoise is a browser-based studio for producing beats, recording sessions and mixing tracks — with a
-            built-in audience. Stream live, share waveforms, and connect with other producers without leaving the page.
-          </p>
+          <p className={styles.lead}>{t('landing.hero.lead')}</p>
 
           <div className={styles.ctas}>
             <Link to="/register">
               <Button type="primary" size="large">
-                Sign up free <MsnIcon name="arrowR" size="12px" />
+                {t('auth.register.action')} <MsnIcon name="arrowR" size="12px" />
               </Button>
             </Link>
             <Button size="large">
-              <MsnIcon name="play" size="12px" /> Watch a demo
+              <MsnIcon name="play" size="12px" /> {t('landing.hero.watchDemo')}
             </Button>
             <span className={styles.muted}>2:14</span>
           </div>
@@ -58,7 +58,11 @@ export function Hero(): JSX.Element {
               ))}
             </Avatar.Group>
             <span className={styles.muted}>
-              <strong className={styles.strong}>4,200+ producers</strong> already making noise
+              <Trans
+                i18nKey="landing.hero.producers"
+                components={{ strong: <strong className={styles.strong} /> }}
+                values={{ total: 4200 }}
+              />
             </span>
           </div>
         </div>

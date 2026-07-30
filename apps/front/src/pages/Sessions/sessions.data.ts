@@ -1,3 +1,4 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
 import type { MsnIconLabel } from '@transcendence/ui';
 
@@ -202,7 +203,30 @@ export const TYPE_ICON: Record<SessionType, MsnIconLabel> = {
   recording: 'record',
 };
 
-export function formatSize(mb: number): string {
-  if (mb >= 1024) return `${(mb / 1024).toFixed(2)} GB`;
-  return `${mb.toFixed(1)} MB`;
+export const TYPE_LABEL: Record<SessionType, TranslationKey> = {
+  mixing: 'sessions.type.mixing',
+  production: 'sessions.type.production',
+  recording: 'sessions.type.recording',
+};
+
+export const TYPE_DESCRIPTION: Record<SessionType, TranslationKey> = {
+  mixing: 'sessions.typeDescription.mixing',
+  production: 'sessions.typeDescription.production',
+  recording: 'sessions.typeDescription.recording',
+};
+
+export type SessSort = 'edited' | 'name' | 'bpm';
+
+export const SORT_LABEL: Record<SessSort, TranslationKey> = {
+  bpm: 'sessions.sort.bpm',
+  edited: 'sessions.sort.edited',
+  name: 'sessions.sort.name',
+};
+
+export function formatSize(mb: number, locale: string): string {
+  const format = (value: number, digits: number): string =>
+    new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value);
+
+  if (mb >= 1024) return `${format(mb / 1024, 2)} GB`;
+  return `${format(mb, 1)} MB`;
 }

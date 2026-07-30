@@ -14,11 +14,11 @@ interface PanelFramePros {
 export function PanelFrame({ className, icon, id, isVisible, onToggle }: PanelFramePros): JSX.Element | null {
   const panel = panels[id];
 
-  const { header: Header, label, main: Main } = panel;
+  const { header: Header, labelKey, main: Main } = panel;
 
   return (
     <div className={`${styles.panelFrame} ${className ?? ''}`}>
-      <Header icon={icon} id={id} label={label} isVisible={isVisible} onToggle={onToggle} />
+      <Header icon={icon} id={id} labelKey={labelKey} isVisible={isVisible} onToggle={onToggle} />
       {isVisible(id) ? (
         <div className={styles.panelBody}>
           <Main />

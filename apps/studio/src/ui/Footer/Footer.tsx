@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
@@ -6,6 +7,7 @@ import { FooterItem } from './FooterItem';
 
 export function Footer(): JSX.Element {
   const { audioContext } = useProject();
+  const { t } = useTranslation();
 
   const latency = audioContext.baseLatency + audioContext.outputLatency * 1000;
 
@@ -17,14 +19,21 @@ export function Footer(): JSX.Element {
 
   return (
     <footer className={styles.footerContainer}>
-      <FooterItem label="Online" value={<span style={{ color: theme.green }}>● Yes</span>} />
-      <FooterItem label="Users" value={<span>3 live</span>} />
-      <FooterItem label="Latency" value={`${latency.toFixed()} ms`} accent={latencyColor(latency)} />
+      <FooterItem
+        label={t('studio.footer.online')}
+        value={<span style={{ color: theme.green }}>● {t('common.yes')}</span>}
+      />
+      <FooterItem label={t('studio.footer.users')} value={<span>{t('studio.footer.live', { count: 3 })}</span>} />
+      <FooterItem
+        label={t('studio.footer.latency')}
+        value={t('studio.footer.latencyValue', { ms: latency.toFixed() })}
+        accent={latencyColor(latency)}
+      />
 
       <div className={styles.footerDivider} />
       <span className={styles.footerLegalMentions}>
         {/* TODO: Link to privacy terms page */}
-        <a className={styles.footerPrivacy}>Privacy</a>
+        <a className={styles.footerPrivacy}>{t('legal.privacy.navLabel')}</a>
       </span>
     </footer>
   );

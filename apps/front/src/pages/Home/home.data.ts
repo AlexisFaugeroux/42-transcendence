@@ -1,40 +1,53 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
 
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
 export interface SessionType {
   key: string;
-  title: string;
-  blurb: string;
+  titleKey: TranslationKey;
+  blurbKey: TranslationKey;
   icon: MsnIconLabel;
   color: string;
-  meta: string[];
+  metaKeys: TranslationKey[];
 }
 
 export const SESSION_TYPES: SessionType[] = [
   {
-    blurb: 'Capture vocals, instruments or field audio. Multitrack with monitoring and overdubs.',
+    blurbKey: 'home.sessionTypes.record.blurb',
     color: 'hsl(8, 85%, 55%)',
     icon: 'record',
     key: 'record',
-    meta: ['Multitrack', 'Monitor', 'Overdub'],
-    title: 'Recording Session',
+    metaKeys: [
+      'home.sessionTypes.record.meta.multitrack',
+      'home.sessionTypes.record.meta.monitor',
+      'home.sessionTypes.record.meta.overdub',
+    ],
+    titleKey: 'home.sessionTypes.record.title',
   },
   {
-    blurb: 'Beat maker, drum scheduler, loops and instrument tracks on the timeline.',
+    blurbKey: 'home.sessionTypes.produce.blurb',
     color: 'hsl(25, 90%, 55%)',
     icon: 'produce',
     key: 'produce',
-    meta: ['Beat maker', 'Loops', 'MIDI'],
-    title: 'Music Production',
+    metaKeys: [
+      'home.sessionTypes.produce.meta.beatMaker',
+      'home.sessionTypes.produce.meta.loops',
+      'home.sessionTypes.produce.meta.midi',
+    ],
+    titleKey: 'home.sessionTypes.produce.title',
   },
   {
-    blurb: 'Open the channel strip mixer. EQ, sends, busses and master export.',
+    blurbKey: 'home.sessionTypes.mix.blurb',
     color: 'hsl(210, 90%, 50%)',
     icon: 'mix',
     key: 'mix',
-    meta: ['Strips', 'Sends', 'Export'],
-    title: 'Mixing Session',
+    metaKeys: [
+      'home.sessionTypes.mix.meta.strips',
+      'home.sessionTypes.mix.meta.sends',
+      'home.sessionTypes.mix.meta.export',
+    ],
+    titleKey: 'home.sessionTypes.mix.title',
   },
 ];
 
@@ -48,6 +61,8 @@ export interface SavedSession {
   duration: string;
 }
 
+// Placeholder rows until the sessions endpoint lands: titles, keys and relative
+// times are sample content, not UI copy, so they are not translated.
 export const SAVED_SESSIONS: SavedSession[] = [
   { bpm: 142, duration: '3:42', id: 1, key: 'F min', kind: 'production', title: 'Liquid Drum 808', updated: '2h ago' },
   {
@@ -76,6 +91,7 @@ export interface OnlineUser {
   listeners: number;
 }
 
+// Same as SAVED_SESSIONS: sample presence rows, replaced by the social endpoint.
 export const ONLINE: OnlineUser[] = [
   { activity: 'Recording vocals', handle: '@maya.o', listeners: 12, name: 'Maya Okafor', status: 'live' },
   { activity: 'Mixing — Side B', handle: '@theo', listeners: 0, name: 'Theo Rivera', status: 'online' },
@@ -94,6 +110,7 @@ export interface ActivityItem {
   when: string;
 }
 
+// Same as SAVED_SESSIONS: sample feed rows, replaced by the activity endpoint.
 export const ACTIVITY: ActivityItem[] = [
   { did: 'liked', what: 'your track “Liquid Drum 808”', when: '3m', who: 'Maya Okafor' },
   { did: 'commented', what: 'on “Tape Saturator demo”', when: '12m', who: 'Theo Rivera' },
@@ -112,4 +129,10 @@ export const KIND_ICON: Record<SessionKind, MsnIconLabel> = {
   mixing: 'mix',
   production: 'produce',
   recording: 'record',
+};
+
+export const KIND_LABEL: Record<SessionKind, TranslationKey> = {
+  mixing: 'home.kind.mixing',
+  production: 'home.kind.production',
+  recording: 'home.kind.recording',
 };

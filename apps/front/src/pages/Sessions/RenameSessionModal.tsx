@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Input, Modal, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import type { Session } from './sessions.data';
@@ -18,18 +19,22 @@ function RenameForm({
   onConfirm: (t: string) => void;
 }): JSX.Element {
   const [title, setTitle] = useState(session.title);
+  const { t } = useTranslation();
+
   return (
     <Modal
       open
-      title="Rename session"
-      okText="Save"
+      title={t('sessions.rename.title')}
+      okText={t('common.save')}
       onOk={() => {
         onConfirm(title);
       }}
       onCancel={onCancel}
     >
       <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <span style={{ color: theme.fg2, fontSize: 11, letterSpacing: 0.5, textTransform: 'uppercase' }}>Title</span>
+        <span style={{ color: theme.fg2, fontSize: 11, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+          {t('sessions.new.titleField')}
+        </span>
         <Input
           autoFocus
           value={title}

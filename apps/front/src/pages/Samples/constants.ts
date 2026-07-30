@@ -1,5 +1,6 @@
+import type { TranslationKey } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
-import type { AudioFile, Family } from '../../types/audioFile';
+import type { AudioFile, Family, Mode, Visibility } from '../../types/audioFile';
 import type { FamilyGroup, SortKey } from './types';
 
 export const FAMILY_GROUPS: Record<FamilyGroup, Family[]> = {
@@ -31,6 +32,36 @@ export const GROUP_BY_FAMILY = Object.entries(FAMILY_GROUPS).reduce<Partial<Reco
   },
   {},
 );
+
+export const SORT_LABEL: Record<SortKey, TranslationKey> = {
+  bpm: 'samples.sort.bpm',
+  duration: 'samples.sort.duration',
+  name: 'samples.sort.name',
+  recent: 'samples.sort.recent',
+  size: 'samples.sort.size',
+};
+
+export const MODE_LABEL: Record<Mode, TranslationKey> = {
+  MAJOR: 'samples.mode.major',
+  MINOR: 'samples.mode.minor',
+};
+
+export const MODE_ABBR: Record<Mode, TranslationKey> = {
+  MAJOR: 'samples.modeAbbr.major',
+  MINOR: 'samples.modeAbbr.minor',
+};
+
+export const VISIBILITY_LABEL: Record<Visibility, TranslationKey> = {
+  PRIVATE: 'samples.visibility.private',
+  PUBLIC: 'samples.visibility.public',
+  SHARED: 'samples.visibility.shared',
+};
+
+export const UPLOAD_STATUS_LABEL: Record<'error' | 'queued' | 'uploading', TranslationKey> = {
+  error: 'samples.upload.status.error',
+  queued: 'samples.upload.status.queued',
+  uploading: 'samples.upload.status.uploading',
+};
 
 export const SAMPLE_COMPARATORS: Record<SortKey, (a: AudioFile, b: AudioFile) => number> = {
   bpm: (a, b) => (a.bpm ?? Number.POSITIVE_INFINITY) - (b.bpm ?? Number.POSITIVE_INFINITY),

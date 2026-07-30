@@ -1,4 +1,5 @@
 import type { Project } from '@opendaw/studio-core';
+import { useTranslation } from '@transcendence/i18n';
 import { createContext, type JSX, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { initializeOpenDaw } from '../lib/projectSetup';
 
@@ -13,6 +14,7 @@ const projectContext = createContext<ProjectContextValue | null>(null);
 export function ProjectProvider({ children }: { children: ReactNode }): JSX.Element {
   const [value, setValue] = useState<ProjectContextValue | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
+  const { t } = useTranslation();
 
   useEffect(() => {
     let mounted = true;
@@ -31,7 +33,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
     };
   }, []);
 
-  if (!value) return <div>Loading...</div>;
+  if (!value) return <div>{t('common.loading')}</div>;
 
   return <projectContext.Provider value={value}>{children}</projectContext.Provider>;
 }
