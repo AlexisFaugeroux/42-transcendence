@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from '@transcendence/i18n';
 import { Modal } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { AudioFile } from '../../types/audioFile';
@@ -19,25 +20,26 @@ export function DeleteSampleModal({
   selectedCount,
   target,
 }: DeleteSampleModalProps): JSX.Element {
+  const { t } = useTranslation();
   const isMulti = target === 'selection';
   const sample = target && target !== 'selection' ? target : null;
 
   return (
     <Modal
       open={target !== null}
-      title={isMulti ? `Delete ${selectedCount} samples?` : 'Delete this sample?'}
-      okText="Delete"
+      title={isMulti ? t('samples.delete.titleMulti', { count: selectedCount }) : t('samples.delete.titleOne')}
+      okText={t('common.delete')}
       okButtonProps={{ danger: true }}
       confirmLoading={confirmLoading}
-      cancelText="Cancel"
+      cancelText={t('common.cancel')}
       onOk={onConfirm}
       onCancel={onCancel}
     >
       {isMulti ? (
-        <p>These files will be removed from your library. Sessions that use these might crash.</p>
+        <p>{t('samples.delete.bodyMulti')}</p>
       ) : (
         <p>
-          The file <code>{sample?.name}</code> will be removed from your library. Sessions that use it might crash
+          <Trans i18nKey="samples.delete.bodyOne" components={{ code: <code /> }} values={{ name: sample?.name }} />
         </p>
       )}
     </Modal>

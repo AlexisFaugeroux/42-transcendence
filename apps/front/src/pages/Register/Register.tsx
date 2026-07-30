@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
+import { Trans, useTranslation } from '@transcendence/i18n';
 import { Button, CheckOutlined, Form, Input, MsnIcon, MsnWordmark, notification, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,18 +12,19 @@ import styles from './Register.module.scss';
 export default function Register(): JSX.Element {
   const [form] = Form.useForm<RegisterBody>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const openNotification = () => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
-      description: "You'll be redirected to the login page in a few seconds",
+      description: t('auth.register.successDescription'),
       duration: 3,
       icon: <CheckOutlined color={theme.green} />,
       key,
       onClose: () => void navigate('/login'),
-      title: "You've succesffuly registered !",
+      title: t('auth.register.successTitle'),
     });
   };
 
@@ -31,9 +33,9 @@ export default function Register(): JSX.Element {
     onError: (error: ApiErrorReponse) => {
       if (error.status === 409) {
         form.setFields([
-          { errors: ['Email, artist name or handle already taken.'], name: 'email' },
-          { errors: ['Email, artist name or handle already taken.'], name: 'artistName' },
-          { errors: ['Email, artist name or handle already taken.'], name: 'handle' },
+          { errors: [t('auth.register.alreadyTaken')], name: 'email' },
+          { errors: [t('auth.register.alreadyTaken')], name: 'artistName' },
+          { errors: [t('auth.register.alreadyTaken')], name: 'handle' },
         ]);
       }
     },
@@ -61,103 +63,101 @@ export default function Register(): JSX.Element {
 
       <main className={styles.main}>
         <div className={styles.cardWrap}>
-          <div className={styles.eyebrow}>Get started</div>
-          <h1 className={styles.title}>Create your account</h1>
-          <p className={styles.subtitle}>Free during beta. No tracking, no credit card.</p>
+          <div className={styles.eyebrow}>{t('auth.register.eyebrow')}</div>
+          <h1 className={styles.title}>{t('auth.register.title')}</h1>
+          <p className={styles.subtitle}>{t('auth.register.subtitle')}</p>
 
           <div className={styles.card}>
             <Form className={styles.form} form={form} layout="vertical" requiredMark={false} onFinish={onFinish}>
               <Form.Item
-                label="Email"
+                label={t('auth.fields.email')}
                 name="email"
                 rules={[
-                  { message: 'Please enter your email.', required: true },
-                  { message: "That doesn't look like a valid email.", type: 'email' },
+                  { message: t('auth.validation.emailRequired'), required: true },
+                  { message: t('auth.validation.emailInvalid'), type: 'email' },
                 ]}
               >
                 <Input size="large" placeholder="you@example.com" autoFocus autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="First name"
+                label={t('auth.fields.firstname')}
                 name="firstname"
-                rules={[{ message: 'Please enter your first name.', required: true }]}
+                rules={[{ message: t('auth.validation.firstnameRequired'), required: true }]}
               >
                 <Input size="large" placeholder="Lex" autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="Last name"
+                label={t('auth.fields.lastname')}
                 name="lastname"
-                rules={[{ message: 'Please enter your last name.', required: true }]}
+                rules={[{ message: t('auth.validation.lastnameRequired'), required: true }]}
               >
                 <Input size="large" placeholder="Moreau" autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="Artist name"
+                label={t('auth.fields.artistName')}
                 name="artistName"
-                extra="Your public producer name. Shown on your profile and tracks."
+                extra={t('auth.register.artistNameHint')}
                 rules={[
-                  { message: 'Please choose an artist name.', required: true },
-                  { message: 'At least 3 characters.', min: 3 },
+                  { message: t('auth.validation.artistNameRequired'), required: true },
+                  { message: t('auth.validation.minChars', { count: 3 }), min: 3 },
                 ]}
               >
                 <Input size="large" placeholder="Lex Moreau" autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="Handle"
+                label={t('auth.fields.handle')}
                 name="handle"
-                extra="Used in your profile URL: makesomenoise.fm/@…"
+                extra={t('auth.register.handleHint')}
                 rules={[
-                  { message: 'Please choose a handle.', required: true },
-                  { message: 'At least 3 characters.', min: 3 },
-                  { message: 'Only letters, numbers, dot and underscore.', pattern: /^[\w.]+$/ },
+                  { message: t('auth.validation.handleRequired'), required: true },
+                  { message: t('auth.validation.minChars', { count: 3 }), min: 3 },
+                  { message: t('auth.validation.handlePattern'), pattern: /^[\w.]+$/ },
                 ]}
               >
                 <Input size="large" prefix="@" placeholder="lexmoreau" autoComplete="off" />
               </Form.Item>
 
               <Form.Item
-                label="Password"
+                label={t('auth.fields.password')}
                 name="password"
                 style={{ marginBottom: 8 }}
                 rules={[
-                  { message: 'Please choose a password.', required: true },
-                  { message: 'At least 10 characters.', min: 10 },
+                  { message: t('auth.validation.passwordChoose'), required: true },
+                  { message: t('auth.validation.minChars', { count: 10 }), min: 10 },
                 ]}
               >
-                <Input.Password size="large" placeholder="At least 10 characters" />
+                <Input.Password size="large" placeholder={t('auth.register.passwordPlaceholder')} />
               </Form.Item>
 
               {/* Lives just under the password field; renders nothing while empty. */}
               <PasswordStrength value={password} />
 
               <p className={styles.terms}>
-                By creating an account you agree to our{' '}
-                <a className={styles.termsLink} onClick={() => void navigate('/terms')}>
-                  Terms
-                </a>{' '}
-                and{' '}
-                <a className={styles.termsLink} onClick={() => void navigate('/privacy')}>
-                  Privacy policy
-                </a>
-                .
+                <Trans
+                  i18nKey="auth.register.termsNotice"
+                  components={{
+                    privacy: <a className={styles.termsLink} onClick={() => void navigate('/privacy')} />,
+                    terms: <a className={styles.termsLink} onClick={() => void navigate('/terms')} />,
+                  }}
+                />
               </p>
 
               <Form.Item>
                 <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={isPending}>
-                  {isPending ? 'Creating account…' : 'Create account'}
+                  {isPending ? t('auth.register.submitting') : t('auth.register.submit')}
                 </Button>
               </Form.Item>
             </Form>
           </div>
 
           <div className={styles.footer}>
-            Already have an account?{' '}
+            {t('auth.register.haveAccount')}{' '}
             <a className={styles.link} onClick={() => void navigate('/login')}>
-              Log in →
+              {t('auth.register.loginLink')}
             </a>
           </div>
         </div>

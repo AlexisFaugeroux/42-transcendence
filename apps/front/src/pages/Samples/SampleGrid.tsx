@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { AudioFile } from '../../types/audioFile';
@@ -15,6 +16,9 @@ interface SampleGridProps {
 }
 
 export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows }: SampleGridProps): JSX.Element {
+  const { i18n, t } = useTranslation();
+  const locale = i18n.language;
+
   return (
     <div className={styles.grid}>
       {rows.map((row) => (
@@ -51,8 +55,8 @@ export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows 
 
           <div className={styles.meta}>
             <span>{formatDuration(row.duration)}</span>
-            <span>· {formatBytes(row.bytes)}</span>
-            {row.bpm ? <span>· {row.bpm} BPM</span> : null}
+            <span>· {formatBytes(row.bytes, locale)}</span>
+            {row.bpm ? <span>· {t('samples.bpm', { bpm: row.bpm })}</span> : null}
             {row.key ? <span className={styles.muted}>{formatKey(row.key)}</span> : null}
           </div>
 
@@ -64,7 +68,7 @@ export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows 
                   onEdit(row);
                 }}
               >
-                Edit
+                {t('common.edit')}
               </Button>
               <Button
                 size="small"
@@ -73,7 +77,7 @@ export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows 
                   onDelete(row);
                 }}
               >
-                Delete
+                {t('common.delete')}
               </Button>
             </div>
           ) : null}

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAuthUser, useUser } from '@transcendence/auth';
+import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import {
   Badge,
   Button,
@@ -22,32 +23,33 @@ import { HeaderIconButton } from '../../components/HeaderIconButton/HeaderIconBu
 import { UserChip } from '../../components/UserChip/UserChip';
 import styles from './TopBar.module.scss';
 
-const items: MenuProps['items'] = [
-  {
-    icon: <SettingOutlined style={{ color: theme.orange }} />,
-    key: 'settings',
-    label: 'Settings',
-    style: { fontSize: '10px' },
-  },
-  {
-    icon: <LogoutOutlined style={{ color: theme.orange }} />,
-    key: 'logout',
-    label: 'Logout',
-    style: { fontSize: '10px' },
-  },
-  {
-    icon: <FileProtectOutlined style={{ color: theme.orange }} />,
-    key: 'privacy',
-    label: 'Privacy terms',
-    style: { fontSize: '10px' },
-  },
-];
-
 export function TopBar(): JSX.Element {
   const user = useAuthUser();
   const { logout } = useUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
+
+  const items: MenuProps['items'] = [
+    {
+      icon: <SettingOutlined style={{ color: theme.orange }} />,
+      key: 'settings',
+      label: t('header.settings'),
+      style: { fontSize: '10px' },
+    },
+    {
+      icon: <LogoutOutlined style={{ color: theme.orange }} />,
+      key: 'logout',
+      label: t('header.logout'),
+      style: { fontSize: '10px' },
+    },
+    {
+      icon: <FileProtectOutlined style={{ color: theme.orange }} />,
+      key: 'privacy',
+      label: t('header.privacyTerms'),
+      style: { fontSize: '10px' },
+    },
+  ];
 
   const openErrorNotification = (error: Error) => {
     const key = `open${Date.now()}`;
@@ -57,7 +59,7 @@ export function TopBar(): JSX.Element {
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: 'An error occured while deleting you account',
+      title: t('header.logoutError'),
     });
   };
 
@@ -91,13 +93,15 @@ export function TopBar(): JSX.Element {
         className={styles.search}
         variant="filled"
         prefix={<MsnIcon name="search" size="13px" />}
-        placeholder="Search sessions, samples, friends…"
+        placeholder={t('home.topBar.searchPlaceholder')}
       />
 
       <div className={styles.spacer} />
 
+      <LanguageSelect />
+
       <Badge count={3} size="small" color="var(--color-orange)">
-        <HeaderIconButton label="Notifications">
+        <HeaderIconButton label={t('header.notifications')}>
           <MsnIcon name="bell" size="16px" />
         </HeaderIconButton>
       </Badge>

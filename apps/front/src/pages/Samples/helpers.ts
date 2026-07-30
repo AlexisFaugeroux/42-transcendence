@@ -1,15 +1,4 @@
-import {
-  FAMILIES,
-  type Family,
-  type Key,
-  KEYS,
-  type Kind,
-  type Mode,
-  MODES,
-  USER_KINDS,
-  VISIBILITIES,
-  type Visibility,
-} from '../../types/audioFile';
+import { FAMILIES, type Family, type Key, KEYS, type Kind, USER_KINDS } from '../../types/audioFile';
 import { FAMILY_COLOR, GROUP_BY_FAMILY } from './constants';
 import type { FamilyGroup, Option } from './types';
 
@@ -29,11 +18,16 @@ export function formatDuration(durationMs: number): string {
   return `${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
 }
 
-export function formatBytes(bytes: number): string {
+function formatDecimal(value: number, locale: string, digits: number): string {
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value);
+}
+
+// `locale` is the active UI language, so the decimal separator follows it (1,5 MB in fr/es).
+export function formatBytes(bytes: number, locale: string): string {
   const mb = bytes / (1024 * 1024);
-  if (mb >= 1024) return `${(mb / 1024).toFixed(2)} GB`;
-  if (mb < 1) return `${Math.round(mb * 1024).toString()} KB`;
-  return `${mb.toFixed(1)} MB`;
+  if (mb >= 1024) return `${formatDecimal(mb / 1024, locale, 2)} GB`;
+  if (mb < 1) return `${formatDecimal(Math.round(mb * 1024), locale, 0)} KB`;
+  return `${formatDecimal(mb, locale, 1)} MB`;
 }
 
 export function formatKey(key: Key): string {
@@ -44,11 +38,9 @@ export function formatKind(kind: Kind): string {
   return kind === 'ONE_SHOT' ? 'ONE-SHOT' : kind;
 }
 
+// Family, kind and key stay in their canonical English form: they are audio
+// taxonomy tokens (like note names or BPM), not prose. Mode, visibility and the
+// sort options are plain language and go through t().
 export const FAMILY_OPTIONS: Option<Family>[] = FAMILIES.map((family) => ({ label: family, value: family }));
 export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({ label: formatKind(kind), value: kind }));
 export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({ label: formatKey(key), value: key }));
-export const MODE_OPTIONS: Option<Mode>[] = MODES.map((mode) => ({ label: mode, value: mode }));
-export const VISIBILITY_OPTIONS: Option<Visibility>[] = VISIBILITIES.map((visibility) => ({
-  label: visibility,
-  value: visibility,
-}));

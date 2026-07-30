@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Carousel, MsnIcon } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
 import { SAVED_SESSIONS } from './home.data';
@@ -6,23 +7,32 @@ import { SavedSessionTile } from './SavedSessionTile';
 
 export function SavedSessions(): JSX.Element {
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
+  const { t } = useTranslation();
 
   return (
     <section>
       <div className={styles.head}>
         <div className={styles.headLeft}>
-          <h3 className={styles.title}>Continue a saved session</h3>
-          <span className={styles.count}>{SAVED_SESSIONS.length} sessions</span>
+          <h3 className={styles.title}>{t('home.saved.title')}</h3>
+          <span className={styles.count}>{t('home.saved.count', { count: SAVED_SESSIONS.length })}</span>
         </div>
         <div className={styles.controls}>
-          <button className={styles.iconBtn} aria-label="Scroll left" onClick={() => carousel.current?.prev()}>
+          <button
+            className={styles.iconBtn}
+            aria-label={t('home.saved.scrollLeft')}
+            onClick={() => carousel.current?.prev()}
+          >
             <MsnIcon name="arrowL" size="14px" />
           </button>
-          <button className={styles.iconBtn} aria-label="Scroll right" onClick={() => carousel.current?.next()}>
+          <button
+            className={styles.iconBtn}
+            aria-label={t('home.saved.scrollRight')}
+            onClick={() => carousel.current?.next()}
+          >
             <MsnIcon name="arrowR" size="14px" />
           </button>
           <a href="#" className={styles.viewAll}>
-            View all
+            {t('home.saved.viewAll')}
           </a>
         </div>
       </div>

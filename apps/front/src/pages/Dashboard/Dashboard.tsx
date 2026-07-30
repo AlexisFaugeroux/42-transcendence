@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { type AuthUser, useAuthUser, useUser } from '@transcendence/auth';
+import { useTranslation } from '@transcendence/i18n';
 import { CheckOutlined, CloseCircleOutlined, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { updateUserProfile } from '../../api/user';
@@ -15,7 +16,7 @@ import { SettingsNav } from './SettingsNav';
 function validateProfile(form: AuthUser): ProfileErrors {
   const errors: ProfileErrors = {};
   if (!/^[\w.]+$/.test(form.handle)) {
-    errors.handle = 'Handles can only contain letters, numbers, dot, underscore.';
+    errors.handle = 'settings.profile.handleError';
   }
   return errors;
 }
@@ -26,6 +27,7 @@ export function Dashboard(): JSX.Element {
   const [saved, setSaved] = useState<AuthUser>(() => user);
   const [form, setForm] = useState<AuthUser>(() => user);
   const [isEditing, setIsEditing] = useState(false);
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const openSuccessNotification = () => {
@@ -35,7 +37,7 @@ export function Dashboard(): JSX.Element {
       duration: 3,
       icon: <CheckOutlined color={theme.green} />,
       key,
-      title: 'Your profile has been updated',
+      title: t('settings.profile.updated'),
     });
   };
 
@@ -47,7 +49,7 @@ export function Dashboard(): JSX.Element {
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: 'Your profile could not be updated',
+      title: t('settings.profile.updateFailed'),
     });
   };
 

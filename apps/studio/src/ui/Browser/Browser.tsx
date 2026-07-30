@@ -1,14 +1,17 @@
+import { useTranslation } from '@transcendence/i18n';
 import { ConfigProvider, Tabs, type TabsProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './Browser.module.scss';
 import { Samples } from './Samples/Samples';
 
-const tabs: TabsProps['items'] = [
-  { children: <Samples />, key: 'samples', label: 'SAMPLES' },
-  { children: 'Devices', key: 'devices', label: 'DEVICES' },
-];
-
 export function Browser(): JSX.Element {
+  const { t } = useTranslation();
+
+  const tabs: TabsProps['items'] = [
+    { children: <Samples />, key: 'samples', label: t('studio.browser.samples') },
+    { children: t('studio.panels.devices'), key: 'devices', label: t('studio.browser.devices') },
+  ];
+
   return (
     <aside style={{ background: theme.bgPanel, display: 'flex', flex: 1, flexDirection: 'column', minHeight: 0 }}>
       <ConfigProvider

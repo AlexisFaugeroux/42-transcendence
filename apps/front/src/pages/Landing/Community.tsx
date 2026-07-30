@@ -1,3 +1,4 @@
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { MsnIcon } from '@transcendence/ui';
 import type { MsnIconLabel } from '@transcendence/ui';
 import type { JSX } from 'react';
@@ -7,36 +8,35 @@ import { ImagePlaceholder } from './ImagePlaceholder';
 interface Bullet {
   icon: MsnIconLabel;
   color: string;
-  text: string;
+  textKey: TranslationKey;
 }
 
 const BULLETS: Bullet[] = [
-  { color: 'hsl(210, 90%, 50%)', icon: 'chat', text: 'Direct messaging and group chat' },
-  { color: 'hsl(140, 65%, 45%)', icon: 'users', text: 'Profiles, follows and live presence' },
-  { color: 'hsl(280, 65%, 60%)', icon: 'list', text: 'Shared playlists and re-posts' },
-  { color: 'hsl(8, 85%, 55%)', icon: 'heart', text: 'Timestamp-pinned likes and comments' },
+  { color: 'hsl(210, 90%, 50%)', icon: 'chat', textKey: 'landing.community.bullets.messaging' },
+  { color: 'hsl(140, 65%, 45%)', icon: 'users', textKey: 'landing.community.bullets.presence' },
+  { color: 'hsl(280, 65%, 60%)', icon: 'list', textKey: 'landing.community.bullets.playlists' },
+  { color: 'hsl(8, 85%, 55%)', icon: 'heart', textKey: 'landing.community.bullets.likes' },
 ];
 
 export function Community(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
         <div>
-          <div className={styles.eyebrow}>Community</div>
+          <div className={styles.eyebrow}>{t('landing.community.eyebrow')}</div>
           <h2 className={styles.title}>
-            Built-in audience. <span className={styles.accent}>From the first beat.</span>
+            {t('landing.community.title')} <span className={styles.accent}>{t('landing.community.titleAccent')}</span>
           </h2>
-          <p className={styles.body}>
-            Stream sessions live. Drop tracks into shared playlists. DM another producer to swap stems. Likes, follows
-            and comments tied to the waveform itself — feedback lands on the bar it was meant for.
-          </p>
+          <p className={styles.body}>{t('landing.community.body')}</p>
           <ul className={styles.bullets}>
             {BULLETS.map((bullet) => (
-              <li key={bullet.text} className={styles.bullet}>
+              <li key={bullet.textKey} className={styles.bullet}>
                 <span style={{ color: bullet.color, display: 'inline-flex' }}>
                   <MsnIcon name={bullet.icon} size="16px" />
                 </span>
-                {bullet.text}
+                {t(bullet.textKey)}
               </li>
             ))}
           </ul>

@@ -1,3 +1,4 @@
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 
 interface PasswordStrengthProps {
@@ -13,7 +14,14 @@ const COLORS = [
   'hsl(140, 65%, 45%)', // 4
   'hsl(140, 65%, 45%)', // 5
 ];
-const LABELS = ['Too short', 'Weak', 'OK', 'Good', 'Strong', 'Excellent'];
+const LABEL_KEYS: TranslationKey[] = [
+  'auth.passwordStrength.tooShort',
+  'auth.passwordStrength.weak',
+  'auth.passwordStrength.ok',
+  'auth.passwordStrength.good',
+  'auth.passwordStrength.strong',
+  'auth.passwordStrength.excellent',
+];
 
 function scorePassword(pw: string): number {
   let score = 0;
@@ -26,6 +34,8 @@ function scorePassword(pw: string): number {
 }
 
 export function PasswordStrength({ value }: PasswordStrengthProps): JSX.Element | null {
+  const { t } = useTranslation();
+
   // Nothing to show until the user types something.
   if (!value) return null;
 
@@ -57,7 +67,7 @@ export function PasswordStrength({ value }: PasswordStrengthProps): JSX.Element 
           textTransform: 'uppercase',
         }}
       >
-        {LABELS[score]}
+        {t(LABEL_KEYS[score])}
       </span>
     </div>
   );

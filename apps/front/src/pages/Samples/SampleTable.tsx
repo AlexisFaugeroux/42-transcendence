@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import {
   Button,
   DeleteOutlined,
@@ -10,6 +11,7 @@ import {
 } from '@transcendence/ui';
 import type { JSX, Key } from 'react';
 import type { AudioFile } from '../../types/audioFile';
+import { MODE_ABBR } from './constants';
 import { familyColor, formatBytes, formatDuration, formatKey, formatKind } from './helpers';
 import styles from './SampleTable.module.scss';
 import { WaveformPlaceholder } from './WaveformPlaceholder';
@@ -35,6 +37,9 @@ export function SampleTable({
   rows,
   selectedKeys,
 }: SampleTableProps): JSX.Element {
+  const { i18n, t } = useTranslation();
+  const locale = i18n.language;
+
   const columns: TableColumnsType<AudioFile> = [
     {
       key: 'play',
@@ -72,18 +77,18 @@ export function SampleTable({
           </div>
         </div>
       ),
-      title: 'Name',
+      title: t('samples.table.name'),
     },
     {
       key: 'waveform',
       render: (_, row) => <WaveformPlaceholder seed={row.id} color={theme.fg1} />,
-      title: 'Waveform',
+      title: t('samples.table.waveform'),
       width: 220,
     },
     {
       key: 'bpm',
       render: (_, row) => <span className={styles.mono}>{row.bpm ?? '—'}</span>,
-      title: 'BPM',
+      title: t('samples.table.bpm'),
       width: 70,
     },
     {
@@ -91,28 +96,28 @@ export function SampleTable({
       render: (_, row) => (
         <span className={styles.mono}>
           {row.key ? formatKey(row.key) : '—'}
-          {row.key && row.mode ? <span className={styles.muted}> {row.mode === 'MAJOR' ? 'maj' : 'min'}</span> : null}
+          {row.key && row.mode ? <span className={styles.muted}> {t(MODE_ABBR[row.mode])}</span> : null}
         </span>
       ),
-      title: 'Key',
+      title: t('samples.table.key'),
       width: 90,
     },
     {
       key: 'duration',
       render: (_, row) => <span className={styles.mono}>{formatDuration(row.duration)}</span>,
-      title: 'Length',
+      title: t('samples.table.length'),
       width: 80,
     },
     {
       key: 'bytes',
-      render: (_, row) => <span className={styles.mono}>{formatBytes(row.bytes)}</span>,
-      title: 'Size',
+      render: (_, row) => <span className={styles.mono}>{formatBytes(row.bytes, locale)}</span>,
+      title: t('samples.table.size'),
       width: 90,
     },
     {
       key: 'kind',
       render: (_, row) => <Tag>{row.kind ? formatKind(row.kind) : '—'}</Tag>,
-      title: 'Type',
+      title: t('samples.table.type'),
       width: 90,
     },
     {
@@ -124,7 +129,7 @@ export function SampleTable({
             <Button
               type="text"
               size="small"
-              title="Edit"
+              title={t('common.edit')}
               onClick={() => {
                 onEdit(row);
               }}
@@ -132,7 +137,7 @@ export function SampleTable({
               <EditOutlined />
             </Button>
           ) : null}
-          <Button type="text" size="small" title="Download">
+          <Button type="text" size="small" title={t('common.download')}>
             <MsnIcon name="download" size="12px" />
           </Button>
           {row.ownerId === ownerId ? (
@@ -140,7 +145,7 @@ export function SampleTable({
               type="text"
               size="small"
               danger
-              title="Delete"
+              title={t('common.delete')}
               onClick={() => {
                 onDelete(row);
               }}
@@ -150,7 +155,7 @@ export function SampleTable({
           ) : null}
         </div>
       ),
-      title: 'Actions',
+      title: t('samples.table.actions'),
       width: 120,
     },
   ];

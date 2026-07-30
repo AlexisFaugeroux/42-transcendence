@@ -1,3 +1,4 @@
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { MsnIcon } from '@transcendence/ui';
 import type { MsnIconLabel } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
@@ -5,18 +6,19 @@ import styles from './SettingsNav.module.scss';
 
 interface NavSection {
   id: string;
-  label: string;
+  labelKey: TranslationKey;
   icon: MsnIconLabel;
 }
 
 const SECTIONS: NavSection[] = [
-  { icon: 'user', id: 'profile', label: 'Profile' },
-  { icon: 'settings', id: 'account', label: 'Account' },
-  { icon: 'bell', id: 'danger', label: 'Danger zone' },
+  { icon: 'user', id: 'profile', labelKey: 'settings.nav.profile' },
+  { icon: 'settings', id: 'account', labelKey: 'settings.nav.account' },
+  { icon: 'bell', id: 'danger', labelKey: 'settings.nav.danger' },
 ];
 
 export function SettingsNav(): JSX.Element {
   const [activeId, setActiveId] = useState('profile');
+  const { t } = useTranslation();
 
   // Watch the three <section> elements and highlight whichever is most in view.
   useEffect(() => {
@@ -42,7 +44,7 @@ export function SettingsNav(): JSX.Element {
 
   return (
     <>
-      <div className={styles.label}>Settings</div>
+      <div className={styles.label}>{t('settings.nav.label')}</div>
       <nav className={styles.nav}>
         {SECTIONS.map((section) => (
           <a
@@ -50,7 +52,7 @@ export function SettingsNav(): JSX.Element {
             href={`#${section.id}`}
             className={`${styles.item} ${activeId === section.id ? styles.active : ''}`}
           >
-            <MsnIcon name={section.icon} size="13px" /> {section.label}
+            <MsnIcon name={section.icon} size="13px" /> {t(section.labelKey)}
           </a>
         ))}
       </nav>

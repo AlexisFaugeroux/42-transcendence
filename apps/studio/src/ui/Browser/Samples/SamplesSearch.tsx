@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, TeamOutlined, theme } from '@transcendence/ui';
 import type { Dispatch, JSX, SetStateAction } from 'react';
 import type { SampleLibrary } from './Samples';
@@ -9,6 +10,8 @@ interface SamplesSearchProps {
 }
 
 export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSearchProps): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -40,6 +43,7 @@ export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSea
       >
         <Button
           style={{ borderColor: activeLib === 'user' ? theme.orange : undefined }}
+          title={t('studio.browser.myLibrary')}
           onClick={() => {
             if (activeLib !== 'user') setActiveLib('user');
           }}
@@ -48,6 +52,7 @@ export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSea
 
         <Button
           style={{ borderColor: activeLib === 'shared' ? theme.orange : undefined }}
+          title={t('studio.browser.sharedLibrary')}
           onClick={() => {
             if (activeLib !== 'shared') setActiveLib('shared');
           }}
@@ -56,7 +61,7 @@ export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSea
         <Input
           size="small"
           prefix={<SearchOutlined style={{ color: theme.fg3 }} />}
-          placeholder="Chercher un sample"
+          placeholder={t('studio.browser.searchPlaceholder')}
           onChange={(e) => {
             setSearch(e.target.value);
           }}

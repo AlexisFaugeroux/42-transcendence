@@ -1,34 +1,67 @@
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { MsnIcon, MsnWordmark } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SiteFooter.module.scss';
 
 interface FooterCol {
-  title: string;
-  links: string[];
+  titleKey: TranslationKey;
+  linkKeys: TranslationKey[];
 }
 
 // `to` set → routed page exists; otherwise still a placeholder anchor.
 interface LegalLink {
-  label: string;
+  labelKey: TranslationKey;
   to?: string;
 }
 
 const COLUMNS: FooterCol[] = [
-  { links: ['Features', 'Beat maker', 'Recording', 'Mixer', 'Stream'], title: 'Product' },
-  { links: ['Discover', 'Playlists', 'Live now', 'Discord', 'Newsletter'], title: 'Community' },
-  { links: ['Manuals', 'Tutorials', 'Changelog', 'Status', 'Roadmap'], title: 'Resources' },
-  { links: ['About', 'Contact', 'Press kit'], title: 'Company' },
+  {
+    linkKeys: [
+      'landing.footer.product.features',
+      'landing.footer.product.beatMaker',
+      'landing.footer.product.recording',
+      'landing.footer.product.mixer',
+      'landing.footer.product.stream',
+    ],
+    titleKey: 'landing.footer.product.title',
+  },
+  {
+    linkKeys: [
+      'landing.footer.community.discover',
+      'landing.footer.community.playlists',
+      'landing.footer.community.liveNow',
+      'landing.footer.community.discord',
+      'landing.footer.community.newsletter',
+    ],
+    titleKey: 'landing.footer.community.title',
+  },
+  {
+    linkKeys: [
+      'landing.footer.resources.manuals',
+      'landing.footer.resources.tutorials',
+      'landing.footer.resources.changelog',
+      'landing.footer.resources.status',
+      'landing.footer.resources.roadmap',
+    ],
+    titleKey: 'landing.footer.resources.title',
+  },
+  {
+    linkKeys: ['landing.footer.company.about', 'landing.footer.company.contact', 'landing.footer.company.press'],
+    titleKey: 'landing.footer.company.title',
+  },
 ];
 
 const LEGAL: LegalLink[] = [
-  { label: 'Terms', to: '/terms' },
-  { label: 'Privacy', to: '/privacy' },
-  { label: 'Legal mentions', to: '/legal' },
-  { label: 'Cookies' },
+  { labelKey: 'legal.terms.navLabel', to: '/terms' },
+  { labelKey: 'legal.privacy.navLabel', to: '/privacy' },
+  { labelKey: 'legal.mentions.navLabel', to: '/legal' },
+  { labelKey: 'legal.cookies.navLabel' },
 ];
 
 export function SiteFooter(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -38,17 +71,17 @@ export function SiteFooter(): JSX.Element {
               <MsnIcon name="msn" size="20px" color="hsl(25, 90%, 55%)" />
               <MsnWordmark size={14} accent="hsl(25, 90%, 55%)" />
             </div>
-            <p className={styles.tagline}>A browser-based studio with a built-in audience. No installs, no tracking.</p>
+            <p className={styles.tagline}>{t('landing.footer.tagline')}</p>
           </div>
 
           {COLUMNS.map((col) => (
-            <div key={col.title}>
-              <div className={styles.colTitle}>{col.title}</div>
+            <div key={col.titleKey}>
+              <div className={styles.colTitle}>{t(col.titleKey)}</div>
               <ul className={styles.linkList}>
-                {col.links.map((link) => (
-                  <li key={link}>
+                {col.linkKeys.map((linkKey) => (
+                  <li key={linkKey}>
                     <a href="#" className={styles.link}>
-                      {link}
+                      {t(linkKey)}
                     </a>
                   </li>
                 ))}
@@ -60,16 +93,16 @@ export function SiteFooter(): JSX.Element {
         <div className={styles.divider} />
 
         <div className={styles.legal}>
-          <div>© 2026 MakeSomeNoise. Built with ♥.</div>
+          <div>{t('landing.footer.copyright', { year: 2026 })}</div>
           <div className={styles.legalLinks}>
             {LEGAL.map((item) =>
               item.to ? (
-                <Link key={item.label} to={item.to} className={styles.link}>
-                  {item.label}
+                <Link key={item.labelKey} to={item.to} className={styles.link}>
+                  {t(item.labelKey)}
                 </Link>
               ) : (
-                <a key={item.label} href="#" className={styles.link}>
-                  {item.label}
+                <a key={item.labelKey} href="#" className={styles.link}>
+                  {t(item.labelKey)}
                 </a>
               ),
             )}

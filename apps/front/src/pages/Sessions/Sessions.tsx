@@ -1,3 +1,4 @@
+import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
@@ -5,14 +6,20 @@ import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
 import { RenameSessionModal } from './RenameSessionModal';
 import { SessionGrid } from './SessionGrid';
-import { type Session, SESSIONS } from './sessions.data';
+import { type Session, SESSIONS, type SessSort } from './sessions.data';
 import styles from './Sessions.module.scss';
 import { SessionsEmpty, SessionsNoMatches } from './SessionsEmpty';
-import { type SessSort, SessToolbar } from './SessToolbar';
+import { SessToolbar } from './SessToolbar';
 
 type Bucket = 'owned' | 'archived';
 
+const TABS: { value: Bucket; labelKey: TranslationKey }[] = [
+  { labelKey: 'sessions.tabs.owned', value: 'owned' },
+  { labelKey: 'sessions.tabs.archived', value: 'archived' },
+];
+
 export function Sessions(): JSX.Element {
+  const { t } = useTranslation();
   const [bucket, setBucket] = useState<Bucket>('owned');
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
@@ -26,11 +33,6 @@ export function Sessions(): JSX.Element {
     archived: SESSIONS.filter((s) => s.archived).length,
     owned: SESSIONS.filter((s) => !s.archived).length,
   };
-
-  const TABS: { value: Bucket; label: string }[] = [
-    { label: 'Owned by me', value: 'owned' },
-    { label: 'Archived', value: 'archived' },
-  ];
 
   const filtered = useMemo(() => {
     let list = SESSIONS.filter((s) => (bucket === 'archived' ? s.archived : !s.archived));
@@ -75,14 +77,14 @@ export function Sessions(): JSX.Element {
       <div className={styles.container}>
         <div className={styles.titleRow}>
           <div>
-            <div className={styles.eyebrow}>Workspace</div>
-            <h1 className={styles.title}>My sessions</h1>
+            <div className={styles.eyebrow}>{t('nav.workspace')}</div>
+            <h1 className={styles.title}>{t('sessions.title')}</h1>
             <p className={styles.subtitle}>
-              {counts.owned} active · {counts.archived} archived
+              {t('sessions.counts', { active: counts.owned, archived: counts.archived })}
             </p>
           </div>
           <Button type="primary" size="large" onClick={openNew}>
-            <MsnIcon name="plus" size="13px" /> New session
+            <MsnIcon name="plus" size="13px" /> {t('sessions.newSession')}
           </Button>
         </div>
 
@@ -95,7 +97,7 @@ export function Sessions(): JSX.Element {
                 setBucket(tab.value);
               }}
             >
-              {tab.label}
+              {t(tab.labelKey)}
               <span className={styles.tabCount}>{counts[tab.value]}</span>
             </button>
           ))}

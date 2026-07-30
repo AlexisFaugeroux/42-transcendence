@@ -8,7 +8,7 @@ export function DeepDives(): JSX.Element {
     <section className={styles.section}>
       <div className={styles.inner}>
         {DEEP_DIVES.map((dive, index) => (
-          <DeepDiveRow key={dive.title} {...dive} reverse={index % 2 === 1} />
+          <DeepDiveRow key={dive.id} {...dive} reverse={index % 2 === 1} />
         ))}
       </div>
     </section>

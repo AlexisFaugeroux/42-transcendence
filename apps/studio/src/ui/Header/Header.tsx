@@ -1,3 +1,4 @@
+import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import { IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
@@ -7,6 +8,8 @@ import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
 
 export function Header(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <header className={styles.header}>
       {/* TODO: must link to sessions page from front app */}
@@ -18,16 +21,16 @@ export function Header(): JSX.Element {
 
       <div className={styles.titleBloc}>
         {/* TODO: Make project name and project state dynamic */}
-        <span className={styles.projectPill}>Project</span>
+        <span className={styles.projectPill}>{t('studio.header.project')}</span>
         <span className={styles.projectTitle}>Pipi caca prout</span>
-        <span className={styles.projectState}>● saved</span>
+        <span className={styles.projectState}>● {t('studio.header.saved')}</span>
       </div>
       <Separator />
 
       {/* TODO: implement undo/redo mechanic */}
       <div>
         <IconBtn
-          title="Undo"
+          title={t('studio.header.undo')}
           onClick={() => {
             console.log('un-prout');
           }}
@@ -35,7 +38,7 @@ export function Header(): JSX.Element {
           <StudioIcon name="undo" size={14} />
         </IconBtn>
         <IconBtn
-          title="Redo"
+          title={t('studio.header.redo')}
           onClick={() => {
             console.log('re-prout');
           }}
@@ -52,6 +55,9 @@ export function Header(): JSX.Element {
       <Separator />
 
       <Meter />
+      <Separator />
+
+      <LanguageSelect compact />
     </header>
   );
 }

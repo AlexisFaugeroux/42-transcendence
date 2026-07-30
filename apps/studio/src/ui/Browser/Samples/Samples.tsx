@@ -1,32 +1,40 @@
+import { useTranslation } from '@transcendence/i18n';
 import { ConfigProvider, Table, type TableColumnsType, theme } from '@transcendence/ui';
 import { type DragEvent, type JSX, useState } from 'react';
 import { useSamples } from '../../../hooks/useSamples';
 import { useTableScrollY } from '../../../hooks/useTableScrollY';
+import type { Sample } from '../../../lib/types';
 import styles from './Samples.module.scss';
 import { SamplesSearch } from './SamplesSearch';
 export type SampleLibrary = 'user' | 'shared';
-
-const columns: TableColumnsType<{ name: string; bpm?: number; key?: string }> = [
-  {
-    dataIndex: 'name',
-    ellipsis: true,
-    sorter: (a, b) => a.name.localeCompare(b.name),
-    title: 'Name',
-    width: 170,
-  },
-  { align: 'right', dataIndex: 'bpm', sorter: (a, b) => (a.bpm ?? 0) - (b.bpm ?? 0), title: 'Bpm' },
-  {
-    align: 'right',
-    dataIndex: 'sampleKey',
-    sorter: (a, b) => a.name.localeCompare(b.name),
-    title: 'Key',
-  },
-];
 
 export function Samples(): JSX.Element {
   const [activeLib, setActiveLib] = useState<SampleLibrary>('user');
   const [search, setSearch] = useState('');
   const { ref, y } = useTableScrollY();
+  const { t } = useTranslation();
+
+  const columns: TableColumnsType<Sample> = [
+    {
+      dataIndex: 'name',
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      title: t('studio.browser.table.name'),
+      width: 170,
+    },
+    {
+      align: 'right',
+      dataIndex: 'bpm',
+      sorter: (a, b) => (a.bpm ?? 0) - (b.bpm ?? 0),
+      title: t('studio.browser.table.bpm'),
+    },
+    {
+      align: 'right',
+      dataIndex: 'sampleKey',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      title: t('studio.browser.table.key'),
+    },
+  ];
 
   const { data, error, isError } = useSamples();
   if (isError) console.error(error);

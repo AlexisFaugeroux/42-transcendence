@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAuthUser, useUser } from '@transcendence/auth';
+import { LanguageSelect, type TranslationKey, useTranslation } from '@transcendence/i18n';
 import {
   Button,
   CloseCircleOutlined,
@@ -21,32 +22,17 @@ import styles from './AppHeader.module.scss';
 
 export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'settings';
 
-const items: MenuProps['items'] = [
-  {
-    icon: <LogoutOutlined style={{ color: theme.orange }} />,
-    key: 'logout',
-    label: 'Logout',
-    style: { fontSize: '10px' },
-  },
-  {
-    icon: <FileProtectOutlined style={{ color: theme.orange }} />,
-    key: 'privacy',
-    label: 'Privacy terms',
-    style: { fontSize: '10px' },
-  },
-];
-
 interface HeaderLink {
   key: AppHeaderKey;
-  label: string;
+  labelKey: TranslationKey;
   to: string;
 }
 
 const LINKS: HeaderLink[] = [
-  { key: 'home', label: 'Home', to: '/home' },
-  { key: 'sessions', label: 'Sessions', to: '/sessions' },
-  { key: 'library', label: 'Library', to: '/library' },
-  { key: 'settings', label: 'Settings', to: '/settings' },
+  { key: 'home', labelKey: 'header.home', to: '/home' },
+  { key: 'sessions', labelKey: 'header.sessions', to: '/sessions' },
+  { key: 'library', labelKey: 'header.library', to: '/library' },
+  { key: 'settings', labelKey: 'header.settings', to: '/settings' },
 ];
 
 // Shared top header for the in-app pages (Home / Sessions / Library / Settings).
@@ -55,7 +41,23 @@ export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
   const user = useAuthUser();
   const { logout } = useUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
+
+  const items: MenuProps['items'] = [
+    {
+      icon: <LogoutOutlined style={{ color: theme.orange }} />,
+      key: 'logout',
+      label: t('header.logout'),
+      style: { fontSize: '10px' },
+    },
+    {
+      icon: <FileProtectOutlined style={{ color: theme.orange }} />,
+      key: 'privacy',
+      label: t('header.privacyTerms'),
+      style: { fontSize: '10px' },
+    },
+  ];
 
   const openErrorNotification = (error: Error) => {
     const key = `open${Date.now()}`;
@@ -65,7 +67,7 @@ export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: 'An error occured while deleting you account',
+      title: t('header.logoutError'),
     });
   };
 
@@ -102,13 +104,14 @@ export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
             to={link.to}
             className={`${styles.navLink} ${active === link.key ? styles.navLinkActive : ''}`}
           >
-            {link.label}
+            {t(link.labelKey)}
           </Link>
         ))}
       </nav>
 
       <div className={styles.right}>
-        <HeaderIconButton label="Notifications">
+        <LanguageSelect />
+        <HeaderIconButton label={t('header.notifications')}>
           <MsnIcon name="bell" size="16px" />
         </HeaderIconButton>
         <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>

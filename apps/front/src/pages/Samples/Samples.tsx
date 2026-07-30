@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
+import { useTranslation } from '@transcendence/i18n';
 import {
   Button,
   CheckCircleOutlined,
@@ -31,6 +32,7 @@ import { UploadModal } from './UploadModal';
 export function Samples(): JSX.Element {
   const user = useAuthUser();
   const queryClient = useQueryClient();
+  const { i18n, t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
@@ -103,18 +105,21 @@ export function Samples(): JSX.Element {
       return ids.filter((_, index) => results[index].status === 'rejected');
     },
     onError: (error) => {
-      notifyError('Deletion failed', error.message);
+      notifyError(t('samples.delete.failedTitle'), error.message);
     },
     onSettled: invalidateLibrary,
     onSuccess: (failedIds, ids) => {
       if (failedIds.length) {
         setSelectedKeys(failedIds);
-        notifyError('Deletion failed', `${failedIds.length.toString()} of ${ids.length.toString()} samples were kept`);
+        notifyError(
+          t('samples.delete.failedTitle'),
+          t('samples.delete.partialFailure', { kept: failedIds.length, total: ids.length }),
+        );
         return;
       }
 
       setSelectedKeys([]);
-      notifySuccess('Samples deleted', `${ids.length.toString()} sample(s) removed from your library`);
+      notifySuccess(t('samples.delete.successTitle'), t('samples.delete.successDescription', { count: ids.length }));
     },
   });
 
@@ -153,11 +158,16 @@ export function Samples(): JSX.Element {
       <div className={styles.container}>
         <div className={styles.titleRow}>
           <div>
-            <div className={styles.eyebrow}>Library</div>
-            <h1 className={styles.title}>Samples</h1>
+            <div className={styles.eyebrow}>{t('samples.eyebrow')}</div>
+            <h1 className={styles.title}>{t('samples.title')}</h1>
             <p className={styles.subtitle}>
-              {samples.length} sounds
-              {storage ? ` · ${formatBytes(storage.usedBytes)} used of ${formatBytes(storage.quotaBytes)}` : null}
+              {t('samples.soundCount', { count: samples.length })}
+              {storage
+                ? ` · ${t('samples.storageSummary', {
+                    quota: formatBytes(storage.quotaBytes, i18n.language),
+                    used: formatBytes(storage.usedBytes, i18n.language),
+                  })}`
+                : null}
             </p>
           </div>
           <div className={styles.actions}>
@@ -171,7 +181,7 @@ export function Samples(): JSX.Element {
                 backgroundColor: theme.orange,
               }}
             >
-              <MsnIcon name="plus" size="13px" /> Add sample
+              <MsnIcon name="plus" size="13px" /> {t('samples.addSample')}
             </Button>
           </div>
         </div>
@@ -181,11 +191,11 @@ export function Samples(): JSX.Element {
         ) : error ? (
           <Result
             status="error"
-            title="Failed to load samples"
+            title={t('samples.loadError')}
             subTitle={error.message}
             extra={
               <Button type="primary" onClick={retry}>
-                Retry
+                {t('common.retry')}
               </Button>
             }
           />

@@ -1,15 +1,18 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './SessionsEmpty.module.scss';
 
 // Shown when a bucket has no sessions at all.
 export function SessionsEmpty({ bucket, onNew }: { bucket: 'owned' | 'archived'; onNew: () => void }): JSX.Element {
+  const { t } = useTranslation();
+
   if (bucket === 'archived') {
     return (
       <div className={styles.box}>
         <MsnIcon name="folder" size="28px" color={theme.blue} />
-        <h3 className={styles.title}>Nothing archived</h3>
-        <p className={styles.text}>Archived sessions will live here when you&apos;re done with them.</p>
+        <h3 className={styles.title}>{t('sessions.emptyArchived.title')}</h3>
+        <p className={styles.text}>{t('sessions.emptyArchived.text')}</p>
       </div>
     );
   }
@@ -26,12 +29,10 @@ export function SessionsEmpty({ bucket, onNew }: { bucket: 'owned' | 'archived';
           <MsnIcon name="mix" size="22px" />
         </span>
       </div>
-      <h3 className={styles.title}>No sessions yet</h3>
-      <p className={styles.text}>
-        Sessions are where you record, produce and mix. Start your first one — it takes about three seconds.
-      </p>
+      <h3 className={styles.title}>{t('sessions.emptyOwned.title')}</h3>
+      <p className={styles.text}>{t('sessions.emptyOwned.text')}</p>
       <Button type="primary" size="large" onClick={onNew}>
-        <MsnIcon name="plus" size="13px" /> Create your first session
+        <MsnIcon name="plus" size="13px" /> {t('sessions.emptyOwned.action')}
       </Button>
     </div>
   );
@@ -39,12 +40,14 @@ export function SessionsEmpty({ bucket, onNew }: { bucket: 'owned' | 'archived';
 
 // Shown when filters hide everything in a non-empty bucket.
 export function SessionsNoMatches({ onClear }: { onClear: () => void }): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.box}>
       <MsnIcon name="search" size="22px" color={theme.orange} />
-      <h3 className={styles.title}>No sessions match these filters</h3>
-      <p className={styles.text}>Try changing your filters or clearing them.</p>
-      <Button onClick={onClear}>Clear filters</Button>
+      <h3 className={styles.title}>{t('sessions.noMatches.title')}</h3>
+      <p className={styles.text}>{t('sessions.noMatches.text')}</p>
+      <Button onClick={onClear}>{t('sessions.noMatches.clearFilters')}</Button>
     </div>
   );
 }

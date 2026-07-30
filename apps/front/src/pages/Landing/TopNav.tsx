@@ -1,12 +1,21 @@
+import { LanguageSelect, type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, MsnWordmark } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './TopNav.module.scss';
 
 // No pages for these yet — placeholder anchors until those sections exist.
-const NAV_LINKS = ['Features', 'Make beats', 'Stream', 'Community', 'Manuals'];
+const NAV_LINKS: TranslationKey[] = [
+  'landing.nav.features',
+  'landing.nav.makeBeats',
+  'landing.nav.stream',
+  'landing.nav.community',
+  'landing.nav.manuals',
+];
 
 export function TopNav(): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <header className={styles.nav}>
       <div className={styles.bar}>
@@ -16,19 +25,20 @@ export function TopNav(): JSX.Element {
         </Link>
 
         <nav className={styles.links}>
-          {NAV_LINKS.map((label) => (
-            <a key={label} href="#" className={styles.link}>
-              {label}
+          {NAV_LINKS.map((labelKey) => (
+            <a key={labelKey} href="#" className={styles.link}>
+              {t(labelKey)}
             </a>
           ))}
         </nav>
 
         <div className={styles.actions}>
+          <LanguageSelect />
           <Link to="/login">
-            <Button>Log in</Button>
+            <Button>{t('auth.login.action')}</Button>
           </Link>
           <Link to="/register">
-            <Button type="primary">Sign up free</Button>
+            <Button type="primary">{t('auth.register.action')}</Button>
           </Link>
         </div>
       </div>

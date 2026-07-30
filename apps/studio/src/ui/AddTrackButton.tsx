@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { Dropdown, type MenuProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { InstrumentType } from '../lib/arrangementFactory';
@@ -7,13 +8,15 @@ interface AddTrackButtonProps {
   onAddTrack: (value: InstrumentType) => void;
 }
 
-const items: MenuProps['items'] = [
-  { key: 'Tape', label: 'Audio (Tape)', style: { fontSize: '10px' } },
-  { key: 'Nano', label: 'Sampler (Nano)', style: { fontSize: '10px' } },
-  { key: 'Vaporisateur', label: 'Synth (Vaporisateur)', style: { fontSize: '10px' } },
-];
-
 export function AddTrackButton({ onAddTrack }: AddTrackButtonProps): JSX.Element {
+  const { t } = useTranslation();
+
+  const items: MenuProps['items'] = [
+    { key: 'Tape', label: t('studio.addTrack.tape'), style: { fontSize: '10px' } },
+    { key: 'Nano', label: t('studio.addTrack.nano'), style: { fontSize: '10px' } },
+    { key: 'Vaporisateur', label: t('studio.addTrack.vaporisateur'), style: { fontSize: '10px' } },
+  ];
+
   return (
     <Dropdown
       menu={{
@@ -28,7 +31,7 @@ export function AddTrackButton({ onAddTrack }: AddTrackButtonProps): JSX.Element
         style={{ alignItems: 'center', background: 'transparent', border: 0, cursor: 'pointer', display: 'flex' }}
       >
         <StudioIcon name="add" size={14} color={theme.fg1} />
-        <span style={{ fontSize: 10 }}> Add track</span>
+        <span style={{ fontSize: 10 }}> {t('studio.addTrack.label')}</span>
       </button>
     </Dropdown>
   );
