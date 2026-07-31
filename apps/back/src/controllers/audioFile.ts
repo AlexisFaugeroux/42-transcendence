@@ -7,7 +7,7 @@ import { ownerRepository } from '../repositories/owner';
 import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
 import { parseUploadAudioFileFields } from '../utils/validation';
-import { type ParsedWAVFile, parseWAV } from '../utils/wav';
+import { wavManager, type WavInfo } from '../services/wav';
 
 interface GetAudioFilesRoute extends RouteGenericInterface {
   Querystring: GetAudioFileInput;
@@ -83,12 +83,12 @@ class AudioFileController {
 
     // Parse from file on disk
     try {
-      let info: ParsedWAVFile;
+      let info: WavInfo;
       try {
-        info = await parseWAV(filePath);
+        info = await wavManager.decodeWav(filePath, { channelData: false });
       } catch (error) {
         req.log.error(error);
-        throw new BadRequestError(`invalid WAV file`);
+        throw new BadRequestError(`invalid .wav file`);
       }
 
       // Check user quota
