@@ -23,6 +23,13 @@ import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
 import { saveProject, loadProject } from '../api/project';
 import type { ProjectProperties } from "../lib/types";
+import { getAudioById } from '../api/audiofile';
+import { arrayBufferToBase64, base64ToArrayBuffer } from '../utils/base64';
+import { loadAudioFile } from './audioUtils';
+import type { Track } from '../lib/types';
+import type { Clip } from '../lib/types';
+import { PPQN } from '@opendaw/lib-dsp';
+import { theme } from '@transcendence/ui/theme';
 
 function testFeatures() {
   requireProperty(Promise, 'withResolvers');
@@ -77,8 +84,8 @@ export interface ProjectSetupResult {
 
 let _initPromise: Promise<ProjectSetupResult> | null = null;
 
-export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectPropeties : ProjectProperties ): Promise<ProjectSetupResult> {
-  _initPromise ??= _doInitializeOpenDaw(options, projectPropeties);
+export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectProperties : ProjectProperties ): Promise<ProjectSetupResult> {
+  _initPromise ??= _doInitializeOpenDaw(options, projectProperties);
   return _initPromise;
 }
 
@@ -96,7 +103,7 @@ export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectProp
  * @returns Promise resolving to initialized Project and AudioContext
  * @throws Error if initialization fails or features are not supported
  */
-export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, projectPropeties : ProjectProperties ): Promise<ProjectSetupResult> {
+export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, projectProperties : ProjectProperties ): Promise<ProjectSetupResult> {
   const { bpm, localAudioBuffers, onStatusUpdate } = options;
 
   console.log('========================================');
@@ -150,28 +157,39 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
     fetch: async (uuid: UUID.Bytes): Promise<[AudioData, SampleMetaData]> => {
       const uuidString = UUID.toString(uuid);
       console.debug(`Sample manager fetch called for UUID: ${uuidString}`);
-
+      let audioBuffer;
       // Check if we have a local audio buffer for this UUID
       if (localAudioBuffers) {
-        const audioBuffer = localAudioBuffers.get(uuidString);
-
-        if (audioBuffer) {
-          console.debug(
-            `Found local audio buffer for ${uuidString}, channels: ${audioBuffer.numberOfChannels}, duration: ${audioBuffer.duration}s`,
-          );
-          const audioData = audioBufferToAudioData(audioBuffer);
-          const metaData: SampleMetaData = {
-            bpm: bpm ?? 0,
-            duration: audioBuffer.duration,
-            name: uuidString,
-            origin: 'import',
-            sample_rate: audioBuffer.sampleRate,
-          };
-
-          return [audioData, metaData];
-        }
+        audioBuffer = localAudioBuffers.get(uuidString);
       }
+      else {
 
+        const id = UUID.toString(uuid);
+        const sample = await getAudioById( id );
+        if (!sample) throw new Error("Failed to fetch sample in OpenDaw init");
+        audioBuffer = await loadAudioFile(
+          audioContext,
+          sample.url,
+          sample.id,
+          ""
+        )
+
+      }
+      if (audioBuffer) {
+        console.debug(
+          `Found local audio buffer for ${uuidString}, channels: ${audioBuffer.numberOfChannels}, duration: ${audioBuffer.duration}s`,
+        );
+        const audioData = audioBufferToAudioData(audioBuffer);
+        const metaData: SampleMetaData = {
+          bpm: bpm ?? 0,
+          duration: audioBuffer.duration,
+          name: uuidString,
+          origin: 'import',
+          sample_rate: audioBuffer.sampleRate,
+        };
+        return [audioData, metaData];
+      }
+      
       // Samples imported via SampleService
       const sample = await SampleStorage.get().exists(uuid);
       if (sample) {
@@ -216,9 +234,8 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
   // Create project
   const audioWorklets = AudioWorklets.get(audioContext);
   let project : Project;
-  if (!projectPropeties.id)
+  if (!projectProperties.id)
   {
-      const decoder = new TextDecoder();
       project = Project.new({
       audioContext,
       audioWorklets,
@@ -228,29 +245,29 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
       soundfontService,
     });
 
-    projectPropeties.id = UUID.generate().toString();
-    projectPropeties.state = decoder.decode(project.boxGraph.toArrayBuffer());
-    await saveProject( projectPropeties );
+    projectProperties.id = UUID.generate().toString();
+    projectProperties.state = arrayBufferToBase64(project.toArrayBuffer());
+    await saveProject( projectProperties );
 
   }
   else
   {
-    const encoder = new TextEncoder();
-    projectPropeties = await loadProject( projectPropeties.id );
-    const buffer = encoder.encode( projectPropeties.state ).buffer;
-    project = Project.load({     
-      audioContext,
-      audioWorklets,
-      sampleManager,
-      sampleService,
-      soundfontManager,
-      soundfontService
-    }
-    , buffer );
+    projectProperties = await loadProject( projectProperties.id );
+    const buffer = base64ToArrayBuffer(projectProperties.state);
+    project = await Project.loadAnyVersion(
+      {
+        audioContext,
+        audioWorklets,
+        sampleManager,
+        sampleService,
+        soundfontManager,
+        soundfontService,
+      },
+      buffer,
+    );
   }
-  if (!projectPropeties.id) throw new Error("ProjectId missing");
-  const id : string = projectPropeties.id;
-
+  if (!projectProperties.id) throw new Error("ProjectId missing");
+  const id : string = projectProperties.id;
   // Set BPM if custom value provided
   if (bpm && bpm !== 120) {
     project.editing.modify(() => {
@@ -277,4 +294,66 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
     document.addEventListener('keydown', resume);
   }
   return { audioContext, project, id };
+}
+
+function isInstrumentName(value: string): value is Track['instrumentName'] {
+  return value === 'Tape' || value === 'Nano' || value === 'Vaporisateur';
+}
+
+export function reloadClipsAndTracks(project: Project): {
+  tracks: Track[];
+  clips: Clip[];
+} {
+  const tracks: Track[] = [];
+  const clips: Clip[] = [];
+
+  const audioUnits = project.rootBoxAdapter.audioUnits
+    .adapters()
+    .filter((audioUnit) => audioUnit.isInstrument);
+
+  for (const audioUnit of audioUnits) {
+    const instrumentName = audioUnit.label;
+
+    if (!isInstrumentName(instrumentName)) continue;
+
+    for (const trackAdapter of audioUnit.tracks.values()) {
+      const track: Track = {
+        audioUnitBox: audioUnit.box,
+        color: theme.fg2,
+        instrumentName,
+        name: `${instrumentName}-${tracks.length + 1}`,
+        trackBox: trackAdapter.box,
+        uuid: trackAdapter.uuid,
+      };
+
+      tracks.push(track);
+
+      const regions = trackAdapter.regions.collection.asArray();
+
+      for (const region of regions) {
+        if (!region.isAudioRegion()) continue;
+
+        const eventCollection = region.optCollection;
+        if (eventCollection.isEmpty()) continue;
+
+        clips.push({
+          audioDuration: PPQN.pulsesToSeconds(
+            region.duration,
+            project.timelineBox.bpm.getValue(),
+          ),
+          audioFileBox: region.file.box,
+          color: track.color,
+          duration: region.duration,
+          eventsCollectionBox: eventCollection.unwrap().box,
+          label: region.box.label.getValue(),
+          position: region.position,
+          regionBox: region.box,
+          trackBox: track.trackBox,
+          trackName: track.name,
+        });
+      }
+    }
+  }
+
+  return { clips, tracks };
 }

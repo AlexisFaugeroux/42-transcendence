@@ -10,6 +10,7 @@ import { type Session, SESSIONS, type SessSort } from './sessions.data';
 import styles from './Sessions.module.scss';
 import { SessionsEmpty, SessionsNoMatches } from './SessionsEmpty';
 import { SessToolbar } from './SessToolbar';
+import { useSession } from "../../../hooks/useSession"
 
 type Bucket = 'owned' | 'archived';
 
@@ -28,31 +29,33 @@ export function Sessions(): JSX.Element {
   const [newOpen, setNewOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Session | null>(null);
   const [renameTarget, setRenameTarget] = useState<Session | null>(null);
+  const { data, error, isError } = useSession();
+
+  if ( isError ) throw error;
 
   const counts = {
-    archived: SESSIONS.filter((s) => s.archived).length,
-    owned: SESSIONS.filter((s) => !s.archived).length,
+    archived: (data ?? []).filter((s) => s.archived).length,
+    owned: (data ?? []).filter((s) => !s.archived).length,
   };
 
   const filtered = useMemo(() => {
-    let list = SESSIONS.filter((s) => (bucket === 'archived' ? s.archived : !s.archived));
+    let list = (data ?? []);
     const q = query.trim().toLowerCase();
-    if (q) list = list.filter((r) => r.title.toLowerCase().includes(q));
-    if (type !== 'all') list = list.filter((r) => r.type === type);
-    if (genre !== 'all') list = list.filter((r) => r.tags.includes(genre));
+    if (q) list = list.filter((r) => r.name.toLowerCase().includes(q));
+ //   if (type !== 'all') list = list.filter((r) => r.key === type);
 
     list.sort((a, b) => {
       switch (sort) {
         case 'name':
-          return a.title.localeCompare(b.title);
+          return a.name.localeCompare(b.name);
         case 'bpm':
           return (a.bpm ?? 999) - (b.bpm ?? 999);
         default:
-          return b.editedAt.localeCompare(a.editedAt); // 'edited' (newest first)
+          return b.updatedAt.localeCompare(a.updatedAt); // 'edited' (newest first)
       }
     });
     return list;
-  }, [bucket, query, type, genre, sort]);
+}, [data, bucket, query, type, genre, sort]);
 
   const clearFilters = (): void => {
     setQuery('');

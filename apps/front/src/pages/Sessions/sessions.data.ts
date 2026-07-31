@@ -5,16 +5,18 @@ import type { MsnIconLabel } from '@transcendence/ui';
 export type SessionType = 'production' | 'recording' | 'mixing';
 
 export interface Session {
-  id: number;
-  title: string;
+  id: string;
+  state: string;
+  samples: string[];
+  name: string;
+  ownerId: string;
+  duration: number;
+  bpm: number;
+  key?: string;
+  mode?: string;
   type: SessionType;
-  bpm: number | null;
-  key: string | null;
-  edited: string;
-  editedAt: string; // sortable "YYYY-MM-DD HH:mm"
-  size: number; // MB
-  tags: string[];
-  seed: string;
+  createdAt: string;
+  updatedAt: string;
   archived: boolean;
 }
 

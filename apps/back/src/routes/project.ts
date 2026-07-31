@@ -68,5 +68,7 @@ export function projectRoutes(app: FastifyInstance) {
 
   app.get('/load', { preHandler: app.authenticate, schema: loadProjectSchema }, projectController.load);
 
+  app.get('/list', { preHandler: app.authenticate }, projectController.list);
+
   app.delete('/delete', { preHandler: app.authenticate, schema: deleteProjectSchema }, projectController.detele);
 }
