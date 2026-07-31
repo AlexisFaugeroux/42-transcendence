@@ -13,7 +13,7 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
   const [picked, setPicked] = useState<SessionType>('production');
   const [name, setName] = useState<string>('Untitled');
   const [bpm, setBpm] = useState<number>(120);
-
+  const {t} = useTranslation();
   const openNewSession = () => {
     onClose;
     window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?name=${name}&bpm=${bpm}`;
@@ -38,7 +38,7 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
             <span className={styles.typeHead}>
               <MsnIcon name={TYPE_ICON[type]} size="18px" /> {t(TYPE_LABEL[type])}
             </span>
-            <span className={styles.typeDesc}>{t(TYPE_DESCRIPTION[type])}</span>
+            <span className={styles.typeDesc}>{(TYPE_DESCRIPTION[type])}</span>
           </button>
         ))}
       </div>
@@ -50,7 +50,7 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>BPM</span>
-          <Input placeholder="120" onChange={ e => { setBpm(e.target.valueAsNumber) }} />
+          <Input type="number" placeholder="120" onChange={ e => { setBpm(e.target.valueAsNumber) }} />
         </label>
       </div>
     </Modal>

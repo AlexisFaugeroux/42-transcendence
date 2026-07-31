@@ -1,13 +1,11 @@
-import { apiFetch } from "@auth/src"
-import { ApiErrorReponse } from "@auth/src";
+import { apiFetch } from "@transcendence/auth"
+import { ApiErrorReponse } from "@transcendence/auth";
 import type { ProjectProperties } from "../lib/types"
 
 const BACK_URL = import.meta.env.VITE_API_URL;
 
-
 export async function saveProject( properties : ProjectProperties) {
 
-    console.log( properties );
     const res = await apiFetch(`${BACK_URL}/api/project/save`,{
         method: "PUT",
         headers : {

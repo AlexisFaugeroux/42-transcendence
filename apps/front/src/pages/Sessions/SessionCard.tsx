@@ -43,6 +43,19 @@ export function SessionCard({ archived, onDelete, onRename, session }: SessionCa
     },
   ];
 
+const loadProject = () => {
+    const query = new URLSearchParams({
+        bpm: String(session.bpm),
+        name: session.name,
+        projectId: session.id,
+    });
+    
+    for (const sampleId of session.samples) {
+        query.append('sampleId', sampleId);
+    }
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
+  }
+
   return (
     <div className={styles.card} data-archived={archived}>
       <div className={styles.cover} style={{ '--type-color': color } as CSSProperties}>
@@ -57,7 +70,7 @@ export function SessionCard({ archived, onDelete, onRename, session }: SessionCa
 
       <div className={styles.body}>
         <div className={styles.titleRow}>
-          <h3 className={styles.title}>{session.title}</h3>
+          <h3 className={styles.title}>{session.name}</h3>
           <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
             <button className={styles.menuButton} aria-label={t('sessions.card.actions')}>
               ⋯
@@ -70,19 +83,12 @@ export function SessionCard({ archived, onDelete, onRename, session }: SessionCa
           <span className={styles.dot}>·</span>
           <span>{session.key ?? '—'}</span>
           <span className={styles.dot}>·</span>
-          <span>{formatSize(session.size, i18n.language)}</span>
-        </div>
-
-        <div className={styles.tags}>
-          {session.tags.map((tag) => (
-            <Tag key={tag}>#{tag}</Tag>
-          ))}
         </div>
 
         <div className={styles.footer}>
-          <span className={styles.edited}>{t('sessions.card.edited', { when: session.edited })}</span>
-          <Button size="small" type={archived ? 'default' : 'primary'}>
-            {archived ? t('sessions.card.restore') : t('sessions.card.open')} <MsnIcon name="arrowR" size="11px" />
+          <span className={styles.edited}>Edited {session.updatedAt}</span>
+          <Button size="small" type={archived ? 'default' : 'primary'} onClick={ loadProject }>
+            {archived ? 'Restore' : 'Open'} <MsnIcon name="arrowR" size="11px" />
           </Button>
         </div>
       </div>

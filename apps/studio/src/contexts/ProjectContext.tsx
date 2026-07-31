@@ -24,7 +24,7 @@ const projectContext = createContext<ProjectContextValue | null>(null);
 export function ProjectProvider({ children }: { children: ReactNode }): JSX.Element {
   const [value, setValue] = useState<ProjectContextValue | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
-  
+  const { t } = useTranslation();
   const query = new URLSearchParams( window.location.search);
   const meta = {
     id : query.get('projectId'),
@@ -38,7 +38,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
   const properties : ProjectProperties = {
     ...meta,
     bpm : Number ( query.get('bpm') ),
-    samples : null,
+    samples : query.getAll( 'sampleId' ),
     state : ""
   }
 
@@ -55,6 +55,9 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
       meta.id = id;
+      const url = new URL(window.location.href);
+      url.searchParams.set('projectId', id);
+      window.history.replaceState(window.history.state, '', url);
       setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project, meta });
     })();
 

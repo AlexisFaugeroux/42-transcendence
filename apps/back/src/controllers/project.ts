@@ -15,6 +15,11 @@ interface LoadProjectRoute extends RouteGenericInterface {
   Reply: Project;
 }
 
+interface ListProjectRoute extends RouteGenericInterface {
+
+  Reply: Project[];
+}
+
 interface RemoveProjectRoute extends RouteGenericInterface {
   Querystring: {
     id: string;
@@ -50,6 +55,17 @@ class ProjectController {
     });
 
     reply.code(204).send();
+  };
+
+  public list = async (req: FastifyRequest<ListProjectRoute>, reply: FastifyReply<ListProjectRoute>) => {
+
+    const user = await userRepository.findById(req.authUser.id);
+    const project = await projectRepository.get({
+      ownerIds : [ user.ownerId ],
+      ids : [],
+      visibilities : []
+    })
+    reply.code(200).send(project);
   };
 
   public load = async (req: FastifyRequest<LoadProjectRoute>, reply: FastifyReply<LoadProjectRoute>) => {

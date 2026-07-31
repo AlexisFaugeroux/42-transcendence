@@ -358,7 +358,6 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
       clip.regionBox.delete();
       clip.eventsCollectionBox.delete();
     });
-
     setClips((prev) => prev.filter((c) => c.regionBox !== clip.regionBox));
   }
 

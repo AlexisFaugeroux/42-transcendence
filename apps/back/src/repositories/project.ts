@@ -16,11 +16,7 @@ class ProjectRepository {
     try {
       const { ownerId, samples, state, ...scalars } = input;
 
-      console.log(samples);
-      let samplesRef : { id: string; }[] = [];
-      if ( samples?.length )
-         samplesRef = samples.map((id) => ({ id }));
-      console.log( samplesRef );
+      const samplesRef = samples?.map((id) => ({ id })) ?? [];
 
       const upsertProject = await this.prisma.studioProject.upsert({
         create: {
@@ -33,6 +29,7 @@ class ProjectRepository {
         update: {
           ...scalars,
           owner: { connect: { id: ownerId } },
+          state,
           samples: {
             set: samplesRef,
           },

@@ -11,6 +11,7 @@ export interface Project {
   bpm: number;
   key?: Key;
   mode?: Mode;
+  archived: boolean;
   createdAt: string;
   updatedAt: string;
 }

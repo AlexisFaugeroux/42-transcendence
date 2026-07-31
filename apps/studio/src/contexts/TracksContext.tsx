@@ -12,6 +12,7 @@ import {
 /* import { seedDemoData } from '../lib/seedDemoData'; */
 import type { Clip, Track } from '../lib/types';
 import { useProject } from './ProjectContext';
+import { reloadClipsAndTracks } from '../lib/projectSetup';
 
 interface TracksContext {
   clips: Clip[];
@@ -28,17 +29,12 @@ export function TracksProvider({ children }: { children: ReactNode }): JSX.Eleme
   const [clips, setClips] = useState<Clip[]>([]);
   const hasSeeded = useRef(false);
 
-  useEffect(() => {
-    if (hasSeeded.current) return;
-    hasSeeded.current = true;
-    // TODO: to be replaced by actual project data when loading an existing project
-    /* void (async () => {
-      const { clips, tracks } = await seedDemoData(project, audioContext, localAudioBuffers);
+useEffect(() => {
+  const { clips, tracks } = reloadClipsAndTracks(project);
 
-      setTracks(tracks);
-      setClips(clips);
-    })(); */
-  }, [audioContext, project, localAudioBuffers]);
+  setTracks(tracks);
+  setClips(clips);
+}, [project]);
 
   return <tracksContext.Provider value={{ clips, setClips, setTracks, tracks }}>{children}</tracksContext.Provider>;
 }
