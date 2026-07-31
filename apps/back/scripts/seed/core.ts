@@ -4,7 +4,7 @@ import { dirname, join, sep } from 'node:path';
 import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
 import { prisma } from '../../src/utils/prisma';
-import { parseWAV } from '../../src/utils/wav';
+import { wavManager } from '../../src/services/wav';
 import { deriveSampleMeta } from './meta';
 import type { SampleOwner, SeedConfig } from './types';
 
@@ -102,7 +102,7 @@ export async function seed(config: SeedConfig): Promise<void> {
         const visibility =
           typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
 
-        const { durationMs, size } = await parseWAV(abs);
+        const { durationMs, size } = await wavManager.decodeWav(abs, { channelData: true });
         const { bpm, family, kind } = deriveSampleMeta(originalName);
 
         return { abs, bpm, durationMs, family, id, kind, name, size, url, visibility };
