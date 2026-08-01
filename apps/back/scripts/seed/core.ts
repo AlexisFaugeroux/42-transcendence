@@ -1,10 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, sep } from 'node:path';
 import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
 import { prisma } from '../../src/utils/prisma';
 import { wavManager } from '../../src/services/wav';
+import { msnpManager } from '../../src/services/msnp';
 import { deriveSampleMeta } from './meta';
 import type { SampleOwner, SeedConfig } from './types';
 
@@ -81,7 +82,7 @@ export async function seed(config: SeedConfig): Promise<void> {
     return user.ownerId;
   };
 
-  console.log('Clean volume directory....');
+  console.log('Clean volume directory...');
   await mkdir(config.volumeDir, { recursive: true });
   const stale = await readdir(config.volumeDir);
   await Promise.all(stale.map((name) => rm(join(config.volumeDir, name), { force: true, recursive: true })));
@@ -102,10 +103,10 @@ export async function seed(config: SeedConfig): Promise<void> {
         const visibility =
           typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
 
-        const { durationMs, size } = await wavManager.decodeWav(abs, { channelData: true });
+        const { channelData, durationMs, size } = await wavManager.decodeWav(abs, { channelData: true });
         const { bpm, family, kind } = deriveSampleMeta(originalName);
 
-        return { abs, bpm, durationMs, family, id, kind, name, size, url, visibility };
+        return { abs, bpm, channelData, durationMs, family, id, kind, name, size, url, visibility };
       }),
     );
 
@@ -129,9 +130,14 @@ export async function seed(config: SeedConfig): Promise<void> {
     });
 
     for (const sample of samples) {
+      // write file on disk
       const dest = join(config.volumeDir, sample.url);
       await mkdir(dirname(dest), { recursive: true });
       await copyFile(sample.abs, dest);
+
+      if (sample.channelData) {
+        await writeFile(dest.replace('.wav', '.peaks'), msnpManager.generatePeaks(sample.channelData));
+      }
     }
   }
 

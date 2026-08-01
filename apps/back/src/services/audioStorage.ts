@@ -1,13 +1,11 @@
-import { randomUUID } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
-import { mkdir, rm, unlink } from 'node:fs/promises';
+import { mkdir, rm, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { PayloadTooLargeError } from '../domain/errors';
 
 interface StoredFile {
-  uuid: string;
   filePath: string;
   url: string;
 }
@@ -19,10 +17,17 @@ class AudioStorageService {
     this.audioRoot = audioRoot;
   }
 
-  public async writeStream(ownerId: string, stream: Readable & { truncated?: boolean }): Promise<StoredFile> {
-    const uuid = randomUUID();
-    const dir = path.join(this.audioRoot, ownerId);
-    const filePath = path.join(dir, `${uuid}.wav`);
+  public async write(uuid: string, ownerId: string, data: Buffer, ext?: 'wav' | 'peaks') {
+    const { filePath } = this._path(uuid, ownerId, ext);
+    await writeFile(filePath, data);
+  }
+
+  public async writeStream(
+    uuid: string,
+    ownerId: string,
+    stream: Readable & { truncated?: boolean },
+  ): Promise<StoredFile> {
+    const { dir, filePath } = this._path(uuid, ownerId, 'wav');
 
     await mkdir(dir, { recursive: true });
 
@@ -38,22 +43,29 @@ class AudioStorageService {
       throw new PayloadTooLargeError('Maximum file size reached');
     }
 
-    return { filePath, url: `${ownerId}/${uuid}.wav`, uuid };
+    return { filePath, url: `${ownerId}/${uuid}.wav` };
   }
 
   public async remove(uuid: string, ownerId: string): Promise<void> {
-    const dir = path.join(this.audioRoot, ownerId);
-    const filePath = path.join(dir, `${uuid}.wav`);
-    try {
-      await unlink(filePath);
-    } catch (error) {
-      console.error(error);
+    for (const ext of ['wav', 'peaks'] as const) {
+      try {
+        const { filePath } = this._path(uuid, ownerId, ext);
+        await unlink(filePath);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
   public async deleteDirectory(ownerId: string): Promise<void> {
     const dir = path.join(this.audioRoot, ownerId);
     await rm(dir, { force: true, recursive: true });
+  }
+
+  private _path(uuid: string, ownerId: string, ext?: 'wav' | 'peaks') {
+    const dir = path.join(this.audioRoot, ownerId);
+    const filePath = path.join(dir, `${uuid}.${ext ?? 'wav'}`);
+    return { dir, filePath };
   }
 }
 
