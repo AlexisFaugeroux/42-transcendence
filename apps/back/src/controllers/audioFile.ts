@@ -8,6 +8,8 @@ import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
 import { parseUploadAudioFileFields } from '../utils/validation';
 import { wavManager, type WavInfo } from '../services/wav';
+import { randomUUID } from 'node:crypto';
+import { msnpManager } from '../services/msnp';
 
 interface GetAudioFilesRoute extends RouteGenericInterface {
   Querystring: GetAudioFileInput;
@@ -78,18 +80,26 @@ class AudioFileController {
 
     const fields = parseUploadAudioFileFields(data.fields);
 
+    const uuid = randomUUID();
+
     // Write streamed file on disk
-    const { filePath, url, uuid } = await audioStorageService.writeStream(ownerId, data.file);
+    const { filePath, url } = await audioStorageService.writeStream(uuid, ownerId, data.file);
 
     // Parse from file on disk
     try {
       let info: WavInfo;
       try {
-        info = await wavManager.decodeWav(filePath, { channelData: false });
+        info = await wavManager.decodeWav(filePath, { channelData: true });
       } catch (error) {
         req.log.error(error);
         throw new BadRequestError(`invalid .wav file`);
       }
+
+      // Write .peaks file on disk
+      if (info.channelData) {
+        const peaks = msnpManager.generatePeaks(info.channelData);
+        await audioStorageService.write(uuid, ownerId, peaks, 'peaks');
+      } else console.warn(`Missing peaks from ${uuid}, could not generate .peaks file`);
 
       // Check user quota
       const usedBytes = await audioFileRepository.sumBytes(ownerId);
