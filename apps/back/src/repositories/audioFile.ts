@@ -110,7 +110,7 @@ class AudioFileRepository {
 
     const formattedCreatedAt = formatISO(createdAt);
 
-    return { ...rest, createdAt: formattedCreatedAt };
+    return { ...rest, peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks'), createdAt: formattedCreatedAt };
   }
 
   private _buildFilters(input: GetAudioFileInput) {
