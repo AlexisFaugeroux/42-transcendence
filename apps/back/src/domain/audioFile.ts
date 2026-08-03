@@ -55,6 +55,7 @@ export interface AudioFile {
   kind: Kind | null;
   visibility: Visibility | null;
   url: string;
+  peaksUrl: string;
   duration: number;
   bytes: number;
   name: string;
