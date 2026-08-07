@@ -3,9 +3,9 @@ import { copyFile, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, sep } from 'node:path';
 import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
-import { prisma } from '../../src/utils/prisma';
-import { wavManager } from '../../src/services/wav';
 import { msnpManager } from '../../src/services/msnp';
+import { wavManager } from '../../src/services/wav';
+import { prisma } from '../../src/utils/prisma';
 import { deriveSampleMeta } from './meta';
 import type { SampleOwner, SeedConfig } from './types';
 

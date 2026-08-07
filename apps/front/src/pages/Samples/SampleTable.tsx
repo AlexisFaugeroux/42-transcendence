@@ -10,19 +10,18 @@ import {
   theme,
 } from '@transcendence/ui';
 import type { JSX, Key } from 'react';
+import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
 import type { AudioFile } from '../../types/audioFile';
 import { MODE_ABBR } from './constants';
 import { familyColor, formatBytes, formatDuration, formatKey, formatKind } from './helpers';
 import styles from './SampleTable.module.scss';
-import { WaveformPlaceholder } from './WaveformPlaceholder';
+import { SampleWaveform } from './SampleWaveform';
 
 interface SampleTableProps {
   rows: AudioFile[];
   ownerId: string;
   selectedKeys: Key[];
   onSelectionChange: (keys: Key[]) => void;
-  playingId: string | null;
-  onPlay: (id: string) => void;
   onEdit: (sample: AudioFile) => void;
   onDelete: (sample: AudioFile) => void;
 }
@@ -30,15 +29,14 @@ interface SampleTableProps {
 export function SampleTable({
   onDelete,
   onEdit,
-  onPlay,
   onSelectionChange,
   ownerId,
-  playingId,
   rows,
   selectedKeys,
 }: SampleTableProps): JSX.Element {
   const { i18n, t } = useTranslation();
   const locale = i18n.language;
+  const player = useSamplePlayer();
 
   const columns: TableColumnsType<AudioFile> = [
     {
@@ -46,12 +44,12 @@ export function SampleTable({
       render: (_, row) => (
         <button
           className={styles.play}
-          data-active={playingId === row.id}
+          data-active={player.currentId === row.id}
           onClick={() => {
-            onPlay(row.id);
+            player.toggle(row.id, `/audio/${row.url}`);
           }}
         >
-          <MsnIcon name={playingId === row.id ? 'list' : 'play'} size="11px" />
+          <MsnIcon name={player.currentId === row.id ? 'list' : 'play'} size="11px" />
         </button>
       ),
       title: '',
@@ -81,7 +79,7 @@ export function SampleTable({
     },
     {
       key: 'waveform',
-      render: (_, row) => <WaveformPlaceholder seed={row.id} color={theme.fg1} />,
+      render: (_, row) => <SampleWaveform id={row.id} peaksUrl={row.peaksUrl} />,
       title: t('samples.table.waveform'),
       width: 220,
     },

@@ -38,9 +38,6 @@ export function formatKind(kind: Kind): string {
   return kind === 'ONE_SHOT' ? 'ONE-SHOT' : kind;
 }
 
-// Family, kind and key stay in their canonical English form: they are audio
-// taxonomy tokens (like note names or BPM), not prose. Mode, visibility and the
-// sort options are plain language and go through t().
 export const FAMILY_OPTIONS: Option<Family>[] = FAMILIES.map((family) => ({ label: family, value: family }));
 export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({ label: formatKind(kind), value: kind }));
 export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({ label: formatKey(key), value: key }));
