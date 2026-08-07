@@ -9,11 +9,16 @@ files and asks the backend for an access decision before handing any file over.
 
 ```
 <AUDIO_ROOT>/<ownerId>/<audioFileId>.wav
+<AUDIO_ROOT>/<ownerId>/<audioFileId>.peaks
 ```
 
 `AUDIO_ROOT` defaults to `/var/www/audio`. In dev it maps to `infra/audio_data/`
 on the host; in prod to the `audio_data` Docker volume (see [infra.md](../infra.md)).
 The path key is `ownerId` (the `Owner` model), not `userId`.
+
+Every `.wav` has a `.peaks` sidecar next to it — same UUID, different extension —
+holding a precomputed amplitude envelope so the browser can draw a waveform
+without downloading the audio. See [peaks.md](../peaks.md) for the format.
 
 ## Data model
 
@@ -23,13 +28,16 @@ The path key is `ownerId` (the `Owner` model), not `userId`.
 There is no `mime_type` column; the binary is addressed by `ownerId`/`id` on disk
 (`name` is the client-supplied display label, never the disk path).
 
+The API also returns `peaksUrl`, which is **not** a column: the repository's
+`_format` derives it from `url` by swapping the extension.
+
 `duration` and `bytes` (size) are derived from the audio file itself server-side
 — see [wav.md](../wav.md) for how to interpret a `.wav`'s bytes.
 
 ## Access control (nginx `auth_request`)
 
 For every `/audio/` request, nginx fires an internal sub-request to the backend,
-which answers 200 / 403 / 404:
+which answers 200 / 401 / 403:
 
 ```nginx
 # infra/nginx/audio.conf  (prod; dev uses audio.dev.conf → host.docker.internal:8080)
@@ -49,12 +57,25 @@ location = /auth/check-access {
 
 The upstream path is `/api/auth/check-access` — the handler is registered under
 the `/api/auth` prefix, not `/api/audio`. Getting it wrong is silent and total:
-`auth_request` denies on any non-2xx, so a 404 from a mistyped path makes _every_
-audio file unreachable while the app otherwise looks healthy.
+a mistyped path 404s, which `auth_request` turns into a 500, so _every_ audio
+file becomes unreachable while the app otherwise looks healthy.
 
 The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
-`authenticate` hook, then allows the file if it is `PUBLIC` / `SHARED` or the
-requester owns it (else 403; 404 if missing).
+`authenticate` hook, parses `<ownerId>/<audioFileId>.<ext>` out of the
+`X-Original-URI` path, then allows the file if it is `PUBLIC` / `SHARED` or the
+requester owns it.
+
+Two rules that are easy to break:
+
+- **The identity comes from the session, never from the request.**
+  `checkAccess` resolves the owner from `req.authUser.id`, like every other
+  controller. Taking a user id from the URL would mean the caller picks whose
+  permissions are checked, which is not a permission check at all.
+- **It must only ever answer 200, 401 or 403.** `auth_request` maps anything
+  else — a 400 on a malformed path, a 404 on a missing row — to a **500** for
+  the client, with the real status visible only in the nginx container log. Any
+  failure path here therefore returns 403 (fail closed), including "sample not
+  found", which also avoids leaking whether an id exists.
 
 ## API (`/api/audio`, `routes/audioFile.ts`)
 
@@ -71,7 +92,9 @@ All authenticated. Registered with prefix `/api/audio` in `app.ts`.
   `usedBytes`.
 - `POST /upload` — `multipart/form-data` (`@fastify/multipart`). Streams the file
   to disk (`audioStorageService.writeStream`), parses the WAV server-side
-  (`utils/wav.ts` → `duration`, `bytes`), enforces the per-owner quota
+  (`services/wav.ts` → `wavManager.decodeWav` → `duration`, `bytes`, and the
+  per-channel `Float32Array`s), writes the `.peaks` sidecar
+  (`msnpManager.generatePeaks`), enforces the per-owner quota
   (`AUDIO_USER_QUOTA_BYTES`, `413` on overflow), then creates the row. Fields
   (`visibility`, `bpm?`, `key?`, `mode?`, `family?`, `kind?`) are validated in
   `utils/validation.ts`; `duration` is **never** trusted from the client. On any
@@ -82,19 +105,27 @@ All authenticated. Registered with prefix `/api/audio` in `app.ts`.
   while `visibility` does not — a file always has one. Nothing here touches the
   file on disk, so `url`, `duration` and `bytes` are not editable: they are
   derived server-side and a client must not be able to contradict them.
-- `DELETE /delete?id=` — removes the disk file then the row (owner-checked).
+- `DELETE /delete?id=` — removes the disk files (`.wav` **and** `.peaks`) then
+  the row (owner-checked).
 
 Seeds still populate the platform/user samples directly (`scripts/seed/`);
 `seed/meta.ts` derives `family`/`kind`/`bpm` from the filename.
 
-`services/audioStorage.ts` provides `writeStream`, `remove`, and
-`deleteDirectory(ownerId)`.
+`services/audioStorage.ts` provides `write`, `writeStream`, `remove`, and
+`deleteDirectory(ownerId)`. The caller generates the UUID and passes it in, so
+the `.wav` and its `.peaks` share one.
 
-Clients reach `/audio/` with a **relative** path (`/audio/<url>?sampleId=…&userId=…`),
-routed by the reverse proxy in prod and by each app's Vite dev proxy in dev — see
-[infra.md](../infra.md). Requests go through `apiFetch` so the cookie travels
-(the `auth_request` above needs it) and a 401 triggers the same global logout as
-any other call.
+Clients reach `/audio/` with a **relative** path (`/audio/<url>`), routed by the
+reverse proxy in prod and by each app's Vite dev proxy in dev — see
+[infra.md](../infra.md). `url` and `peaksUrl` are storage keys
+(`<ownerId>/<uuid>.<ext>`), not URLs: the `/audio/` prefix is added by the
+consumer, so the same value works behind any mount point. Requests go through
+`apiFetch` so the cookie travels (the `auth_request` above needs it) and a 401
+triggers the same global logout as any other call.
+
+The studio still appends `?sampleId=…&userId=…` (`apps/studio/src/lib/audioUtils.ts`).
+Those parameters are vestigial — `checkAccess` ignores the query string — and can
+be dropped whenever that file is next touched.
 
 The on-disk filename is always a server-generated `{uuid}.{ext}` — the client
 filename is stored only as `AudioFile.name`, never used to build the path (no

@@ -33,13 +33,17 @@ The override publishes `db` on `localhost:5432` and `nginx-audio` on
 Each Vite dev server proxies the paths the reverse proxy owns in prod, so app
 code can use relative URLs in both environments and never has to know a host:
 
-| Path     | front (`:5173`)         | studio (`:5174`)               |
-| -------- | ----------------------- | ------------------------------ |
-| `/api`   | → `localhost:8080` back | → `localhost:8080` back        |
-| `/audio` | —                       | → `localhost:8081` nginx-audio |
+| Path     | front (`:5173`)                | studio (`:5174`)               |
+| -------- | ------------------------------ | ------------------------------ |
+| `/api`   | → `localhost:8080` back        | → `localhost:8080` back        |
+| `/audio` | → `localhost:8081` nginx-audio | → `localhost:8081` nginx-audio |
 
-The studio is the only app that fetches sample audio, hence the extra `/audio`
-route. Add it to the front's proxy too the day it plays audio itself.
+Both apps fetch from `/audio/`: the studio loads samples into the DAW, the front
+previews them and fetches their `.peaks` in the samples library. Going through
+the proxy rather than hitting `localhost:8081` directly keeps the requests
+same-origin, so the session cookie travels and nginx's `auth_request` is
+satisfied — a direct call would be cross-origin and blocked by the CORS headers
+in `audio.dev.conf`.
 
 Teardown: `pnpm services:down` (keep data) or `pnpm services:kill` (remove
 volumes/orphans — wipes data).
