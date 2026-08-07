@@ -16,7 +16,7 @@ class MsnpManager {
     const buffer = Buffer.alloc(this.PEAKS_HEADER_BYTES + numChannels * this.PEAKS_BUCKETS * 2);
 
     buffer.write(this.PEAKS_MAGIC, 0, 'ascii');
-    buffer.writeUInt8(this.PEAKS_VERSION, 4);
+    buffer.writeUint8(this.PEAKS_VERSION, 4);
     buffer.writeUint8(numChannels, 5);
     buffer.writeUint16LE(this.PEAKS_BUCKETS, 6);
 
