@@ -14,6 +14,7 @@ import {
 import { type JSX, type Key, useMemo, useState } from 'react';
 import { deleteSample, getSamples, getStorageUsage } from '../../api/audioFile/audioFile';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
+import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import type { AudioFile, Family, Kind } from '../../types/audioFile';
 import { SAMPLE_COMPARATORS } from './constants';
 import { DeleteSampleModal, type DeleteTarget } from './DeleteSampleModal';
@@ -36,7 +37,6 @@ export function Samples(): JSX.Element {
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
-  const [playingId, setPlayingId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [families, setFamilies] = useState<Family[]>([]);
   const [kinds, setKinds] = useState<Kind[]>([]);
@@ -123,10 +123,6 @@ export function Samples(): JSX.Element {
     },
   });
 
-  const togglePlay = (id: string): void => {
-    setPlayingId((prev) => (prev === id ? null : id));
-  };
-
   const clearFilters = (): void => {
     setQuery('');
     setFamilies([]);
@@ -152,144 +148,142 @@ export function Samples(): JSX.Element {
   const error = samplesQuery.error ?? storageQuery.error;
 
   return (
-    <div className={styles.page}>
-      {notificationContext}
-      <AppHeader active="library" />
-      <div className={styles.container}>
-        <div className={styles.titleRow}>
-          <div>
-            <div className={styles.eyebrow}>{t('samples.eyebrow')}</div>
-            <h1 className={styles.title}>{t('samples.title')}</h1>
-            <p className={styles.subtitle}>
-              {t('samples.soundCount', { count: samples.length })}
-              {storage
-                ? ` · ${t('samples.storageSummary', {
-                    quota: formatBytes(storage.quotaBytes, i18n.language),
-                    used: formatBytes(storage.usedBytes, i18n.language),
-                  })}`
-                : null}
-            </p>
+    <SamplePlayerProvider>
+      <div className={styles.page}>
+        {notificationContext}
+        <AppHeader active="library" />
+        <div className={styles.container}>
+          <div className={styles.titleRow}>
+            <div>
+              <div className={styles.eyebrow}>{t('samples.eyebrow')}</div>
+              <h1 className={styles.title}>{t('samples.title')}</h1>
+              <p className={styles.subtitle}>
+                {t('samples.soundCount', { count: samples.length })}
+                {storage
+                  ? ` · ${t('samples.storageSummary', {
+                      quota: formatBytes(storage.quotaBytes, i18n.language),
+                      used: formatBytes(storage.usedBytes, i18n.language),
+                    })}`
+                  : null}
+              </p>
+            </div>
+            <div className={styles.actions}>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => {
+                  setUploadOpen(true);
+                }}
+                style={{
+                  backgroundColor: theme.orange,
+                }}
+              >
+                <MsnIcon name="plus" size="13px" /> {t('samples.addSample')}
+              </Button>
+            </div>
           </div>
-          <div className={styles.actions}>
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => {
-                setUploadOpen(true);
-              }}
-              style={{
-                backgroundColor: theme.orange,
-              }}
-            >
-              <MsnIcon name="plus" size="13px" /> {t('samples.addSample')}
-            </Button>
-          </div>
+
+          {isLoading ? (
+            <Spin size="large" />
+          ) : error ? (
+            <Result
+              status="error"
+              title={t('samples.loadError')}
+              subTitle={error.message}
+              extra={
+                <Button type="primary" onClick={retry}>
+                  {t('common.retry')}
+                </Button>
+              }
+            />
+          ) : (
+            <>
+              {storage ? <StorageBar usage={storage} /> : null}
+
+              <Toolbar
+                query={query}
+                setQuery={setQuery}
+                families={families}
+                setFamilies={setFamilies}
+                kinds={kinds}
+                setKinds={setKinds}
+                favOnly={favOnly}
+                setFavOnly={setFavOnly}
+                sort={sort}
+                setSort={setSort}
+                view={view}
+                setView={setView}
+                shownCount={filtered.length}
+                totalCount={samples.length}
+              />
+
+              {selectedKeys.length > 0 && (
+                <SelectionBar
+                  count={selectedKeys.length}
+                  onClear={() => {
+                    setSelectedKeys([]);
+                  }}
+                  onDelete={() => {
+                    setConfirmDelete('selection');
+                  }}
+                />
+              )}
+
+              {filtered.length === 0 ? (
+                <EmptyState onClear={clearFilters} />
+              ) : view === 'list' ? (
+                <SampleTable
+                  rows={filtered}
+                  ownerId={user.ownerId}
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={setSelectedKeys}
+                  onEdit={setEditTarget}
+                  onDelete={(sample) => {
+                    setConfirmDelete(sample);
+                  }}
+                />
+              ) : (
+                <SampleGrid
+                  rows={filtered}
+                  ownerId={user.ownerId}
+                  onEdit={setEditTarget}
+                  onDelete={(sample) => {
+                    setConfirmDelete(sample);
+                  }}
+                />
+              )}
+            </>
+          )}
         </div>
 
-        {isLoading ? (
-          <Spin size="large" />
-        ) : error ? (
-          <Result
-            status="error"
-            title={t('samples.loadError')}
-            subTitle={error.message}
-            extra={
-              <Button type="primary" onClick={retry}>
-                {t('common.retry')}
-              </Button>
-            }
-          />
-        ) : (
-          <>
-            {storage ? <StorageBar usage={storage} /> : null}
-
-            <Toolbar
-              query={query}
-              setQuery={setQuery}
-              families={families}
-              setFamilies={setFamilies}
-              kinds={kinds}
-              setKinds={setKinds}
-              favOnly={favOnly}
-              setFavOnly={setFavOnly}
-              sort={sort}
-              setSort={setSort}
-              view={view}
-              setView={setView}
-              shownCount={filtered.length}
-              totalCount={samples.length}
-            />
-
-            {selectedKeys.length > 0 && (
-              <SelectionBar
-                count={selectedKeys.length}
-                onClear={() => {
-                  setSelectedKeys([]);
-                }}
-                onDelete={() => {
-                  setConfirmDelete('selection');
-                }}
-              />
-            )}
-
-            {filtered.length === 0 ? (
-              <EmptyState onClear={clearFilters} />
-            ) : view === 'list' ? (
-              <SampleTable
-                rows={filtered}
-                ownerId={user.ownerId}
-                selectedKeys={selectedKeys}
-                onSelectionChange={setSelectedKeys}
-                playingId={playingId}
-                onPlay={togglePlay}
-                onEdit={setEditTarget}
-                onDelete={(sample) => {
-                  setConfirmDelete(sample);
-                }}
-              />
-            ) : (
-              <SampleGrid
-                rows={filtered}
-                ownerId={user.ownerId}
-                playingId={playingId}
-                onPlay={togglePlay}
-                onEdit={setEditTarget}
-                onDelete={(sample) => {
-                  setConfirmDelete(sample);
-                }}
-              />
-            )}
-          </>
-        )}
+        <DeleteSampleModal
+          target={confirmDelete}
+          selectedCount={selectedKeys.length}
+          confirmLoading={isDeleting}
+          onCancel={() => {
+            setConfirmDelete(null);
+          }}
+          onConfirm={confirmDeletion}
+        />
+        <EditSampleModal
+          target={editTarget}
+          onCancel={() => {
+            setEditTarget(null);
+          }}
+          onSaved={invalidateLibrary}
+          notifySuccess={notifySuccess}
+          notifyError={notifyError}
+        />
+        <UploadModal
+          open={uploadOpen}
+          onClose={() => {
+            setUploadOpen(false);
+          }}
+          onUploaded={invalidateLibrary}
+          usedBytes={storage?.usedBytes ?? 0}
+          quotaBytes={storage?.quotaBytes ?? 0}
+        />
       </div>
-
-      <DeleteSampleModal
-        target={confirmDelete}
-        selectedCount={selectedKeys.length}
-        confirmLoading={isDeleting}
-        onCancel={() => {
-          setConfirmDelete(null);
-        }}
-        onConfirm={confirmDeletion}
-      />
-      <EditSampleModal
-        target={editTarget}
-        onCancel={() => {
-          setEditTarget(null);
-        }}
-        onSaved={invalidateLibrary}
-        notifySuccess={notifySuccess}
-        notifyError={notifyError}
-      />
-      <UploadModal
-        open={uploadOpen}
-        onClose={() => {
-          setUploadOpen(false);
-        }}
-        onUploaded={invalidateLibrary}
-        usedBytes={storage?.usedBytes ?? 0}
-        quotaBytes={storage?.quotaBytes ?? 0}
-      />
-    </div>
+    </SamplePlayerProvider>
   );
 }

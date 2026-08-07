@@ -1,4 +1,5 @@
 import { apiError, apiFetch } from '@transcendence/auth';
+import { type DecodedPeaks, decodePeak } from '../../lib/peaks';
 import type { AudioFile } from '../../types/audioFile';
 import type { AudioStorageUsage, GetSamplesFilters, UpdateSampleFields, UploadSampleFields } from './types';
 
@@ -73,4 +74,10 @@ export async function deleteSample(uuid: string): Promise<void> {
   });
 
   if (!res.ok) throw await apiError(res, '/api/audio/delete');
+}
+
+export async function getPeaks(peaksUrl: string): Promise<DecodedPeaks> {
+  const res = await apiFetch(`/audio/${peaksUrl}`);
+  if (!res.ok) throw await apiError(res, peaksUrl);
+  return decodePeak(await res.arrayBuffer());
 }

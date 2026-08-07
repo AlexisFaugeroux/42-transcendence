@@ -4,7 +4,7 @@ class MsnpManager {
   private readonly PEAKS_BUCKETS;
   private readonly PEAKS_HEADER_BYTES = 8;
 
-  constructor({ magic, version, buckets }: { magic: string; version: number; buckets: number }) {
+  constructor({ buckets, magic, version }: { magic: string; version: number; buckets: number }) {
     this.PEAKS_MAGIC = magic;
     this.PEAKS_VERSION = version;
     this.PEAKS_BUCKETS = buckets;
@@ -46,4 +46,4 @@ class MsnpManager {
   }
 }
 
-export const msnpManager = new MsnpManager({ magic: 'MSNP', version: 1, buckets: 1024 });
+export const msnpManager = new MsnpManager({ buckets: 1024, magic: 'MSNP', version: 1 });

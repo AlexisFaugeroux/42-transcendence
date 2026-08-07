@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/auth';
-import { BadRequestError, ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
+import { ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
 import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
 import { audioFileRepository } from '../repositories/audioFile';
@@ -78,24 +78,30 @@ class AuthController {
   };
 
   public checkAccess = async (req: FastifyRequest, reply: FastifyReply) => {
-    const originalString = req.headers['x-original-uri'];
-    if (!originalString || Array.isArray(originalString)) {
-      throw new BadRequestError();
-    }
-    const queryParser = new URLSearchParams(
-      originalString.substring(originalString.indexOf('?'), originalString.length),
-    );
-    const sampleId = queryParser.get('sampleId');
-    const userId = queryParser.get('userId');
-    if (!userId || !sampleId) {
-      throw new BadRequestError();
-    }
+    const originalUri = req.headers['x-original-uri'];
+    if (typeof originalUri !== 'string') throw new ForbiddenError();
 
-    const ownerId = (await userRepository.findById(userId)).ownerId;
-    const sample = await audioFileRepository.findById(sampleId);
+    const [path] = originalUri.split('?');
+    const segments = path.split('/').filter(Boolean); // ['audio', ownerId, '<uuid>.<ext>']
 
-    if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+    if (segments.length !== 3 || segments[0] !== 'audio') throw new ForbiddenError();
+
+    const filename = segments[2];
+    const dot = filename.lastIndexOf('.');
+    if (dot <= 0) throw new ForbiddenError();
+
+    const sampleId = filename.slice(0, dot);
+
+    try {
+      const { ownerId } = await userRepository.findById(req.authUser.id);
+      const sample = await audioFileRepository.findById(sampleId);
+
+      if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+        throw new ForbiddenError();
+    } catch {
       throw new ForbiddenError();
+    }
+
     reply.code(200).send();
   };
 

@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type JSX, type ReactNode } from 'react';
+import { createContext, type JSX, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 interface SamplePlayer {
-  currendId: string | null;
+  currentId: string | null;
   isPlaying: boolean;
   progress: number;
   toggle: (id: string, url: string) => void;
@@ -12,7 +12,7 @@ const playerContext = createContext<SamplePlayer | null>(null);
 
 export function SamplePlayerProvider({ children }: { children: ReactNode }): JSX.Element {
   const audioRef = useRef<HTMLAudioElement>(new Audio());
-  const [currendId, setCurrentId] = useState<string | null>(null);
+  const [currentId, setCurrentId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -49,11 +49,20 @@ export function SamplePlayerProvider({ children }: { children: ReactNode }): JSX
   const value = useMemo<SamplePlayer>(() => {
     const audio = audioRef.current;
     return {
-      currendId,
+      currentId,
       isPlaying,
       progress,
+      seek: (fraction: number) => {
+        if (audio.duration > 0) audio.currentTime = fraction * audio.duration;
+      },
+      stop: () => {
+        audio.pause();
+        setIsPlaying(false);
+        setCurrentId(null);
+        setProgress(0);
+      },
       toggle: (id, url) => {
-        if (currendId === id) {
+        if (currentId === id) {
           if (audio.paused) {
             void audio.play();
             setIsPlaying(true);
@@ -70,22 +79,13 @@ export function SamplePlayerProvider({ children }: { children: ReactNode }): JSX
         void audio.play();
         setIsPlaying(true);
       },
-      stop: () => {
-        audio.pause();
-        setIsPlaying(false);
-        setCurrentId(null);
-        setProgress(0);
-      },
-      seek: (fraction: number) => {
-        if (audio.duration > 0) audio.currentTime = fraction * audio.duration;
-      },
     };
-  }, [currendId, isPlaying, progress]);
+  }, [currentId, isPlaying, progress]);
 
   return <playerContext.Provider value={value}>{children}</playerContext.Provider>;
 }
 
-export function useSampleProvider() {
+export function useSamplePlayer() {
   const ctx = useContext(playerContext);
   if (!ctx) throw new Error('useSamplePlayer must be used within context');
   return ctx;

@@ -1,23 +1,23 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
+import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
 import type { AudioFile } from '../../types/audioFile';
 import { familyColor, formatBytes, formatDuration, formatKey } from './helpers';
 import styles from './SampleGrid.module.scss';
-import { WaveformPlaceholder } from './WaveformPlaceholder';
+import { SampleWaveform } from './SampleWaveform';
 
 interface SampleGridProps {
   rows: AudioFile[];
   ownerId: string;
-  playingId: string | null;
-  onPlay: (id: string) => void;
   onEdit: (sample: AudioFile) => void;
   onDelete: (sample: AudioFile) => void;
 }
 
-export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows }: SampleGridProps): JSX.Element {
+export function SampleGrid({ onDelete, onEdit, ownerId, rows }: SampleGridProps): JSX.Element {
   const { i18n, t } = useTranslation();
   const locale = i18n.language;
+  const player = useSamplePlayer();
 
   return (
     <div className={styles.grid}>
@@ -43,14 +43,14 @@ export function SampleGrid({ onDelete, onEdit, onPlay, ownerId, playingId, rows 
           <div className={styles.player}>
             <button
               className={styles.play}
-              data-active={playingId === row.id}
+              data-active={player.currentId === row.id}
               onClick={() => {
-                onPlay(row.id);
+                player.toggle(row.id, `/audio/${row.url}`);
               }}
             >
-              <MsnIcon name={playingId === row.id ? 'list' : 'play'} size="11px" />
+              <MsnIcon name={player.currentId === row.id ? 'list' : 'play'} size="11px" />
             </button>
-            <WaveformPlaceholder seed={row.id} color={theme.fg1} height={36} />
+            <SampleWaveform id={row.id} peaksUrl={row.peaksUrl} height={36} />
           </div>
 
           <div className={styles.meta}>
