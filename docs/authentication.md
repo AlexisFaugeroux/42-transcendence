@@ -51,8 +51,9 @@ POST /login      (5/min)  verify password (generic 401 on failure) →
                           create Session → sign JWT → Set-Cookie → 200 { user }
 GET  /me         [auth]   return current user (never the hash)
 POST /logout     [auth]   revoke session → clear cookie → 204
-GET  /check-access [auth]  audio ownership/visibility check → 200/403/404
-                          (called by nginx's auth_request, not by the browser —
+GET  /check-access [auth]  audio ownership/visibility check → 200/401/403 only
+                          (called by nginx's auth_request, not by the browser;
+                          any other status becomes a 500 for the client —
                           see audio-file-storage.md)
 ```
 
