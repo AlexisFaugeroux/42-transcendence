@@ -1,1 +1,1 @@
-export const AUDIO_USER_QUOTA_BYTES = 500_288_000;
+export const AUDIO_USER_QUOTA_BYTES = 524_288_000; // 500 MiB
