@@ -11,10 +11,10 @@ interface StoredFile {
 }
 
 class AudioStorageService {
-  private readonly audioRoot: string;
+  private readonly _audioRoot: string;
 
   constructor(audioRoot: string) {
-    this.audioRoot = audioRoot;
+    this._audioRoot = audioRoot;
   }
 
   public async write(uuid: string, ownerId: string, data: Buffer, ext?: 'wav' | 'peaks') {
@@ -58,12 +58,12 @@ class AudioStorageService {
   }
 
   public async deleteDirectory(ownerId: string): Promise<void> {
-    const dir = path.join(this.audioRoot, ownerId);
+    const dir = path.join(this._audioRoot, ownerId);
     await rm(dir, { force: true, recursive: true });
   }
 
   private _path(uuid: string, ownerId: string, ext?: 'wav' | 'peaks') {
-    const dir = path.join(this.audioRoot, ownerId);
+    const dir = path.join(this._audioRoot, ownerId);
     const filePath = path.join(dir, `${uuid}.${ext ?? 'wav'}`);
     return { dir, filePath };
   }

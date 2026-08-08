@@ -5,6 +5,7 @@ export interface User {
   email: string;
   firstname: string;
   lastname: string;
+  avatarUpdatedAt: string | null;
   location?: string;
   bio?: string;
   handle: string;
@@ -53,6 +54,7 @@ export interface UpdateUserInput {
   handle?: string;
   firstname?: string;
   lastnane?: string;
+  avatarUpdatedAt?: string;
   links?: { kind: string; url: string }[];
   location?: string;
   artistName?: string;

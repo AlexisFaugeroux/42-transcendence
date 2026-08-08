@@ -34,7 +34,8 @@
     "fastify": "5.8.5",
     "fastify-plugin": "6.0.0",
     "pg": "8.21.0",
-    "prisma": "7.8.0"
+    "prisma": "7.8.0",
+    "sharp": "0.35.3"
   },
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
