@@ -83,9 +83,9 @@ export async function seed(config: SeedConfig): Promise<void> {
   };
 
   console.log('Clean volume directory...');
-  await mkdir(config.volumeDir, { recursive: true });
-  const stale = await readdir(config.volumeDir);
-  await Promise.all(stale.map((name) => rm(join(config.volumeDir, name), { force: true, recursive: true })));
+  await mkdir(config.mediaDir, { recursive: true });
+  const stale = await readdir(config.mediaDir);
+  await Promise.all(stale.map((name) => rm(join(config.mediaDir, name), { force: true, recursive: true })));
 
   for (const sampleSet of config.sampleSets) {
     const ownerId = resolveOwnerId(sampleSet.owner);
@@ -131,7 +131,7 @@ export async function seed(config: SeedConfig): Promise<void> {
 
     for (const sample of samples) {
       // write file on disk
-      const dest = join(config.volumeDir, sample.url);
+      const dest = join(config.mediaDir, 'audio', sample.url);
       await mkdir(dirname(dest), { recursive: true });
       await copyFile(sample.abs, dest);
 

@@ -82,9 +82,10 @@ samples library, studio workspace.
 - **Database:** PostgreSQL (Alpine image) in a Docker container. Relational data only —
   audio files stay on disk. May migrate to Supabase later.
   See `docs/architecture/database.md`.
-- **Audio storage:** VPS disk at `/var/www/audio/`. Uploads go through the backend,
-  served by nginx with `auth_request` to the backend for per-user access control.
-  See `docs/architecture/audio-file-storage.md`.
+- **Media storage:** VPS disk at `/var/www/media/`, one subdirectory per kind of
+  uploaded file (`audio/`). Uploads go through the backend, served by the
+  `nginx-media` container — `/audio/` with `auth_request` to the backend for
+  per-user access control. See `docs/architecture/audio-file-storage.md`.
 - **Real-time collaboration:** Yjs documents synced over WebSockets. Used for the
   studio (collaborative DAW editing) and potentially chat.
 

@@ -3,11 +3,11 @@ services:
     ports:
       - 5432:5432
 
-  nginx-audio:
+  nginx-media:
     ports: ["8081:80"]
     volumes:
-      - ./infra/nginx/audio.dev.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./infra/audio_data:/var/www/audio:rw
+      - ./infra/nginx/media.dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./infra/media_data:/var/www/media:rw
     # Create a domain refering to the host, from the container. Allows the service to reach the backend in dev mode (not running in the container)
     extra_hosts:
       - "host.docker.internal:host-gateway"

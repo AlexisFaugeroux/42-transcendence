@@ -8,13 +8,18 @@ files and asks the backend for an access decision before handing any file over.
 ## Where files live
 
 ```
-<AUDIO_ROOT>/<ownerId>/<audioFileId>.wav
-<AUDIO_ROOT>/<ownerId>/<audioFileId>.peaks
+<MEDIA_ROOT>/audio/<ownerId>/<audioFileId>.wav
+<MEDIA_ROOT>/audio/<ownerId>/<audioFileId>.peaks
 ```
 
-`AUDIO_ROOT` defaults to `/var/www/audio`. In dev it maps to `infra/audio_data/`
-on the host; in prod to the `audio_data` Docker volume (see [infra.md](../infra.md)).
-The path key is `ownerId` (the `Owner` model), not `userId`.
+`MEDIA_ROOT` defaults to `/var/www/media` and is the root shared by every kind of
+uploaded file, one subdirectory each (`audio/` here). In dev it maps to
+`infra/media_data/` on the host; in prod to the `media_data` Docker volume (see
+[infra.md](../infra.md)). The path key is `ownerId` (the `Owner` model), not
+`userId`.
+
+The disk layout is invisible to clients: nginx roots at `/var/www/media`, so the
+public URL stays `/audio/<ownerId>/<audioFileId>.wav`.
 
 Every `.wav` has a `.peaks` sidecar next to it — same UUID, different extension —
 holding a precomputed amplitude envelope so the browser can draw a waveform
@@ -40,10 +45,10 @@ For every `/audio/` request, nginx fires an internal sub-request to the backend,
 which answers 200 / 401 / 403:
 
 ```nginx
-# infra/nginx/audio.conf  (prod; dev uses audio.dev.conf → host.docker.internal:8080)
+# infra/nginx/media.conf  (prod; dev uses media.dev.conf → host.docker.internal:8080)
 location /audio/ {
   auth_request /auth/check-access;
-  root /var/www;
+  root /var/www/media;
 }
 location = /auth/check-access {
   internal;

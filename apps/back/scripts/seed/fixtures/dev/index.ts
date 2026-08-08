@@ -16,6 +16,7 @@ export const devConfig: SeedConfig = {
     user0: ['quentin'],
     user1: [],
   },
+  mediaDir: join(repoRoot, 'infra/media_data'),
   sampleSets: [
     {
       dir: join(samplesDir, 'platform'),
@@ -112,5 +113,4 @@ export const devConfig: SeedConfig = {
       role: Role.ARTIST,
     },
   ],
-  volumeDir: join(repoRoot, 'infra/audio_data'),
 };

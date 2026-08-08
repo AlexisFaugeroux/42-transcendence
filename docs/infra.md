@@ -6,10 +6,16 @@ Orchestrated with Docker Compose from the repo root:
 - `docker-compose.override.yaml` — **dev-only** tweaks, auto-merged unless you
   pass `-f docker-compose.yaml` explicitly.
 
-A Compose **profile** splits the two modes: `db` and `nginx-audio` have no
+A Compose **profile** splits the two modes: `db` and `nginx-media` have no
 profile (start in dev); `back`, `front`, `studio`, `reverse-proxy` are under the
 `prod` profile. Shared network `transcendence_net`; volumes `db_data` and
-`audio_data`.
+`media_data`.
+
+`media_data` is the **media root**, mounted at `/var/www/media`. Uploaded content
+sits in one subdirectory per kind — `audio/` today, `avatars/` next — so adding a
+kind needs neither a new volume nor a new nginx service. Public URLs are
+unaffected by the layout: nginx roots at `/var/www/media`, so `/audio/…` still
+resolves to `/var/www/media/audio/…`.
 
 ## Development
 
@@ -25,9 +31,9 @@ pnpm --filter @transcendence/front dev         # Vite    -> http://localhost:517
 pnpm --filter @transcendence/studio dev
 ```
 
-The override publishes `db` on `localhost:5432` and `nginx-audio` on
-`localhost:8081`, mounts `audio.dev.conf` (whose `auth_request` upstream is
-`host.docker.internal:8080`, i.e. the host-run backend) and `infra/audio_data`
+The override publishes `db` on `localhost:5432` and `nginx-media` on
+`localhost:8081`, mounts `media.dev.conf` (whose `auth_request` upstream is
+`host.docker.internal:8080`, i.e. the host-run backend) and `infra/media_data`
 (rw), and adds `extra_hosts: host.docker.internal:host-gateway`.
 
 Each Vite dev server proxies the paths the reverse proxy owns in prod, so app
@@ -36,14 +42,14 @@ code can use relative URLs in both environments and never has to know a host:
 | Path     | front (`:5173`)                | studio (`:5174`)               |
 | -------- | ------------------------------ | ------------------------------ |
 | `/api`   | → `localhost:8080` back        | → `localhost:8080` back        |
-| `/audio` | → `localhost:8081` nginx-audio | → `localhost:8081` nginx-audio |
+| `/audio` | → `localhost:8081` nginx-media | → `localhost:8081` nginx-media |
 
 Both apps fetch from `/audio/`: the studio loads samples into the DAW, the front
 previews them and fetches their `.peaks` in the samples library. Going through
 the proxy rather than hitting `localhost:8081` directly keeps the requests
 same-origin, so the session cookie travels and nginx's `auth_request` is
 satisfied — a direct call would be cross-origin and blocked by the CORS headers
-in `audio.dev.conf`.
+in `media.dev.conf`.
 
 Teardown: `pnpm services:down` (keep data) or `pnpm services:kill` (remove
 volumes/orphans — wipes data).
@@ -64,7 +70,7 @@ browser ──► reverse-proxy (nginx, TLS)
               / ───────► front       (nginx:80)
               /studio/ ─► studio      (nginx:80)
               /api/ ────► back        (:8080)
-              /audio/ ──► nginx-audio (nginx:80) ─auth_request─► back
+              /audio/ ──► nginx-media (nginx:80) ─auth_request─► back
             back ──► db (postgres:5432)
 ```
 
@@ -73,8 +79,8 @@ browser ──► reverse-proxy (nginx, TLS)
 | `reverse-proxy` | `nginx:1.30.3-alpine`    | Only public entry point. Ports `8080:80` (redirect) + `8443:443` (HTTPS). TLS terminated here (`reverse-proxy.conf`). |
 | `front`         | `apps/front/Dockerfile`  | Static Vite build served by nginx (`nginx-spa.conf`, SPA fallback).                                                   |
 | `studio`        | `apps/studio/Dockerfile` | Static Vite build served by nginx.                                                                                    |
-| `back`          | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `audio_data` (rw).                                                  |
-| `nginx-audio`   | `nginx:1.30.3-alpine`    | Serves `/audio/` from `audio_data` (ro) with `auth_request` (`audio.conf`).                                           |
+| `back`          | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `media_data` (rw).                                                  |
+| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/audio/` from `media_data` (ro) with `auth_request` (`media.conf`).                                           |
 | `db`            | `postgres:18-alpine`     | PostgreSQL, reached at host `db` on the network (not published).                                                      |
 
 Reach the app at **https://localhost:8443** (self-signed — accept the warning);

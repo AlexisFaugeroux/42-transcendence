@@ -15,10 +15,10 @@ few hundred pixels per row.
 
 Concretely, for `DSP ACE Processed Loop 127 18.wav`:
 
-| File      | Size          |
-| --------- | ------------- |
-| `.wav`    | 1 012 356 B   |
-| `.peaks`  | 4 104 B       |
+| File     | Size        |
+| -------- | ----------- |
+| `.wav`   | 1 012 356 B |
+| `.peaks` | 4 104 B     |
 
 About 250× smaller, and already in the shape the renderer wants. A 100-sample
 library costs ~400 KB of peaks instead of ~100 MB of audio.
@@ -45,12 +45,12 @@ fields: the whole file is addressable by arithmetic.
 
 ### Header
 
-| Offset | Size | Field      | Read with                   | Value                |
-| ------ | ---- | ---------- | --------------------------- | -------------------- |
-| 0      | 4    | magic      | 4 ASCII bytes               | `"MSNP"`             |
-| 4      | 1    | `version`  | `getUint8` / `readUint8`    | `1`                  |
-| 5      | 1    | `channels` | `getUint8` / `readUint8`    | 1 = mono, 2 = stereo |
-| 6      | 2    | `buckets`  | `getUint16(…, true)` (LE)   | `1024`               |
+| Offset | Size | Field      | Read with                 | Value                |
+| ------ | ---- | ---------- | ------------------------- | -------------------- |
+| 0      | 4    | magic      | 4 ASCII bytes             | `"MSNP"`             |
+| 4      | 1    | `version`  | `getUint8` / `readUint8`  | `1`                  |
+| 5      | 1    | `channels` | `getUint8` / `readUint8`  | 1 = mono, 2 = stereo |
+| 6      | 2    | `buckets`  | `getUint16(…, true)` (LE) | `1024`               |
 
 Little-endian for `buckets`, like WAV — see [wav.md](./wav.md) if the
 `readUInt16LE` family is unfamiliar.
@@ -69,7 +69,7 @@ Each pair is the minimum and maximum sample value observed over that bucket's
 slice of the audio, quantised from float `[-1, 1]` to int8 `[-127, 127]`:
 
 ```ts
-Math.round(value * 127)   // clamped to ±127
+Math.round(value * 127); // clamped to ±127
 ```
 
 Total file size is therefore always `8 + channels * buckets * 2`.
@@ -77,7 +77,7 @@ Total file size is therefore always `8 + channels * buckets * 2`.
 ## Worked example
 
 A real seeded file
-(`infra/audio_data/<ownerId>/39f8bcd8-….peaks`, "DSP ACE Processed Loop 127 18.wav"):
+(`infra/media_data/audio/<ownerId>/39f8bcd8-….peaks`, "DSP ACE Processed Loop 127 18.wav"):
 
 ```
 $ ls -l 39f8bcd8-….peaks
@@ -87,14 +87,14 @@ $ xxd -l 16 39f8bcd8-….peaks
 00000000: 4d53 4e50 0102 0004 fd00 fa00 fa00 fa00  MSNP............
 ```
 
-| Offset | Bytes         | Meaning                                     |
-| ------ | ------------- | ------------------------------------------- |
-| 0      | `4d 53 4e 50` | `"MSNP"`                                    |
-| 4      | `01`          | version 1                                   |
-| 5      | `02`          | 2 channels (stereo)                         |
-| 6      | `00 04`       | `0x0400` little-endian = **1024** buckets   |
-| 8      | `fd 00`       | channel 0, bucket 0 → min `-3`, max `0`     |
-| 10     | `fa 00`       | channel 0, bucket 1 → min `-6`, max `0`     |
+| Offset | Bytes         | Meaning                                   |
+| ------ | ------------- | ----------------------------------------- |
+| 0      | `4d 53 4e 50` | `"MSNP"`                                  |
+| 4      | `01`          | version 1                                 |
+| 5      | `02`          | 2 channels (stereo)                       |
+| 6      | `00 04`       | `0x0400` little-endian = **1024** buckets |
+| 8      | `fd 00`       | channel 0, bucket 0 → min `-3`, max `0`   |
+| 10     | `fa 00`       | channel 0, bucket 1 → min `-6`, max `0`   |
 
 `-3` as a float is `-3 / 127` ≈ `-0.024` — the loop starts quiet.
 

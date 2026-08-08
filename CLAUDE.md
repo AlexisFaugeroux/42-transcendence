@@ -85,9 +85,10 @@ samples library, studio workspace.
 
 - **Database:** PostgreSQL 18 (Alpine image) in a Docker container. Relational data only —
   audio files stay on disk. See `docs/architecture/database.md`.
-- **Audio storage:** on-disk volume at `/var/www/audio/`, served by nginx with
-  `auth_request` to the backend for access control. Each `.wav` has a `.peaks`
-  sidecar (precomputed waveform envelope) written next to it. See
+- **Media storage:** on-disk volume mounted at `/var/www/media/`, one subdirectory
+  per kind of uploaded file (`audio/`). Served by the `nginx-media` container —
+  `/audio/` with `auth_request` to the backend for access control. Each `.wav`
+  has a `.peaks` sidecar (precomputed waveform envelope) written next to it. See
   `docs/architecture/audio-file-storage.md` and `docs/peaks.md`.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **Real-time collaboration:** Yjs documents synced over WebSockets. Used for the
