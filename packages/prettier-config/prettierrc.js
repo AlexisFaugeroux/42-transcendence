@@ -21,7 +21,7 @@ export default {
     import.meta.resolve("prettier-plugin-sort-json"),
     import.meta.resolve("prettier-plugin-packagejson"),
   ],
-  printWidth: 120,
+  printWidth: 100,
   semi: true,
   singleQuote: true,
   tabWidth: 2,

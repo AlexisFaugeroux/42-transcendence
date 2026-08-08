@@ -41,7 +41,11 @@ export function LoopRegionHandleStrip({ timelineWidth }: LoopRegionProps): JSX.E
 
   const SNAP = PPQN.Quarter / 4;
 
-  function handleMouseDown(e: ReactMouseEvent<SVGPathElement>, handle: 'from' | 'to', startValuePpqn: number) {
+  function handleMouseDown(
+    e: ReactMouseEvent<SVGPathElement>,
+    handle: 'from' | 'to',
+    startValuePpqn: number,
+  ) {
     if (e.button !== 0) return;
     e.preventDefault();
 
@@ -54,8 +58,10 @@ export function LoopRegionHandleStrip({ timelineWidth }: LoopRegionProps): JSX.E
       const snappedPpqn = Math.round(rawPpqn / SNAP) * SNAP;
 
       project.editing.modify(() => {
-        if (handle === 'from' && snappedPpqn <= to) project.timelineBox.loopArea.from.setValue(snappedPpqn);
-        else if (handle === 'to' && snappedPpqn >= from) project.timelineBox.loopArea.to.setValue(snappedPpqn);
+        if (handle === 'from' && snappedPpqn <= to)
+          project.timelineBox.loopArea.from.setValue(snappedPpqn);
+        else if (handle === 'to' && snappedPpqn >= from)
+          project.timelineBox.loopArea.to.setValue(snappedPpqn);
       });
     }
 

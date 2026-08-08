@@ -110,7 +110,11 @@ class AudioFileRepository {
 
     const formattedCreatedAt = formatISO(createdAt);
 
-    return { ...rest, createdAt: formattedCreatedAt, peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks') };
+    return {
+      ...rest,
+      createdAt: formattedCreatedAt,
+      peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks'),
+    };
   }
 
   private _buildFilters(input: GetAudioFileInput) {
@@ -122,7 +126,9 @@ class AudioFileRepository {
     const modeFilter = modes?.length ? { mode: { in: modes } } : undefined;
     const familyFilter = families?.length ? { family: { in: families } } : undefined;
     const kindFilter = kinds?.length ? { kind: { in: kinds } } : undefined;
-    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
+    const visibilityFilter = visibilities?.length
+      ? { visibility: { in: visibilities } }
+      : undefined;
     const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
 
     return {

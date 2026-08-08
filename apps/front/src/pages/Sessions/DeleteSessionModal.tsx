@@ -9,7 +9,11 @@ interface DeleteSessionModalProps {
   onConfirm: () => void;
 }
 
-export function DeleteSessionModal({ onCancel, onConfirm, session }: DeleteSessionModalProps): JSX.Element {
+export function DeleteSessionModal({
+  onCancel,
+  onConfirm,
+  session,
+}: DeleteSessionModalProps): JSX.Element {
   const { t } = useTranslation();
 
   return (
@@ -28,7 +32,7 @@ export function DeleteSessionModal({ onCancel, onConfirm, session }: DeleteSessi
           components={{
             code: <code style={{ color: theme.orange, fontFamily: 'ui-monospace, monospace' }} />,
           }}
-          values={{ title: session?.title }}
+          values={{ title: session?.name }}
         />
       </p>
     </Modal>

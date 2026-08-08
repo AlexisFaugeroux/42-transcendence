@@ -64,11 +64,27 @@ const deleteProjectSchema = {
 };
 
 export function projectRoutes(app: FastifyInstance) {
-  app.put('/save', { preHandler: app.authenticate, schema: saveProjectSchema }, projectController.save);
+  app.put(
+    '/save',
+    { preHandler: app.authenticate, schema: saveProjectSchema },
+    projectController.save,
+  );
 
-  app.get('/load', { preHandler: app.authenticate, schema: loadProjectSchema }, projectController.load);
+  app.get(
+    '/load',
+    { preHandler: app.authenticate, schema: loadProjectSchema },
+    projectController.load,
+  );
 
+<<<<<<< HEAD
   app.get('/list', { preHandler: app.authenticate }, projectController.list);
 
   app.delete('/delete', { preHandler: app.authenticate, schema: deleteProjectSchema }, projectController.detele);
+=======
+  app.delete(
+    '/delete',
+    { preHandler: app.authenticate, schema: deleteProjectSchema },
+    projectController.detele,
+  );
+>>>>>>> aa26ce4 (feat: #138 serve /avatars/ via nginx-media)
 }

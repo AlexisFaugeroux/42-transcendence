@@ -71,7 +71,9 @@ export function Transport(): JSX.Element {
       </IconBtn>
       <IconBtn
         color={theme.orange}
-        background={isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void}
+        background={
+          isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void
+        }
         borderColor={isLooping ? theme.orange : theme.lineSoft}
         boxShadow={isLooping ? `0 0 8px -3px ${theme.orange}` : 'none'}
         onClick={() => {

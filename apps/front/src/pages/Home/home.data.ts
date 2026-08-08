@@ -64,7 +64,15 @@ export interface SavedSession {
 // Placeholder rows until the sessions endpoint lands: titles, keys and relative
 // times are sample content, not UI copy, so they are not translated.
 export const SAVED_SESSIONS: SavedSession[] = [
-  { bpm: 142, duration: '3:42', id: 1, key: 'F min', kind: 'production', title: 'Liquid Drum 808', updated: '2h ago' },
+  {
+    bpm: 142,
+    duration: '3:42',
+    id: 1,
+    key: 'F min',
+    kind: 'production',
+    title: 'Liquid Drum 808',
+    updated: '2h ago',
+  },
   {
     bpm: 96,
     duration: '2:51',
@@ -74,11 +82,51 @@ export const SAVED_SESSIONS: SavedSession[] = [
     title: 'Tape Saturator demo',
     updated: 'yesterday',
   },
-  { bpm: 88, duration: '1:08', id: 3, key: 'C maj', kind: 'recording', title: 'Vocal Take 04', updated: '3d ago' },
-  { bpm: 110, duration: '5:20', id: 4, key: 'D# min', kind: 'production', title: 'Granular Pads', updated: '1w ago' },
-  { bpm: 128, duration: '4:02', id: 5, key: 'G min', kind: 'mixing', title: 'Late Night Bounce', updated: '1w ago' },
-  { bpm: 120, duration: '2:14', id: 6, key: 'C maj', kind: 'production', title: 'First Steps', updated: '2w ago' },
-  { bpm: null, duration: '6:48', id: 7, key: null, kind: 'recording', title: 'Field Recording 02', updated: '3w ago' },
+  {
+    bpm: 88,
+    duration: '1:08',
+    id: 3,
+    key: 'C maj',
+    kind: 'recording',
+    title: 'Vocal Take 04',
+    updated: '3d ago',
+  },
+  {
+    bpm: 110,
+    duration: '5:20',
+    id: 4,
+    key: 'D# min',
+    kind: 'production',
+    title: 'Granular Pads',
+    updated: '1w ago',
+  },
+  {
+    bpm: 128,
+    duration: '4:02',
+    id: 5,
+    key: 'G min',
+    kind: 'mixing',
+    title: 'Late Night Bounce',
+    updated: '1w ago',
+  },
+  {
+    bpm: 120,
+    duration: '2:14',
+    id: 6,
+    key: 'C maj',
+    kind: 'production',
+    title: 'First Steps',
+    updated: '2w ago',
+  },
+  {
+    bpm: null,
+    duration: '6:48',
+    id: 7,
+    key: null,
+    kind: 'recording',
+    title: 'Field Recording 02',
+    updated: '3w ago',
+  },
 ];
 
 export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
@@ -93,14 +141,62 @@ export interface OnlineUser {
 
 // Same as SAVED_SESSIONS: sample presence rows, replaced by the social endpoint.
 export const ONLINE: OnlineUser[] = [
-  { activity: 'Recording vocals', handle: '@maya.o', listeners: 12, name: 'Maya Okafor', status: 'live' },
-  { activity: 'Mixing — Side B', handle: '@theo', listeners: 0, name: 'Theo Rivera', status: 'online' },
-  { activity: 'Producing — 92 BPM', handle: '@anouk', listeners: 0, name: 'Anouk Lemaire', status: 'online' },
-  { activity: 'Streaming a beat set', handle: '@idris', listeners: 47, name: 'Idris Khan', status: 'live' },
-  { activity: 'Browsing samples', handle: '@rosa', listeners: 0, name: 'Rosa Petrov', status: 'idle' },
-  { activity: 'Mastering single', handle: '@junpark', listeners: 0, name: 'Jun Park', status: 'online' },
-  { activity: 'Live drum jam', handle: '@cleo.b', listeners: 8, name: 'Cleo Banner', status: 'live' },
-  { activity: 'Playlist: late night', handle: '@samwest', listeners: 0, name: 'Sam West', status: 'online' },
+  {
+    activity: 'Recording vocals',
+    handle: '@maya.o',
+    listeners: 12,
+    name: 'Maya Okafor',
+    status: 'live',
+  },
+  {
+    activity: 'Mixing — Side B',
+    handle: '@theo',
+    listeners: 0,
+    name: 'Theo Rivera',
+    status: 'online',
+  },
+  {
+    activity: 'Producing — 92 BPM',
+    handle: '@anouk',
+    listeners: 0,
+    name: 'Anouk Lemaire',
+    status: 'online',
+  },
+  {
+    activity: 'Streaming a beat set',
+    handle: '@idris',
+    listeners: 47,
+    name: 'Idris Khan',
+    status: 'live',
+  },
+  {
+    activity: 'Browsing samples',
+    handle: '@rosa',
+    listeners: 0,
+    name: 'Rosa Petrov',
+    status: 'idle',
+  },
+  {
+    activity: 'Mastering single',
+    handle: '@junpark',
+    listeners: 0,
+    name: 'Jun Park',
+    status: 'online',
+  },
+  {
+    activity: 'Live drum jam',
+    handle: '@cleo.b',
+    listeners: 8,
+    name: 'Cleo Banner',
+    status: 'live',
+  },
+  {
+    activity: 'Playlist: late night',
+    handle: '@samwest',
+    listeners: 0,
+    name: 'Sam West',
+    status: 'online',
+  },
 ];
 
 export interface ActivityItem {

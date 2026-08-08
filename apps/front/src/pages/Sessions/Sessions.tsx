@@ -6,7 +6,7 @@ import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
 import { RenameSessionModal } from './RenameSessionModal';
 import { SessionGrid } from './SessionGrid';
-import { type Session, SESSIONS, type SessSort } from './sessions.data';
+import { type Session, type SessSort } from './sessions.data';
 import styles from './Sessions.module.scss';
 import { SessionsEmpty, SessionsNoMatches } from './SessionsEmpty';
 import { SessToolbar } from './SessToolbar';

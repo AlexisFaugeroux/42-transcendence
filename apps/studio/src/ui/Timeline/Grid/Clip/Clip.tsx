@@ -5,7 +5,14 @@ import { AudioRegionBoxAdapter } from '@opendaw/studio-adapters';
 import { AudioRegionBox, ValueEventCollectionBox } from '@opendaw/studio-boxes';
 import { CanvasPainter } from '@opendaw/studio-core';
 import { Dropdown, type MenuProps, theme } from '@transcendence/ui';
-import { type JSX, memo, type MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
+import {
+  type JSX,
+  memo,
+  type MouseEvent as ReactMouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useProject } from '../../../../contexts/ProjectContext';
 import { useTracks } from '../../../../contexts/TracksContext';
 import { resolveCssColor } from '../../../../lib/resolveCssColor';
@@ -14,14 +21,24 @@ import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
 import { PIXELS_PER_PULSE, RESIZE_HANDLE_PX, ROW_HEIGTH } from '../../constants';
 import styles from './Clip.module.scss';
 
-function renderClipHeader(ctx: CanvasRenderingContext2D, color: string, width: number, headerHeight: number) {
+function renderClipHeader(
+  ctx: CanvasRenderingContext2D,
+  color: string,
+  width: number,
+  headerHeight: number,
+) {
   ctx.fillStyle = color;
   ctx.globalAlpha = 0.5;
   ctx.fillRect(0, 0, width, headerHeight);
   ctx.globalAlpha = 1.0;
 }
 
-function renderClipName(ctx: CanvasRenderingContext2D, label: string, color: string, headerHeight: number) {
+function renderClipName(
+  ctx: CanvasRenderingContext2D,
+  label: string,
+  color: string,
+  headerHeight: number,
+) {
   ctx.fillStyle = color;
   ctx.font = '9px Rubik, sans-serif';
   ctx.textBaseline = 'middle';
@@ -53,7 +70,9 @@ function renderWaveform(
   const numberOfChannels = peaks.numChannels;
   const peaksHeight = Math.floor((height - 4) / numberOfChannels);
 
-  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-bright').trim();
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue('--color-bright')
+    .trim();
 
   for (let channel = 0; channel < numberOfChannels; channel++) {
     PeaksPainter.renderPixelStrips(ctx, peaks, channel, {
@@ -69,7 +88,12 @@ function renderWaveform(
   }
 }
 
-function renderClipBorder(ctx: CanvasRenderingContext2D, color: string, width: number, height: number) {
+function renderClipBorder(
+  ctx: CanvasRenderingContext2D,
+  color: string,
+  width: number,
+  height: number,
+) {
   ctx.strokeStyle = color;
   const lineWidth = 1;
   ctx.lineWidth = lineWidth;
@@ -225,7 +249,9 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
         }
       });
 
-      setClips((prev) => prev.map((c) => (c.regionBox === clip.regionBox ? { ...c, position: newPosition } : c)));
+      setClips((prev) =>
+        prev.map((c) => (c.regionBox === clip.regionBox ? { ...c, position: newPosition } : c)),
+      );
     }
 
     window.addEventListener('mousemove', onMove);
@@ -284,7 +310,9 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
         }
       });
 
-      setClips((prev) => prev.map((c) => (c.regionBox === clip.regionBox ? { ...c, duration: newDuration } : c)));
+      setClips((prev) =>
+        prev.map((c) => (c.regionBox === clip.regionBox ? { ...c, duration: newDuration } : c)),
+      );
     }
 
     window.addEventListener('mousemove', onMove);
@@ -348,7 +376,10 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
     if (duplicate.isEmpty()) return;
     const { eventsCollectionBox, regionBox } = duplicate.unwrap();
 
-    setClips((prev) => [...prev, { ...clip, eventsCollectionBox, position: newClipPosition, regionBox }]);
+    setClips((prev) => [
+      ...prev,
+      { ...clip, eventsCollectionBox, position: newClipPosition, regionBox },
+    ]);
   }
 
   function handleDelete() {

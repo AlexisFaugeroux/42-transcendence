@@ -54,7 +54,10 @@ class UserController {
     reply.code(200).send({ user: updatedUser });
   };
 
-  public updatePassword = async (req: FastifyRequest<UpdatePasswordRoute>, reply: FastifyReply): Promise<void> => {
+  public updatePassword = async (
+    req: FastifyRequest<UpdatePasswordRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const { newPassword, oldPassword } = req.body;
 
     const user = await userRepository.findById(req.authUser.id);

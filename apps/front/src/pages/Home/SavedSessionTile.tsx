@@ -1,7 +1,8 @@
+import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { CoverArt } from './CoverArt';
-import { KIND_COLOR, KIND_ICON, KIND_LABEL, type SavedSession } from './home.data';
+import { KIND_COLOR, KIND_ICON, KIND_LABEL } from './home.data';
 import styles from './SavedSessionTile.module.scss';
 import type { Session } from '../Sessions/sessions.data';
 import { Button } from '@transcendence/ui';
@@ -26,11 +27,12 @@ export function SavedSessionTile( { session, onOpen } : SavedSessionParams ): JS
       <div className={styles.title}>{session.name}</div>
       <div className={styles.meta}>
         <span>
-          {session.bpm ? t('home.saved.bpm', { bpm: session.bpm }) : '—'} · {session.key ?? t('home.saved.noKey')}
+          {session.bpm ? t('home.saved.bpm', { bpm: session.bpm }) : '—'} ·{' '}
+          {session.key ?? t('home.saved.noKey')}
         </span>
         <span>{session.duration}</span>
       </div>
-      <div className={styles.updated}>{session.updatedAt}</div>
+      <div className={styles.updated}>{formatDate(session.updatedAt)}</div>
     <Button onClick={ () => {onOpen(session)}}> Open in studio </Button>
     </div>
   );

@@ -119,7 +119,11 @@ export function AppHeader({ active }: { active: AppHeaderKey }): JSX.Element {
         <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
           <Dropdown
             trigger={['click']}
-            menu={{ items, onClick: onMeunuClick, style: { border: `1px solid ${theme.lineSoft}` } }}
+            menu={{
+              items,
+              onClick: onMeunuClick,
+              style: { border: `1px solid ${theme.lineSoft}` },
+            }}
           >
             <Button style={{ background: theme.void, border: 'none', boxShadow: 'none' }}>
               <UserChip
