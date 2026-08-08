@@ -21,6 +21,7 @@ transcendence/
     auth/            Shared React auth (context + API client)
     date/            Shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   Shared ESLint rules (base + React configs)
+    i18n/            Shared i18n provider & translations (fr / en / es)
     prettier-config/ Shared Prettier rules
     ui/              Shared UI components (@transcendence/ui)
   design/         UI mockups & design system reference (READ-ONLY, not shipped)
@@ -85,7 +86,9 @@ samples library, studio workspace.
 - **Database:** PostgreSQL 18 (Alpine image) in a Docker container. Relational data only —
   audio files stay on disk. See `docs/architecture/database.md`.
 - **Audio storage:** on-disk volume at `/var/www/audio/`, served by nginx with
-  `auth_request` to the backend for access control. See `docs/architecture/audio-file-storage.md`.
+  `auth_request` to the backend for access control. Each `.wav` has a `.peaks`
+  sidecar (precomputed waveform envelope) written next to it. See
+  `docs/architecture/audio-file-storage.md` and `docs/peaks.md`.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **Real-time collaboration:** Yjs documents synced over WebSockets. Used for the
   studio (collaborative DAW editing) and potentially chat.

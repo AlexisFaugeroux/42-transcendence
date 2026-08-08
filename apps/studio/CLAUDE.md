@@ -7,7 +7,8 @@ full-featured production tool.
 ## Target features (MVP)
 
 1. **Load samples into a timeline/grid** — drag or click to place a clip onto a track.
-2. **Browse audio samples** — panel listing samples from `public/audio/`.
+2. **Browse audio samples** — panel listing the samples the backend returns (`api/audiofile.ts` → `hooks/useSamples`);
+   the audio itself is fetched from `/audio/<ownerId>/<uuid>.wav`, which nginx guards with `auth_request`.
 3. **Transport controls** — play / stop / (later: loop, record-arm visual only).
 4. **Playback** — plays arranged clips through the openDAW audio engine with a moving playhead.
 
@@ -32,17 +33,22 @@ mix them.
 ```
 studio/
 ├── CLAUDE.md          <- this file
-├── public/
-│   └── audio/         <- sample files (static assets served by Vite)
 ├── src/
 │   ├── App.tsx
-│   ├── lib/           <- audioUtils, projectSetup, seedDemoData, types
+│   ├── api/           <- audiofile.ts (samples list, same conventions as apps/front)
+│   ├── contexts/      <- ProjectContext, TracksContext
+│   ├── hooks/         <- useCurrentPosition, useMasterPeaks, usePanels, useSamples, useTableScrollY
+│   ├── lib/           <- arrangementFactory, audioUtils, projectSetup, resolveCssColor, types
 │   └── ui/
-│       ├── Timeline/  (Timeline, Grid)
-│       └── Transport/
-├── vite.config.ts
-└── TODO.txt           <- scratch notes (may be stale — trust code + this file)
+│       ├── Timeline/  (Timeline, Grid, LoopRegion, Rack)
+│       ├── Header/    (Transport, Meter, Metrics)
+│       ├── Browser/   (Samples)
+│       ├── Devices/ · Editor/ · Footer/ · PanelFrame/
+│       └── components/ (MsnPeakMeter, StudioIcon)
+└── vite.config.ts
 ```
+
+Sample audio is served by nginx, not by Vite — `public/` is empty.
 
 ## Studio-specific conventions
 
