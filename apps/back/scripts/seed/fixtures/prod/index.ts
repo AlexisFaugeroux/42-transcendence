@@ -6,7 +6,7 @@ import type { SeedConfig } from '../../types';
 
 // Prod seeding runs from the Docker image's WORKDIR `/app`. The entrypoint
 // unzips the bundled samples into `/app/samples/<owner>` before running the
-// seed, and the audio volume is the absolute host path `/var/www/audio`.
+// seed, and the audio volume is the absolute host path `/var/www/media/audio`.
 const samplesDir = join(process.cwd(), 'samples');
 
 export const prodConfig: SeedConfig = {
@@ -19,6 +19,7 @@ export const prodConfig: SeedConfig = {
     user0: ['quentin'],
     user1: [],
   },
+  mediaDir: '/var/www/media',
   sampleSets: [
     {
       dir: join(samplesDir, 'platform'),
@@ -114,5 +115,4 @@ export const prodConfig: SeedConfig = {
       role: Role.ARTIST,
     },
   ],
-  volumeDir: '/var/www/audio',
 };

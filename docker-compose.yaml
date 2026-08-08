@@ -10,14 +10,14 @@ services:
     networks:
       - transcendence_net
 
-  nginx-audio:
+  nginx-media:
     image: nginx:1.30.3-alpine
     restart: always
     expose:
       - "80"
     volumes:
-      - ./infra/nginx/audio.conf:/etc/nginx/conf.d/default.conf:ro
-      - audio_data:/var/www/audio:ro
+      - ./infra/nginx/media.conf:/etc/nginx/conf.d/default.conf:ro
+      - media_data:/var/www/media:ro
     networks:
       - transcendence_net
 
@@ -30,9 +30,9 @@ services:
     restart: always
     depends_on:
       - "db"
-      - "nginx-audio"
+      - "nginx-media"
     volumes:
-      - audio_data:/var/www/audio:rw
+      - media_data:/var/www/media:rw
     networks:
       - transcendence_net
 
@@ -64,7 +64,7 @@ services:
       - front
       - studio
       - back
-      - nginx-audio
+      - nginx-media
     volumes:
       - ./infra/nginx/reverse-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       - ./infra/nginx/certs:/etc/nginx/certs:ro
@@ -76,7 +76,7 @@ networks:
     name: transcendence_net
 
 volumes:
-  audio_data:
-    name: audio_data
+  media_data:
+    name: media_data
   db_data:
     name: db_data

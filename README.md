@@ -216,12 +216,12 @@ cp apps/back/.env.prod.example apps/back/.env.prod   # production
 
 Then set the values:
 
-| Variable                                            | Notes                                                                                                                          |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                     |
-| `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod` |
-| `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                        |
-| `AUDIO_ROOT`                                        | Directory holding the audio files. **Dev:** `infra/audio_data`. **Prod:** `/var/www/audio` (the `audio_data` volume)           |
+| Variable                                            | Notes                                                                                                                                                |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                                           |
+| `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod`                       |
+| `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                                              |
+| `MEDIA_ROOT`                                        | Root holding uploaded media, one subdirectory per kind (`audio/`). **Dev:** `infra/media_data`. **Prod:** `/var/www/media` (the `media_data` volume) |
 
 `POSTGRES_URL` and `JWT_SECRET` are validated at boot — the backend refuses to
 start without them rather than falling back to a default.
@@ -267,7 +267,7 @@ In dev, the infrastructure runs in containers while the apps run on the host wit
 
 ```sh
 pnpm install
-docker compose up -d                              # db (exposed on 5432) + nginx-audio
+docker compose up -d                              # db (exposed on 5432) + nginx-media
 
 pnpm --filter @transcendence/back db:migrate      # apply migrations to transcendence_dev
 pnpm --filter @transcendence/back db:seed         # dev fixtures

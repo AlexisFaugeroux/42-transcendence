@@ -16,6 +16,6 @@ export interface SeedConfig {
   users: UserFixture[];
   follows: Record<string, string[]>;
   sampleSets: SampleSet[];
-  volumeDir: string;
+  mediaDir: string;
   cleanupDirs?: string[];
 }

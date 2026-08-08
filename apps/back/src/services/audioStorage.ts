@@ -1,6 +1,6 @@
 import { createWriteStream } from 'node:fs';
 import { mkdir, rm, unlink, writeFile } from 'node:fs/promises';
-import path from 'node:path';
+import path, { join } from 'node:path';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { PayloadTooLargeError } from '../domain/errors';
@@ -69,4 +69,4 @@ class AudioStorageService {
   }
 }
 
-export const audioStorageService = new AudioStorageService(process.env.AUDIO_ROOT ?? '/var/www/audio');
+export const audioStorageService = new AudioStorageService(join(process.env.MEDIA_ROOT ?? '/var/www/media', 'audio'));

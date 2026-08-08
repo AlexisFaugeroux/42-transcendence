@@ -20,6 +20,6 @@ infra/nginx/certs
 samples/platform/
 samples/alex/
 samples/julien/
-infra/audio_data
+infra/media_data
 
 docs/superpowers
