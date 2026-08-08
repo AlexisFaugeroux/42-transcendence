@@ -3,10 +3,10 @@ import type { JsonValue } from '../../src/generated/prisma/internal/prismaNamesp
 import type {
   CreateUserInput,
   GetUserInput,
-  UpdateUserInput,
-  User,
   PublicProducer,
   PublicProducerProfile,
+  UpdateUserInput,
+  User,
 } from '../domain/user';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
@@ -116,10 +116,12 @@ class UserRepository {
     }
   }
 
-  public async findProfileByHandle(handle: string, viewerId: string): Promise<PublicProducerProfile> {
+  public async findProfileByHandle(
+    handle: string,
+    viewerId: string,
+  ): Promise<PublicProducerProfile> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
         include: {
           _count: {
             select: {
@@ -129,12 +131,13 @@ class UserRepository {
           },
 
           followedBy: {
-            where: { id: viewerId },
             select: {
               id: true,
             },
+            where: { id: viewerId },
           },
         },
+        where: { handle },
       });
 
       return {
@@ -151,7 +154,6 @@ class UserRepository {
   public async listFollowers(handle: string): Promise<PublicProducer[]> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
         include: {
           followedBy: {
             orderBy: {
@@ -159,6 +161,7 @@ class UserRepository {
             },
           },
         },
+        where: { handle },
       });
 
       return user.followedBy.map((follower: PrismaUser) => this._formatPublic(follower));
@@ -170,7 +173,6 @@ class UserRepository {
   public async listFollowing(handle: string): Promise<PublicProducer[]> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
         include: {
           following: {
             orderBy: {
@@ -178,6 +180,7 @@ class UserRepository {
             },
           },
         },
+        where: { handle },
       });
 
       return user.following.map((followed: PrismaUser) => this._formatPublic(followed));
@@ -189,12 +192,12 @@ class UserRepository {
   public async follow(followerId: string, targetId: string): Promise<void> {
     try {
       await this.prisma.user.update({
-        where: { id: followerId },
         data: {
           following: {
             connect: { id: targetId },
           },
         },
+        where: { id: followerId },
       });
     } catch (error: unknown) {
       throw mapError(error, 'User');
@@ -204,12 +207,12 @@ class UserRepository {
   public async unfollow(followerId: string, targetId: string): Promise<void> {
     try {
       await this.prisma.user.update({
-        where: { id: followerId },
         data: {
           following: {
             disconnect: { id: targetId },
           },
         },
+        where: { id: followerId },
       });
     } catch (error: unknown) {
       throw mapError(error, 'User');
@@ -246,10 +249,11 @@ class UserRepository {
   // Format prisma response (type User from PrismaClient) into domain type (type User from domain/)
   // because we do not keep every field from the User table in the database
   private _format(user: PrismaUser): User {
-    const { bio, createdAt, links, location, updatedAt, ...rest } = user;
+    const { avatarUpdatedAt, bio, createdAt, links, location, updatedAt, ...rest } = user;
 
     return {
       ...rest,
+      avatarUpdatedAt: avatarUpdatedAt?.toISOString() ?? null,
       bio: bio ?? undefined,
       links: toLinks(links),
       location: location ?? undefined,
@@ -258,14 +262,14 @@ class UserRepository {
 
   private _formatPublic(user: PrismaUser): PublicProducer {
     return {
-      id: user.id,
       artistName: user.artistName,
-      handle: user.handle,
       bio: user.bio ?? undefined,
-      location: user.location ?? undefined,
-      links: toLinks(user.links),
-      role: user.role,
+      handle: user.handle,
+      id: user.id,
       joined: user.createdAt,
+      links: toLinks(user.links),
+      location: user.location ?? undefined,
+      role: user.role,
     };
   }
 

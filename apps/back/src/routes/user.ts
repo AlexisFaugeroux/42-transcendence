@@ -69,4 +69,12 @@ export function userRoutes(app: FastifyInstance) {
     },
     userController.deleteUser,
   );
+
+  app.post(
+    '/upload/avatar',
+    {
+      preHandler: app.authenticate,
+    },
+    userController.uploadAvatar,
+  );
 }

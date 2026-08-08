@@ -1,13 +1,17 @@
+import { dayjs } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { BadRequestError, ForbiddenError } from '../domain/errors';
+import { AVATAR_MAX_BYTES } from '../constants';
+import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import type {
+  PublicProducerProfileResponse,
+  PublicProducersResponse,
   UpdateUserInput,
   UserResponse,
-  PublicProducersResponse,
-  PublicProducerProfileResponse,
 } from '../domain/user';
 import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
+import { avatarStorageService } from '../services/avatarStorage';
+import { imageService } from '../services/imageService';
 import { hashPassword, verifyPassword } from '../utils/password';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
@@ -42,6 +46,10 @@ interface ListFollowRoute extends RouteGenericInterface {
 
 interface FollowRoute extends RouteGenericInterface {
   Params: HandleParam;
+}
+
+interface UploadAvatarRoute extends RouteGenericInterface {
+  Reply: UserResponse;
 }
 
 class UserController {
@@ -123,7 +131,10 @@ class UserController {
     reply.code(204).send();
   };
 
-  public unfollow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
+  public unfollow = async (
+    req: FastifyRequest<FollowRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
 
     if (target.id === req.authUser.id) {
@@ -132,6 +143,30 @@ class UserController {
 
     await userRepository.unfollow(req.authUser.id, target.id);
     reply.code(204).send();
+  };
+
+  public uploadAvatar = async (
+    req: FastifyRequest,
+    reply: FastifyReply<UploadAvatarRoute>,
+  ): Promise<void> => {
+    const data = await req.file({ limits: { fileSize: AVATAR_MAX_BYTES } });
+    if (!data) throw new BadRequestError();
+
+    let buffer: Buffer;
+    try {
+      buffer = await data.toBuffer();
+    } catch (error) {
+      req.log.error(error);
+      throw new PayloadTooLargeError('Avatar file is too large');
+    }
+
+    const webp = await imageService.normalizeAvatar(buffer);
+    await avatarStorageService.write(req.authUser.id, webp);
+
+    const updatedUser = await userRepository.update(req.authUser.id, {
+      avatarUpdatedAt: dayjs().toISOString(),
+    });
+    reply.code(201).send({ user: updatedUser });
   };
 }
 
