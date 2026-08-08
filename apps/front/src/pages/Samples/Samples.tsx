@@ -85,7 +85,10 @@ export function Samples(): JSX.Element {
     const needle = query.trim().toLowerCase();
 
     return samples
-      .filter((sample) => !families.length || (sample.family !== null && families.includes(sample.family)))
+      .filter(
+        (sample) =>
+          !families.length || (sample.family !== null && families.includes(sample.family)),
+      )
       .filter((sample) => !kinds.length || (sample.kind !== null && kinds.includes(sample.kind)))
       .filter((sample) => !needle || sample.name.toLowerCase().includes(needle))
       .sort(SAMPLE_COMPARATORS[sort]);
@@ -119,7 +122,10 @@ export function Samples(): JSX.Element {
       }
 
       setSelectedKeys([]);
-      notifySuccess(t('samples.delete.successTitle'), t('samples.delete.successDescription', { count: ids.length }));
+      notifySuccess(
+        t('samples.delete.successTitle'),
+        t('samples.delete.successDescription', { count: ids.length }),
+      );
     },
   });
 
@@ -133,7 +139,8 @@ export function Samples(): JSX.Element {
   const confirmDeletion = (): void => {
     if (confirmDelete === null) return;
 
-    const ids = confirmDelete === 'selection' ? selectedKeys.map((key) => String(key)) : [confirmDelete.id];
+    const ids =
+      confirmDelete === 'selection' ? selectedKeys.map((key) => String(key)) : [confirmDelete.id];
 
     setConfirmDelete(null);
     if (ids.length) deleteSamples(ids);

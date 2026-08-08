@@ -36,7 +36,11 @@ useEffect(() => {
   setClips(clips);
 }, [project]);
 
-  return <tracksContext.Provider value={{ clips, setClips, setTracks, tracks }}>{children}</tracksContext.Provider>;
+  return (
+    <tracksContext.Provider value={{ clips, setClips, setTracks, tracks }}>
+      {children}
+    </tracksContext.Provider>
+  );
 }
 
 export function useTracks() {

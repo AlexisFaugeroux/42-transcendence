@@ -3,7 +3,7 @@ import { AudioData } from '@opendaw/lib-dsp';
 import { Promises } from '@opendaw/lib-runtime';
 import type { Progress } from '@opendaw/lib-std';
 import { assert, requireProperty, UUID } from '@opendaw/lib-std';
-import { PlayfieldSampleBoxAdapter, type SampleMetaData, type SoundfontMetaData } from '@opendaw/studio-adapters';
+import { type SampleMetaData, type SoundfontMetaData } from '@opendaw/studio-adapters';
 import type { SoundfontService } from '@opendaw/studio-core';
 import {
   AudioWorklets,
@@ -22,7 +22,7 @@ import OfflineEngineUrl from '@opendaw/studio-core/offline-engine.js?worker&url'
 import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
 import { saveProject, loadProject } from '../api/project';
-import type { ProjectProperties } from "../lib/types";
+import type { ProjectProperties } from '../lib/types';
 import { getAudioById } from '../api/audiofile';
 import { arrayBufferToBase64, base64ToArrayBuffer } from '../utils/base64';
 import { loadAudioFile } from './audioUtils';
@@ -79,12 +79,15 @@ export interface ProjectSetupOptions {
 export interface ProjectSetupResult {
   project: Project;
   audioContext: AudioContext;
-  id : string;
+  id: string;
 }
 
 let _initPromise: Promise<ProjectSetupResult> | null = null;
 
-export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectProperties : ProjectProperties ): Promise<ProjectSetupResult> {
+export function initializeOpenDaw(
+  options: ProjectSetupOptions = {},
+  projectProperties: ProjectProperties,
+): Promise<ProjectSetupResult> {
   _initPromise ??= _doInitializeOpenDaw(options, projectProperties);
   return _initPromise;
 }
@@ -103,7 +106,10 @@ export function initializeOpenDaw(options: ProjectSetupOptions = {}, projectProp
  * @returns Promise resolving to initialized Project and AudioContext
  * @throws Error if initialization fails or features are not supported
  */
-export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, projectProperties : ProjectProperties ): Promise<ProjectSetupResult> {
+export async function _doInitializeOpenDaw(
+  options: ProjectSetupOptions = {},
+  projectProperties: ProjectProperties,
+): Promise<ProjectSetupResult> {
   const { bpm, localAudioBuffers, onStatusUpdate } = options;
 
   console.log('========================================');
@@ -142,12 +148,16 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
 
   // Create AudioContext
   const audioContext = new AudioContext({ latencyHint: 0 });
-  console.debug(`AudioContext state: ${audioContext.state}, sampleRate: ${audioContext.sampleRate}`);
+  console.debug(
+    `AudioContext state: ${audioContext.state}, sampleRate: ${audioContext.sampleRate}`,
+  );
 
   onStatusUpdate?.('Installing audio worklets...');
 
   // Create audio worklets
-  const { error: workletError, status: workletStatus } = await Promises.tryCatch(AudioWorklets.createFor(audioContext));
+  const { error: workletError, status: workletStatus } = await Promises.tryCatch(
+    AudioWorklets.createFor(audioContext),
+  );
   if (workletStatus === 'rejected') {
     throw new Error(`Could not install Worklets: ${workletError}`);
   }
@@ -161,19 +171,11 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
       // Check if we have a local audio buffer for this UUID
       if (localAudioBuffers) {
         audioBuffer = localAudioBuffers.get(uuidString);
-      }
-      else {
-
+      } else {
         const id = UUID.toString(uuid);
-        const sample = await getAudioById( id );
-        if (!sample) throw new Error("Failed to fetch sample in OpenDaw init");
-        audioBuffer = await loadAudioFile(
-          audioContext,
-          sample.url,
-          sample.id,
-          ""
-        )
-
+        const sample = await getAudioById(id);
+        if (!sample) throw new Error('Failed to fetch sample in OpenDaw init');
+        audioBuffer = await loadAudioFile(audioContext, sample.url, sample.id, '');
       }
       if (audioBuffer) {
         console.debug(
@@ -189,7 +191,7 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
         };
         return [audioData, metaData];
       }
-      
+
       // Samples imported via SampleService
       const sample = await SampleStorage.get().exists(uuid);
       if (sample) {
@@ -197,7 +199,9 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
         return [audioData, meta];
       }
 
-      console.warn(`No audio buffer found for UUID: ${uuidString}. The sample will not be available.`);
+      console.warn(
+        `No audio buffer found for UUID: ${uuidString}. The sample will not be available.`,
+      );
       throw new Error(`Sample not found: ${uuidString}`);
     },
   };
@@ -205,8 +209,10 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
 
   // Create soundfont manager
   const soundfontProvider: SoundfontProvider = {
-    fetch: async (uuid: UUID.Bytes, progress: Progress.Handler): Promise<[ArrayBuffer, SoundfontMetaData]> =>
-      OpenSoundfontAPI.get().load(uuid, progress),
+    fetch: async (
+      uuid: UUID.Bytes,
+      progress: Progress.Handler,
+    ): Promise<[ArrayBuffer, SoundfontMetaData]> => OpenSoundfontAPI.get().load(uuid, progress),
   };
   const soundfontManager = new GlobalSoundfontLoaderManager(soundfontProvider);
 
@@ -233,10 +239,9 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
 
   // Create project
   const audioWorklets = AudioWorklets.get(audioContext);
-  let project : Project;
-  if (!projectProperties.id)
-  {
-      project = Project.new({
+  let project: Project;
+  if (!projectProperties.id) {
+    project = Project.new({
       audioContext,
       audioWorklets,
       sampleManager,
@@ -247,12 +252,9 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
 
     projectProperties.id = UUID.generate().toString();
     projectProperties.state = arrayBufferToBase64(project.toArrayBuffer());
-    await saveProject( projectProperties );
-
-  }
-  else
-  {
-    projectProperties = await loadProject( projectProperties.id );
+    await saveProject(projectProperties);
+  } else {
+    projectProperties = await loadProject(projectProperties.id);
     const buffer = base64ToArrayBuffer(projectProperties.state);
     project = await Project.loadAnyVersion(
       {
@@ -266,8 +268,8 @@ export async function _doInitializeOpenDaw(options: ProjectSetupOptions = {}, pr
       buffer,
     );
   }
-  if (!projectProperties.id) throw new Error("ProjectId missing");
-  const id : string = projectProperties.id;
+  if (!projectProperties.id) throw new Error('ProjectId missing');
+  const id: string = projectProperties.id;
   // Set BPM if custom value provided
   if (bpm && bpm !== 120) {
     project.editing.modify(() => {
@@ -337,10 +339,7 @@ export function reloadClipsAndTracks(project: Project): {
         if (eventCollection.isEmpty()) continue;
 
         clips.push({
-          audioDuration: PPQN.pulsesToSeconds(
-            region.duration,
-            project.timelineBox.bpm.getValue(),
-          ),
+          audioDuration: PPQN.pulsesToSeconds(region.duration, project.timelineBox.bpm.getValue()),
           audioFileBox: region.file.box,
           color: track.color,
           duration: region.duration,

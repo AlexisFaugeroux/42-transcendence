@@ -25,13 +25,12 @@ export const FAMILY_COLOR: Record<FamilyGroup, string> = {
   VOCAL: theme.cyan,
 };
 
-export const GROUP_BY_FAMILY = Object.entries(FAMILY_GROUPS).reduce<Partial<Record<Family, FamilyGroup>>>(
-  (acc, [group, families]) => {
-    for (const family of families) acc[family] = group as FamilyGroup;
-    return acc;
-  },
-  {},
-);
+export const GROUP_BY_FAMILY = Object.entries(FAMILY_GROUPS).reduce<
+  Partial<Record<Family, FamilyGroup>>
+>((acc, [group, families]) => {
+  for (const family of families) acc[family] = group as FamilyGroup;
+  return acc;
+}, {});
 
 export const SORT_LABEL: Record<SortKey, TranslationKey> = {
   bpm: 'samples.sort.bpm',

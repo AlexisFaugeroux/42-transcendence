@@ -1,6 +1,14 @@
 import type { Project } from '@opendaw/studio-core';
 import { useTranslation } from '@transcendence/i18n';
-import { createContext, type JSX, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  type JSX,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { initializeOpenDaw } from '../lib/projectSetup';
 import type { ProjectProperties } from '../lib/types'
 

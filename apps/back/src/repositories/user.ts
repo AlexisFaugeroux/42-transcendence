@@ -248,7 +248,12 @@ class UserRepository {
   private _format(user: PrismaUser): User {
     const { bio, createdAt, links, location, updatedAt, ...rest } = user;
 
-    return { ...rest, bio: bio ?? undefined, links: toLinks(links), location: location ?? undefined };
+    return {
+      ...rest,
+      bio: bio ?? undefined,
+      links: toLinks(links),
+      location: location ?? undefined,
+    };
   }
 
   private _formatPublic(user: PrismaUser): PublicProducer {

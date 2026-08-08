@@ -29,9 +29,12 @@ async function authPlugin(app: FastifyInstance) {
   // so auth endpoints are throttled while everything else is untouched.
   await app.register(rateLimit, { global: false });
 
-  app.decorate('signAuthToken', function (this: FastifyInstance, payload: { sub: string; sid: string }) {
-    return this.jwt.sign(payload);
-  });
+  app.decorate(
+    'signAuthToken',
+    function (this: FastifyInstance, payload: { sub: string; sid: string }) {
+      return this.jwt.sign(payload);
+    },
+  );
 
   app.decorate('authenticate', async function (req: FastifyRequest, reply: FastifyReply) {
     try {

@@ -1,4 +1,11 @@
-import { FAMILIES, type Family, type Key, KEYS, type Kind, USER_KINDS } from '../../types/audioFile';
+import {
+  FAMILIES,
+  type Family,
+  type Key,
+  KEYS,
+  type Kind,
+  USER_KINDS,
+} from '../../types/audioFile';
 import { FAMILY_COLOR, GROUP_BY_FAMILY } from './constants';
 import type { FamilyGroup, Option } from './types';
 
@@ -19,7 +26,10 @@ export function formatDuration(durationMs: number): string {
 }
 
 function formatDecimal(value: number, locale: string, digits: number): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value);
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: digits,
+  }).format(value);
 }
 
 // `locale` is the active UI language, so the decimal separator follows it (1,5 MB in fr/es).
@@ -38,6 +48,15 @@ export function formatKind(kind: Kind): string {
   return kind === 'ONE_SHOT' ? 'ONE-SHOT' : kind;
 }
 
-export const FAMILY_OPTIONS: Option<Family>[] = FAMILIES.map((family) => ({ label: family, value: family }));
-export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({ label: formatKind(kind), value: kind }));
-export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({ label: formatKey(key), value: key }));
+export const FAMILY_OPTIONS: Option<Family>[] = FAMILIES.map((family) => ({
+  label: family,
+  value: family,
+}));
+export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({
+  label: formatKind(kind),
+  value: kind,
+}));
+export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({
+  label: formatKey(key),
+  value: key,
+}));

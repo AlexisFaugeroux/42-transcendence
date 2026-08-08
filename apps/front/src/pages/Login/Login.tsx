@@ -78,7 +78,13 @@ export default function Login(): JSX.Element {
               </div>
 
               <Form.Item>
-                <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={isPending}>
+                <Button
+                  className={styles.primaryButton}
+                  htmlType="submit"
+                  block
+                  size="large"
+                  loading={isPending}
+                >
                   {isPending ? t('auth.login.submitting') : t('auth.login.submit')}
                 </Button>
               </Form.Item>

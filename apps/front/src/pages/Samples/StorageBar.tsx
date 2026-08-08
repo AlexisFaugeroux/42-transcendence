@@ -47,11 +47,16 @@ export function StorageBar({ usage }: StorageBarProps): JSX.Element {
         <div className={styles.headLeft}>
           <span className={styles.label}>{t('samples.storage.label')}</span>
           <span className={styles.mono}>
-            <span style={{ color: warn ? theme.yellow : theme.orange }}>{formatBytes(usedBytes, locale)}</span>
+            <span style={{ color: warn ? theme.yellow : theme.orange }}>
+              {formatBytes(usedBytes, locale)}
+            </span>
             <span className={styles.muted}> / {formatBytes(quotaBytes, locale)}</span>
           </span>
           <span className={styles.muted}>
-            {t('samples.storage.free', { free: formatBytes(remaining, locale), percent: Math.round(pct * 100) })}
+            {t('samples.storage.free', {
+              free: formatBytes(remaining, locale),
+              percent: Math.round(pct * 100),
+            })}
           </span>
         </div>
       </div>

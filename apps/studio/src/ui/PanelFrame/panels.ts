@@ -26,5 +26,10 @@ export const panels: Record<Panel['id'], Panel> = {
   browser: { header: PanelHeader, id: 'browser', labelKey: 'studio.panels.browser', main: Browser },
   devices: { header: PanelHeader, id: 'devices', labelKey: 'studio.panels.devices', main: Devices },
   editor: { header: PanelHeader, id: 'editor', labelKey: 'studio.panels.editor', main: Editor },
-  timeline: { header: PanelHeader, id: 'timeline', labelKey: 'studio.panels.timeline', main: Timeline },
+  timeline: {
+    header: PanelHeader,
+    id: 'timeline',
+    labelKey: 'studio.panels.timeline',
+    main: Timeline,
+  },
 };

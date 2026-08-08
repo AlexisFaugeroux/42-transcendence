@@ -1,4 +1,13 @@
-import { createContext, type JSX, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  type JSX,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 interface SamplePlayer {
   currentId: string | null;

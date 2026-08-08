@@ -10,7 +10,14 @@ interface FieldTextProps {
   error?: string;
 }
 
-export function FieldText({ editing, error, onChange, placeholder, prefix, value }: FieldTextProps): JSX.Element {
+export function FieldText({
+  editing,
+  error,
+  onChange,
+  placeholder,
+  prefix,
+  value,
+}: FieldTextProps): JSX.Element {
   if (!editing) {
     return (
       <span style={{ color: 'var(--fg1)', fontSize: 13 }}>

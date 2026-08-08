@@ -8,7 +8,12 @@ import { Header } from './ui/Header/Header';
 import { PanelFrame } from './ui/PanelFrame/PanelFrame';
 
 function App(): JSX.Element {
-  const { isVisible, toggle } = usePanels({ browser: true, devices: true, editor: false, timeline: true });
+  const { isVisible, toggle } = usePanels({
+    browser: true,
+    devices: true,
+    editor: false,
+    timeline: true,
+  });
 
   return (
     <div className="app">

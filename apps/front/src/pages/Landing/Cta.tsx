@@ -11,7 +11,8 @@ export function Cta(): JSX.Element {
     <section className={styles.cta}>
       <div className={styles.inner}>
         <h2 className={styles.title}>
-          {t('landing.cta.title')} <span className={styles.accent}>{t('landing.cta.titleAccent')}</span>
+          {t('landing.cta.title')}{' '}
+          <span className={styles.accent}>{t('landing.cta.titleAccent')}</span>
         </h2>
         <p className={styles.sub}>{t('landing.cta.sub')}</p>
         <div className={styles.actions}>

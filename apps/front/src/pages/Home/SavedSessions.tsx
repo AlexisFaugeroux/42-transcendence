@@ -13,6 +13,8 @@ export function SavedSessions(): JSX.Element {
   const { t } = useTranslation();
   const { data, error, isError } = useSession();
 
+  if (isError) throw error;
+
   const loadProject = ( session : Session ) => {
     const query = new URLSearchParams({
         bpm: String(session.bpm),
@@ -30,7 +32,9 @@ export function SavedSessions(): JSX.Element {
       <div className={styles.head}>
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
-          <span className={styles.count}>{t('home.saved.count', { count: SAVED_SESSIONS.length })}</span>
+          <span className={styles.count}>
+            {t('home.saved.count', { count: SAVED_SESSIONS.length })}
+          </span>
         </div>
         <div className={styles.controls}>
           <button

@@ -13,7 +13,15 @@ export function Browser(): JSX.Element {
   ];
 
   return (
-    <aside style={{ background: theme.bgPanel, display: 'flex', flex: 1, flexDirection: 'column', minHeight: 0 }}>
+    <aside
+      style={{
+        background: theme.bgPanel,
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        minHeight: 0,
+      }}
+    >
       <ConfigProvider
         theme={{
           components: {
@@ -29,7 +37,13 @@ export function Browser(): JSX.Element {
           },
         }}
       >
-        <Tabs className={styles.fillTabs} defaultActiveKey="samples" items={tabs} centered size="small" />
+        <Tabs
+          className={styles.fillTabs}
+          defaultActiveKey="samples"
+          items={tabs}
+          centered
+          size="small"
+        />
       </ConfigProvider>
     </aside>
   );
