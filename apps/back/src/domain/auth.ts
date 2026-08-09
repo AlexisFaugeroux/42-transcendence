@@ -22,6 +22,7 @@ export interface AuthUser {
   joined: Date;
   firstname: string;
   lastname: string;
+  avatarUpdatedAt: string | null;
   location?: string;
   handle: string;
   links?: { kind: string; url: string }[] | null;

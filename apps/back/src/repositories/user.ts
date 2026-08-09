@@ -253,7 +253,7 @@ class UserRepository {
 
     return {
       ...rest,
-      avatarUpdatedAt: avatarUpdatedAt?.toISOString() ?? null,
+      avatarUpdatedAt: avatarUpdatedAt ? avatarUpdatedAt.toISOString() : null,
       bio: bio ?? undefined,
       links: toLinks(links),
       location: location ?? undefined,

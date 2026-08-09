@@ -1,5 +1,6 @@
 import { type UseMutateFunction, useMutation } from '@tanstack/react-query';
 import type { AuthUser } from '@transcendence/auth';
+import { formatDate } from '@transcendence/date';
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import {
   Button,
@@ -210,8 +211,7 @@ export function AccountSection({
         <Hr />
 
         <Row label={t('settings.account.memberSince')}>
-          {/* TODO: use Dayjs for date formatting*/}
-          <span className={styles.mono}>{saved.joined.toString()}</span>
+          <span className={styles.mono}>{formatDate(saved.joined)}</span>
         </Row>
       </Card>
     </div>

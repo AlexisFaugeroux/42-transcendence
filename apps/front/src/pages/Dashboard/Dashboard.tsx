@@ -30,18 +30,18 @@ export function Dashboard(): JSX.Element {
   const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
-  const openSuccessNotification = () => {
+  const notifySuccess = (title: string) => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
       duration: 3,
       icon: <CheckOutlined color={theme.green} />,
       key,
-      title: t('settings.profile.updated'),
+      title,
     });
   };
 
-  const openErrorNotification = (error: Error) => {
+  const notifyError = (error: Error, title: string) => {
     const key = `open${Date.now()}`;
 
     notificationApi.open({
@@ -49,20 +49,20 @@ export function Dashboard(): JSX.Element {
       duration: 3,
       icon: <CloseCircleOutlined color={theme.red} />,
       key,
-      title: t('settings.profile.updateFailed'),
+      title,
     });
   };
 
   const { mutate: updateUserProfileMutation } = useMutation({
     mutationFn: updateUserProfile,
     onError: (error) => {
-      openErrorNotification(error);
+      notifyError(error, t('settings.profile.updateFailed'));
     },
     onSuccess: (updated) => {
       setAuthUser(updated);
       setSaved(form);
       setIsEditing(false);
-      openSuccessNotification();
+      notifySuccess(t('settings.profile.updated'));
     },
   });
 
@@ -104,17 +104,20 @@ export function Dashboard(): JSX.Element {
         <div className={styles.sections}>
           <section id="profile">
             <ProfileSection
+              avatarUpdatedAt={user.avatarUpdatedAt}
               isEditing={isEditing}
               form={form}
               errors={errors}
               setField={setField}
+              notifyError={notifyError}
+              notifySuccess={notifySuccess}
               onEdit={startEditing}
               onCancel={cancel}
               onSave={save}
+              userId={user.id}
             />
           </section>
           <section id="account">
-            {/* TODO: use Dayjs for date formatting*/}
             <AccountSection
               form={form}
               saved={saved}
