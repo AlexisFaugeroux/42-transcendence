@@ -604,6 +604,8 @@
       "alias": "Producer alias",
       "aliasPlaceholder": "Your artist name",
       "avatar": "Avatar",
+      "avatarDeleted": "Your avatar has been removed",
+      "avatarDeletionFailed": "Your avatar could not be removed",
       "avatarUpdateFailed": "Your avatar could not be updated",
       "avatarUpdated": "Your avatar has been updated",
       "bio": "Bio",

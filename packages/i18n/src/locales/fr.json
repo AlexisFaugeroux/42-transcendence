@@ -604,6 +604,8 @@
       "alias": "Nom de producteur",
       "aliasPlaceholder": "Votre nom d'artiste",
       "avatar": "Avatar",
+      "avatarDeleted": "Votre avatar a été supprimé",
+      "avatarDeletionFailed": "Votre avatar n'a pas pu être supprimé",
       "avatarUpdateFailed": "Votre avatar n'a pas pu être mis à jour",
       "avatarUpdated": "Votre avatar a été mis à jour",
       "bio": "Bio",

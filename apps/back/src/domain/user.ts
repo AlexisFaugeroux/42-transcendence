@@ -54,7 +54,7 @@ export interface UpdateUserInput {
   handle?: string;
   firstname?: string;
   lastnane?: string;
-  avatarUpdatedAt?: string;
+  avatarUpdatedAt?: string | null;
   links?: { kind: string; url: string }[];
   location?: string;
   artistName?: string;

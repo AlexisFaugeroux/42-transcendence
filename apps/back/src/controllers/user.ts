@@ -84,6 +84,7 @@ class UserController {
     await userRepository.delete(req.authUser.id);
 
     if (user.ownerId) await audioStorageService.deleteDirectory(user.ownerId);
+    await avatarStorageService.remove(req.authUser.id);
 
     reply.code(204).send();
   };
@@ -167,6 +168,15 @@ class UserController {
       avatarUpdatedAt: dayjs().toISOString(),
     });
     reply.code(201).send({ user: updatedUser });
+  };
+
+  public deleteAvatar = async (req: FastifyRequest, reply: FastifyReply) => {
+    await avatarStorageService.remove(req.authUser.id);
+    await userRepository.update(req.authUser.id, {
+      avatarUpdatedAt: null,
+    });
+
+    reply.code(204).send();
   };
 }
 

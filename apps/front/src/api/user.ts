@@ -67,3 +67,15 @@ export async function uploadAvatar(file: File): Promise<AuthUser> {
 
   return data.user;
 }
+
+export async function deleteAvatar(): Promise<void> {
+  const res = await apiFetch('/api/user/delete/avatar', {
+    method: 'DELETE',
+  });
+
+  if (!res.ok)
+    throw new ApiErrorReponse(
+      `[api/user/delete/avatar] Avatar deletion failed ${res.status}`,
+      res.status,
+    );
+}
