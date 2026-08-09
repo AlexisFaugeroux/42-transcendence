@@ -20,7 +20,9 @@ infra/nginx/certs
 samples/platform/
 samples/alex/
 samples/julien/
+avatars/*
+!avatars/avatars.zip
 infra/media_data
-infra/audio_data
 
 docs/superpowers
+docs/brainstorm

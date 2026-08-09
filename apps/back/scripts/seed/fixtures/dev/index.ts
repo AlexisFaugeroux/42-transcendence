@@ -6,8 +6,13 @@ import type { SeedConfig } from '../../types';
 
 const repoRoot = join(process.cwd(), '../..');
 const samplesDir = join(repoRoot, 'samples');
+const avatarsDir = join(repoRoot, 'avatars');
 
 export const devConfig: SeedConfig = {
+  avatars: [
+    { artistName: 'alex', file: join(avatarsDir, 'alex.jpeg') },
+    { artistName: 'julien', file: join(avatarsDir, 'julien.webp') },
+  ],
   follows: {
     alex: ['julien'],
     antoine: [],

@@ -31,6 +31,7 @@ COPY --from=build /prod .
 COPY samples/platform.zip samples/platform.zip
 COPY samples/alex.zip samples/alex.zip
 COPY samples/julien.zip samples/julien.zip
+COPY avatars/avatars.zip avatars/avatars.zip
 RUN chmod +x /app/docker-entrypoint.sh
 ENV NODE_ENV=production
 EXPOSE 8080
