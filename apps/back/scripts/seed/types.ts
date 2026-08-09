@@ -5,6 +5,11 @@ export type UserFixture = Omit<User, 'ownerId'>;
 
 export type SampleOwner = 'PLATFORM' | { artistName: string };
 
+export interface AvatarFixture {
+  artistName: string;
+  file: string;
+}
+
 export interface SampleSet {
   dir: string;
   owner: SampleOwner;
@@ -16,6 +21,7 @@ export interface SeedConfig {
   users: UserFixture[];
   follows: Record<string, string[]>;
   sampleSets: SampleSet[];
+  avatars?: AvatarFixture[];
   mediaDir: string;
   cleanupDirs?: string[];
 }

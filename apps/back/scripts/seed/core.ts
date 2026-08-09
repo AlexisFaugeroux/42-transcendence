@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { copyFile, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, sep } from 'node:path';
 import type { User } from '../../src/domain/user';
 import { OwnerType } from '../../src/generated/prisma/enums';
+import { imageService } from '../../src/services/imageService';
 import { msnpManager } from '../../src/services/msnp';
 import { wavManager } from '../../src/services/wav';
 import { prisma } from '../../src/utils/prisma';
@@ -147,6 +148,25 @@ export async function seed(config: SeedConfig): Promise<void> {
           msnpManager.generatePeaks(sample.channelData),
         );
       }
+    }
+  }
+
+  if (config.avatars) {
+    console.log('Create avatars...');
+    for (const avatar of config.avatars) {
+      const user = users.find((candidate) => candidate.artistName === avatar.artistName);
+      if (!user) throw new Error(`Cannot find user ${avatar.artistName}`);
+
+      // same normalization as the upload endpoint, so both stay in sync
+      const webp = await imageService.normalizeAvatar(await readFile(avatar.file));
+      const dest = join(config.mediaDir, 'avatars', `${user.id}.webp`);
+      await mkdir(dirname(dest), { recursive: true });
+      await writeFile(dest, webp);
+
+      await prisma.user.update({
+        data: { avatarUpdatedAt: new Date() },
+        where: { id: user.id },
+      });
     }
   }
 

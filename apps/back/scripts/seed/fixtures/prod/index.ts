@@ -5,12 +5,18 @@ import { hashPassword } from '../../../../src/utils/password';
 import type { SeedConfig } from '../../types';
 
 // Prod seeding runs from the Docker image's WORKDIR `/app`. The entrypoint
-// unzips the bundled samples into `/app/samples/<owner>` before running the
-// seed, and the audio volume is the absolute host path `/var/www/media/audio`.
+// unzips the bundled samples into `/app/samples/<owner>` and the avatar
+// fixtures into `/app/avatars` before running the seed. The media root is the
+// absolute host path `/var/www/media` (`audio/` + `avatars/`).
 const samplesDir = join(process.cwd(), 'samples');
+const avatarsDir = join(process.cwd(), 'avatars');
 
 export const prodConfig: SeedConfig = {
-  cleanupDirs: ['samples'],
+  avatars: [
+    { artistName: 'alex', file: join(avatarsDir, 'alex.jpeg') },
+    { artistName: 'julien', file: join(avatarsDir, 'julien.webp') },
+  ],
+  cleanupDirs: ['avatars', 'samples'],
   follows: {
     alex: ['julien'],
     antoine: [],

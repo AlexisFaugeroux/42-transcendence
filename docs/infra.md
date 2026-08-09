@@ -90,7 +90,8 @@ everything else talks over the internal network.
 ### Backend container startup
 
 `apps/back/docker-entrypoint.sh`: `prisma migrate deploy` → unzip
-`samples/*.zip` → `node build/seedDb.prod.js` → start Fastify. The image is
+`samples/*.zip` and `avatars/avatars.zip` → `node build/seedDb.prod.js` → start
+Fastify. The image is
 multi-stage (Node 26 Alpine, pnpm 11.1.3): install → generate Prisma client →
 esbuild → `pnpm deploy --prod`.
 
