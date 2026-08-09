@@ -1,7 +1,9 @@
-import type { AuthUser } from '@transcendence/auth';
+import { useMutation } from '@tanstack/react-query';
+import { type AuthUser, avatarUrl, useUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { Avatar, Button, MsnIcon, Tag } from '@transcendence/ui';
-import type { JSX } from 'react';
+import { type JSX, useRef } from 'react';
+import { uploadAvatar } from '../../api/user';
 import type { ProfileErrors } from './dashboard.data';
 import { FieldArea, FieldText } from './Field';
 import { Card, Hr, Row, SectionHeader } from './primitives';
@@ -12,21 +14,42 @@ interface ProfileSectionProps {
   form: AuthUser;
   errors: ProfileErrors;
   setField: <K extends keyof AuthUser>(key: K, value: AuthUser[K]) => void;
+  notifyError: (error: Error, title: string) => void;
+  notifySuccess: (title: string) => void;
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
+  avatarUpdatedAt: string | null;
+  userId: string;
 }
 
 export function ProfileSection({
+  avatarUpdatedAt,
   errors,
   form,
   isEditing,
+  notifyError,
+  notifySuccess,
   onCancel,
   onEdit,
   onSave,
   setField,
+  userId,
 }: ProfileSectionProps): JSX.Element {
+  const { setAuthUser } = useUser();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
+
+  const { mutate: upload } = useMutation({
+    mutationFn: uploadAvatar,
+    onError: (error) => {
+      notifyError(error, t('settings.profile.avatarUpdateFailed'));
+    },
+    onSuccess: (updated) => {
+      setAuthUser(updated);
+      notifySuccess(t('settings.profile.avatarUpdated'));
+    },
+  });
 
   return (
     <div>
@@ -47,13 +70,37 @@ export function ProfileSection({
       <Card>
         <Row label={t('settings.profile.avatar')}>
           <div className={styles.avatarRow}>
-            <Avatar size={64}>{form.artistName.slice(0, 2).toUpperCase()}</Avatar>
+            <Avatar size={64} src={avatarUrl(userId, avatarUpdatedAt) ?? undefined}>
+              {form.artistName.slice(0, 2).toUpperCase()}
+            </Avatar>
             {isEditing ? (
               <div className={styles.avatarActions}>
-                <Button size="small">{t('settings.profile.uploadImage')}</Button>
-                <Button size="small" danger>
-                  {t('common.remove')}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = '';
+                    if (file) upload(file);
+                  }}
+                />
+                <Button
+                  size="small"
+                  onClick={() => {
+                    fileInputRef.current?.click();
+                  }}
+                >
+                  {avatarUpdatedAt
+                    ? t('settings.profile.changeImage')
+                    : t('settings.profile.uploadImage')}
                 </Button>
+                {avatarUpdatedAt ? (
+                  <Button size="small" danger>
+                    {t('common.remove')}
+                  </Button>
+                ) : null}
               </div>
             ) : null}
           </div>

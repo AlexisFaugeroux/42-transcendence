@@ -1,3 +1,4 @@
+import { formatDate } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/auth';
 import { ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
@@ -117,6 +118,7 @@ class AuthController {
   private _format(user: User): AuthUser {
     return {
       artistName: user.artistName,
+      avatarUpdatedAt: user.avatarUpdatedAt ? formatDate(user.avatarUpdatedAt) : null,
       bio: user.bio ?? undefined,
       email: user.email,
       firstname: user.firstname,

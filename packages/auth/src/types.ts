@@ -16,6 +16,7 @@ export interface AuthUser {
   artistName: string;
   firstname: string;
   lastname: string;
+  avatarUpdatedAt: string | null;
   location?: string;
   handle: string;
   bio?: string;

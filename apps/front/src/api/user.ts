@@ -47,3 +47,23 @@ export async function deleteAccount(): Promise<void> {
       res.status,
     );
 }
+
+export async function uploadAvatar(file: File): Promise<AuthUser> {
+  const form = new FormData();
+  form.set('avatar', file);
+
+  const res = await apiFetch('/api/user/upload/avatar', {
+    body: form,
+    method: 'POST',
+  });
+
+  if (!res.ok)
+    throw new ApiErrorReponse(
+      `[api/user/upload/avatar] Avatar upload failed ${res.status}`,
+      res.status,
+    );
+
+  const data = (await res.json()) as AuthResponse;
+
+  return data.user;
+}
