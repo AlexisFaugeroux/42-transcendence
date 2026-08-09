@@ -77,4 +77,6 @@ export function userRoutes(app: FastifyInstance) {
     },
     userController.uploadAvatar,
   );
+
+  app.delete('/delete/avatar', { preHandler: app.authenticate }, userController.deleteAvatar);
 }

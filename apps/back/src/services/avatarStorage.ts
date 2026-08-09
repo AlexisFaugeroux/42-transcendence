@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path, { join } from 'node:path';
 
 class AvatarStorageService {
@@ -13,6 +13,11 @@ class AvatarStorageService {
     const filePath = path.join(this._avatarsRoot, `${userId}.webp`);
     await writeFile(filePath, data);
     return `${userId}.webp`;
+  }
+
+  public async remove(userId: string): Promise<void> {
+    const filePath = path.join(this._avatarsRoot, `${userId}.webp`);
+    await unlink(filePath);
   }
 }
 

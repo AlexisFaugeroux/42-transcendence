@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { type AuthUser, avatarUrl, useUser } from '@transcendence/auth';
+import { type AuthUser, avatarUrl, useAuthUser, useUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { Avatar, Button, MsnIcon, Tag } from '@transcendence/ui';
 import { type JSX, useRef } from 'react';
-import { uploadAvatar } from '../../api/user';
+import { deleteAvatar, uploadAvatar } from '../../api/user';
 import type { ProfileErrors } from './dashboard.data';
 import { FieldArea, FieldText } from './Field';
 import { Card, Hr, Row, SectionHeader } from './primitives';
@@ -37,10 +37,11 @@ export function ProfileSection({
   userId,
 }: ProfileSectionProps): JSX.Element {
   const { setAuthUser } = useUser();
+  const user = useAuthUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const { mutate: upload } = useMutation({
+  const { mutate: uploadAvatarMutation } = useMutation({
     mutationFn: uploadAvatar,
     onError: (error) => {
       notifyError(error, t('settings.profile.avatarUpdateFailed'));
@@ -48,6 +49,20 @@ export function ProfileSection({
     onSuccess: (updated) => {
       setAuthUser(updated);
       notifySuccess(t('settings.profile.avatarUpdated'));
+    },
+  });
+
+  const { mutate: deleteAvatarMutation } = useMutation({
+    mutationFn: deleteAvatar,
+    onError: (error) => {
+      notifyError(error, t('settings.profile.avatarDeletionFailed'));
+    },
+    onSuccess: () => {
+      setAuthUser({
+        ...user,
+        avatarUpdatedAt: null,
+      });
+      notifySuccess(t('settings.profile.avatarDeleted'));
     },
   });
 
@@ -83,7 +98,7 @@ export function ProfileSection({
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     e.target.value = '';
-                    if (file) upload(file);
+                    if (file) uploadAvatarMutation(file);
                   }}
                 />
                 <Button
@@ -97,7 +112,13 @@ export function ProfileSection({
                     : t('settings.profile.uploadImage')}
                 </Button>
                 {avatarUpdatedAt ? (
-                  <Button size="small" danger>
+                  <Button
+                    size="small"
+                    danger
+                    onClick={() => {
+                      deleteAvatarMutation();
+                    }}
+                  >
                     {t('common.remove')}
                   </Button>
                 ) : null}
