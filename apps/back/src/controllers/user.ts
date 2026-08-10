@@ -1,6 +1,11 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { ForbiddenError } from '../domain/errors';
-import type { UpdateUserInput, UserResponse } from '../domain/user';
+import { BadRequestError, ForbiddenError } from '../domain/errors';
+import type {
+  UpdateUserInput,
+  UserResponse,
+  PublicProducersResponse,
+  PublicProducerProfileResponse,
+} from '../domain/user';
 import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
 import { hashPassword, verifyPassword } from '../utils/password';
@@ -15,6 +20,28 @@ interface UpdatePasswordRoute extends RouteGenericInterface {
     oldPassword: string;
     newPassword: string;
   };
+}
+
+interface ListProducersRoute extends RouteGenericInterface {
+  Reply: PublicProducersResponse;
+}
+
+interface HandleParam {
+  handle: string;
+}
+
+interface GetProfileRoute extends RouteGenericInterface {
+  Params: HandleParam;
+  Reply: PublicProducerProfileResponse;
+}
+
+interface ListFollowRoute extends RouteGenericInterface {
+  Params: HandleParam;
+  Reply: PublicProducersResponse;
+}
+
+interface FollowRoute extends RouteGenericInterface {
+  Params: HandleParam;
 }
 
 class UserController {
@@ -47,6 +74,63 @@ class UserController {
 
     if (user.ownerId) await audioStorageService.deleteDirectory(user.ownerId);
 
+    reply.code(204).send();
+  };
+
+  public listProducers = async (
+    _req: FastifyRequest<ListProducersRoute>,
+    reply: FastifyReply<ListProducersRoute>,
+  ): Promise<void> => {
+    const producers = await userRepository.listPublic();
+    reply.code(200).send({ producers });
+  };
+
+  public getProfile = async (
+    req: FastifyRequest<GetProfileRoute>,
+    reply: FastifyReply<GetProfileRoute>,
+  ): Promise<void> => {
+    const producer = await userRepository.findProfileByHandle(
+      req.params.handle,
+      req.authUser.id,
+    );
+    reply.code(200).send({ producer });
+  };
+
+  public listFollowers = async (
+    req: FastifyRequest<ListFollowRoute>,
+    reply: FastifyReply<ListFollowRoute>,
+  ): Promise<void> => {
+    const producers = await userRepository.listFollowers(req.params.handle);
+    reply.code(200).send({ producers });
+  };
+
+  public listFollowing = async (
+    req: FastifyRequest<ListFollowRoute>,
+    reply: FastifyReply<ListFollowRoute>,
+  ): Promise<void> => {
+    const producers = await userRepository.listFollowing(req.params.handle);
+    reply.code(200).send({ producers });
+  };
+
+  public follow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
+    const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
+
+    if (target.id === req.authUser.id) {
+      throw new BadRequestError('Cannot self-follow');
+    }
+
+    await userRepository.follow(req.authUser.id, target.id);
+    reply.code(204).send();
+  };
+
+  public unfollow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
+    const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
+
+    if (target.id === req.authUser.id) {
+      throw new BadRequestError('Cannot self-unfollow');
+    }
+
+    await userRepository.unfollow(req.authUser.id, target.id);
     reply.code(204).send();
   };
 }

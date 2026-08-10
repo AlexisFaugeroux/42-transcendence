@@ -15,6 +15,23 @@ export interface User {
   ownerId: string;
 }
 
+export interface PublicProducer {
+  id: string;
+  artistName: string;
+  handle: string;
+  bio?: string;
+  location?: string;
+  links?: { kind: string; url: string }[] | null;
+  role: Role;
+  joined: Date;
+}
+
+export interface PublicProducerProfile extends PublicProducer {
+  followersCount: number;
+  followingCount: number;
+  isFollowing: boolean;
+}
+
 export interface CreateUserInput {
   email: string;
   firstname: string;
@@ -46,4 +63,12 @@ export interface UpdateUserInput {
 
 export interface UserResponse {
   user: User;
+}
+
+export interface PublicProducersResponse {
+  producers: PublicProducer[];
+}
+
+export interface PublicProducerProfileResponse {
+  producer: PublicProducerProfile;
 }
