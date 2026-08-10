@@ -329,6 +329,7 @@
     "messages": "Messages",
     "mySessions": "My Sessions",
     "playlists": "Playlists",
+    "producers": "Producers",
     "social": "Social",
     "storage": "Storage",
     "storageUsage": "{{used, number}} / {{total, number}} GB",
@@ -513,6 +514,34 @@
       "production": "Full DAW: tracks, MIDI, effects, automation.",
       "recording": "Get a take down. Multi-mic, punch-in, comp."
     }
+  },
+  "producers": {
+    "count_one": "{{count}} producer on MakeSomeNoise",
+    "count_other": "{{count}} producers on MakeSomeNoise",
+    "empty": "No producers found.",
+    "emptyFollowers": "No followers yet.",
+    "emptyFollowing": "Not following anyone yet.",
+    "emptyLiked": "No liked tracks.",
+    "emptyTracks": "No tracks yet.",
+    "eyebrow": "Community",
+    "follow": "Follow",
+    "followers": "Followers",
+    "following": "Following",
+    "joined": "Joined {{date}}",
+    "likes": "Likes",
+    "listLoadError": "Couldn’t load this list.",
+    "loadError": "Couldn’t load producers.",
+    "notFound": "Producer not found.",
+    "searchPlaceholder": "Search alias or @handle…",
+    "tabs": {
+      "followers": "Followers",
+      "following": "Following",
+      "liked": "Liked",
+      "tracks": "Tracks"
+    },
+    "title": "Producers",
+    "unfollow": "Following",
+    "viewProfile": "View profile"
   },
   "settings": {
     "account": {

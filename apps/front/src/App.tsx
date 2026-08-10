@@ -8,6 +8,8 @@ import { Landing } from './pages/Landing/Landing';
 import { Legal } from './pages/Legal/Legal';
 import Login from './pages/Login/Login';
 import { Privacy } from './pages/Privacy/Privacy';
+import { ProducerProfile } from './pages/Producers/ProducerProfile';
+import { Producers } from './pages/Producers/Producers';
 import Register from './pages/Register/Register';
 import { Samples } from './pages/Samples/Samples';
 import { Sessions } from './pages/Sessions/Sessions';
@@ -32,6 +34,8 @@ export function App(): JSX.Element {
             <Route path="/library" element={<Samples />} />
             <Route path="/sessions" element={<Sessions />} />
             <Route path="/settings" element={<Dashboard />} />
+            <Route path="/producers" element={<Producers />} />
+            <Route path="/producers/:handle" element={<ProducerProfile />} />
           </Route>
 
           {/*
