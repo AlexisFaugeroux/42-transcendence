@@ -1,0 +1,146 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-app);
+  color: var(--fg1);
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 32px 80px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  margin-bottom: 6px;
+  color: var(--color-orange);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--fg2);
+  font-size: 13px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 300px;
+  max-width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  background: var(--color-void);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 3px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--fg1);
+  font-family: inherit;
+  font-size: 13px;
+
+  &::placeholder {
+    color: var(--fg3);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--bg-panel-2);
+  border: 0.5px solid var(--line-soft);
+  border-radius: 4px;
+  transition: border-color 140ms;
+
+  &:hover {
+    border-color: var(--line-hover);
+  }
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.alias {
+  color: var(--fg1);
+  font-size: 15px;
+  font-weight: 400;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.handle {
+  color: var(--fg3);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viewLink {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 0.5px solid var(--color-orange);
+  border-radius: 3px;
+  color: var(--color-orange);
+  font-size: 12px;
+  text-decoration: none;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-orange) 12%, transparent);
+  }
+}
+
+.state {
+  padding: 48px 0;
+  color: var(--fg3);
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 16px 64px;
+  }
+}

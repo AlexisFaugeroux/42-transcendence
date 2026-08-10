@@ -22,4 +22,5 @@ export const SOCIAL_ITEMS: NavItemDef[] = [
   { badge: '2', badgeColor: 'var(--color-red)', icon: 'chat', labelKey: 'nav.messages', to: '/messages' },
   { icon: 'heart', labelKey: 'nav.liked', to: '/liked' },
   { icon: 'list', labelKey: 'nav.playlists', to: '/playlists' },
+  { icon: 'users', labelKey: 'nav.producers', to: '/producers' },
 ];

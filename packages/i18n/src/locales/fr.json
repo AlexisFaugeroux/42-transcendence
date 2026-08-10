@@ -329,6 +329,7 @@
     "messages": "Messages",
     "mySessions": "Mes sessions",
     "playlists": "Playlists",
+    "producers": "Producteurs",
     "social": "Social",
     "storage": "Stockage",
     "storageUsage": "{{used, number}} / {{total, number}} Go",
@@ -513,6 +514,34 @@
       "production": "DAW complet : pistes, MIDI, effets, automation.",
       "recording": "Capturez une prise. Multi-micro, punch-in, montage."
     }
+  },
+  "producers": {
+    "count_one": "{{count}} producteur sur MakeSomeNoise",
+    "count_other": "{{count}} producteurs sur MakeSomeNoise",
+    "empty": "Aucun producteur trouvé.",
+    "emptyFollowers": "Pas encore d’abonnés.",
+    "emptyFollowing": "Ne suit personne pour l’instant.",
+    "emptyLiked": "Aucune track aimée.",
+    "emptyTracks": "Pas encore de tracks.",
+    "eyebrow": "Communauté",
+    "follow": "Suivre",
+    "followers": "Abonnés",
+    "following": "Abonnements",
+    "joined": "Inscrit en {{date}}",
+    "likes": "Likes",
+    "listLoadError": "Impossible de charger cette liste.",
+    "loadError": "Impossible de charger les producteurs.",
+    "notFound": "Producteur introuvable.",
+    "searchPlaceholder": "Rechercher un alias ou @handle…",
+    "tabs": {
+      "followers": "Abonnés",
+      "following": "Abonnements",
+      "liked": "Aimés",
+      "tracks": "Tracks"
+    },
+    "title": "Producteurs",
+    "unfollow": "Abonné",
+    "viewProfile": "Voir le profil"
   },
   "settings": {
     "account": {
