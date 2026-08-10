@@ -1,6 +1,13 @@
 import type { PrismaClient, User as PrismaUser } from '../../src/generated/prisma/client';
 import type { JsonValue } from '../../src/generated/prisma/internal/prismaNamespace';
-import type { CreateUserInput, GetUserInput, UpdateUserInput, User } from '../domain/user';
+import type {
+  CreateUserInput,
+  GetUserInput,
+  UpdateUserInput,
+  User,
+  PublicProducer,
+  PublicProducerProfile,
+} from '../domain/user';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
 
@@ -95,6 +102,120 @@ class UserRepository {
     return formattedUsers;
   }
 
+  public async listPublic(): Promise<PublicProducer[]> {
+    try {
+      const users: PrismaUser[] = await this.prisma.user.findMany({
+        orderBy: {
+          artistName: 'asc',
+        },
+      });
+
+      return users.map((user: PrismaUser) => this._formatPublic(user));
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async findProfileByHandle(handle: string, viewerId: string): Promise<PublicProducerProfile> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: { handle },
+        include: {
+          _count: {
+            select: {
+              followedBy: true,
+              following: true,
+            },
+          },
+
+          followedBy: {
+            where: { id: viewerId },
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      return {
+        ...this._formatPublic(user),
+        followersCount: user._count.followedBy,
+        followingCount: user._count.following,
+        isFollowing: user.followedBy.length > 0,
+      };
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async listFollowers(handle: string): Promise<PublicProducer[]> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: { handle },
+        include: {
+          followedBy: {
+            orderBy: {
+              artistName: 'asc',
+            },
+          },
+        },
+      });
+
+      return user.followedBy.map((follower: PrismaUser) => this._formatPublic(follower));
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async listFollowing(handle: string): Promise<PublicProducer[]> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: { handle },
+        include: {
+          following: {
+            orderBy: {
+              artistName: 'asc',
+            },
+          },
+        },
+      });
+
+      return user.following.map((followed: PrismaUser) => this._formatPublic(followed));
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async follow(followerId: string, targetId: string): Promise<void> {
+    try {
+      await this.prisma.user.update({
+        where: { id: followerId },
+        data: {
+          following: {
+            connect: { id: targetId },
+          },
+        },
+      });
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async unfollow(followerId: string, targetId: string): Promise<void> {
+    try {
+      await this.prisma.user.update({
+        where: { id: followerId },
+        data: {
+          following: {
+            disconnect: { id: targetId },
+          },
+        },
+      });
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
   public async update(id: string, input: UpdateUserInput): Promise<User> {
     try {
       const updatedUser: PrismaUser = await this.prisma.user.update({
@@ -128,6 +249,19 @@ class UserRepository {
     const { bio, createdAt, links, location, updatedAt, ...rest } = user;
 
     return { ...rest, bio: bio ?? undefined, links: toLinks(links), location: location ?? undefined };
+  }
+
+  private _formatPublic(user: PrismaUser): PublicProducer {
+    return {
+      id: user.id,
+      artistName: user.artistName,
+      handle: user.handle,
+      bio: user.bio ?? undefined,
+      location: user.location ?? undefined,
+      links: toLinks(user.links),
+      role: user.role,
+      joined: user.createdAt,
+    };
   }
 
   private _buildFilters(input: GetUserInput) {
