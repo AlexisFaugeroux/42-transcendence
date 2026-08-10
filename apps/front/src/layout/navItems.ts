@@ -18,7 +18,7 @@ export const WORKSPACE_ITEMS: NavItemDef[] = [
 ];
 
 export const SOCIAL_ITEMS: NavItemDef[] = [
-  { badge: '58', icon: 'users', labelKey: 'nav.following', to: '/following' },
+  { icon: 'users', labelKey: 'nav.following', to: '/following' },
   { badge: '2', badgeColor: 'var(--color-red)', icon: 'chat', labelKey: 'nav.messages', to: '/messages' },
   { icon: 'heart', labelKey: 'nav.liked', to: '/liked' },
   { icon: 'list', labelKey: 'nav.playlists', to: '/playlists' },

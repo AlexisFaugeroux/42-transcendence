@@ -72,6 +72,17 @@
     "save": "Enregistrer",
     "yes": "Oui"
   },
+  "following": {
+    "browseProducers": "Parcourir les producteurs",
+    "count_one": "Vous suivez {{count}} producteur",
+    "count_other": "Vous suivez {{count}} producteurs",
+    "empty": "Vous ne suivez personne pour l’instant.",
+    "emptySearch": "Aucun producteur trouvé.",
+    "eyebrow": "Social",
+    "loadError": "Impossible de charger votre liste d’abonnements.",
+    "searchPlaceholder": "Rechercher un alias ou @handle...",
+    "title": "Abonnements"
+  },
   "header": {
     "home": "Accueil",
     "library": "Bibliothèque",
@@ -80,7 +91,9 @@
     "notifications": "Notifications",
     "privacyTerms": "Confidentialité",
     "sessions": "Sessions",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "producers": "Producteurs",
+    "following": "Abonnements"
   },
   "home": {
     "activity": {

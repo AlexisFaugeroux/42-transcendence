@@ -72,6 +72,17 @@
     "save": "Save",
     "yes": "Yes"
   },
+  "following": {
+    "browseProducers": "Browse producers",
+    "count_one": "You’re following {{count}} producer",
+    "count_other": "You’re following {{count}} producers",
+    "empty": "You’re not following anyone yet.",
+    "emptySearch": "No producers found.",
+    "eyebrow": "Social",
+    "loadError": "Couldn’t load your following list.",
+    "searchPlaceholder": "Search alias or @handle...",
+    "title": "Following"
+  },
   "header": {
     "home": "Home",
     "library": "Library",
@@ -80,7 +91,9 @@
     "notifications": "Notifications",
     "privacyTerms": "Privacy terms",
     "sessions": "Sessions",
-    "settings": "Settings"
+    "settings": "Settings",
+    "producers": "Producers",
+    "following": "Following"
   },
   "home": {
     "activity": {

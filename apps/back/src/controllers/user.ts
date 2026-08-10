@@ -89,10 +89,7 @@ class UserController {
     req: FastifyRequest<GetProfileRoute>,
     reply: FastifyReply<GetProfileRoute>,
   ): Promise<void> => {
-    const producer = await userRepository.findProfileByHandle(
-      req.params.handle,
-      req.authUser.id,
-    );
+    const producer = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
     reply.code(200).send({ producer });
   };
 
