@@ -72,6 +72,17 @@
     "save": "Guardar",
     "yes": "Sí"
   },
+  "following": {
+    "browseProducers": "Explorar productores",
+    "count_one": "Sigues a {{count}} productor",
+    "count_other": "Sigues a {{count}} productores",
+    "empty": "Aún no sigues a nadie.",
+    "emptySearch": "No se encontraron productores.",
+    "eyebrow": "Social",
+    "loadError": "No se pudo cargar tu lista de seguidos.",
+    "searchPlaceholder": "Buscar alias o @handle...",
+    "title": "Siguiendo"
+  },
   "header": {
     "home": "Inicio",
     "library": "Biblioteca",
@@ -80,7 +91,9 @@
     "notifications": "Notificaciones",
     "privacyTerms": "Privacidad",
     "sessions": "Sesiones",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "producers": "Productores",
+    "following": "Siguiendo"
   },
   "home": {
     "activity": {

@@ -7,7 +7,8 @@ import {
   listProducers,
   unfollowProducer,
 } from '../api/producers';
-import type { PublicProducerProfile } from '../types/producer';
+import type { PublicProducer, PublicProducerProfile } from '../types/producer';
+import { useAuthUser } from '@transcendence/auth';
 
 // Reads hooks
 
@@ -46,6 +47,8 @@ export function useFollowing(handle: string, enabled = true) {
 
 export function useFollow() {
   const queryClient = useQueryClient();
+  const myHandle = useAuthUser().handle;
+  const myFollowingKey = ['producer', myHandle, 'following'] as const;
 
   return useMutation({
     mutationFn: (handle: string) => followProducer(handle),
@@ -56,6 +59,7 @@ export function useFollow() {
         queryClient.setQueryData<PublicProducerProfile>(['producer', handle], context.previous);
       }
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] }); // invalidate query -> trigger a new fetch
+      void queryClient.invalidateQueries({ queryKey: myFollowingKey });
     },
 
     onMutate: async (handle: string) => {
@@ -77,13 +81,15 @@ export function useFollow() {
 
     onSuccess: (_data, handle) => {
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] }); // invalidate query -> trigger a new fetch
+      void queryClient.invalidateQueries({ queryKey: myFollowingKey });
     },
   });
 }
 
-// mirror of useFollow
 export function useUnfollow() {
   const queryClient = useQueryClient();
+  const myHandle = useAuthUser().handle;
+  const myFollowingKey = ['producer', myHandle, 'following'] as const;
 
   return useMutation({
     mutationFn: (handle: string) => unfollowProducer(handle),
@@ -92,13 +98,19 @@ export function useUnfollow() {
       if (context?.previous) {
         queryClient.setQueryData<PublicProducerProfile>(['producer', handle], context.previous);
       }
+      if (context?.previousFollowing) {
+        queryClient.setQueryData(myFollowingKey, context.previousFollowing);
+      }
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] });
+      void queryClient.invalidateQueries({ queryKey: myFollowingKey });
     },
 
     onMutate: async (handle: string) => {
       await queryClient.cancelQueries({ queryKey: ['producer', handle] });
+      await queryClient.cancelQueries({ queryKey: myFollowingKey });
 
       const previous = queryClient.getQueryData<PublicProducerProfile>(['producer', handle]);
+      const previousFollowing = queryClient.getQueryData<PublicProducer[]>(myFollowingKey);
 
       if (previous) {
         queryClient.setQueryData<PublicProducerProfile>(['producer', handle], {
@@ -108,11 +120,19 @@ export function useUnfollow() {
         });
       }
 
-      return { previous };
+      if (previousFollowing) {
+        queryClient.setQueryData<PublicProducer[]>(
+          myFollowingKey,
+          previousFollowing.filter((p) => p.handle !== handle),
+        );
+      }
+
+      return { previous, previousFollowing };
     },
 
     onSuccess: (_data, handle) => {
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] });
+      void queryClient.invalidateQueries({ queryKey: myFollowingKey });
     },
   });
 }

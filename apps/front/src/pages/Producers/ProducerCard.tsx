@@ -5,24 +5,42 @@ import { Link } from 'react-router-dom';
 import type { PublicProducer } from '../../types/producer';
 import { StatusAvatar } from '../Home/StatusAvatar';
 import styles from './Producers.module.scss';
+import { UnfollowButton } from './UnfollowButton';
 
 interface ProducerCardProps {
   producer: PublicProducer;
+  showUnfollow?: boolean;
 }
 
-export function ProducerCard({ producer }: ProducerCardProps): JSX.Element {
+export function ProducerCard({ producer, showUnfollow = false }: ProducerCardProps): JSX.Element {
   const { t } = useTranslation();
+  const profileTo = `/producers/${producer.handle}`;
 
   return (
     <div className={styles.card}>
-      <StatusAvatar name={producer.artistName} size={44} />
-      <div className={styles.meta}>
-        <div className={styles.alias}>{producer.artistName}</div>
-        <div className={styles.handle}>@{producer.handle}</div>
-      </div>
-      <Link to={`/producers/${producer.handle}`} className={styles.viewLink}>
-        {t('producers.viewProfile')} <MsnIcon name="arrowR" size="11px" />
-      </Link>
+      {showUnfollow ? (
+        <>
+          <Link to={profileTo} className={styles.cardMain}>
+            <StatusAvatar name={producer.artistName} size={44} />
+            <div className={styles.meta}>
+              <div className={styles.alias}>{producer.artistName}</div>
+              <div className={styles.handle}>@{producer.handle}</div>
+            </div>
+          </Link>
+          <UnfollowButton handle={producer.handle} />
+        </>
+      ) : (
+        <>
+          <StatusAvatar name={producer.artistName} size={44} />
+          <div className={styles.meta}>
+            <div className={styles.alias}>{producer.artistName}</div>
+            <div className={styles.handle}>@{producer.handle}</div>
+          </div>
+          <Link to={profileTo} className={styles.viewLink}>
+            {t('producers.viewProfile')} <MsnIcon name="arrowR" size="11px" />
+          </Link>
+        </>
+      )}
     </div>
   );
 }

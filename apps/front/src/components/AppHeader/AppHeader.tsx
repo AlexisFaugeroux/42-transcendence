@@ -20,7 +20,7 @@ import { HeaderIconButton } from '../HeaderIconButton/HeaderIconButton';
 import { UserChip } from '../UserChip/UserChip';
 import styles from './AppHeader.module.scss';
 
-export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'producers' | 'settings';
+export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'producers' | 'following' | 'settings';
 
 interface HeaderLink {
   key: AppHeaderKey;
@@ -32,7 +32,8 @@ const LINKS: HeaderLink[] = [
   { key: 'home', labelKey: 'header.home', to: '/home' },
   { key: 'sessions', labelKey: 'header.sessions', to: '/sessions' },
   { key: 'library', labelKey: 'header.library', to: '/library' },
-  { key: 'producers', labelKey: 'nav.producers', to: '/producers' }, // dupliquer dans header plutot ? ou garder nav
+  { key: 'producers', labelKey: 'header.producers', to: '/producers' },
+  { key: 'following', labelKey: 'header.following', to: '/following' },
   { key: 'settings', labelKey: 'header.settings', to: '/settings' },
 ];
 

@@ -10,6 +10,7 @@ import Login from './pages/Login/Login';
 import { Privacy } from './pages/Privacy/Privacy';
 import { ProducerProfile } from './pages/Producers/ProducerProfile';
 import { Producers } from './pages/Producers/Producers';
+import { Following } from './pages/Following/Following';
 import Register from './pages/Register/Register';
 import { Samples } from './pages/Samples/Samples';
 import { Sessions } from './pages/Sessions/Sessions';
@@ -36,6 +37,7 @@ export function App(): JSX.Element {
             <Route path="/settings" element={<Dashboard />} />
             <Route path="/producers" element={<Producers />} />
             <Route path="/producers/:handle" element={<ProducerProfile />} />
+            <Route path="/following" element={<Following />} />
           </Route>
 
           {/*
