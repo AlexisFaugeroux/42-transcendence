@@ -6,12 +6,13 @@
 
 .types {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin-top: 18px;
 }
 
 .typeCard {
+  min-width: 0;
   text-align: left;
   cursor: pointer;
   background: var(--color-void);
