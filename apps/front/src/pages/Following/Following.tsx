@@ -14,7 +14,8 @@ export function Following(): JSX.Element {
   const [query, setQuery] = useState('');
   const { data, error, isLoading } = useFollowing(me.handle);
 
-  const list = data ?? [];
+  const list = useMemo(() => data ?? [], [data]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return list;

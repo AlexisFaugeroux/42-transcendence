@@ -2,14 +2,7 @@ import { useTranslation } from '@transcendence/i18n';
 import { Input, Modal, MsnIcon } from '@transcendence/ui';
 import { type CSSProperties, type JSX, useState } from 'react';
 import styles from './NewSessionModal.module.scss';
-import {
-  SESS_TYPES,
-  type SessionType,
-  TYPE_COLOR,
-  TYPE_DESCRIPTION,
-  TYPE_ICON,
-  TYPE_LABEL,
-} from './sessions.data';
+import { SESS_TYPES, type SessionType, TYPE_COLOR, TYPE_DESCRIPTION, TYPE_ICON, TYPE_LABEL } from './sessions.data';
 
 interface NewSessionModalProps {
   open: boolean;
@@ -20,14 +13,22 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
   const [picked, setPicked] = useState<SessionType>('production');
   const [name, setName] = useState<string>('Untitled');
   const [bpm, setBpm] = useState<number>(120);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   const openNewSession = () => {
-    onClose;
+    onClose();
     window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?name=${name}&bpm=${bpm}`;
-  }
+  };
 
   return (
-    <Modal open={open} title="Start a new session" width={560} okText="Create & open" onOk={openNewSession} onCancel={onClose}>
+    <Modal
+      open={open}
+      title="Start a new session"
+      width={560}
+      okText="Create & open"
+      onOk={openNewSession}
+      onCancel={onClose}
+    >
       <p className={styles.lead}>Pick the kind of session, then we&apos;ll set up the right workspace.</p>
 
       <div className={styles.types}>
@@ -45,7 +46,7 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
             <span className={styles.typeHead}>
               <MsnIcon name={TYPE_ICON[type]} size="18px" /> {t(TYPE_LABEL[type])}
             </span>
-            <span className={styles.typeDesc}>{(TYPE_DESCRIPTION[type])}</span>
+            <span className={styles.typeDesc}>{TYPE_DESCRIPTION[type]}</span>
           </button>
         ))}
       </div>
@@ -53,11 +54,22 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
       <div className={styles.fields}>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Title</span>
-          <Input placeholder="Untitled session" onChange={ e => { setName(e.target.value) }} />
+          <Input
+            placeholder="Untitled session"
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>BPM</span>
-          <Input type="number" placeholder="120" onChange={ e => { setBpm(e.target.valueAsNumber) }} />
+          <Input
+            type="number"
+            placeholder="120"
+            onChange={(e) => {
+              setBpm(e.target.valueAsNumber);
+            }}
+          />
         </label>
       </div>
     </Modal>
