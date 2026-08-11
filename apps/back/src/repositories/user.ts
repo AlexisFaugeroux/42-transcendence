@@ -189,6 +189,25 @@ class UserRepository {
     }
   }
 
+  public async listFollowingIdsByUserId(userId: string): Promise<string[]> {
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        select: {
+          following: {
+            select: {
+              id: true,
+            },
+          },
+        },
+        where: { id: userId },
+      });
+    
+      return user.following.map((followed) => followed.id);
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
   public async follow(followerId: string, targetId: string): Promise<void> {
     try {
       await this.prisma.user.update({

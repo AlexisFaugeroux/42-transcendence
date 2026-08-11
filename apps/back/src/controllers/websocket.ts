@@ -4,28 +4,53 @@ import { userRepository } from "../repositories/user";
 
 class WebsocketControler {
 
-    private sockets : Map<string, WebSocket> = new Map<string, WebSocket>;
+    private sockets : Map<string, WebSocket> = new Map<string, Set<WebSocket | null>>;
 
     public ws = async ( socket : WebSocket, req : FastifyRequest ) => {
      
         const userId = req.authUser.id;
-        socket.send( JSON.stringify({ message : "CONNECTED"}) );
-        this.sockets.set( userId, socket);
-        for ( let key of this.sockets.keys() ) {
-            if ( key !== userId)
-                await this.broadcastConnection( key, userId );
-        }
 
+        let userSockets : Set<WebSocket | null> = this.sockets.get( userId );
+        if (!userSockets) 
+        {    
+            userSockets = new Set<WebSocket>();userSockets.add( socket );
+            this.sockets.set( userId, userSockets);
+        }
+        userSockets.add( socket );
+
+        for ( let key of this.sockets.keys() ) {
+            if ( key !== userId && this.sockets.get( key ) !== null )
+                await this.broadcastConnection( key, userId, "FollowingConnected" );
+        }
+        socket.send(JSON.stringify({ message :"TU ES CO" }));
+        
+
+        socket.on( 'close', async () => {
+            console.log("DISCONNED : ", userId);
+
+            let userSockets : Set<WebSocket | null> = this.sockets.get( userId );
+           
+            userSockets?.delete( socket );
+            if ( userSockets?.size == 0 )
+                this.sockets.set( userId, null);
+
+            for ( let key of this.sockets.keys() ) {
+                if ( key !== userId && this.sockets.get( key ) !== null )
+                    await this.broadcastConnection( key, userId, "FollowingDisconnected" );
+            }        
+        });
     }
 
-    private broadcastConnection = async ( userBroadcastToId : string, newUserConnectedId : string ) => {
+    private broadcastConnection = async ( userBroadcastToId : string, newUserConnectedId : string, event : string ) => {
         
-        const following = await userRepository.listFollowing( userBroadcastToId );
-        for ( let follow of following) {
-            if ( follow.id === newUserConnectedId )
+        const following = await userRepository.listFollowingIdsByUserId( userBroadcastToId );
+        for ( let followId of following) {
+            if ( followId === newUserConnectedId )
             {
-                const socket : WebSocket = this.sockets.get( userBroadcastToId );
-                socket.send();
+                const sockets : Set<WebSocket> = this.sockets.get( userBroadcastToId );
+                for ( let socket of sockets ) {
+                    socket.send( JSON.stringify({ event : event, followingId : followId }) );
+                }
                 return ;
             }
         }
