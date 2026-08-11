@@ -65,11 +65,10 @@ export function Samples(): JSX.Element {
     });
   };
 
-  const handleDownload = async (sample:AudioFile): Promise<void> => {
-    try{
+  const handleDownload = async (sample: AudioFile): Promise<void> => {
+    try {
       await downloadSample(sample);
-    
-    }catch {
+    } catch {
       notifyError(t('samples.download.failedTitle'), t('samples.download.failedDescription'));
     }
   };
@@ -254,7 +253,9 @@ export function Samples(): JSX.Element {
                   selectedKeys={selectedKeys}
                   onSelectionChange={setSelectedKeys}
                   onEdit={setEditTarget}
-                  onDownload={handleDownload}
+                  onDownload={(sample) => {
+                    void handleDownload(sample);
+                  }}
                   onDelete={(sample) => {
                     setConfirmDelete(sample);
                   }}
@@ -264,7 +265,9 @@ export function Samples(): JSX.Element {
                   rows={filtered}
                   ownerId={user.ownerId}
                   onEdit={setEditTarget}
-                  onDownload={handleDownload}
+                  onDownload={(sample) => {
+                    void handleDownload(sample);
+                  }}
                   onDelete={(sample) => {
                     setConfirmDelete(sample);
                   }}

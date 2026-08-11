@@ -64,7 +64,7 @@ export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({
 
 export async function downloadSample(sample: AudioFile): Promise<void> {
   const response = await fetch(`/audio/${sample.url}`, { credentials: 'include' });
-  if( !response.ok) {
+  if (!response.ok) {
     throw new Error(`HTTP: ${response.status}`);
   }
   const blob = await response.blob();
