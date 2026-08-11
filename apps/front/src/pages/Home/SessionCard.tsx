@@ -1,18 +1,12 @@
 import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { SessionType } from './home.data';
-import styles from './SessionCard.module.scss';
 import { useState } from 'react';
 import { NewSessionModal } from '../Sessions/NewSessionModal';
+import type { SessionType } from './home.data';
+import styles from './SessionCard.module.scss';
 
-export function SessionCard({
-  blurbKey,
-  color,
-  icon,
-  metaKeys,
-  titleKey,
-}: SessionType): JSX.Element {
+export function SessionCard({ blurbKey, color, icon, metaKeys, titleKey }: SessionType): JSX.Element {
   const [newOpen, setNewOpen] = useState(false);
 
   const { t } = useTranslation();

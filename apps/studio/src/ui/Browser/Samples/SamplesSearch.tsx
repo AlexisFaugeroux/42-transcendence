@@ -1,13 +1,5 @@
 import { useTranslation } from '@transcendence/i18n';
-import {
-  Button,
-  ConfigProvider,
-  FolderOutlined,
-  Input,
-  SearchOutlined,
-  TeamOutlined,
-  theme,
-} from '@transcendence/ui';
+import { Button, ConfigProvider, FolderOutlined, Input, SearchOutlined, TeamOutlined, theme } from '@transcendence/ui';
 import type { Dispatch, JSX, SetStateAction } from 'react';
 import type { SampleLibrary } from './Samples';
 
@@ -17,11 +9,7 @@ interface SamplesSearchProps {
   setSearch: Dispatch<SetStateAction<string>>;
 }
 
-export function SamplesSearch({
-  activeLib,
-  setActiveLib,
-  setSearch,
-}: SamplesSearchProps): JSX.Element {
+export function SamplesSearch({ activeLib, setActiveLib, setSearch }: SamplesSearchProps): JSX.Element {
   const { t } = useTranslation();
 
   return (

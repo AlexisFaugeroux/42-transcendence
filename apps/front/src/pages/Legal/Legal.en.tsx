@@ -9,9 +9,8 @@ export function LegalEn(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Publisher</h2>
         <p className={styles.body}>
-          MakeSomeNoise is an educational project built as part of the 42 school curriculum
-          (ft_transcendence), with no commercial purpose. Published by the team members (to be
-          completed). Contact: to be completed.
+          MakeSomeNoise is an educational project built as part of the 42 school curriculum (ft_transcendence), with no
+          commercial purpose. Published by the team members (to be completed). Contact: to be completed.
         </p>
       </section>
 
@@ -30,9 +29,8 @@ export function LegalEn(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Intellectual property</h2>
         <p className={styles.body}>
-          The source code, design and original content of the site are the property of their
-          authors. Content created by users (sessions, samples, exports) remains the property of
-          those users (see the Terms of Use).
+          The source code, design and original content of the site are the property of their authors. Content created by
+          users (sessions, samples, exports) remains the property of those users (see the Terms of Use).
         </p>
       </section>
 
@@ -40,12 +38,7 @@ export function LegalEn(): JSX.Element {
         <h2 className={styles.heading}>Third-party technologies</h2>
         <p className={styles.body}>
           The audio tools (studio) are built on the open-source technology{' '}
-          <a
-            className={styles.link}
-            href="https://github.com/andremichelle/openDAW"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className={styles.link} href="https://github.com/andremichelle/openDAW" target="_blank" rel="noreferrer">
             openDAW
           </a>
           , via the{' '}
@@ -64,8 +57,7 @@ export function LegalEn(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Disclaimer</h2>
         <p className={styles.body}>
-          This site is built for educational purposes as part of the 42 program. It has no
-          commercial purpose.
+          This site is built for educational purposes as part of the 42 program. It has no commercial purpose.
         </p>
       </section>
     </>

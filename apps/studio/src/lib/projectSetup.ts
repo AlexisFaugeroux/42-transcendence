@@ -1,5 +1,6 @@
 import { AnimationFrame } from '@opendaw/lib-dom';
 import { AudioData } from '@opendaw/lib-dsp';
+import { PPQN } from '@opendaw/lib-dsp';
 import { Promises } from '@opendaw/lib-runtime';
 import type { Progress } from '@opendaw/lib-std';
 import { assert, requireProperty, UUID } from '@opendaw/lib-std';
@@ -18,18 +19,17 @@ import {
   type SoundfontProvider,
   Workers,
 } from '@opendaw/studio-core';
+import { theme } from '@transcendence/ui/theme';
 import OfflineEngineUrl from '@opendaw/studio-core/offline-engine.js?worker&url';
 import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
-import { saveProject, loadProject } from '../api/project';
-import type { ProjectProperties } from '../lib/types';
 import { getAudioById } from '../api/audiofile';
-import { arrayBufferToBase64, base64ToArrayBuffer } from '../utils/base64';
-import { loadAudioFile } from './audioUtils';
+import { loadProject, saveProject } from '../api/project';
+import type { ProjectProperties } from '../lib/types';
 import type { Track } from '../lib/types';
 import type { Clip } from '../lib/types';
-import { PPQN } from '@opendaw/lib-dsp';
-import { theme } from '@transcendence/ui/theme';
+import { arrayBufferToBase64, base64ToArrayBuffer } from '../utils/base64';
+import { loadAudioFile } from './audioUtils';
 
 function testFeatures() {
   requireProperty(Promise, 'withResolvers');
@@ -148,16 +148,12 @@ export async function _doInitializeOpenDaw(
 
   // Create AudioContext
   const audioContext = new AudioContext({ latencyHint: 0 });
-  console.debug(
-    `AudioContext state: ${audioContext.state}, sampleRate: ${audioContext.sampleRate}`,
-  );
+  console.debug(`AudioContext state: ${audioContext.state}, sampleRate: ${audioContext.sampleRate}`);
 
   onStatusUpdate?.('Installing audio worklets...');
 
   // Create audio worklets
-  const { error: workletError, status: workletStatus } = await Promises.tryCatch(
-    AudioWorklets.createFor(audioContext),
-  );
+  const { error: workletError, status: workletStatus } = await Promises.tryCatch(AudioWorklets.createFor(audioContext));
   if (workletStatus === 'rejected') {
     throw new Error(`Could not install Worklets: ${workletError}`);
   }
@@ -199,9 +195,7 @@ export async function _doInitializeOpenDaw(
         return [audioData, meta];
       }
 
-      console.warn(
-        `No audio buffer found for UUID: ${uuidString}. The sample will not be available.`,
-      );
+      console.warn(`No audio buffer found for UUID: ${uuidString}. The sample will not be available.`);
       throw new Error(`Sample not found: ${uuidString}`);
     },
   };
@@ -209,10 +203,8 @@ export async function _doInitializeOpenDaw(
 
   // Create soundfont manager
   const soundfontProvider: SoundfontProvider = {
-    fetch: async (
-      uuid: UUID.Bytes,
-      progress: Progress.Handler,
-    ): Promise<[ArrayBuffer, SoundfontMetaData]> => OpenSoundfontAPI.get().load(uuid, progress),
+    fetch: async (uuid: UUID.Bytes, progress: Progress.Handler): Promise<[ArrayBuffer, SoundfontMetaData]> =>
+      OpenSoundfontAPI.get().load(uuid, progress),
   };
   const soundfontManager = new GlobalSoundfontLoaderManager(soundfontProvider);
 
@@ -295,7 +287,7 @@ export async function _doInitializeOpenDaw(
     document.addEventListener('click', resume);
     document.addEventListener('keydown', resume);
   }
-  return { audioContext, project, id };
+  return { audioContext, id, project };
 }
 
 function isInstrumentName(value: string): value is Track['instrumentName'] {
@@ -309,9 +301,7 @@ export function reloadClipsAndTracks(project: Project): {
   const tracks: Track[] = [];
   const clips: Clip[] = [];
 
-  const audioUnits = project.rootBoxAdapter.audioUnits
-    .adapters()
-    .filter((audioUnit) => audioUnit.isInstrument);
+  const audioUnits = project.rootBoxAdapter.audioUnits.adapters().filter((audioUnit) => audioUnit.isInstrument);
 
   for (const audioUnit of audioUnits) {
     const instrumentName = audioUnit.label;

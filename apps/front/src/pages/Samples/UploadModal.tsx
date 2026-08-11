@@ -39,23 +39,14 @@ interface UploadModalProps {
   quotaBytes: number;
 }
 
-export function UploadModal({
-  onClose,
-  onUploaded,
-  open,
-  quotaBytes,
-  usedBytes,
-}: UploadModalProps): JSX.Element {
+export function UploadModal({ onClose, onUploaded, open, quotaBytes, usedBytes }: UploadModalProps): JSX.Element {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const { i18n, t } = useTranslation();
   const locale = i18n.language;
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const addToQueue = (file: File): void => {
-    setQueue((q) => [
-      ...q,
-      { fields: { visibility: 'PRIVATE' }, file, status: 'queued', uuid: crypto.randomUUID() },
-    ]);
+    setQueue((q) => [...q, { fields: { visibility: 'PRIVATE' }, file, status: 'queued', uuid: crypto.randomUUID() }]);
   };
 
   const patch = (uuid: string, next: Partial<QueueItem>): void => {
@@ -63,9 +54,7 @@ export function UploadModal({
   };
 
   const patchFields = (uuid: string, next: Partial<UploadSampleFields>): void => {
-    setQueue((q) =>
-      q.map((it) => (it.uuid === uuid ? { ...it, fields: { ...it.fields, ...next } } : it)),
-    );
+    setQueue((q) => q.map((it) => (it.uuid === uuid ? { ...it, fields: { ...it.fields, ...next } } : it)));
   };
 
   const deleteFromQueue = (uuid: string): void => {
@@ -94,8 +83,7 @@ export function UploadModal({
 
       await onUploaded();
 
-      if (failed)
-        throw new Error(t('samples.upload.partialFailure', { failed, total: pending.length }));
+      if (failed) throw new Error(t('samples.upload.partialFailure', { failed, total: pending.length }));
 
       return pending.length;
     },
@@ -156,12 +144,7 @@ export function UploadModal({
         accept=".wav"
       >
         <p className={styles.dropIcon}>
-          <MsnIcon
-            name="download"
-            size="22px"
-            color={theme.orange}
-            style={{ transform: 'rotate(180deg)' }}
-          />
+          <MsnIcon name="download" size="22px" color={theme.orange} style={{ transform: 'rotate(180deg)' }} />
         </p>
         <p className={styles.dropTitle}>{t('samples.upload.dropTitle')}</p>
         <p className={styles.dropHint}>.wav</p>

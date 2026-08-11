@@ -86,9 +86,7 @@ export async function seed(config: SeedConfig): Promise<void> {
   console.log('Clean volume directory...');
   await mkdir(config.mediaDir, { recursive: true });
   const stale = await readdir(config.mediaDir);
-  await Promise.all(
-    stale.map((name) => rm(join(config.mediaDir, name), { force: true, recursive: true })),
-  );
+  await Promise.all(stale.map((name) => rm(join(config.mediaDir, name), { force: true, recursive: true })));
 
   for (const sampleSet of config.sampleSets) {
     const ownerId = resolveOwnerId(sampleSet.owner);
@@ -104,9 +102,7 @@ export async function seed(config: SeedConfig): Promise<void> {
         const url = `${ownerId}/${id}.${ext}`;
         const name = originalName;
         const visibility =
-          typeof sampleSet.visibility === 'function'
-            ? sampleSet.visibility(index)
-            : sampleSet.visibility;
+          typeof sampleSet.visibility === 'function' ? sampleSet.visibility(index) : sampleSet.visibility;
 
         const { channelData, durationMs, size } = await wavManager.decodeWav(abs, {
           channelData: true,
@@ -143,10 +139,7 @@ export async function seed(config: SeedConfig): Promise<void> {
       await copyFile(sample.abs, dest);
 
       if (sample.channelData) {
-        await writeFile(
-          dest.replace('.wav', '.peaks'),
-          msnpManager.generatePeaks(sample.channelData),
-        );
+        await writeFile(dest.replace('.wav', '.peaks'), msnpManager.generatePeaks(sample.channelData));
       }
     }
   }

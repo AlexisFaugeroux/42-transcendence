@@ -17,8 +17,7 @@ export function ImagePlaceholder({
     <div
       style={{
         alignItems: 'center',
-        background:
-          'repeating-linear-gradient(135deg, hsl(197,14%,12%) 0 14px, hsl(197,14%,8%) 14px 28px)',
+        background: 'repeating-linear-gradient(135deg, hsl(197,14%,12%) 0 14px, hsl(197,14%,8%) 14px 28px)',
         border: '0.5px solid rgba(255, 255, 255, 0.07)',
         borderRadius: 4,
         display: 'flex',

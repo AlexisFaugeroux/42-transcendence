@@ -27,8 +27,7 @@ export function Community(): JSX.Element {
         <div>
           <div className={styles.eyebrow}>{t('landing.community.eyebrow')}</div>
           <h2 className={styles.title}>
-            {t('landing.community.title')}{' '}
-            <span className={styles.accent}>{t('landing.community.titleAccent')}</span>
+            {t('landing.community.title')} <span className={styles.accent}>{t('landing.community.titleAccent')}</span>
           </h2>
           <p className={styles.body}>{t('landing.community.body')}</p>
           <ul className={styles.bullets}>

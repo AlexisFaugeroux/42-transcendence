@@ -77,8 +77,7 @@ class WavManager {
   }
 
   private _parseFmt(body: Buffer): WavFmt {
-    if (body.length < this.FMT_MIN_BYTES)
-      throw new Error(`fmt chunk too short: ${body.length} bytes`);
+    if (body.length < this.FMT_MIN_BYTES) throw new Error(`fmt chunk too short: ${body.length} bytes`);
 
     return {
       audioFormat: body.readUInt16LE(0),
@@ -96,11 +95,7 @@ class WavManager {
     return buffer;
   }
 
-  private _extractChannelData(
-    fmt: WavFmt,
-    buffer: Buffer,
-    size: number,
-  ): Float32Array<ArrayBuffer>[] {
+  private _extractChannelData(fmt: WavFmt, buffer: Buffer, size: number): Float32Array<ArrayBuffer>[] {
     const { bitsPerSample, channels } = fmt;
     const bytesPerSample = bitsPerSample / 8;
     const numFrames = Math.floor(size / (bytesPerSample * channels));

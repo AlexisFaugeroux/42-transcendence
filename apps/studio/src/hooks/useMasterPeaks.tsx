@@ -12,14 +12,11 @@ export function useMasterPeaks(): PeaksRef {
 
   useEffect(() => {
     const buffer = peaksRef.current;
-    const sub = project.liveStreamReceiver.subscribeFloats(
-      EngineAddresses.PEAKS,
-      (data: Float32Array) => {
-        buffer[0] = data[0];
-        buffer[1] = data[1];
-        buffer[2] = gainToDb(Math.max(data[0], data[1]));
-      },
-    );
+    const sub = project.liveStreamReceiver.subscribeFloats(EngineAddresses.PEAKS, (data: Float32Array) => {
+      buffer[0] = data[0];
+      buffer[1] = data[1];
+      buffer[2] = gainToDb(Math.max(data[0], data[1]));
+    });
 
     return () => {
       sub.terminate();

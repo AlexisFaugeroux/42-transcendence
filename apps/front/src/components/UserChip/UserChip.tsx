@@ -11,13 +11,7 @@ interface UserChipProps {
   status?: PresenceStatus;
 }
 
-export function UserChip({
-  avatarName,
-  handle,
-  name,
-  size = 26,
-  status,
-}: UserChipProps): JSX.Element {
+export function UserChip({ avatarName, handle, name, size = 26, status }: UserChipProps): JSX.Element {
   return (
     <span className={styles.chip}>
       <StatusAvatar name={avatarName} size={size} status={status} />

@@ -37,13 +37,7 @@ export function Browser(): JSX.Element {
           },
         }}
       >
-        <Tabs
-          className={styles.fillTabs}
-          defaultActiveKey="samples"
-          items={tabs}
-          centered
-          size="small"
-        />
+        <Tabs className={styles.fillTabs} defaultActiveKey="samples" items={tabs} centered size="small" />
       </ConfigProvider>
     </aside>
   );

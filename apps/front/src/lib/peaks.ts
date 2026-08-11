@@ -9,12 +9,7 @@ const MAGIC = 'MSNP';
 export function decodePeak(buffer: ArrayBuffer): DecodedPeaks {
   const view = new DataView(buffer);
 
-  const magic = String.fromCharCode(
-    view.getUint8(0),
-    view.getUint8(1),
-    view.getUint8(2),
-    view.getUint8(3),
-  );
+  const magic = String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2), view.getUint8(3));
   if (magic !== MAGIC) throw new Error('Not an MSNP pekas file');
 
   const channels = view.getUint8(5);

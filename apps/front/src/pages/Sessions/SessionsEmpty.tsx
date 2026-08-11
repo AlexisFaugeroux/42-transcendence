@@ -4,13 +4,7 @@ import type { JSX } from 'react';
 import styles from './SessionsEmpty.module.scss';
 
 // Shown when a bucket has no sessions at all.
-export function SessionsEmpty({
-  bucket,
-  onNew,
-}: {
-  bucket: 'owned' | 'archived';
-  onNew: () => void;
-}): JSX.Element {
+export function SessionsEmpty({ bucket, onNew }: { bucket: 'owned' | 'archived'; onNew: () => void }): JSX.Element {
   const { t } = useTranslation();
 
   if (bucket === 'archived') {

@@ -65,9 +65,7 @@ export function createClipFromBuffer(
         box.endInSeconds.setValue(audioBuffer.duration);
       });
 
-  const fullDuration = Math.round(
-    PPQN.secondsToPulses(audioBuffer.duration, project.engine.bpm.getValue()),
-  );
+  const fullDuration = Math.round(PPQN.secondsToPulses(audioBuffer.duration, project.engine.bpm.getValue()));
   const clipDuration = Math.min(fullDuration, maxDuration);
 
   // Create events collection - holds events values for a regionBox such as automation values
@@ -113,17 +111,13 @@ export async function createClip(
   const audioBuffer = await loadAudioFile(audioContext, url, audioFileUUID, userId);
   if (!audioBuffer) return null;
 
-  if (existingClips.find((clip) => track.trackBox === clip.trackBox && clip.position === position))
-    return null;
+  if (existingClips.find((clip) => track.trackBox === clip.trackBox && clip.position === position)) return null;
 
   const SNAP = PPQN.Quarter / 4;
   const MIN_DURATION = SNAP;
 
   const clipToTruncate = existingClips.find(
-    (clip) =>
-      clip.trackBox === track.trackBox &&
-      clip.position < position &&
-      clip.position + clip.duration > position,
+    (clip) => clip.trackBox === track.trackBox && clip.position < position && clip.position + clip.duration > position,
   );
 
   let truncatedNewDuration = 0;

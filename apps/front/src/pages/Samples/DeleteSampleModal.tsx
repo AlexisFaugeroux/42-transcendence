@@ -27,11 +27,7 @@ export function DeleteSampleModal({
   return (
     <Modal
       open={target !== null}
-      title={
-        isMulti
-          ? t('samples.delete.titleMulti', { count: selectedCount })
-          : t('samples.delete.titleOne')
-      }
+      title={isMulti ? t('samples.delete.titleMulti', { count: selectedCount }) : t('samples.delete.titleOne')}
       okText={t('common.delete')}
       okButtonProps={{ danger: true }}
       confirmLoading={confirmLoading}
@@ -43,11 +39,7 @@ export function DeleteSampleModal({
         <p>{t('samples.delete.bodyMulti')}</p>
       ) : (
         <p>
-          <Trans
-            i18nKey="samples.delete.bodyOne"
-            components={{ code: <code /> }}
-            values={{ name: sample?.name }}
-          />
+          <Trans i18nKey="samples.delete.bodyOne" components={{ code: <code /> }} values={{ name: sample?.name }} />
         </p>
       )}
     </Modal>

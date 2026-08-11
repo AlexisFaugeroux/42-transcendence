@@ -126,9 +126,7 @@ class AudioFileRepository {
     const modeFilter = modes?.length ? { mode: { in: modes } } : undefined;
     const familyFilter = families?.length ? { family: { in: families } } : undefined;
     const kindFilter = kinds?.length ? { kind: { in: kinds } } : undefined;
-    const visibilityFilter = visibilities?.length
-      ? { visibility: { in: visibilities } }
-      : undefined;
+    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
     const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
 
     return {

@@ -32,7 +32,7 @@ const saveProjectSchema = {
       },
       mode: { enum: ['MAJOR', 'MINOR'], type: 'string' },
       name: { maxLength: 128, minLength: 1, type: 'string' },
-      samples: { items: { type: 'string' }, type: 'array', uniqueItems: true},
+      samples: { items: { type: 'string' }, type: 'array', uniqueItems: true },
       state: { contentEncoding: 'base64', minLength: 1, type: 'string' },
       visibility: { enum: ['PRIVATE', 'SHARED', 'PUBLIC'], type: 'string' },
     },
@@ -64,27 +64,11 @@ const deleteProjectSchema = {
 };
 
 export function projectRoutes(app: FastifyInstance) {
-  app.put(
-    '/save',
-    { preHandler: app.authenticate, schema: saveProjectSchema },
-    projectController.save,
-  );
+  app.put('/save', { preHandler: app.authenticate, schema: saveProjectSchema }, projectController.save);
 
-  app.get(
-    '/load',
-    { preHandler: app.authenticate, schema: loadProjectSchema },
-    projectController.load,
-  );
+  app.get('/load', { preHandler: app.authenticate, schema: loadProjectSchema }, projectController.load);
 
-<<<<<<< HEAD
   app.get('/list', { preHandler: app.authenticate }, projectController.list);
 
   app.delete('/delete', { preHandler: app.authenticate, schema: deleteProjectSchema }, projectController.detele);
-=======
-  app.delete(
-    '/delete',
-    { preHandler: app.authenticate, schema: deleteProjectSchema },
-    projectController.detele,
-  );
->>>>>>> aa26ce4 (feat: #138 serve /avatars/ via nginx-media)
 }

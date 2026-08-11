@@ -13,8 +13,8 @@ export async function getlistAudioFile(): Promise<Sample[]> {
   return data;
 }
 
-export async function getAudioById( id : string ): Promise<Sample> {
-    const query = new URLSearchParams({
+export async function getAudioById(id: string): Promise<Sample> {
+  const query = new URLSearchParams({
     id,
   });
 

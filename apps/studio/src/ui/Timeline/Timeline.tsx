@@ -18,11 +18,7 @@ function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
     const width = bar.durationPpqn * pixelsPerPulse;
 
     return (
-      <div
-        key={`bar-label-${bar.barNumber}`}
-        className={styles.barLabel}
-        style={{ left: x, width }}
-      >
+      <div key={`bar-label-${bar.barNumber}`} className={styles.barLabel} style={{ left: x, width }}>
         <span className={styles.barLabelText}>{bar.barNumber}</span>
       </div>
     );
@@ -84,11 +80,7 @@ export function Timeline(): JSX.Element {
           <AddTrackButton onAddTrack={handleAddTrack} />
         </div>
         <div ref={barLabelsRef} className={styles.barLabelsViewport}>
-          <div
-            className={styles.barLabelsRow}
-            style={{ width: timelineWidth }}
-            onDoubleClick={handleDoubleClick}
-          >
+          <div className={styles.barLabelsRow} style={{ width: timelineWidth }} onDoubleClick={handleDoubleClick}>
             {renderLabels(project, PIXELS_PER_PULSE)}
           </div>
           <LoopRegionHandleStrip timelineWidth={timelineWidth} />

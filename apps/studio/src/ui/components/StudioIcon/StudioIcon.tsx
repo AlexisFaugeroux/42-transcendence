@@ -15,9 +15,7 @@ const STUDIO_ICONS: Record<StudioIconLabel, JSX.Element | undefined> = {
       <rect x="4" y="6" width="16" height="12" rx="1" />
     </g>
   ),
-  close: (
-    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-  ),
+  close: <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />,
   collapseV: (
     <path
       d="M6 9l6 6 6-6"
@@ -45,18 +43,8 @@ const STUDIO_ICONS: Record<StudioIconLabel, JSX.Element | undefined> = {
       <rect x="13" y="11" width="6" height="2" fill="var(--bg-app)" />
     </g>
   ),
-  folder: (
-    <path
-      d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"
-      fill="currentColor"
-    />
-  ),
-  font: (
-    <path
-      d="M5 19l5-14h2l5 14h-2.2l-1.3-3.7H8.5L7.2 19H5zm4-5.4h4l-2-5.7-2 5.7z"
-      fill="currentColor"
-    />
-  ),
+  folder: <path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z" fill="currentColor" />,
+  font: <path d="M5 19l5-14h2l5 14h-2.2l-1.3-3.7H8.5L7.2 19H5zm4-5.4h4l-2-5.7-2 5.7z" fill="currentColor" />,
   loop: (
     <g fill="currentColor">
       <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7z" />
@@ -88,14 +76,7 @@ const STUDIO_ICONS: Record<StudioIconLabel, JSX.Element | undefined> = {
       <rect x="11" y="3" width="2" height="18" />
       <rect x="18" y="3" width="2" height="18" />
       <circle cx="5" cy="9" r="2.2" fill="var(--bg-app)" stroke="currentColor" strokeWidth="1.4" />
-      <circle
-        cx="12"
-        cy="14"
-        r="2.2"
-        fill="var(--bg-app)"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
+      <circle cx="12" cy="14" r="2.2" fill="var(--bg-app)" stroke="currentColor" strokeWidth="1.4" />
       <circle cx="19" cy="7" r="2.2" fill="var(--bg-app)" stroke="currentColor" strokeWidth="1.4" />
     </g>
   ),
@@ -175,15 +156,8 @@ const STUDIO_ICONS: Record<StudioIconLabel, JSX.Element | undefined> = {
   ),
   stop: <rect x="5" y="5" width="14" height="14" rx="1" fill="currentColor" />,
   triangle: <path d="M5 9l4 4 4-4z" fill="currentColor" />,
-  undo: (
-    <path d="M9 7L4 12l5 5v-3h6a4 4 0 0 1 0 8h-3v2h3a6 6 0 0 0 0-12H9V7z" fill="currentColor" />
-  ),
-  walk: (
-    <path
-      d="M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-4 4l-3 4 2 5 3-4 1 4 3-1-1-3 1-3-2-2h-4z"
-      fill="currentColor"
-    />
-  ),
+  undo: <path d="M9 7L4 12l5 5v-3h6a4 4 0 0 1 0 8h-3v2h3a6 6 0 0 0 0-12H9V7z" fill="currentColor" />,
+  walk: <path d="M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-4 4l-3 4 2 5 3-4 1 4 3-1-1-3 1-3-2-2h-4z" fill="currentColor" />,
 };
 
 interface StudioIconsProps {

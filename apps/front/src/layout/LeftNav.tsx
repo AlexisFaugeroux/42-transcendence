@@ -1,10 +1,10 @@
+import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
+import { useFollowing } from '../hooks/useProducers';
 import styles from './LeftNav.module.scss';
 import { NavItem } from './NavItem';
 import { SOCIAL_ITEMS, WORKSPACE_ITEMS } from './navItems';
-import { useAuthUser } from '@transcendence/auth';
-import { useFollowing } from '../hooks/useProducers';
 
 export function LeftNav(): JSX.Element {
   const { t } = useTranslation();

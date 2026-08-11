@@ -1,14 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { Trans, useTranslation } from '@transcendence/i18n';
-import {
-  Button,
-  CheckOutlined,
-  CloseCircleOutlined,
-  Input,
-  Modal,
-  notification,
-  theme,
-} from '@transcendence/ui';
+import { Button, CheckOutlined, CloseCircleOutlined, Input, Modal, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../../api/user';

@@ -1,16 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
 import { Trans, useTranslation } from '@transcendence/i18n';
-import {
-  Button,
-  CheckOutlined,
-  Form,
-  Input,
-  MsnIcon,
-  MsnWordmark,
-  notification,
-  theme,
-} from '@transcendence/ui';
+import { Button, CheckOutlined, Form, Input, MsnIcon, MsnWordmark, notification, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerRequest } from '../../api/auth/auth';
@@ -77,13 +68,7 @@ export default function Register(): JSX.Element {
           <p className={styles.subtitle}>{t('auth.register.subtitle')}</p>
 
           <div className={styles.card}>
-            <Form
-              className={styles.form}
-              form={form}
-              layout="vertical"
-              requiredMark={false}
-              onFinish={onFinish}
-            >
+            <Form className={styles.form} form={form} layout="vertical" requiredMark={false} onFinish={onFinish}>
               <Form.Item
                 label={t('auth.fields.email')}
                 name="email"
@@ -155,24 +140,14 @@ export default function Register(): JSX.Element {
                 <Trans
                   i18nKey="auth.register.termsNotice"
                   components={{
-                    privacy: (
-                      <a className={styles.termsLink} onClick={() => void navigate('/privacy')} />
-                    ),
-                    terms: (
-                      <a className={styles.termsLink} onClick={() => void navigate('/terms')} />
-                    ),
+                    privacy: <a className={styles.termsLink} onClick={() => void navigate('/privacy')} />,
+                    terms: <a className={styles.termsLink} onClick={() => void navigate('/terms')} />,
                   }}
                 />
               </p>
 
               <Form.Item>
-                <Button
-                  className={styles.primaryButton}
-                  htmlType="submit"
-                  block
-                  size="large"
-                  loading={isPending}
-                >
+                <Button className={styles.primaryButton} htmlType="submit" block size="large" loading={isPending}>
                   {isPending ? t('auth.register.submitting') : t('auth.register.submit')}
                 </Button>
               </Form.Item>

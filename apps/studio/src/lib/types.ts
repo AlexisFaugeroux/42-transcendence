@@ -47,11 +47,11 @@ export interface Sample {
 }
 
 export interface ProjectProperties {
-  id : string | null,
-  name : string | null,
-  bpm : number | null,
-  duration : number,
-  visibility : string,
-  samples : string[] | null,
-  state : string,
+  id: string | null;
+  name: string | null;
+  bpm: number | null;
+  duration: number;
+  visibility: string;
+  samples: string[] | null;
+  state: string;
 }

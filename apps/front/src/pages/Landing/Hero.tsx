@@ -52,12 +52,7 @@ export function Hero(): JSX.Element {
           <div className={styles.social}>
             <Avatar.Group>
               {PRODUCERS.map(({ color, name }) => (
-                <Avatar
-                  key={name}
-                  size={26}
-                  shape="square"
-                  style={{ backgroundColor: color, fontSize: 11 }}
-                >
+                <Avatar key={name} size={26} shape="square" style={{ backgroundColor: color, fontSize: 11 }}>
                   {name.slice(0, 2).toUpperCase()}
                 </Avatar>
               ))}
