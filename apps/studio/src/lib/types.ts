@@ -54,6 +54,4 @@ export interface ProjectProperties {
   visibility : string,
   samples : string[] | null,
   state : string,
-  key? : string,
-  mode? : string
 }

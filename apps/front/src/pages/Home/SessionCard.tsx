@@ -3,16 +3,25 @@ import { MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { SessionType } from './home.data';
 import styles from './SessionCard.module.scss';
+import { useState } from 'react';
+import { NewSessionModal } from '../Sessions/NewSessionModal';
 
 export function SessionCard({ blurbKey, color, icon, metaKeys, titleKey }: SessionType): JSX.Element {
-  const { t } = useTranslation();
+  const [newOpen, setNewOpen] = useState(false);
 
+  const { t } = useTranslation();
+  
   return (
+    <div>
+      <NewSessionModal
+        open={newOpen}
+        onClose={() => {
+          setNewOpen(false);
+        }}
+      />
     <button
       className={styles.card}
-      onClick={() => {
-        window.location.href = import.meta.env.VITE_STUDIO_URL;
-      }}
+      onClick={() => {setNewOpen(true)}}
     >
       <div className={styles.top}>
         <div className={styles.iconBox} style={{ color }}>
@@ -32,5 +41,6 @@ export function SessionCard({ blurbKey, color, icon, metaKeys, titleKey }: Sessi
         ))}
       </div>
     </button>
+    </div>
   );
 }

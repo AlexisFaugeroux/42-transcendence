@@ -47,5 +47,10 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-family: var(--font-mono);
+
+    &[data-saved='false'] {
+      color: var(--color-red);
+      border-color: var(--color-red);
+    }
   }
 }
