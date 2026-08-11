@@ -2,7 +2,7 @@ import { UUID } from '@opendaw/lib-std';
 import { useMutation } from '@tanstack/react-query';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import { Button, IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
-import { useState, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
 import { arrayBufferToBase64 } from '../../utils/base64';
@@ -17,9 +17,21 @@ export function Header(): JSX.Element {
   const { project, meta } = useProject();
   const { t } = useTranslation();
 
+  useEffect(() => {
+    const updateSavedState = (): void => {
+      setSaved(!project.editing.hasUnsavedChanges());
+    };
+    updateSavedState();
+    const subscription = project.editing.subscribe(updateSavedState);
+    return () => {
+      subscription.terminate();
+    };
+  }, [project]);
+
   const { isPending, mutate : save } = useMutation({
     mutationFn : saveProject,
     onSuccess : () => {
+      project.editing.markSaved();
       setSaved( true );
     }
   })
@@ -46,7 +58,9 @@ export function Header(): JSX.Element {
         {/* TODO: Make project name and project state dynamic */}
         <span className={styles.projectPill}>Project</span>
         <span className={styles.projectTitle}>{meta.name}</span>
-        <span className={styles.projectState}>{ saved ? "● saved" : "unsaved" }</span>
+        <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
+          {saved ? '● saved' : '● unsaved'}
+        </span>
       </div>
       <Separator />
 

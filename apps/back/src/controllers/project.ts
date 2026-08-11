@@ -40,14 +40,11 @@ class ProjectController {
       visibilities : []
     });
     if ( project.length ) {
-      if ( project[0].ownerId != user.ownerId) throw new NotFoundError("Owner_id mismatch project's owner");
+      if ( project[0].ownerId !== user.ownerId) throw new NotFoundError("Owner_id mismatch project's owner");
     }
 
     const decodedState = Buffer.from(state, 'base64');
 
-    if ( rest.samples?.length == 1 && rest.samples[0] == '' )
-        rest.samples = null;
-    
     await projectRepository.upsert({
       ...rest,
       ownerId: user.ownerId,

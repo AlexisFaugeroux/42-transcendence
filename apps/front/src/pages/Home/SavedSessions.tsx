@@ -4,11 +4,27 @@ import { type ComponentRef, type JSX, useRef } from 'react';
 import { SAVED_SESSIONS } from './home.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';
+import { useSession } from '../../../hooks/useSession';
+import type { Session } from '../Sessions/sessions.data';
 
 export function SavedSessions(): JSX.Element {
+
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
   const { t } = useTranslation();
+  const { data, error, isError } = useSession();
 
+  const loadProject = ( session : Session ) => {
+    const query = new URLSearchParams({
+        bpm: String(session.bpm),
+        name: session.name,
+        projectId: session.id,
+    });
+    
+    for (const sampleId of session.samples) {
+        query.append('sampleId', sampleId);
+    }
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
+  }
   return (
     <section>
       <div className={styles.head}>
@@ -31,7 +47,7 @@ export function SavedSessions(): JSX.Element {
           >
             <MsnIcon name="arrowR" size="14px" />
           </button>
-          <a href="#" className={styles.viewAll}>
+          <a href="http://localhost:5173/sessions" className={styles.viewAll}>
             {t('home.saved.viewAll')}
           </a>
         </div>
@@ -50,8 +66,8 @@ export function SavedSessions(): JSX.Element {
           { breakpoint: 640, settings: { slidesToShow: 1 } },
         ]}
       >
-        {SAVED_SESSIONS.map((session) => (
-          <SavedSessionTile key={session.id} session={session} />
+        {data?.map((session) => (
+          <SavedSessionTile key={session.id} session={session} onOpen={loadProject} />
         ))}
       </Carousel>
     </section>

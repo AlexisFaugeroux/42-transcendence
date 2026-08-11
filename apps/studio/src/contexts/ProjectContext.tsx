@@ -12,8 +12,6 @@ interface ProjectContextValue {
     id : string | null,
     name : string | null,
     visibility : string,
-    key : string,
-    mode : string,
     duration : number,
   }
 }
@@ -29,8 +27,6 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
   const meta = {
     id : query.get('projectId'),
     name : query.get('name'),
-    key : "A_key",
-    mode : "MAJOR",
     duration : 0,
     visibility : 'PRIVATE',
   }

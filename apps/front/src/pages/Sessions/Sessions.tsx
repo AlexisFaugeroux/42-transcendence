@@ -42,7 +42,6 @@ export function Sessions(): JSX.Element {
     let list = (data ?? []);
     const q = query.trim().toLowerCase();
     if (q) list = list.filter((r) => r.name.toLowerCase().includes(q));
- //   if (type !== 'all') list = list.filter((r) => r.key === type);
 
     list.sort((a, b) => {
       switch (sort) {
