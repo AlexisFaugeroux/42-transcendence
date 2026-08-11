@@ -1,6 +1,7 @@
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
+import { useSession } from '../../../hooks/useSession';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
@@ -10,7 +11,6 @@ import { type Session, type SessSort } from './sessions.data';
 import styles from './Sessions.module.scss';
 import { SessionsEmpty, SessionsNoMatches } from './SessionsEmpty';
 import { SessToolbar } from './SessToolbar';
-import { useSession } from "../../../hooks/useSession"
 
 type Bucket = 'owned' | 'archived';
 
@@ -31,7 +31,7 @@ export function Sessions(): JSX.Element {
   const [renameTarget, setRenameTarget] = useState<Session | null>(null);
   const { data, error, isError } = useSession();
 
-  if ( isError ) throw error;
+  if (isError) throw error;
 
   const counts = {
     archived: (data ?? []).filter((s) => s.archived).length,
@@ -39,7 +39,7 @@ export function Sessions(): JSX.Element {
   };
 
   const filtered = useMemo(() => {
-    let list = (data ?? []);
+    let list = data ?? [];
     const q = query.trim().toLowerCase();
     if (q) list = list.filter((r) => r.name.toLowerCase().includes(q));
 
@@ -48,13 +48,13 @@ export function Sessions(): JSX.Element {
         case 'name':
           return a.name.localeCompare(b.name);
         case 'bpm':
-          return (a.bpm ?? 999) - (b.bpm ?? 999);
+          return a.bpm - b.bpm;
         default:
           return b.updatedAt.localeCompare(a.updatedAt); // 'edited' (newest first)
       }
     });
     return list;
-}, [data, bucket, query, type, genre, sort]);
+  }, [data, query, sort]);
 
   const clearFilters = (): void => {
     setQuery('');

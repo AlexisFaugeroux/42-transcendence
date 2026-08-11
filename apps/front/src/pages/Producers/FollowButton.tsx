@@ -27,7 +27,8 @@ export function FollowButton({ producer }: FollowButtonProps): JSX.Element | nul
       className={following ? styles.followingBtn : styles.followBtn}
       disabled={pending}
       onClick={() => {
-        following ? unfollow.mutate(producer.handle) : follow.mutate(producer.handle);
+        if (following) unfollow.mutate(producer.handle);
+        else follow.mutate(producer.handle);
       }}
     >
       <MsnIcon name={following ? 'users' : 'plus'} size="12px" />
