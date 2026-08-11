@@ -1,60 +1,52 @@
 import type { Project } from '@opendaw/studio-core';
 import { useTranslation } from '@transcendence/i18n';
-import {
-  createContext,
-  type JSX,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, type JSX, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { initializeOpenDaw } from '../lib/projectSetup';
-import type { ProjectProperties } from '../lib/types'
+import type { ProjectProperties } from '../lib/types';
 
 interface ProjectContextValue {
   audioContext: AudioContext;
   project: Project;
   localAudioBuffers: Map<string, AudioBuffer>;
-  meta : {
-    id : string | null,
-    name : string | null,
-    visibility : string,
-    duration : number,
-  }
+  meta: {
+    id: string | null;
+    name: string | null;
+    visibility: string;
+    duration: number;
+  };
 }
 
 const projectContext = createContext<ProjectContextValue | null>(null);
-
 
 export function ProjectProvider({ children }: { children: ReactNode }): JSX.Element {
   const [value, setValue] = useState<ProjectContextValue | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
   const { t } = useTranslation();
-  const query = new URLSearchParams( window.location.search);
-  const meta = {
-    id : query.get('projectId'),
-    name : query.get('name'),
-    duration : 0,
-    visibility : 'PRIVATE',
-  }
-
-  const properties : ProjectProperties = {
-    ...meta,
-    bpm : Number ( query.get('bpm') ),
-    samples : query.getAll( 'sampleId' ),
-    state : ""
-  }
 
   useEffect(() => {
     let mounted = true;
 
     void (async () => {
-      const { audioContext, project, id } = await initializeOpenDaw(
+      const query = new URLSearchParams(window.location.search);
+      const meta = {
+        duration: 0,
+        id: query.get('projectId'),
+        name: query.get('name'),
+        visibility: 'PRIVATE',
+      };
+
+      const properties: ProjectProperties = {
+        ...meta,
+        bpm: Number(query.get('bpm')),
+        samples: query.getAll('sampleId'),
+        state: '',
+      };
+
+      const { audioContext, id, project } = await initializeOpenDaw(
         {
           localAudioBuffers: localAudioBuffersRef.current,
         },
-        properties
+        properties,
       );
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
@@ -62,7 +54,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       const url = new URL(window.location.href);
       url.searchParams.set('projectId', id);
       window.history.replaceState(window.history.state, '', url);
-      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, project, meta });
+      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, meta, project });
     })();
 
     return () => {
