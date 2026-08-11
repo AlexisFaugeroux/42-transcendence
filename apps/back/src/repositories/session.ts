@@ -9,10 +9,7 @@ export class SessionRepository {
     this.prisma = prismaClient;
   }
 
-  public async create(
-    userId: string,
-    userAgent?: string,
-  ): Promise<{ id: string; expiresAt: Date }> {
+  public async create(userId: string, userAgent?: string): Promise<{ id: string; expiresAt: Date }> {
     const expiresAt = new Date(Date.now() + SessionRepository.TTL_MS);
     const session = await this.prisma.session.create({
       data: { expiresAt, userAgent, userId },

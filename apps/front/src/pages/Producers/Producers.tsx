@@ -27,9 +27,7 @@ export function Producers(): JSX.Element {
           <div>
             <div className={styles.eyebrow}>{t('producers.eyebrow')}</div>
             <h1 className={styles.title}>{t('producers.title')}</h1>
-            <p className={styles.subtitle}>
-              {isLoading ? '...' : t('producers.count', { count: filtered.length })}
-            </p>
+            <p className={styles.subtitle}>{isLoading ? '...' : t('producers.count', { count: filtered.length })}</p>
           </div>
 
           <div className={styles.search}>

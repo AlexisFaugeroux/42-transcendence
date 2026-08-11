@@ -47,11 +47,7 @@ const COLUMNS: FooterCol[] = [
     titleKey: 'landing.footer.resources.title',
   },
   {
-    linkKeys: [
-      'landing.footer.company.about',
-      'landing.footer.company.contact',
-      'landing.footer.company.press',
-    ],
+    linkKeys: ['landing.footer.company.about', 'landing.footer.company.contact', 'landing.footer.company.press'],
     titleKey: 'landing.footer.company.title',
   },
 ];

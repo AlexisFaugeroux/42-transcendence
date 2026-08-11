@@ -9,14 +9,7 @@ interface DeepDiveRowProps extends DeepDive {
   reverse: boolean;
 }
 
-export function DeepDiveRow({
-  accent,
-  bodyKey,
-  eyebrowKey,
-  image,
-  reverse,
-  titleKey,
-}: DeepDiveRowProps): JSX.Element {
+export function DeepDiveRow({ accent, bodyKey, eyebrowKey, image, reverse, titleKey }: DeepDiveRowProps): JSX.Element {
   const { t } = useTranslation();
 
   return (

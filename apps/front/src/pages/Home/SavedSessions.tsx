@@ -1,40 +1,37 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Carousel, MsnIcon } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
+import { useSession } from '../../../hooks/useSession';
+import type { Session } from '../Sessions/sessions.data';
 import { SAVED_SESSIONS } from './home.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';
-import { useSession } from '../../../hooks/useSession';
-import type { Session } from '../Sessions/sessions.data';
 
 export function SavedSessions(): JSX.Element {
-
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
   const { t } = useTranslation();
   const { data, error, isError } = useSession();
 
   if (isError) throw error;
 
-  const loadProject = ( session : Session ) => {
+  const loadProject = (session: Session) => {
     const query = new URLSearchParams({
-        bpm: String(session.bpm),
-        name: session.name,
-        projectId: session.id,
+      bpm: String(session.bpm),
+      name: session.name,
+      projectId: session.id,
     });
-    
+
     for (const sampleId of session.samples) {
-        query.append('sampleId', sampleId);
+      query.append('sampleId', sampleId);
     }
     window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
-  }
+  };
   return (
     <section>
       <div className={styles.head}>
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
-          <span className={styles.count}>
-            {t('home.saved.count', { count: SAVED_SESSIONS.length })}
-          </span>
+          <span className={styles.count}>{t('home.saved.count', { count: SAVED_SESSIONS.length })}</span>
         </div>
         <div className={styles.controls}>
           <button

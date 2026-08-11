@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthUser } from '@transcendence/auth';
 import {
   followProducer,
   getFollowers,
@@ -8,7 +9,6 @@ import {
   unfollowProducer,
 } from '../api/producers';
 import type { PublicProducer, PublicProducerProfile } from '../types/producer';
-import { useAuthUser } from '@transcendence/auth';
 
 // Reads hooks
 

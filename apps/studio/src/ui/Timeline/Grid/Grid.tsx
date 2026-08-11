@@ -130,14 +130,7 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
 
   if (tracks.length > 0) {
     tracksSvg.push(
-      <rect
-        key={`sep-last`}
-        x={0}
-        y={contentHeight - 1}
-        height={1}
-        width={fullGridWidth}
-        fill={theme.lineSoft}
-      />,
+      <rect key={`sep-last`} x={0} y={contentHeight - 1} height={1} width={fullGridWidth} fill={theme.lineSoft} />,
     );
   }
 
@@ -209,14 +202,7 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
         const width = clip.duration * PIXELS_PER_PULSE;
 
         return (
-          <Clip
-            key={UUID.toString(clip.regionBox.address.uuid)}
-            bpm={bpm}
-            clip={clip}
-            x={x}
-            y={y}
-            width={width}
-          />
+          <Clip key={UUID.toString(clip.regionBox.address.uuid)} bpm={bpm} clip={clip} x={x} y={y} width={width} />
         );
       })}
       <LoopRegionBandOver />

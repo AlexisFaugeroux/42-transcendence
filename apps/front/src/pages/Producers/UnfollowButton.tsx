@@ -16,7 +16,9 @@ export function UnfollowButton({ handle }: UnfollowButtonProps): JSX.Element {
       type="button"
       className={styles.followingBtn}
       disabled={unfollow.isPending}
-      onClick={() => unfollow.mutate(handle)}
+      onClick={() => {
+        unfollow.mutate(handle);
+      }}
     >
       <MsnIcon name="users" size="12px" />
       {t('producers.unfollow')}

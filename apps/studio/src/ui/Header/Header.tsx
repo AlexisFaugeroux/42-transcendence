@@ -2,7 +2,7 @@ import { UUID } from '@opendaw/lib-std';
 import { useMutation } from '@tanstack/react-query';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import { Button, IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
-import { useEffect, useState, type JSX } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
 import { arrayBufferToBase64 } from '../../utils/base64';
@@ -13,8 +13,8 @@ import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
 
 export function Header(): JSX.Element {
-  const [saved, setSaved] = useState( true );
-  const { project, meta } = useProject();
+  const [saved, setSaved] = useState(true);
+  const { meta, project } = useProject();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -28,22 +28,24 @@ export function Header(): JSX.Element {
     };
   }, [project]);
 
-  const { isPending, mutate : save } = useMutation({
-    mutationFn : saveProject,
-    onSuccess : () => {
+  const { isPending, mutate: save } = useMutation({
+    mutationFn: saveProject,
+    onSuccess: () => {
       project.editing.markSaved();
-      setSaved( true );
-    }
-  })
+      setSaved(true);
+    },
+  });
 
   const onSave = () => {
     save({
-        ...meta,
-        bpm :  project.timelineBox.bpm.getValue() ,
-        state : arrayBufferToBase64(project.toArrayBuffer()),
-        samples : project.collectSampleUUIDs().map( ( uuid ) => { return UUID.toString(uuid) })
-      });
-  }
+      ...meta,
+      bpm: project.timelineBox.bpm.getValue(),
+      samples: project.collectSampleUUIDs().map((uuid) => {
+        return UUID.toString(uuid);
+      }),
+      state: arrayBufferToBase64(project.toArrayBuffer()),
+    });
+  };
 
   return (
     <header className={styles.header}>
@@ -96,8 +98,10 @@ export function Header(): JSX.Element {
 
       <LanguageSelect compact />
 
-      <Button onClick={onSave} loading={isPending} > Save </Button>   
-
+      <Button onClick={onSave} loading={isPending}>
+        {' '}
+        Save{' '}
+      </Button>
     </header>
   );
 }

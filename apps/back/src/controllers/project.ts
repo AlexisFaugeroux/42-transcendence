@@ -38,8 +38,7 @@ class ProjectController {
       visibilities: [],
     });
     if (project.length) {
-      if (project[0].ownerId !== user.ownerId)
-        throw new NotFoundError("Owner_id mismatch project's owner");
+      if (project[0].ownerId !== user.ownerId) throw new NotFoundError("Owner_id mismatch project's owner");
     }
 
     const decodedState = Buffer.from(state, 'base64');
@@ -53,23 +52,17 @@ class ProjectController {
     reply.code(204).send();
   };
 
-  public list = async (
-    req: FastifyRequest<ListProjectRoute>,
-    reply: FastifyReply<ListProjectRoute>,
-  ) => {
+  public list = async (req: FastifyRequest<ListProjectRoute>, reply: FastifyReply<ListProjectRoute>) => {
     const user = await userRepository.findById(req.authUser.id);
     const project = await projectRepository.get({
-      ownerIds: [user.ownerId],
       ids: [],
+      ownerIds: [user.ownerId],
       visibilities: [],
     });
     reply.code(200).send(project);
   };
 
-  public load = async (
-    req: FastifyRequest<LoadProjectRoute>,
-    reply: FastifyReply<LoadProjectRoute>,
-  ) => {
+  public load = async (req: FastifyRequest<LoadProjectRoute>, reply: FastifyReply<LoadProjectRoute>) => {
     const { id } = req.query;
 
     const user = await userRepository.findById(req.authUser.id);

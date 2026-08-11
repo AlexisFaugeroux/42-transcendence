@@ -116,10 +116,7 @@ class UserRepository {
     }
   }
 
-  public async findProfileByHandle(
-    handle: string,
-    viewerId: string,
-  ): Promise<PublicProducerProfile> {
+  public async findProfileByHandle(handle: string, viewerId: string): Promise<PublicProducerProfile> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
         include: {

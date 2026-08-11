@@ -64,10 +64,7 @@ export function EditSampleModal({
       notifyError(t('samples.edit.errorTitle'), error.message);
     },
     onSuccess: (updated) => {
-      notifySuccess(
-        t('samples.edit.successTitle'),
-        t('samples.edit.successDescription', { name: updated.name }),
-      );
+      notifySuccess(t('samples.edit.successTitle'), t('samples.edit.successDescription', { name: updated.name }));
       onCancel();
     },
   });

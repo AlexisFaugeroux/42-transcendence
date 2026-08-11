@@ -12,12 +12,7 @@ interface SessionCardProps {
   onDelete: (session: Session) => void;
 }
 
-export function SessionCard({
-  archived,
-  onDelete,
-  onRename,
-  session,
-}: SessionCardProps): JSX.Element {
+export function SessionCard({ archived, onDelete, onRename, session }: SessionCardProps): JSX.Element {
   const { t } = useTranslation();
   const color = TYPE_COLOR[session.type];
 
@@ -73,9 +68,7 @@ export function SessionCard({
   return (
     <div className={styles.card} data-archived={archived}>
       <div className={styles.cover} style={{ '--type-color': color } as CSSProperties}>
-        {archived ? (
-          <span className={styles.ribbon}>{t('sessions.card.archivedRibbon')}</span>
-        ) : null}
+        {archived ? <span className={styles.ribbon}>{t('sessions.card.archivedRibbon')}</span> : null}
         <span className={styles.badge}>
           <MsnIcon name={TYPE_ICON[session.type]} size="11px" /> {t(TYPE_LABEL[session.type])}
         </span>
@@ -95,21 +88,16 @@ export function SessionCard({
         </div>
 
         <div className={styles.meta}>
-          <span>
-            {session.bpm ? t('sessions.card.bpm', { bpm: session.bpm }) : t('sessions.card.noBpm')}
-          </span>
+          <span>{session.bpm ? t('sessions.card.bpm', { bpm: session.bpm }) : t('sessions.card.noBpm')}</span>
           <span className={styles.dot}>·</span>
           <span>{session.key ?? '—'}</span>
           <span className={styles.dot}>·</span>
         </div>
 
         <div className={styles.footer}>
-          <span className={styles.edited}>
-            {t('sessions.card.edited', { when: formatDate(session.updatedAt) })}
-          </span>
+          <span className={styles.edited}>{t('sessions.card.edited', { when: formatDate(session.updatedAt) })}</span>
           <Button size="small" type={archived ? 'default' : 'primary'} onClick={loadProject}>
-            {archived ? t('sessions.card.restore') : t('sessions.card.open')}{' '}
-            <MsnIcon name="arrowR" size="11px" />
+            {archived ? t('sessions.card.restore') : t('sessions.card.open')} <MsnIcon name="arrowR" size="11px" />
           </Button>
         </div>
       </div>

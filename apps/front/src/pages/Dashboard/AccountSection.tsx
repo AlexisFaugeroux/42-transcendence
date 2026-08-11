@@ -2,15 +2,7 @@ import { type UseMutateFunction, useMutation } from '@tanstack/react-query';
 import type { AuthUser } from '@transcendence/auth';
 import { formatDate } from '@transcendence/date';
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
-import {
-  Button,
-  CheckOutlined,
-  CloseCircleOutlined,
-  Form,
-  Input,
-  notification,
-  theme,
-} from '@transcendence/ui';
+import { Button, CheckOutlined, CloseCircleOutlined, Form, Input, notification, theme } from '@transcendence/ui';
 import { type Dispatch, type JSX, type SetStateAction, useState } from 'react';
 import { updateUserPassword } from '../../api/user';
 import { PasswordStrength } from '../Register/PasswordStrength';
@@ -26,13 +18,7 @@ interface AccountSectionProps {
   saveProfile: UseMutateFunction<AuthUser, Error, AuthUser>;
 }
 
-export function AccountSection({
-  form,
-  saved,
-  saveProfile,
-  setField,
-  setForm,
-}: AccountSectionProps): JSX.Element {
+export function AccountSection({ form, saved, saveProfile, setField, setForm }: AccountSectionProps): JSX.Element {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [passwordForm] = Form.useForm<{ oldPassword: string; newPassword: string }>();
@@ -118,10 +104,7 @@ export function AccountSection({
   return (
     <div>
       {notificationContext}
-      <SectionHeader
-        title={t('settings.account.title')}
-        subtitle={t('settings.account.subtitle')}
-      />
+      <SectionHeader title={t('settings.account.title')} subtitle={t('settings.account.subtitle')} />
 
       <Card>
         <Row label={t('auth.fields.email')}>
@@ -181,10 +164,7 @@ export function AccountSection({
                   { message: t('auth.validation.minChars', { count: 10 }), min: 10 },
                 ]}
               >
-                <Input.Password
-                  placeholder={t('auth.register.passwordPlaceholder')}
-                  autoComplete="new-password"
-                />
+                <Input.Password placeholder={t('auth.register.passwordPlaceholder')} autoComplete="new-password" />
               </Form.Item>
 
               {/* Same strength meter as the signup page; renders nothing while empty. */}

@@ -24,8 +24,7 @@ const isVisibility = (value: string): value is Visibility =>
   Object.values(VisibilityEnum).includes(visibilityMap[value]);
 const isKey = (value: string): value is Key => Object.values(KeyEnum).includes(keyMap[value]);
 const isMode = (value: string): value is Mode => Object.values(ModeEnum).includes(modeMap[value]);
-const isFamily = (value: string): value is Family =>
-  Object.values(FamilyEnum).includes(familyMap[value]);
+const isFamily = (value: string): value is Family => Object.values(FamilyEnum).includes(familyMap[value]);
 const isKind = (value: string): value is Kind => USER_KINDS.some((kind) => kind === value);
 
 export function parseUploadAudioFileFields(fields: Record<string, unknown>): UploadAudioFileFields {

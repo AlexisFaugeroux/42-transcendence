@@ -9,11 +9,7 @@ interface MsnPeakMeterProps {
   height?: number;
 }
 
-export function MsnPeakMeter({
-  height = 11,
-  peaksRef,
-  width = 120,
-}: MsnPeakMeterProps): JSX.Element {
+export function MsnPeakMeter({ height = 11, peaksRef, width = 120 }: MsnPeakMeterProps): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,38 +22,18 @@ export function MsnPeakMeter({
       context.clearRect(0, 0, actualHeight, actualHeight);
 
       // Background
-      context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-void',
-      );
+      context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-void');
       context.fillRect(0, 0, actualWidth, barH);
       context.fillRect(0, barH + 1, actualWidth, barH);
 
       // Gradient bars
       const grad = context.createLinearGradient(0, 0, actualWidth, 0);
-      grad.addColorStop(
-        0,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-green'),
-      );
-      grad.addColorStop(
-        0.65,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-green'),
-      );
-      grad.addColorStop(
-        0.65,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-yellow'),
-      );
-      grad.addColorStop(
-        0.88,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-yellow'),
-      );
-      grad.addColorStop(
-        0.88,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-red'),
-      );
-      grad.addColorStop(
-        1,
-        getComputedStyle(document.documentElement).getPropertyValue('--color-red'),
-      );
+      grad.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue('--color-green'));
+      grad.addColorStop(0.65, getComputedStyle(document.documentElement).getPropertyValue('--color-green'));
+      grad.addColorStop(0.65, getComputedStyle(document.documentElement).getPropertyValue('--color-yellow'));
+      grad.addColorStop(0.88, getComputedStyle(document.documentElement).getPropertyValue('--color-yellow'));
+      grad.addColorStop(0.88, getComputedStyle(document.documentElement).getPropertyValue('--color-red'));
+      grad.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue('--color-red'));
       context.fillStyle = grad;
 
       const buffer = peaksRef.current;

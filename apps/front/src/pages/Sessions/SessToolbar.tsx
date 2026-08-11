@@ -1,14 +1,7 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
-import {
-  SESS_GENRES,
-  SESS_TYPES,
-  type SessSort,
-  SORT_LABEL,
-  TYPE_ICON,
-  TYPE_LABEL,
-} from './sessions.data';
+import { SESS_GENRES, SESS_TYPES, type SessSort, SORT_LABEL, TYPE_ICON, TYPE_LABEL } from './sessions.data';
 import styles from './SessToolbar.module.scss';
 
 export type { SessSort } from './sessions.data';

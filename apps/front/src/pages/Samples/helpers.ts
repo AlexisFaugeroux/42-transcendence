@@ -1,11 +1,4 @@
-import {
-  FAMILIES,
-  type Family,
-  type Key,
-  KEYS,
-  type Kind,
-  USER_KINDS,
-} from '../../types/audioFile';
+import { FAMILIES, type Family, type Key, KEYS, type Kind, USER_KINDS } from '../../types/audioFile';
 import { FAMILY_COLOR, GROUP_BY_FAMILY } from './constants';
 import type { FamilyGroup, Option } from './types';
 
