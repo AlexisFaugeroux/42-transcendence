@@ -11,7 +11,13 @@ interface PanelFramePros {
   onToggle: (id: Panel['id']) => void;
 }
 
-export function PanelFrame({ className, icon, id, isVisible, onToggle }: PanelFramePros): JSX.Element | null {
+export function PanelFrame({
+  className,
+  icon,
+  id,
+  isVisible,
+  onToggle,
+}: PanelFramePros): JSX.Element | null {
   const panel = panels[id];
 
   const { header: Header, labelKey, main: Main } = panel;

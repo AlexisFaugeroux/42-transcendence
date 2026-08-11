@@ -151,11 +151,23 @@ export function audioRoutes(app: FastifyInstance) {
     audioFileController.get,
   );
 
-  app.get('/storage', { preHandler: app.authenticate, schema: storageAudioFileSchema }, audioFileController.storage);
+  app.get(
+    '/storage',
+    { preHandler: app.authenticate, schema: storageAudioFileSchema },
+    audioFileController.storage,
+  );
 
   app.post('/upload', { preHandler: app.authenticate }, audioFileController.upload);
 
-  app.put('/update', { preHandler: app.authenticate, schema: updateAudioFileSchema }, audioFileController.update);
+  app.put(
+    '/update',
+    { preHandler: app.authenticate, schema: updateAudioFileSchema },
+    audioFileController.update,
+  );
 
-  app.delete('/delete', { preHandler: app.authenticate, schema: deleteAudioFileSchema }, audioFileController.delete);
+  app.delete(
+    '/delete',
+    { preHandler: app.authenticate, schema: deleteAudioFileSchema },
+    audioFileController.delete,
+  );
 }

@@ -69,4 +69,6 @@ class AudioStorageService {
   }
 }
 
-export const audioStorageService = new AudioStorageService(join(process.env.MEDIA_ROOT ?? '/var/www/media', 'audio'));
+export const audioStorageService = new AudioStorageService(
+  join(process.env.MEDIA_ROOT ?? '/var/www/media', 'audio'),
+);

@@ -32,7 +32,9 @@ function RenameForm({
       onCancel={onCancel}
     >
       <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <span style={{ color: theme.fg2, fontSize: 11, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        <span
+          style={{ color: theme.fg2, fontSize: 11, letterSpacing: 0.5, textTransform: 'uppercase' }}
+        >
           {t('sessions.new.titleField')}
         </span>
         <Input
@@ -47,8 +49,14 @@ function RenameForm({
   );
 }
 
-export function RenameSessionModal({ onCancel, onConfirm, session }: RenameSessionModalProps): JSX.Element | null {
+export function RenameSessionModal({
+  onCancel,
+  onConfirm,
+  session,
+}: RenameSessionModalProps): JSX.Element | null {
   if (!session) return null;
   // Remount per-session so the input starts from the right title each time.
-  return <RenameForm key={session.id} session={session} onCancel={onCancel} onConfirm={onConfirm} />;
+  return (
+    <RenameForm key={session.id} session={session} onCancel={onCancel} onConfirm={onConfirm} />
+  );
 }

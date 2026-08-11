@@ -25,7 +25,15 @@ export function Card({ children }: { children: ReactNode }): JSX.Element {
   return <div className={styles.card}>{children}</div>;
 }
 
-export function Row({ children, hint, label }: { label: string; hint?: string; children: ReactNode }): JSX.Element {
+export function Row({
+  children,
+  hint,
+  label,
+}: {
+  label: string;
+  hint?: string;
+  children: ReactNode;
+}): JSX.Element {
   return (
     <div className={styles.row}>
       <div>

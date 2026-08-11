@@ -62,7 +62,10 @@ class UserController {
     reply.code(200).send({ user: updatedUser });
   };
 
-  public updatePassword = async (req: FastifyRequest<UpdatePasswordRoute>, reply: FastifyReply): Promise<void> => {
+  public updatePassword = async (
+    req: FastifyRequest<UpdatePasswordRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const { newPassword, oldPassword } = req.body;
 
     const user = await userRepository.findById(req.authUser.id);
@@ -129,7 +132,10 @@ class UserController {
     reply.code(204).send();
   };
 
-  public unfollow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
+  public unfollow = async (
+    req: FastifyRequest<FollowRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
 
     if (target.id === req.authUser.id) {
@@ -140,7 +146,10 @@ class UserController {
     reply.code(204).send();
   };
 
-  public uploadAvatar = async (req: FastifyRequest, reply: FastifyReply<UploadAvatarRoute>): Promise<void> => {
+  public uploadAvatar = async (
+    req: FastifyRequest,
+    reply: FastifyReply<UploadAvatarRoute>,
+  ): Promise<void> => {
     const data = await req.file({ limits: { fileSize: AVATAR_MAX_BYTES } });
     if (!data) throw new BadRequestError();
 

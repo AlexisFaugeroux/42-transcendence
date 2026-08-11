@@ -43,7 +43,8 @@ export function Waveform({ color, height, peaks, progress }: WaveformProps): JSX
 
     const canvasStyles = getComputedStyle(canvas);
     const unplayed = canvasStyles.getPropertyValue('--fg3').trim() || '#666';
-    const playedColor = (color ?? canvasStyles.getPropertyValue('--color-orange').trim()) || 'hsl(25, 90%, 55%)';
+    const playedColor =
+      (color ?? canvasStyles.getPropertyValue('--color-orange').trim()) || 'hsl(25, 90%, 55%)';
 
     for (let i = 0; i < bars; i++) {
       let mn = 0;

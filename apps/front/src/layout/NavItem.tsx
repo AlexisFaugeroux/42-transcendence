@@ -9,7 +9,10 @@ export function NavItem({ badge, badgeColor, icon, labelKey, to }: NavItemDef): 
   const { t } = useTranslation();
 
   return (
-    <NavLink to={to} className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}>
+    <NavLink
+      to={to}
+      className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}
+    >
       <MsnIcon name={icon} size="14px" />
       <span className={styles.label}>{t(labelKey)}</span>
       {badge ? (

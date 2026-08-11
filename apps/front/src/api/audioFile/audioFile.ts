@@ -1,13 +1,19 @@
 import { apiError, apiFetch } from '@transcendence/auth';
 import { type DecodedPeaks, decodePeak } from '../../lib/peaks';
 import type { AudioFile } from '../../types/audioFile';
-import type { AudioStorageUsage, GetSamplesFilters, UpdateSampleFields, UploadSampleFields } from './types';
+import type {
+  AudioStorageUsage,
+  GetSamplesFilters,
+  UpdateSampleFields,
+  UploadSampleFields,
+} from './types';
 
 export async function getSamples(filters: GetSamplesFilters): Promise<AudioFile[]> {
   const searchParams = new URLSearchParams();
 
   for (const kind of filters.kinds ?? []) searchParams.append('kinds', kind);
-  for (const visibility of filters.visibilities ?? []) searchParams.append('visibilities', visibility);
+  for (const visibility of filters.visibilities ?? [])
+    searchParams.append('visibilities', visibility);
 
   const res = await apiFetch(`/api/audio/get?${searchParams.toString()}`);
   if (!res.ok) throw await apiError(res, '/api/audio/get');

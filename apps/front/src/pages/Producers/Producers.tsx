@@ -15,7 +15,9 @@ export function Producers(): JSX.Element {
     const list = data ?? [];
     const q = query.trim().toLowerCase();
     if (!q) return list;
-    return list.filter((p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q));
+    return list.filter(
+      (p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q),
+    );
   }, [data, query]);
 
   return (
@@ -27,7 +29,9 @@ export function Producers(): JSX.Element {
           <div>
             <div className={styles.eyebrow}>{t('producers.eyebrow')}</div>
             <h1 className={styles.title}>{t('producers.title')}</h1>
-            <p className={styles.subtitle}>{isLoading ? '...' : t('producers.count', { count: filtered.length })}</p>
+            <p className={styles.subtitle}>
+              {isLoading ? '...' : t('producers.count', { count: filtered.length })}
+            </p>
           </div>
 
           <div className={styles.search}>

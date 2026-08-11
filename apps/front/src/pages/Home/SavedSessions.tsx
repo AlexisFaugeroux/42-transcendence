@@ -31,7 +31,9 @@ export function SavedSessions(): JSX.Element {
       <div className={styles.head}>
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
-          <span className={styles.count}>{t('home.saved.count', { count: SAVED_SESSIONS.length })}</span>
+          <span className={styles.count}>
+            {t('home.saved.count', { count: SAVED_SESSIONS.length })}
+          </span>
         </div>
         <div className={styles.controls}>
           <button

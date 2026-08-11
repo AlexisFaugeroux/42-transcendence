@@ -9,9 +9,9 @@ export function LegalEs(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Editor</h2>
         <p className={styles.body}>
-          MakeSomeNoise es un proyecto educativo desarrollado en el marco del plan de estudios de la escuela 42
-          (ft_transcendence), sin finalidad comercial. Publicado por los miembros del equipo (por completar). Contacto:
-          por completar.
+          MakeSomeNoise es un proyecto educativo desarrollado en el marco del plan de estudios de la
+          escuela 42 (ft_transcendence), sin finalidad comercial. Publicado por los miembros del
+          equipo (por completar). Contacto: por completar.
         </p>
       </section>
 
@@ -23,16 +23,17 @@ export function LegalEs(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Alojamiento</h2>
         <p className={styles.body}>
-          El sitio está alojado en la infraestructura del proyecto (nombre y dirección del proveedor por completar).
+          El sitio está alojado en la infraestructura del proyecto (nombre y dirección del proveedor
+          por completar).
         </p>
       </section>
 
       <section className={styles.section}>
         <h2 className={styles.heading}>Propiedad intelectual</h2>
         <p className={styles.body}>
-          El código fuente, el diseño y los contenidos originales del sitio son propiedad de sus autores. Los contenidos
-          creados por los usuarios (sesiones, samples, exportaciones) siguen siendo propiedad de dichos usuarios (véanse
-          las condiciones de uso).
+          El código fuente, el diseño y los contenidos originales del sitio son propiedad de sus
+          autores. Los contenidos creados por los usuarios (sesiones, samples, exportaciones) siguen
+          siendo propiedad de dichos usuarios (véanse las condiciones de uso).
         </p>
       </section>
 
@@ -40,7 +41,12 @@ export function LegalEs(): JSX.Element {
         <h2 className={styles.heading}>Tecnologías de terceros</h2>
         <p className={styles.body}>
           Las herramientas de audio (estudio) se basan en la tecnología de código abierto{' '}
-          <a className={styles.link} href="https://github.com/andremichelle/openDAW" target="_blank" rel="noreferrer">
+          <a
+            className={styles.link}
+            href="https://github.com/andremichelle/openDAW"
+            target="_blank"
+            rel="noreferrer"
+          >
             openDAW
           </a>
           , a través del SDK{' '}
@@ -59,8 +65,8 @@ export function LegalEs(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Descargo de responsabilidad</h2>
         <p className={styles.body}>
-          Este sitio se ha creado con fines educativos en el marco del programa 42. No tiene ninguna finalidad
-          comercial.
+          Este sitio se ha creado con fines educativos en el marco del programa 42. No tiene ninguna
+          finalidad comercial.
         </p>
       </section>
     </>

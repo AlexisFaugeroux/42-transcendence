@@ -2,7 +2,14 @@ import { useTranslation } from '@transcendence/i18n';
 import { Input, Modal, MsnIcon } from '@transcendence/ui';
 import { type CSSProperties, type JSX, useState } from 'react';
 import styles from './NewSessionModal.module.scss';
-import { SESS_TYPES, type SessionType, TYPE_COLOR, TYPE_DESCRIPTION, TYPE_ICON, TYPE_LABEL } from './sessions.data';
+import {
+  SESS_TYPES,
+  type SessionType,
+  TYPE_COLOR,
+  TYPE_DESCRIPTION,
+  TYPE_ICON,
+  TYPE_LABEL,
+} from './sessions.data';
 
 interface NewSessionModalProps {
   open: boolean;
@@ -29,7 +36,9 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
       onOk={openNewSession}
       onCancel={onClose}
     >
-      <p className={styles.lead}>Pick the kind of session, then we&apos;ll set up the right workspace.</p>
+      <p className={styles.lead}>
+        Pick the kind of session, then we&apos;ll set up the right workspace.
+      </p>
 
       <div className={styles.types}>
         {SESS_TYPES.map((type) => (

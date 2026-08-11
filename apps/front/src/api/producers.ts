@@ -3,7 +3,8 @@ import type { PublicProducer, PublicProducerProfile } from '../types/producer';
 
 export async function listProducers(): Promise<PublicProducer[]> {
   const res = await apiFetch('/api/users');
-  if (!res.ok) throw new ApiErrorReponse(`[api/users] List producers failed: ${res.status}`, res.status);
+  if (!res.ok)
+    throw new ApiErrorReponse(`[api/users] List producers failed: ${res.status}`, res.status);
 
   const data = (await res.json()) as { producers: PublicProducer[] };
   return data.producers;

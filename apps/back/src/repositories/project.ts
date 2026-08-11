@@ -110,7 +110,9 @@ class ProjectRepository {
 
     const idFilter = ids?.length ? { id: { in: ids } } : undefined;
     const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
-    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : undefined;
+    const visibilityFilter = visibilities?.length
+      ? { visibility: { in: visibilities } }
+      : undefined;
 
     return {
       ...idFilter,

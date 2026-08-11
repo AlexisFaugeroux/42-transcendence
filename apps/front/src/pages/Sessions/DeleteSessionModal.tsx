@@ -9,7 +9,11 @@ interface DeleteSessionModalProps {
   onConfirm: () => void;
 }
 
-export function DeleteSessionModal({ onCancel, onConfirm, session }: DeleteSessionModalProps): JSX.Element {
+export function DeleteSessionModal({
+  onCancel,
+  onConfirm,
+  session,
+}: DeleteSessionModalProps): JSX.Element {
   const { t } = useTranslation();
 
   return (

@@ -107,7 +107,9 @@ export function ProfileSection({
                     fileInputRef.current?.click();
                   }}
                 >
-                  {avatarUpdatedAt ? t('settings.profile.changeImage') : t('settings.profile.uploadImage')}
+                  {avatarUpdatedAt
+                    ? t('settings.profile.changeImage')
+                    : t('settings.profile.uploadImage')}
                 </Button>
                 {avatarUpdatedAt ? (
                   <Button

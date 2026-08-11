@@ -29,7 +29,10 @@ class AuthController {
   // Arrow-function property, NOT a method: Fastify binds a handler's `this` to the
   // FastifyInstance, so a plain method would lose `this`. An arrow property keeps
   // `this` bound to the controller while still being safe to pass as a callback.
-  public register = async (req: FastifyRequest<RegisterRoute>, reply: FastifyReply<RegisterRoute>) => {
+  public register = async (
+    req: FastifyRequest<RegisterRoute>,
+    reply: FastifyReply<RegisterRoute>,
+  ) => {
     const { artistName, email, firstname, handle, lastname, password } = req.body;
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email }, { artistName }, { handle }] },
@@ -99,7 +102,11 @@ class AuthController {
       const { ownerId } = await userRepository.findById(req.authUser.id);
       const sample = await audioFileRepository.findById(sampleId);
 
-      if (sample.visibility != 'PUBLIC' && sample.visibility != 'SHARED' && sample.ownerId != ownerId)
+      if (
+        sample.visibility != 'PUBLIC' &&
+        sample.visibility != 'SHARED' &&
+        sample.ownerId != ownerId
+      )
         throw new ForbiddenError();
     } catch {
       throw new ForbiddenError();

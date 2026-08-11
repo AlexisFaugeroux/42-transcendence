@@ -49,7 +49,11 @@ function PeoplePanel({
   );
 }
 
-export function ProfileTabs({ followersCount, followingCount, handle }: ProfileTabsProps): JSX.Element {
+export function ProfileTabs({
+  followersCount,
+  followingCount,
+  handle,
+}: ProfileTabsProps): JSX.Element {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('tracks');
 

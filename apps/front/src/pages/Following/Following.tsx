@@ -19,7 +19,9 @@ export function Following(): JSX.Element {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return list;
-    return list.filter((p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q));
+    return list.filter(
+      (p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q),
+    );
   }, [list, query]);
 
   return (
@@ -31,7 +33,9 @@ export function Following(): JSX.Element {
           <div>
             <div className={styles.eyebrow}>{t('following.eyebrow')}</div>
             <h1 className={styles.title}>{t('following.title')}</h1>
-            <p className={styles.subtitle}>{isLoading ? '...' : t('following.count', { count: filtered.length })}</p>
+            <p className={styles.subtitle}>
+              {isLoading ? '...' : t('following.count', { count: filtered.length })}
+            </p>
           </div>
 
           <div className={styles.search}>

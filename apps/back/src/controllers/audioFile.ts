@@ -1,7 +1,12 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { AUDIO_USER_QUOTA_BYTES } from '../constants';
-import type { AudioFile, AudioStorageUsage, GetAudioFileInput, UpdateAudioFileInput } from '../domain/audioFile';
+import type {
+  AudioFile,
+  AudioStorageUsage,
+  GetAudioFileInput,
+  UpdateAudioFileInput,
+} from '../domain/audioFile';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import { audioFileRepository } from '../repositories/audioFile';
 import { ownerRepository } from '../repositories/owner';
@@ -38,7 +43,10 @@ interface DeleteAudioFileRoute extends RouteGenericInterface {
 }
 
 class AudioFileController {
-  public get = async (req: FastifyRequest<GetAudioFilesRoute>, reply: FastifyReply): Promise<void> => {
+  public get = async (
+    req: FastifyRequest<GetAudioFilesRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const userId = req.authUser.id;
 
     const platformOwnerID = (await ownerRepository.get('PLATEFORM')).id;
@@ -145,7 +153,10 @@ class AudioFileController {
     reply.code(200).send(updatedFile);
   };
 
-  public delete = async (req: FastifyRequest<DeleteAudioFileRoute>, reply: FastifyReply): Promise<void> => {
+  public delete = async (
+    req: FastifyRequest<DeleteAudioFileRoute>,
+    reply: FastifyReply,
+  ): Promise<void> => {
     const user = await userRepository.findById(req.authUser.id);
     const audioFile = await audioFileRepository.findById(req.query.id);
 

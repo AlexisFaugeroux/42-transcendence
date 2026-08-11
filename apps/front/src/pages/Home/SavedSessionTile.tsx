@@ -27,7 +27,8 @@ export function SavedSessionTile({ onOpen, session }: SavedSessionParams): JSX.E
       <div className={styles.title}>{session.name}</div>
       <div className={styles.meta}>
         <span>
-          {session.bpm ? t('home.saved.bpm', { bpm: session.bpm }) : '—'} · {session.key ?? t('home.saved.noKey')}
+          {session.bpm ? t('home.saved.bpm', { bpm: session.bpm }) : '—'} ·{' '}
+          {session.key ?? t('home.saved.noKey')}
         </span>
         <span>{session.duration}</span>
       </div>

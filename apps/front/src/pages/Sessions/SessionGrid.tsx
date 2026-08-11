@@ -14,7 +14,13 @@ export function SessionGrid({ archived, onDelete, onRename, rows }: SessionGridP
   return (
     <div className={styles.grid}>
       {rows.map((session) => (
-        <SessionCard key={session.id} session={session} archived={archived} onRename={onRename} onDelete={onDelete} />
+        <SessionCard
+          key={session.id}
+          session={session}
+          archived={archived}
+          onRename={onRename}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );
