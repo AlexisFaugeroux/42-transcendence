@@ -11,10 +11,11 @@ interface SampleGridProps {
   rows: AudioFile[];
   ownerId: string;
   onEdit: (sample: AudioFile) => void;
+  onDownload: (sample: AudioFile) => void;
   onDelete: (sample: AudioFile) => void;
 }
 
-export function SampleGrid({ onDelete, onEdit, ownerId, rows }: SampleGridProps): JSX.Element {
+export function SampleGrid({ onDelete, onDownload, onEdit, ownerId, rows }: SampleGridProps): JSX.Element {
   const { i18n, t } = useTranslation();
   const locale = i18n.language;
   const player = useSamplePlayer();
@@ -60,27 +61,38 @@ export function SampleGrid({ onDelete, onEdit, ownerId, rows }: SampleGridProps)
             {row.key ? <span className={styles.muted}>{formatKey(row.key)}</span> : null}
           </div>
 
-          {row.ownerId === ownerId ? (
-            <div className={styles.actions}>
-              <Button
-                size="small"
-                onClick={() => {
-                  onEdit(row);
-                }}
-              >
-                {t('common.edit')}
-              </Button>
-              <Button
-                size="small"
-                danger
-                onClick={() => {
-                  onDelete(row);
-                }}
-              >
-                {t('common.delete')}
-              </Button>
-            </div>
-          ) : null}
+          <div className={styles.actions}>
+            <Button
+              size="small"
+              title={t('common.download')}
+              onClick={() => {
+                void onDownload(row);
+              }}
+            >
+              <MsnIcon name="download" size="11px" /> {t('common.download')}
+            </Button>
+            {row.ownerId === ownerId ? (
+              <>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    onEdit(row);
+                  }}
+                >
+                  {t('common.edit')}
+                </Button>
+                <Button
+                  size="small"
+                  danger
+                  onClick={() => {
+                    onDelete(row);
+                  }}
+                >
+                  {t('common.delete')}
+                </Button>
+              </>
+            ) : null}
+          </div>
         </div>
       ))}
     </div>

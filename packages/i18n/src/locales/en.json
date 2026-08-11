@@ -364,6 +364,10 @@
       "titleMulti_other": "Delete {{count}} samples?",
       "titleOne": "Delete this sample?"
     },
+    "download": {
+      "failedDescription": "The file could not be downloaded. Please try again.",
+      "failedTitle": "Download failed"
+    },
     "edit": {
       "errorTitle": "Could not save the sample",
       "successDescription": "{{name}} has been saved",

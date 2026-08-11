@@ -20,7 +20,7 @@ import { SAMPLE_COMPARATORS } from './constants';
 import { DeleteSampleModal, type DeleteTarget } from './DeleteSampleModal';
 import { EditSampleModal } from './EditSampleModal';
 import { EmptyState } from './EmptyState';
-import { formatBytes } from './helpers';
+import { downloadSample, formatBytes } from './helpers';
 import { SampleGrid } from './SampleGrid';
 import styles from './Samples.module.scss';
 import { SampleTable } from './SampleTable';
@@ -63,6 +63,15 @@ export function Samples(): JSX.Element {
       icon: <CloseCircleOutlined style={{ color: theme.red }} />,
       message,
     });
+  };
+
+  const handleDownload = async (sample:AudioFile): Promise<void> => {
+    try{
+      await downloadSample(sample);
+    
+    }catch {
+      notifyError(t('samples.download.failedTitle'), t('samples.download.failedDescription'));
+    }
   };
 
   const samplesQuery = useQuery({
@@ -245,6 +254,7 @@ export function Samples(): JSX.Element {
                   selectedKeys={selectedKeys}
                   onSelectionChange={setSelectedKeys}
                   onEdit={setEditTarget}
+                  onDownload={handleDownload}
                   onDelete={(sample) => {
                     setConfirmDelete(sample);
                   }}
@@ -254,6 +264,7 @@ export function Samples(): JSX.Element {
                   rows={filtered}
                   ownerId={user.ownerId}
                   onEdit={setEditTarget}
+                  onDownload={handleDownload}
                   onDelete={(sample) => {
                     setConfirmDelete(sample);
                   }}
