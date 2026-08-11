@@ -364,6 +364,10 @@
       "titleMulti_other": "Supprimer {{count}} samples ?",
       "titleOne": "Supprimer ce sample ?"
     },
+    "download": {
+      "failedDescription": "Le fichier n'a pas pu être téléchargé. Réessaie.",
+      "failedTitle": "Échec du téléchargement"
+    },
     "edit": {
       "errorTitle": "Impossible d'enregistrer le sample",
       "successDescription": "{{name}} a été enregistré",

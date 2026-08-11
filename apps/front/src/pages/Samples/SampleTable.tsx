@@ -23,11 +23,13 @@ interface SampleTableProps {
   selectedKeys: Key[];
   onSelectionChange: (keys: Key[]) => void;
   onEdit: (sample: AudioFile) => void;
+  onDownload: (sample: AudioFile) => void;
   onDelete: (sample: AudioFile) => void;
 }
 
 export function SampleTable({
   onDelete,
+  onDownload,
   onEdit,
   onSelectionChange,
   ownerId,
@@ -137,7 +139,14 @@ export function SampleTable({
               <EditOutlined />
             </Button>
           ) : null}
-          <Button type="text" size="small" title={t('common.download')}>
+          <Button
+            type="text"
+            size="small"
+            title={t('common.download')}
+            onClick={() => {
+              void onDownload(row);
+            }}
+          >
             <MsnIcon name="download" size="12px" />
           </Button>
           {row.ownerId === ownerId ? (

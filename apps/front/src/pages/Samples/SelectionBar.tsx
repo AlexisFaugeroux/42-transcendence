@@ -1,5 +1,5 @@
 import { useTranslation } from '@transcendence/i18n';
-import { Button, MsnIcon } from '@transcendence/ui';
+import { Button } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './SelectionBar.module.scss';
 
@@ -21,9 +21,6 @@ export function SelectionBar({ count, onClear, onDelete }: SelectionBarProps): J
         </button>
       </div>
       <div className={styles.actions}>
-        <Button size="small">
-          <MsnIcon name="download" size="11px" /> {t('common.download')}
-        </Button>
         <Button size="small" danger onClick={onDelete}>
           {t('common.delete')}
         </Button>
