@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from "react";
 
+import { useUser } from "@transcendence/auth";
+
 type Message = {
     from : string;
     to : string;
@@ -15,8 +17,6 @@ type Message = {
 }
 
 interface WebsocketContextValue {
-
-    socket : WebSocket;
     sendMessage : ( message : Message) => void;
 }
 
@@ -28,23 +28,55 @@ export function WebSocketProvider({
     children : ReactNode 
 }) : JSX.Element {
 
-    const socket = new WebSocket("http://localhost:8080/ws");
+    const [socket, setsocket] = useState<WebSocket>();
+    const [followingConnected, setFollowingConnected] = useState<string[] | null>(null);
+    const { loading, user } = useUser();
+   
+    useEffect( () => {
+        if (loading || !user)
+            return ;
+        const ws = new WebSocket("http://localhost:8080/ws");
+        
+        ws.onopen = ( event ) => {
+            console.log( event );
+            setsocket( ws );
+        }
 
-    socket.onmessage = ( event : MessageEvent) => {
-        console.log( JSON.parse(event.data) );
-    }
-    
-    socket.onclose = ( event ) => {
-        console.log( "CLOSE", event );
-    }
+        ws.onmessage = ( event : MessageEvent) => {
+            const message : { event : string, id : string } = JSON.parse(event.data);
+            if ( message.event == "FollowingConnected") {
+                const userConnectedId = message.id; 
+                setFollowingConnected(followingConnected ? [ userConnectedId, ...followingConnected] : [ userConnectedId ]);
+            }
+            else if ( message.event == "FollowingDisconnected") {
+                const userDisconnectedId = message.id;
+                setFollowingConnected((followingConnected) =>
+                  followingConnected === null
+                    ? null
+                    : followingConnected.filter((id) => id !== userDisconnectedId),
+                );
+            }
+            console.log( "ws EVENT :",  followingConnected )
+        }
+
+        ws.onclose = ( event ) => {
+            console.log( "CLOSE", event ); 
+        }
+
+        return () => { 
+            ws.close();
+        }
+
+    }, [loading, user?.id]);
+
 
     const sendMessage = ( message : Message ) => {
-        if ( socket.readyState === WebSocket.OPEN )
+        if ( socket && socket.readyState === WebSocket.OPEN )
             socket.send( JSON.stringify( message ));
     }
 
     return (
-        <websocketContext.Provider value={{socket, sendMessage}}>
+        <websocketContext.Provider value={{sendMessage}}>
             { children }
         </websocketContext.Provider>
     )
