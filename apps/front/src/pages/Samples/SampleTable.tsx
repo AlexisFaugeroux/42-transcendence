@@ -144,7 +144,7 @@ export function SampleTable({
             size="small"
             title={t('common.download')}
             onClick={() => {
-              void onDownload(row);
+              onDownload(row);
             }}
           >
             <MsnIcon name="download" size="12px" />
