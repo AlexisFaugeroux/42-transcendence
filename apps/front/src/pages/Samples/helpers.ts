@@ -1,3 +1,4 @@
+import { apiFetch } from '@transcendence/auth';
 import {
   type AudioFile,
   FAMILIES,
@@ -63,7 +64,7 @@ export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({
 }));
 
 export async function downloadSample(sample: AudioFile): Promise<void> {
-  const response = await fetch(`/audio/${sample.url}`, { credentials: 'include' });
+  const response = await apiFetch(`/audio/${encodeURI(sample.url)}`);
   if (!response.ok) {
     throw new Error(`HTTP: ${response.status}`);
   }
@@ -74,6 +75,10 @@ export async function downloadSample(sample: AudioFile): Promise<void> {
   const anchor = document.createElement('a');
   anchor.href = objectUrl;
   anchor.download = filename;
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(objectUrl);
+  anchor.remove();
+  setTimeout(() => {
+    URL.revokeObjectURL(objectUrl);
+  }, 1000);
 }
