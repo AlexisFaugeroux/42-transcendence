@@ -1,11 +1,12 @@
 import { dayjs } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { AVATAR_MAX_BYTES } from '../constants';
-import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
+import { BadRequestError, ForbiddenError, NotFoundError, PayloadTooLargeError } from '../domain/errors';
 import type {
   PublicProducerProfileResponse,
   PublicProducersResponse,
   UpdateUserInput,
+  User,
   UserResponse,
 } from '../domain/user';
 import { userRepository } from '../repositories/user';
@@ -13,6 +14,7 @@ import { audioStorageService } from '../services/audioStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
 import { hashPassword, verifyPassword } from '../utils/password';
+import { OnlineUser } from '../domain/user';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -50,6 +52,13 @@ interface FollowRoute extends RouteGenericInterface {
 
 interface UploadAvatarRoute extends RouteGenericInterface {
   Reply: UserResponse;
+}
+
+interface ListUser extends RouteGenericInterface {
+  Querystring : {
+    ids : string[]
+  };
+  Reply : OnlineUser[];
 }
 
 class UserController {
@@ -178,6 +187,40 @@ class UserController {
 
     reply.code(204).send();
   };
+
+  public listUser = async ( req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser> ) => {
+    
+    const rawIds = req.query.ids;
+    if (!rawIds) {
+      reply.code(201).send( [] );
+      return ;
+    }
+
+    const ids = Array.isArray(rawIds) ? rawIds : [rawIds];
+    
+    const users = await userRepository.get({ ids : ids });
+    if (!users) throw new NotFoundError("[listUser] users not found");
+    console.log("USER :", users);
+    reply.code(201).send( this._formatOnlineUser(users) );
+
+
+  }
+
+  private _formatOnlineUser = ( users : User[] ) : OnlineUser[] => {
+
+    let onlineUsers : OnlineUser[] = [];
+
+    users.forEach( (user) => { 
+      onlineUsers.push( {
+        ...user,
+        name : user.artistName,
+        status : 'online',
+        activity : 'producer',
+        listeners : 0
+      })
+    });
+    return ( onlineUsers );
+  }
 }
 
 export const userController = new UserController();

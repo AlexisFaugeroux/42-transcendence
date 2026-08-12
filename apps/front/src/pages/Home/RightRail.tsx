@@ -4,19 +4,21 @@ import type { JSX } from 'react';
 import { ONLINE } from './home.data';
 import styles from './RightRail.module.scss';
 import { LiveUserRow, OnlineUserRow } from './UserRows';
+import { useOnlineFollowing } from '../../hooks/useOnlineFollowing';
 
 export function RightRail(): JSX.Element {
   const { t } = useTranslation();
   const live = ONLINE.filter((u) => u.status === 'live');
-  const online = ONLINE.filter((u) => u.status !== 'live');
-  const onlineCount = ONLINE.filter((u) => u.status !== 'offline').length;
+  const online = useOnlineFollowing();
 
+  const users = online.data;
+  console.log(users);
   return (
     <aside className={styles.rail}>
       <div className={styles.head}>
         <h3 className={styles.title}>{t('home.rail.connected')}</h3>
         <span className={styles.count}>
-          <span className={styles.dot}>●</span> {t('home.rail.onlineCount', { count: onlineCount })}
+          <span className={styles.dot}>●</span> {t('home.rail.onlineCount', { count: online.count })}
         </span>
       </div>
 
@@ -33,7 +35,7 @@ export function RightRail(): JSX.Element {
 
       <div className={`${styles.group} ${styles.onlineGroup}`}>
         <div className={styles.label}>{t('home.rail.online')}</div>
-        {online.map((user) => (
+        {users?.map((user) => (
           <OnlineUserRow key={user.handle} user={user} />
         ))}
       </div>

@@ -1,4 +1,5 @@
 export type Role = 'ADMIN' | 'ARTIST';
+export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface User {
   id: string;
@@ -14,6 +15,14 @@ export interface User {
   password: string;
   role: Role;
   ownerId: string;
+}
+
+export interface OnlineUser {
+  name: string;
+  handle: string;
+  status: PresenceStatus;
+  activity: string;
+  listeners: number;
 }
 
 export interface PublicProducer {
