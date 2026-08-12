@@ -5,6 +5,7 @@ import type {
   FamilyUsage,
   GetAudioFileInput,
   UpdateAudioFileInput,
+  Visibility,
 } from '../domain/audioFile';
 import type { AudioFile as PrismaAudioFile, PrismaClient } from '../generated/prisma/client';
 import { prisma } from '../utils/prisma';
@@ -120,27 +121,53 @@ class AudioFileRepository {
   private _buildFilters(input: GetAudioFileInput) {
     const { bpms, families, ids, keys, kinds, modes, ownerIds, visibilities } = input;
 
-    const idFilter = ids?.length ? { id: { in: ids } } : undefined;
-    const bpmFilter = bpms?.length ? { bpm: { in: bpms } } : undefined;
-    const keyFilter = keys?.length ? { key: { in: keys } } : undefined;
-    const modeFilter = modes?.length ? { mode: { in: modes } } : undefined;
-    const familyFilter = families?.length ? { family: { in: families } } : undefined;
-    const kindFilter = kinds?.length ? { kind: { in: kinds } } : undefined;
-    const visibilityFilter = visibilities?.length
-      ? { visibility: { in: visibilities } }
-      : undefined;
-    const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
-
-    return {
-      ...visibilityFilter,
-      ...ownerIdFilter,
-      ...idFilter,
-      ...bpmFilter,
-      ...keyFilter,
-      ...modeFilter,
-      ...familyFilter,
-      ...kindFilter,
+    const metaFilters = {
+      ...(ids?.length ? { id: { in: ids } } : {}),
+      ...(bpms?.length ? { bpm: { in: bpms } } : {}),
+      ...(keys?.length ? { key: { in: keys } } : {}),
+      ...(modes?.length ? { mode: { in: modes } } : {}),
+      ...(families?.length ? { family: { in: families } } : {}),
+      ...(kinds?.length ? { kind: { in: kinds } } : {}),
     };
+
+    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : {};
+
+    // Other users: never PRIVATE — only PUBLIC/SHARED (intersected with the request)
+    const othersVisibilities = (
+      visibilities?.length ? visibilities : (['PUBLIC', 'SHARED'] as Visibility[])
+    ).filter((v) => v === 'PUBLIC' || v === 'SHARED');
+
+    if (!ownerIds?.length) {
+      return {
+        ...metaFilters,
+        ...visibilityFilter,
+      };
+    }
+
+    const mineAndPlatform = {
+      ownerId: { in: ownerIds },
+      ...visibilityFilter,
+    };
+
+    const fromOthers =
+      othersVisibilities.length > 0
+        ? {
+            ownerId: { notIn: ownerIds },
+            visibility: { in: othersVisibilities },
+          }
+        : undefined;
+
+    const andFilters: object[] = [
+      {
+        OR: fromOthers ? [mineAndPlatform, fromOthers] : [mineAndPlatform],
+      },
+    ];
+
+    if (Object.keys(metaFilters).length > 0) {
+      andFilters.push(metaFilters);
+    }
+
+    return { AND: andFilters };
   }
 }
 
