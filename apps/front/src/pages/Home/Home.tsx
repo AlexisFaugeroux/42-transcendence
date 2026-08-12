@@ -10,11 +10,8 @@ import { useSocket } from '../../websocket/WebSocketProvider';
 
 export function Home(): JSX.Element {
 
-  const { followingConnected } = useSocket();
-
   return (
     <div className={styles.shell}>
-    <div>{followingConnected.length}</div>
       <div className={styles.topbar}>
         <TopBar />
       </div>
