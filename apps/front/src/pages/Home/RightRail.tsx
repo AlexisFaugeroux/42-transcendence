@@ -10,9 +10,8 @@ export function RightRail(): JSX.Element {
   const { t } = useTranslation();
   const live = ONLINE.filter((u) => u.status === 'live');
   const online = useOnlineFollowing();
-
   const users = online.data;
-  console.log(users);
+  
   return (
     <aside className={styles.rail}>
       <div className={styles.head}>

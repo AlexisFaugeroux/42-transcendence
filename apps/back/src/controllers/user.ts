@@ -200,7 +200,6 @@ class UserController {
     
     const users = await userRepository.get({ ids : ids });
     if (!users) throw new NotFoundError("[listUser] users not found");
-    console.log("USER :", users);
     reply.code(201).send( this._formatOnlineUser(users) );
 
 
