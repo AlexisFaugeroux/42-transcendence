@@ -3,7 +3,7 @@ import type { Sample } from '../lib/types';
 
 export async function getlistSample(): Promise<Sample[]> {
   const query = new URLSearchParams({
-    visibility: 'PUBLIC',
+    visibilities: 'PUBLIC',
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
@@ -15,7 +15,7 @@ export async function getlistSample(): Promise<Sample[]> {
 
 export async function getSampleById(id: string): Promise<Sample> {
   const query = new URLSearchParams({
-    id,
+    ids: id,
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
