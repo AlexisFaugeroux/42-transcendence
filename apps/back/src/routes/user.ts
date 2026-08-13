@@ -30,6 +30,21 @@ const updateProfileSchema = {
   },
 };
 
+const listUserSchema = {
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      ids: {
+        items: { format: 'uuid', type: 'string' },
+        minItems: 1,
+        type: 'array',
+        uniqueItems: true,
+      },
+    },
+    type: 'object',
+  },
+};
+
 const changePasswordSchema = {
   body: {
     properties: {
@@ -82,6 +97,7 @@ export function userRoutes(app: FastifyInstance) {
     '/getById',
     {
       preHandler: app.authenticate,
+      schema: listUserSchema,
     },
     userController.listUser,
   );

@@ -27,6 +27,9 @@ import { websocketRoutes } from './routes/websocket';
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
   const app = Fastify({
+    ajv: {
+      customOptions: { removeAdditional: false },
+    },
     logger:
       process.env.NODE_ENV === 'production'
         ? true
