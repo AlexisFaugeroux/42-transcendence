@@ -1,14 +1,12 @@
-
-import { useSocket } from "../websocket/WebSocketProvider";
-import { useQuery } from "@tanstack/react-query";
-import { getOnlineFollowing } from "../api/onlineFollowing";
+import { useQuery } from '@tanstack/react-query';
+import { getOnlineFollowing } from '../api/onlineFollowing';
+import { useSocket } from '../websocket/WebSocketProvider';
 
 export function useOnlineFollowing() {
-
-    const ws = useSocket();
-    const { data } = useQuery({
-        queryKey: [ "onlineFollowing", ws.followingConnected ],
-        queryFn: () => getOnlineFollowing( ws.followingConnected ),
-    })
-    return { data : data ?? null, count : ws.followingConnected.length };
+  const ws = useSocket();
+  const { data } = useQuery({
+    queryFn: () => getOnlineFollowing(ws.followingConnected),
+    queryKey: ['onlineFollowing', ws.followingConnected],
+  });
+  return { count: ws.followingConnected.length, data: data ?? null };
 }

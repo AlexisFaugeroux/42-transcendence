@@ -81,10 +81,10 @@ export function userRoutes(app: FastifyInstance) {
   app.get(
     '/getById',
     {
-      preHandler : app.authenticate
+      preHandler: app.authenticate,
     },
-    userController.listUser
-  )
+    userController.listUser,
+  );
 
   app.delete('/delete/avatar', { preHandler: app.authenticate }, userController.deleteAvatar);
 }

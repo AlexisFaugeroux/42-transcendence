@@ -1,15 +1,14 @@
 import type { JSX } from 'react';
 import { LeftNav } from '../../layout/LeftNav';
+import { useSocket } from '../../websocket/WebSocketProvider';
 import { Greeting } from './Greeting';
 import styles from './Home.module.scss';
 import { RecentActivity } from './RecentActivity';
 import { RightRail } from './RightRail';
 import { SavedSessions } from './SavedSessions';
 import { TopBar } from './TopBar';
-import { useSocket } from '../../websocket/WebSocketProvider';
 
 export function Home(): JSX.Element {
-
   return (
     <div className={styles.shell}>
       <div className={styles.topbar}>
