@@ -8,11 +8,13 @@ import type {
   Visibility,
 } from '../domain/audioFile';
 import type { AudioFile as PrismaAudioFile, PrismaClient } from '../generated/prisma/client';
+import type { AudioFileWhereInput } from '../generated/prisma/models';
 import { prisma } from '../utils/prisma';
-import { mapError } from './helpers';
+import { inFilter, mapError } from './helpers';
 
 class AudioFileRepository {
   private readonly prisma: PrismaClient;
+  private readonly OTHERS_VISIBILITIES: Visibility[] = ['PUBLIC', 'SHARED'];
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -118,56 +120,48 @@ class AudioFileRepository {
     };
   }
 
-  private _buildFilters(input: GetAudioFileInput) {
-    const { bpms, families, ids, keys, kinds, modes, ownerIds, visibilities } = input;
+  private _criteriaFilter(input: GetAudioFileInput): AudioFileWhereInput {
+    const { bpms, families, ids, keys, kinds, modes } = input;
 
-    const metaFilters = {
-      ...(ids?.length ? { id: { in: ids } } : {}),
-      ...(bpms?.length ? { bpm: { in: bpms } } : {}),
-      ...(keys?.length ? { key: { in: keys } } : {}),
-      ...(modes?.length ? { mode: { in: modes } } : {}),
-      ...(families?.length ? { family: { in: families } } : {}),
-      ...(kinds?.length ? { kind: { in: kinds } } : {}),
+    return {
+      bpm: inFilter(bpms),
+      family: inFilter(families),
+      id: inFilter(ids),
+      key: inFilter(keys),
+      kind: inFilter(kinds),
+      mode: inFilter(modes),
     };
+  }
 
-    const visibilityFilter = visibilities?.length ? { visibility: { in: visibilities } } : {};
+  private _scopeFilter(input: GetAudioFileInput): AudioFileWhereInput {
+    const { ownerIds, visibilities } = input;
 
-    // Other users: never PRIVATE — only PUBLIC/SHARED (intersected with the request)
-    const othersVisibilities = (
-      visibilities?.length ? visibilities : (['PUBLIC', 'SHARED'] as Visibility[])
-    ).filter((v) => v === 'PUBLIC' || v === 'SHARED');
+    const visibility = inFilter(visibilities);
 
     if (!ownerIds?.length) {
-      return {
-        ...metaFilters,
-        ...visibilityFilter,
-      };
+      return { visibility };
     }
 
-    const mineAndPlatform = {
-      ownerId: { in: ownerIds },
-      ...visibilityFilter,
+    const mine: AudioFileWhereInput = { ownerId: { in: ownerIds }, visibility };
+
+    const othersVisibilities = visibilities?.length
+      ? visibilities.filter((v) => this.OTHERS_VISIBILITIES.includes(v))
+      : this.OTHERS_VISIBILITIES;
+
+    if (!othersVisibilities.length) {
+      return mine;
+    }
+
+    return {
+      OR: [mine, { ownerId: { notIn: ownerIds }, visibility: { in: othersVisibilities } }],
     };
+  }
 
-    const fromOthers =
-      othersVisibilities.length > 0
-        ? {
-            ownerId: { notIn: ownerIds },
-            visibility: { in: othersVisibilities },
-          }
-        : undefined;
-
-    const andFilters: object[] = [
-      {
-        OR: fromOthers ? [mineAndPlatform, fromOthers] : [mineAndPlatform],
-      },
-    ];
-
-    if (Object.keys(metaFilters).length > 0) {
-      andFilters.push(metaFilters);
-    }
-
-    return { AND: andFilters };
+  private _buildFilters(input: GetAudioFileInput): AudioFileWhereInput {
+    return {
+      ...this._criteriaFilter(input),
+      ...this._scopeFilter(input),
+    };
   }
 }
 

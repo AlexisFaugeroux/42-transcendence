@@ -17,3 +17,7 @@ export function mapError(error: unknown, model: string): Error {
 
   return error instanceof Error ? error : new Error('Unknown database error');
 }
+
+export function inFilter<T>(values?: T[]): { in: T[] } | undefined {
+  return values?.length ? { in: values } : undefined;
+}
