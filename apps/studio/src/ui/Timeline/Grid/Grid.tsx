@@ -22,11 +22,24 @@ interface GridPros {
 export function Grid({ clips, tracks }: GridPros): JSX.Element {
   const { audioContext, localAudioBuffers, project } = useProject();
   const { setClips } = useTracks();
+  const [totalDuration, setTotalDuration] = useState(() =>
+    project.timelineBox.durationInPulses.getValue(),
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(120);
   const [viewportHeight, setViewportHeight] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+
+  useEffect(() => {
+    const sub = project.timelineBox.durationInPulses.catchupAndSubscribe((obs) => {
+      setTotalDuration(obs.getValue());
+    });
+
+    return () => {
+      sub.terminate();
+    };
+  }, [project.timelineBox.durationInPulses]);
 
   useEffect(() => {
     const sub = project.timelineBox.bpm.catchupAndSubscribe((obs) => {
@@ -40,7 +53,6 @@ export function Grid({ clips, tracks }: GridPros): JSX.Element {
 
   const currentPosition = useCurrentPosition(bpm);
 
-  const totalDuration = project.timelineBox.durationInPulses.getValue();
   const fullGridWidth = totalDuration * PIXELS_PER_PULSE;
   const svgWidth = totalDuration * PIXELS_PER_PULSE;
   const bars = computeBarsFromSDK(project);
