@@ -84,7 +84,7 @@ export function TopBar(): JSX.Element {
   return (
     <header className={styles.bar}>
       {notificationContext}
-      <Link to="/" className={styles.brand}>
+      <Link to="/home" className={styles.brand}>
         <MsnIcon name="msn" size="20px" color="var(--color-orange)" />
         <MsnWordmark size={15} accent="var(--color-orange)" />
       </Link>
