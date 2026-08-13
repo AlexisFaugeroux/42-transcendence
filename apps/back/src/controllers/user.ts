@@ -61,7 +61,7 @@ interface UploadAvatarRoute extends RouteGenericInterface {
 
 interface ListUser extends RouteGenericInterface {
   Querystring: {
-    ids: string[];
+    ids?: string[];
   };
   Reply: OnlineUser[];
 }
@@ -194,17 +194,15 @@ class UserController {
   };
 
   public listUser = async (req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser>) => {
-    const rawIds = req.query.ids;
-    if (!rawIds) {
-      reply.code(201).send([]);
+    const ids = req.query.ids;
+    if (!ids) {
+      reply.code(200).send([]);
       return;
     }
 
-    const ids = Array.isArray(rawIds) ? rawIds : [rawIds];
-
-    const users = await userRepository.get({ ids: ids });
+    const users = await userRepository.get({ ids });
     if (!users) throw new NotFoundError('[listUser] users not found');
-    reply.code(201).send(this._formatOnlineUser(users));
+    reply.code(200).send(this._formatOnlineUser(users));
   };
 
   private _formatOnlineUser = (users: User[]): OnlineUser[] => {

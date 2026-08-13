@@ -1,8 +1,19 @@
 import { ApiErrorReponse, apiFetch, type AuthResponse, type AuthUser } from '@transcendence/auth';
 
 export async function updateUserProfile(values: AuthUser): Promise<AuthUser> {
+  const body = {
+    artistName: values.artistName,
+    bio: values.bio,
+    email: values.email,
+    firstname: values.firstname,
+    handle: values.handle,
+    lastname: values.lastname,
+    links: values.links,
+    location: values.location,
+  };
+
   const res = await apiFetch('/api/user/update/profile', {
-    body: JSON.stringify(values),
+    body: JSON.stringify(body),
     headers: {
       'Content-Type': 'application/json',
     },
