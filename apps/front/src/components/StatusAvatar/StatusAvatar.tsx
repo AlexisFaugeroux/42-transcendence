@@ -1,12 +1,11 @@
 import { Avatar, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { PresenceStatus } from './home.data';
+import type { PresenceStatus } from '../../types/presence';
+import styles from './StatusAvatar.module.scss';
 
 const STATUS_COLOR: Record<PresenceStatus, string> = {
-  idle: 'hsl(45, 95%, 55%)',
-  live: theme.purple,
-  offline: 'hsl(0, 0%, 38%)',
-  online: 'hsl(140, 65%, 45%)',
+  offline: theme.fg3,
+  online: theme.green,
 };
 
 interface StatusAvatarProps {
@@ -17,22 +16,18 @@ interface StatusAvatarProps {
 
 export function StatusAvatar({ name, size = 24, status }: StatusAvatarProps): JSX.Element {
   const dot = Math.max(6, Math.round(size * 0.2));
+
   return (
-    <span style={{ display: 'inline-flex', flexShrink: 0, position: 'relative' }}>
+    <span className={styles.wrap}>
       <Avatar size={size} shape="square" style={{ fontSize: Math.round(size * 0.42) }}>
         {name.slice(0, 2).toUpperCase()}
       </Avatar>
       {status ? (
         <span
+          className={styles.dot}
           style={{
             background: STATUS_COLOR[status],
-            border: '2px solid hsl(197, 14%, 6%)',
-            borderRadius: '50%',
-            bottom: 0,
-            boxShadow: status === 'live' ? `0 0 6px ${STATUS_COLOR.live}` : 'none',
             height: dot,
-            position: 'absolute',
-            right: 0,
             width: dot,
           }}
         />

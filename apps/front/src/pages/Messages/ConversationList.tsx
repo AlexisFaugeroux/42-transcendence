@@ -1,0 +1,54 @@
+import { useTranslation } from '@transcendence/i18n';
+import type { JSX } from 'react';
+import type { ConversationSummary } from '../../api/chat/types';
+import styles from './ConversationList.module.scss';
+import { ConversationRow } from './ConversationRow';
+import { ListEmpty, ListError, ListSkeleton } from './ListStates';
+
+interface ConversationListProps {
+  conversations: ConversationSummary[];
+  error: Error | null;
+  isLoading: boolean;
+  meId: string;
+  onRetry: () => void;
+}
+
+export function ConversationList({
+  conversations,
+  error,
+  isLoading,
+  meId,
+  onRetry,
+}: ConversationListProps): JSX.Element {
+  const { t } = useTranslation();
+  const unread = conversations.reduce((total, conv) => total + conv.unreadCount, 0);
+
+  return (
+    <section className={styles.column}>
+      <div className={styles.head}>
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>{t('chat.title')}</h1>
+          {unread > 0 ? (
+            <span className={styles.unread}>{t('chat.unreadNew', { count: unread })}</span>
+          ) : null}
+        </div>
+        {/* T8 (#182) mounts the inline producer search here — a field with a
+            results overlay, not a modal. */}
+      </div>
+
+      {isLoading ? (
+        <ListSkeleton />
+      ) : error ? (
+        <ListError message={error.message} onRetry={onRetry} />
+      ) : conversations.length === 0 ? (
+        <ListEmpty />
+      ) : (
+        <div className={styles.rows}>
+          {conversations.map((conv) => (
+            <ConversationRow key={conv.id} conversation={conv} meId={meId} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

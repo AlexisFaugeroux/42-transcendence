@@ -1,5 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
+import type { PresenceStatus } from '../../types/presence';
 
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
@@ -128,8 +129,6 @@ export const SAVED_SESSIONS: SavedSession[] = [
     updated: '3w ago',
   },
 ];
-
-export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface OnlineUser {
   name: string;

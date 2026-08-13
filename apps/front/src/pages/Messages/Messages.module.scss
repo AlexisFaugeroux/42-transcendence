@@ -1,0 +1,11 @@
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.thread {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-panel-2);
+}

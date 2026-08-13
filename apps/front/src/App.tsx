@@ -2,12 +2,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
+import { AppLayout } from './layout/AppLayout';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Following } from './pages/Following/Following';
 import { Home } from './pages/Home/Home';
 import { Landing } from './pages/Landing/Landing';
 import { Legal } from './pages/Legal/Legal';
 import Login from './pages/Login/Login';
+import { Messages } from './pages/Messages/Messages';
 import { Privacy } from './pages/Privacy/Privacy';
 import { ProducerProfile } from './pages/Producers/ProducerProfile';
 import { Producers } from './pages/Producers/Producers';
@@ -38,16 +40,17 @@ export function App(): JSX.Element {
             <Route path="/producers" element={<Producers />} />
             <Route path="/producers/:handle" element={<ProducerProfile />} />
             <Route path="/following" element={<Following />} />
+
+            <Route element={<AppLayout />}>
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/messages/:conversationId" element={<Messages />} />
+            </Route>
           </Route>
 
           {/*
           <Route element={<AppLayout />}>
-            <Route path="/sessions" element={<Sessions />} />
             <Route path="/tracks" element={<Tracks />} />
-            <Route path="/samples" element={<Samples />} />
             <Route path="/exports" element={<Exports />} />
-            <Route path="/following" element={<Following />} />
-            <Route path="/messages" element={<Messages />} />
             <Route path="/liked" element={<Liked />} />
             <Route path="/playlists" element={<Playlists />} />
           </Route>

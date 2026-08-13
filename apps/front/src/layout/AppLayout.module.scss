@@ -1,10 +1,17 @@
 .shell {
   height: 100vh;
-  display: grid;
-  grid-template-columns: 220px 1fr;
+  display: flex;
+  flex-direction: column;
   background: var(--bg-app);
   color: var(--fg1);
   overflow: hidden;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 200px 1fr;
 }
 
 .nav {
@@ -14,15 +21,20 @@
   overflow: hidden;
 }
 
+// No page-level scroll: pages under this layout are full-height panels that
+// scroll their own columns (see Messages). A page that wants to scroll as a
+// whole adds `overflow-y: auto` on its own root.
 .content {
   background: var(--bg-panel-2);
   min-height: 0;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 // Mobile: drop the left nav (mirrors the dashboard breakpoint).
 @media (max-width: 720px) {
-  .shell {
+  .body {
     grid-template-columns: 1fr;
   }
   .nav {

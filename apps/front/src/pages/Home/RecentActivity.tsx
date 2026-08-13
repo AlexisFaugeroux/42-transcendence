@@ -1,8 +1,8 @@
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
+import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
 import { ACTIVITY } from './home.data';
 import styles from './RecentActivity.module.scss';
-import { StatusAvatar } from './StatusAvatar';
 
 export function RecentActivity(): JSX.Element {
   const { t } = useTranslation();

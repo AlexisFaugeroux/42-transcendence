@@ -2,8 +2,8 @@ import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
+import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
 import type { PublicProducer } from '../../types/producer';
-import { StatusAvatar } from '../Home/StatusAvatar';
 import styles from './Producers.module.scss';
 import { UnfollowButton } from './UnfollowButton';
 
