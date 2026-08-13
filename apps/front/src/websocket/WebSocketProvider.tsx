@@ -24,6 +24,8 @@ interface WebsocketContextValue {
 
 const websocketContext = createContext<WebsocketContextValue | null>(null);
 
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 export function WebSocketProvider({ 
     children 
 }: { 
@@ -39,7 +41,7 @@ export function WebSocketProvider({
         if (loading || !user)
             return ;
 
-        const ws = new WebSocket("http://localhost:8080/ws");
+        const ws = new WebSocket(`${BASE_URL}api/ws`);
         
         ws.onopen = ( event ) => {
             console.log("socket open", event)
@@ -79,7 +81,6 @@ export function WebSocketProvider({
         }
 
         ws.onclose = ( event ) => {
-            console.log( "CLOSE", event ); 
         }
 
         return () => { 
@@ -91,6 +92,7 @@ export function WebSocketProvider({
     useEffect( () => {
         console.log( "Current following connexted:",  followingConnected );
     },[followingConnected]);
+
     const sendMessage = ( message : Message ) => {
         if ( socket && socket.readyState === WebSocket.OPEN )
             socket.send( JSON.stringify( message ));

@@ -5,6 +5,7 @@ import { userRepository } from "../repositories/user";
 class WebsocketControler {
 
     private sockets : Map<string, WebSocket> = new Map<string, Set<WebSocket | null>>;
+    private alive : WeakMap<WebSocket, boolean> = new WeakMap<WebSocket, boolean>;
 
     public ws = async ( socket : WebSocket, req : FastifyRequest ) => {
      
@@ -13,40 +14,33 @@ class WebsocketControler {
         let userSockets : Set<WebSocket | null> = this.sockets.get( userId );
         if ( userSockets === undefined) 
         {    
-            userSockets = new Set<WebSocket>();userSockets.add( socket );
+            userSockets = new Set<WebSocket>();
             this.sockets.set( userId, userSockets);
         }
         
         userSockets.add( socket );
+        this.alive.set(socket, true);
 
         socket.on( 'close', async () => {
-
-            let userSockets : Set<WebSocket | null> = this.sockets.get( userId );
-            console.log("DISCONNED : ", userId, "nb socket :", userSockets?.size);
-           
-            userSockets?.delete( socket );
-            if ( userSockets?.size == 0 )
-            {
-                this.sockets.delete( userId );
-                console.log("DECONNEXION DANS LE BACK");
-                for ( let key of this.sockets.keys() ) {
-                    if ( key !== userId && this.sockets.get( key ) !== null )
-                        await this.broadcastConnection( key, userId, "FollowingDisconnected" );
-                }
-            }        
+            let socketSet : Set<WebSocket | null> = this.sockets.get( userId );
+            await this.disconnect( socketSet, socket, userId );
         });
 
+        socket.on('pong', () => {
+          this.alive.set(socket, true);
+        });
+        
+        const nb_user_socket =  userSockets.size ;
+        
         // recuperation des following par l'appelant
         const followingOnlineAtConnexion = await this.getFollowingAtConnextion( userId );
-        console.log( "cacacacaca :", followingOnlineAtConnexion );
         socket.send(
             JSON.stringify({ 
                 event : "OnlineFolloingAtConnexion", 
                 data : followingOnlineAtConnexion
         }));
         
-
-        if ( userSockets.size > 1 ){
+        if (nb_user_socket > 1 ){
             return 
         };
         // broadcast aux followers
@@ -55,21 +49,16 @@ class WebsocketControler {
                 await this.broadcastConnection( key, userId, "FollowingConnected" );
         }
 
-        console.log("CONNEXION DANS LE BACK");
-
-
     }
 
     private broadcastConnection = async ( userBroadcastToId : string, newUserConnectedId : string, event : string ) => {
         
-        console.log("BROADCAST FT")
         const following = await userRepository.listFollowingIdsByUserId( userBroadcastToId );
         for ( let followId of following) {
             if ( followId === newUserConnectedId )
             {
                 const sockets : Set<WebSocket> = this.sockets.get( userBroadcastToId );
                 for ( let socket of sockets ) {
-                    console.log("Broadcast to : ", userBroadcastToId);
                     socket.send( 
                         JSON.stringify({ 
                             event : event, 
@@ -92,6 +81,33 @@ class WebsocketControler {
         }
         return followingConnected;
     }
+
+    private disconnect = async ( socketSet : Set<WebSocket>, socket : WebSocket, userId : string ) => {
+        
+        socketSet?.delete( socket );
+        if ( socketSet?.size == 0 )
+        {
+            this.sockets.delete( userId );
+            for ( let key of this.sockets.keys() ) {
+                if ( key !== userId && this.sockets.get( key ) !== null )
+                    await this.broadcastConnection( key, userId, "FollowingDisconnected" );
+            }
+        }    
+    }
+            
+    public pong = setInterval( async () => {
+            for ( const socketsSet of this.sockets.values() ) {
+                for ( const socket of socketsSet )
+                {
+                    if ( this.alive.get(socket) === false ) {
+                        socket.terminate();
+                        continue ;
+                    }
+                    this.alive.set(socket, false);
+                    socket.ping();
+                }
+            }
+        }, 15000);
 }
 
 export const websocketControler = new WebsocketControler;

@@ -87,7 +87,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
   await app.register(authPlugin);
   await app.register(websocket);
-  await app.register(websocketRoutes);
+  await app.register(websocketRoutes,  { prefix : '/api'});
   await app.register(audioRoutes, { prefix: '/api/audio' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });
