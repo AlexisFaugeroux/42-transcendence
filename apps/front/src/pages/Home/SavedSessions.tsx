@@ -3,14 +3,13 @@ import { Carousel, MsnIcon } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
 import { useSession } from '../../../hooks/useSession';
 import type { Session } from '../Sessions/sessions.data';
-import { SAVED_SESSIONS } from './home.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';
 
 export function SavedSessions(): JSX.Element {
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
   const { t } = useTranslation();
-  const { data, error, isError } = useSession();
+  const { data, error, isError, isLoading } = useSession();
 
   if (isError) throw error;
 
@@ -26,13 +25,16 @@ export function SavedSessions(): JSX.Element {
     }
     window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
   };
+
+  if ( data?.length === 0)
+      return (<div></div>)
   return (
     <section>
       <div className={styles.head}>
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
           <span className={styles.count}>
-            {t('home.saved.count', { count: SAVED_SESSIONS.length })}
+            {t('home.saved.count', { count: isLoading ? "loading..." : data?.length })}
           </span>
         </div>
         <div className={styles.controls}>
