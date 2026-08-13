@@ -1,5 +1,13 @@
 import { Project } from '@opendaw/studio-core';
-import { type JSX, type MouseEvent, type UIEvent, useRef, type WheelEvent } from 'react';
+import {
+  type JSX,
+  type MouseEvent,
+  type UIEvent,
+  useEffect,
+  useRef,
+  useState,
+  type WheelEvent,
+} from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
 import { createTrack, type InstrumentType } from '../../lib/arrangementFactory';
@@ -32,11 +40,23 @@ function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
 export function Timeline(): JSX.Element {
   const { audioContext, project } = useProject();
   const { clips, setTracks, tracks } = useTracks();
+  const [totalDuration, setTotalDuration] = useState(() =>
+    project.timelineBox.durationInPulses.getValue(),
+  );
   const rackListRef = useRef<HTMLDivElement>(null);
   const barLabelsRef = useRef<HTMLDivElement>(null);
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
-  const totalDuration = project.timelineBox.durationInPulses.getValue();
+  useEffect(() => {
+    const sub = project.timelineBox.durationInPulses.catchupAndSubscribe((obs) => {
+      setTotalDuration(obs.getValue());
+    });
+
+    return () => {
+      sub.terminate();
+    };
+  }, [project.timelineBox.durationInPulses]);
+
   const timelineWidth = totalDuration * PIXELS_PER_PULSE;
 
   const handleGridScroll = (e: UIEvent<HTMLDivElement>) => {

@@ -148,6 +148,8 @@ export async function createClip(
       audioFileUUID,
     );
 
+    ensureTimelineCovers(project, newClip.position + newClip.duration);
+
     if (clipToTruncate) {
       clipToTruncate.regionBox.duration.setValue(truncatedNewDuration);
       clipToTruncate.regionBox.loopDuration.setValue(truncatedNewDuration);
@@ -158,4 +160,12 @@ export async function createClip(
     createdClip: newClip,
     truncatedClip: clipToTruncate ? { ...clipToTruncate, duration: truncatedNewDuration } : null,
   };
+}
+
+export function ensureTimelineCovers(project: Project, endPpqn: number) {
+  const current = project.timelineBox.durationInPulses.getValue();
+  const needed = project.timelineBoxAdapter.signatureTrack.ceilToBar(endPpqn);
+  if (needed > current) {
+    project.timelineBox.durationInPulses.setValue(needed);
+  }
 }

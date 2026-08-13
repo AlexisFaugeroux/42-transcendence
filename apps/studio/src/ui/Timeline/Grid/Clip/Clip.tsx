@@ -15,6 +15,7 @@ import {
 } from 'react';
 import { useProject } from '../../../../contexts/ProjectContext';
 import { useTracks } from '../../../../contexts/TracksContext';
+import { ensureTimelineCovers } from '../../../../lib/arrangementFactory';
 import { resolveCssColor } from '../../../../lib/resolveCssColor';
 import type { Clip as ClipType } from '../../../../lib/types';
 import { StudioIcon } from '../../../components/StudioIcon/StudioIcon';
@@ -239,14 +240,7 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
 
       project.editing.modify(() => {
         clip.regionBox.position.setValue(newPosition);
-
-        const clipEnd = newPosition + clip.duration;
-        const loopTo = project.timelineBox.loopArea.to.getValue();
-        if (clipEnd > loopTo) {
-          const bar = PPQN.Quarter * 4;
-          const newEnd = Math.ceil(clipEnd / bar) * bar;
-          project.timelineBox.durationInPulses.setValue(newEnd);
-        }
+        ensureTimelineCovers(project, newPosition + clip.duration);
       });
 
       setClips((prev) =>
@@ -300,14 +294,7 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
       project.editing.modify(() => {
         clip.regionBox.duration.setValue(newDuration);
         clip.regionBox.loopDuration.setValue(newDuration);
-
-        const clipEnd = clip.position + newDuration;
-        const loopTo = project.timelineBox.loopArea.to.getValue();
-        if (clipEnd > loopTo) {
-          const bar = PPQN.Quarter * 4;
-          const newEnd = Math.ceil(clipEnd / bar) * bar;
-          project.timelineBox.durationInPulses.setValue(newEnd);
-        }
+        ensureTimelineCovers(project, newEnd);
       });
 
       setClips((prev) =>
@@ -362,13 +349,7 @@ export const Clip = memo(function Clip({ bpm, clip, width, x, y }: ClipProps): J
         box.mute.setValue(false);
       });
 
-      const loopTo = project.timelineBox.loopArea.to.getValue();
-      if (newClipEndPosition > loopTo) {
-        const bar = PPQN.Quarter * 4;
-        const newEnd = Math.ceil(newClipEndPosition / bar) * bar;
-        project.timelineBox.durationInPulses.setValue(newEnd);
-        project.timelineBox.loopArea.to.setValue(newEnd);
-      }
+      ensureTimelineCovers(project, newClipEndPosition);
 
       return { eventsCollectionBox, regionBox };
     });
