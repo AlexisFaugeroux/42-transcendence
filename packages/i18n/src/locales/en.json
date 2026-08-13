@@ -60,6 +60,29 @@
       "passwordRequired": "Please enter your password."
     }
   },
+  "chat": {
+    "empty": {
+      "cta": "Find a producer",
+      "text": "Search a producer above to send your first message.",
+      "title": "No conversations yet"
+    },
+    "lastMessage": {
+      "none": "No messages yet",
+      "you": "You:"
+    },
+    "loadError": "Couldn’t load conversations",
+    "threadEmpty": {
+      "cta": "Message a producer",
+      "text": "Pick a conversation on the left, or search a producer by alias or handle to start a new one.",
+      "title": "No conversation open"
+    },
+    "time": {
+      "yesterday": "yesterday"
+    },
+    "title": "Messages",
+    "unreadNew_one": "{{count}} new",
+    "unreadNew_other": "{{count}} new"
+  },
   "common": {
     "cancel": "Cancel",
     "delete": "Delete",

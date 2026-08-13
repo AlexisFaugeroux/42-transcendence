@@ -60,6 +60,29 @@
       "passwordRequired": "Introduce tu contraseña."
     }
   },
+  "chat": {
+    "empty": {
+      "cta": "Buscar un productor",
+      "text": "Busca un productor arriba para enviar tu primer mensaje.",
+      "title": "Aún no hay conversaciones"
+    },
+    "lastMessage": {
+      "none": "Sin mensajes",
+      "you": "Tú:"
+    },
+    "loadError": "No se pudieron cargar las conversaciones",
+    "threadEmpty": {
+      "cta": "Escribir a un productor",
+      "text": "Elige una conversación a la izquierda, o busca un productor por alias o handle para empezar una nueva.",
+      "title": "Ninguna conversación abierta"
+    },
+    "time": {
+      "yesterday": "ayer"
+    },
+    "title": "Mensajes",
+    "unreadNew_one": "{{count}} nuevo",
+    "unreadNew_other": "{{count}} nuevos"
+  },
   "common": {
     "cancel": "Cancelar",
     "delete": "Eliminar",

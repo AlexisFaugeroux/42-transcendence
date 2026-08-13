@@ -1,5 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
+import type { PresenceStatus } from '../../types/presence';
 
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
@@ -63,8 +64,6 @@ export interface SavedSession {
 
 // Placeholder rows until the sessions endpoint lands: titles, keys and relative
 // times are sample content, not UI copy, so they are not translated.
-
-export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface OnlineUser {
   name: string;

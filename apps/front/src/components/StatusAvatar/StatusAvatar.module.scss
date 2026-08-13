@@ -1,0 +1,14 @@
+.wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  position: relative;
+}
+
+// The dot's size scales with the avatar, so width/height/colour stay inline.
+.dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 2px solid var(--bg-panel-3);
+}

@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
-import type { PresenceStatus } from '../../pages/Home/home.data';
-import { StatusAvatar } from '../../pages/Home/StatusAvatar';
+import type { PresenceStatus } from '../../types/presence';
+import { StatusAvatar } from '../StatusAvatar/StatusAvatar';
 import styles from './UserChip.module.scss';
 
 interface UserChipProps {

@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
+import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
 import type { OnlineUser } from './home.data';
-import { StatusAvatar } from './StatusAvatar';
 import styles from './UserRows.module.scss';
 
 export function LiveUserRow({ user }: { user: OnlineUser }): JSX.Element {
