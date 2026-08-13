@@ -21,6 +21,6 @@ export async function getSampleById(id: string): Promise<Sample> {
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
   if (!res.ok) throw new ApiErrorReponse(`[/api/samples/get] : ${res.statusText}`, res.status);
 
-  const data = (await res.json()) as Sample;
-  return data;
+  const [sample] = (await res.json()) as Sample[];
+  return sample;
 }
