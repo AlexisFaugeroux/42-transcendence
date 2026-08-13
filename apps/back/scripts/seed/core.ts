@@ -60,7 +60,12 @@ export async function seed(config: SeedConfig): Promise<void> {
     }
 
     console.log('Create follows...');
+    const artistNames = new Set(users.map((user) => user.artistName));
     for (const [artistName, following] of Object.entries(config.follows)) {
+      for (const name of [artistName, ...following]) {
+        if (!artistNames.has(name)) throw new Error(`Cannot find user ${name} in follows`);
+      }
+
       await tx.user.update({
         data: {
           following: {
