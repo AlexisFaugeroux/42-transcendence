@@ -26,15 +26,14 @@ export function SavedSessions(): JSX.Element {
     window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
   };
 
-  if ( data?.length === 0)
-      return (<div></div>)
+  if (data?.length === 0) return <div></div>;
   return (
     <section>
       <div className={styles.head}>
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
           <span className={styles.count}>
-            {t('home.saved.count', { count: isLoading ? "loading..." : data?.length })}
+            {t('home.saved.count', { count: isLoading ? 'loading...' : data?.length })}
           </span>
         </div>
         <div className={styles.controls}>

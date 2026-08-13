@@ -1,4 +1,5 @@
 import multipart from '@fastify/multipart';
+import websocket from '@fastify/websocket';
 import Fastify, {
   type FastifyError,
   type FastifyInstance,
@@ -19,11 +20,9 @@ import {
 import authPlugin from './plugins/auth';
 import { audioRoutes } from './routes/audioFile';
 import { authRoutes } from './routes/auth';
+import { producerRoutes } from './routes/producer';
 import { projectRoutes } from './routes/project';
 import { userRoutes } from './routes/user';
-
-import { producerRoutes } from './routes/producer';
-import websocket from "@fastify/websocket";
 import { websocketRoutes } from './routes/websocket';
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
@@ -87,7 +86,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
   await app.register(authPlugin);
   await app.register(websocket);
-  await app.register(websocketRoutes,  { prefix : '/api'});
+  await app.register(websocketRoutes, { prefix: '/api' });
   await app.register(audioRoutes, { prefix: '/api/audio' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });

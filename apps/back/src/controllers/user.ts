@@ -1,7 +1,12 @@
 import { dayjs } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { AVATAR_MAX_BYTES } from '../constants';
-import { BadRequestError, ForbiddenError, NotFoundError, PayloadTooLargeError } from '../domain/errors';
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  PayloadTooLargeError,
+} from '../domain/errors';
 import type {
   PublicProducerProfileResponse,
   PublicProducersResponse,
@@ -9,12 +14,12 @@ import type {
   User,
   UserResponse,
 } from '../domain/user';
+import type { OnlineUser } from '../domain/user';
 import { userRepository } from '../repositories/user';
 import { audioStorageService } from '../services/audioStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
 import { hashPassword, verifyPassword } from '../utils/password';
-import { OnlineUser } from '../domain/user';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -55,10 +60,10 @@ interface UploadAvatarRoute extends RouteGenericInterface {
 }
 
 interface ListUser extends RouteGenericInterface {
-  Querystring : {
-    ids : string[]
+  Querystring: {
+    ids: string[];
   };
-  Reply : OnlineUser[];
+  Reply: OnlineUser[];
 }
 
 class UserController {
@@ -188,38 +193,34 @@ class UserController {
     reply.code(204).send();
   };
 
-  public listUser = async ( req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser> ) => {
-    
+  public listUser = async (req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser>) => {
     const rawIds = req.query.ids;
     if (!rawIds) {
-      reply.code(201).send( [] );
-      return ;
+      reply.code(201).send([]);
+      return;
     }
 
     const ids = Array.isArray(rawIds) ? rawIds : [rawIds];
-    
-    const users = await userRepository.get({ ids : ids });
-    if (!users) throw new NotFoundError("[listUser] users not found");
-    reply.code(201).send( this._formatOnlineUser(users) );
 
+    const users = await userRepository.get({ ids: ids });
+    if (!users) throw new NotFoundError('[listUser] users not found');
+    reply.code(201).send(this._formatOnlineUser(users));
+  };
 
-  }
+  private _formatOnlineUser = (users: User[]): OnlineUser[] => {
+    const onlineUsers: OnlineUser[] = [];
 
-  private _formatOnlineUser = ( users : User[] ) : OnlineUser[] => {
-
-    let onlineUsers : OnlineUser[] = [];
-
-    users.forEach( (user) => { 
-      onlineUsers.push( {
+    users.forEach((user) => {
+      onlineUsers.push({
         ...user,
-        name : user.artistName,
-        status : 'online',
-        activity : 'producer',
-        listeners : 0
-      })
+        activity: 'producer',
+        listeners: 0,
+        name: user.artistName,
+        status: 'online',
+      });
     });
-    return ( onlineUsers );
-  }
+    return onlineUsers;
+  };
 }
 
 export const userController = new UserController();

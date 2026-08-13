@@ -1,113 +1,99 @@
-import type { WebSocket } from "@fastify/websocket";
-import type { FastifyRequest } from "fastify";
-import { userRepository } from "../repositories/user";
+import type { WebSocket } from '@fastify/websocket';
+import type { FastifyRequest } from 'fastify';
+import { userRepository } from '../repositories/user';
 
-class WebsocketControler {
+class WebsocketController {
+  private readonly _sockets: Map<string, Set<WebSocket>> = new Map<string, Set<WebSocket>>();
+  private readonly _alive: WeakMap<WebSocket, boolean> = new WeakMap<WebSocket, boolean>();
 
-    private sockets : Map<string, WebSocket> = new Map<string, Set<WebSocket | null>>;
-    private alive : WeakMap<WebSocket, boolean> = new WeakMap<WebSocket, boolean>;
-
-    public ws = async ( socket : WebSocket, req : FastifyRequest ) => {
-     
-        const userId = req.authUser.id;
-
-        let userSockets : Set<WebSocket | null> = this.sockets.get( userId );
-        if ( userSockets === undefined) 
-        {    
-            userSockets = new Set<WebSocket>();
-            this.sockets.set( userId, userSockets);
+  constructor() {
+    setInterval(() => {
+      for (const socketsSet of this._sockets.values()) {
+        for (const socket of socketsSet) {
+          if (this._alive.get(socket) === false) {
+            socket.terminate();
+            continue;
+          }
+          this._alive.set(socket, false);
+          socket.ping();
         }
-        
-        userSockets.add( socket );
-        this.alive.set(socket, true);
+      }
+    }, 15000).unref();
+  }
 
-        socket.on( 'close', async () => {
-            let socketSet : Set<WebSocket | null> = this.sockets.get( userId );
-            await this.disconnect( socketSet, socket, userId );
-        });
+  public ws = async (socket: WebSocket, req: FastifyRequest) => {
+    const userId = req.authUser.id;
 
-        socket.on('pong', () => {
-          this.alive.set(socket, true);
-        });
-        
-        const nb_user_socket =  userSockets.size ;
-        
-        // recuperation des following par l'appelant
-        const followingOnlineAtConnexion = await this.getFollowingAtConnextion( userId );
-        socket.send(
-            JSON.stringify({ 
-                event : "OnlineFolloingAtConnexion", 
-                data : followingOnlineAtConnexion
-        }));
-        
-        if (nb_user_socket > 1 ){
-            return 
-        };
-        // broadcast aux followers
-        for ( let key of this.sockets.keys() ) {
-            if ( key !== userId && this.sockets.get( key ) !== null )
-                await this.broadcastConnection( key, userId, "FollowingConnected" );
-        }
-
+    let userSockets = this._sockets.get(userId);
+    if (!userSockets) {
+      userSockets = new Set<WebSocket>();
+      this._sockets.set(userId, userSockets);
     }
 
-    private broadcastConnection = async ( userBroadcastToId : string, newUserConnectedId : string, event : string ) => {
-        
-        const following = await userRepository.listFollowingIdsByUserId( userBroadcastToId );
-        for ( let followId of following) {
-            if ( followId === newUserConnectedId )
-            {
-                const sockets : Set<WebSocket> = this.sockets.get( userBroadcastToId );
-                for ( let socket of sockets ) {
-                    socket.send( 
-                        JSON.stringify({ 
-                            event : event, 
-                            data : [ followId ]
-                    }) );
-                }
-                return ;
-            }
-        }
+    userSockets.add(socket);
+    this._alive.set(socket, true);
+
+    socket.on('close', () => {
+      const socketSet = this._sockets.get(userId);
+      if (!socketSet) return;
+      this._disconnect(socketSet, socket, userId).catch((error: unknown) => {
+        req.log.error(error);
+      });
+    });
+
+    socket.on('pong', () => {
+      this._alive.set(socket, true);
+    });
+
+    const nbUserSocket = userSockets.size;
+
+    // recuperation des following par l'appelant
+    const followingOnlineAtConnection = await this._getFollowingAtConnection(userId);
+    if (!userSockets.has(socket)) return;
+    socket.send(
+      JSON.stringify({
+        data: followingOnlineAtConnection,
+        event: 'OnlineFollowingAtConnection',
+      }),
+    );
+
+    if (nbUserSocket > 1) {
+      return;
     }
 
-    private getFollowingAtConnextion  = async ( userId : string ) => {
-        let followingConnected : string[] = [];
+    await this._broadcastToFollowers(userId, 'FollowingConnected');
+  };
 
-        const following = await userRepository.listFollowingIdsByUserId( userId );
-        for ( let followId of following )
-        {
-            if ( this.sockets.has( followId ) )
-                followingConnected.push( followId );
-        }
-        return followingConnected;
+  private _broadcastToFollowers = async (userId: string, event: string) => {
+    const followers = await userRepository.listFollowerIdsByUserId(userId);
+    const payload = JSON.stringify({
+      data: [userId],
+      event,
+    });
+    for (const follower of followers) {
+      for (const socket of this._sockets.get(follower) ?? []) {
+        socket.send(payload);
+      }
     }
+  };
 
-    private disconnect = async ( socketSet : Set<WebSocket>, socket : WebSocket, userId : string ) => {
-        
-        socketSet?.delete( socket );
-        if ( socketSet?.size == 0 )
-        {
-            this.sockets.delete( userId );
-            for ( let key of this.sockets.keys() ) {
-                if ( key !== userId && this.sockets.get( key ) !== null )
-                    await this.broadcastConnection( key, userId, "FollowingDisconnected" );
-            }
-        }    
+  private _getFollowingAtConnection = async (userId: string) => {
+    const followingConnected: string[] = [];
+
+    const following = await userRepository.listFollowingIdsByUserId(userId);
+    for (const followId of following) {
+      if (this._sockets.has(followId)) followingConnected.push(followId);
     }
-            
-    public pong = setInterval( async () => {
-            for ( const socketsSet of this.sockets.values() ) {
-                for ( const socket of socketsSet )
-                {
-                    if ( this.alive.get(socket) === false ) {
-                        socket.terminate();
-                        continue ;
-                    }
-                    this.alive.set(socket, false);
-                    socket.ping();
-                }
-            }
-        }, 15000);
+    return followingConnected;
+  };
+
+  private _disconnect = async (socketSet: Set<WebSocket>, socket: WebSocket, userId: string) => {
+    socketSet.delete(socket);
+    if (socketSet.size === 0) {
+      this._sockets.delete(userId);
+      await this._broadcastToFollowers(userId, 'FollowingDisconnected');
+    }
+  };
 }
 
-export const websocketControler = new WebsocketControler;
+export const websocketController = new WebsocketController();
