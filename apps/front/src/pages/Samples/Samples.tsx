@@ -12,10 +12,10 @@ import {
   theme,
 } from '@transcendence/ui';
 import { type JSX, type Key, useMemo, useState } from 'react';
-import { deleteSample, getSamples, getStorageUsage } from '../../api/audioFile/audioFile';
+import { deleteSample, getSamples, getStorageUsage } from '../../api/samples/samples';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
-import type { AudioFile, Family, Kind } from '../../types/audioFile';
+import type { Family, Kind, Sample } from '../../types/sample';
 import { SAMPLE_COMPARATORS } from './constants';
 import { DeleteSampleModal, type DeleteTarget } from './DeleteSampleModal';
 import { EditSampleModal } from './EditSampleModal';
@@ -44,7 +44,7 @@ export function Samples(): JSX.Element {
   const [sort, setSort] = useState<SortKey>('recent');
   const [view, setView] = useState<ViewMode>('list');
   const [confirmDelete, setConfirmDelete] = useState<DeleteTarget>(null);
-  const [editTarget, setEditTarget] = useState<AudioFile | null>(null);
+  const [editTarget, setEditTarget] = useState<Sample | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
 
   const notifySuccess = (message: string, description: string): void => {
@@ -65,7 +65,7 @@ export function Samples(): JSX.Element {
     });
   };
 
-  const handleDownload = async (sample: AudioFile): Promise<void> => {
+  const handleDownload = async (sample: Sample): Promise<void> => {
     try {
       await downloadSample(sample);
     } catch {
@@ -83,10 +83,7 @@ export function Samples(): JSX.Element {
     queryKey: ['audio-storage', user.id],
   });
 
-  const samples = useMemo(
-    () => (samplesQuery.data ?? []).filter((sample) => sample.kind !== 'TRACK'),
-    [samplesQuery.data],
-  );
+  const samples = useMemo(() => samplesQuery.data ?? [], [samplesQuery.data]);
   const storage = storageQuery.data;
 
   const filtered = useMemo(() => {

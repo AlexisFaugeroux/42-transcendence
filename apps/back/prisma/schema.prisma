@@ -12,11 +12,6 @@ enum Role {
   ARTIST
 }
 
-enum AudioType {
-  SAMPLE
-  TRACK
-}
-
 enum Key {
   A_key
   A_sharp_key
@@ -80,17 +75,16 @@ enum VisibilityType {
   PUBLIC
 }
 
-enum AudioFileKind {
+enum SampleKind {
   ONE_SHOT
   LOOP
-  TRACK
 }
 
 model Owner {
   id        String     @id @default(uuid()) 
   type      OwnerType
   user      User?
-  samples   AudioFile[]
+  samples   Sample[]
   projects  StudioProject[]
 }
 
@@ -117,13 +111,13 @@ model User {
   updatedAt                   DateTime @updatedAt
 } 
 
-model AudioFile {
+model Sample {
   id          String @id @default(uuid())
   owner       Owner @relation(fields: [ownerId], references: [id])
   name        String
   ownerId     String
   family      Family?
-  kind        AudioFileKind?
+  kind        SampleKind?
   bpm         Int?
   key         Key?
   mode        Mode?
@@ -150,7 +144,7 @@ model Session {
 model StudioProject {
   id          String @id @unique
   state       Bytes
-  samples     AudioFile[]
+  samples     Sample[]
   owner       Owner @relation(fields: [ownerId], references: [id])
   ownerId     String
   name        String

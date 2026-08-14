@@ -14,9 +14,9 @@ import {
   Upload,
 } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
-import { uploadSample } from '../../api/audioFile/audioFile';
-import type { UploadSampleFields } from '../../api/audioFile/types';
-import { VISIBILITIES } from '../../types/audioFile';
+import { uploadSample } from '../../api/samples/samples';
+import type { UploadSampleFields } from '../../api/samples/types';
+import { VISIBILITIES } from '../../types/sample';
 import { UPLOAD_STATUS_LABEL, VISIBILITY_LABEL } from './constants';
 import { FAMILY_OPTIONS, formatBytes, KEY_OPTIONS, KIND_OPTIONS } from './helpers';
 import styles from './UploadModal.module.scss';

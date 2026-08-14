@@ -6,7 +6,7 @@ import Fastify, {
   type FastifyReply,
   type FastifyRequest,
 } from 'fastify';
-import { AUDIO_USER_QUOTA_BYTES } from './constants';
+import { SAMPLE_USER_QUOTA_BYTES } from './constants';
 import {
   BadRequestError,
   ConflictError,
@@ -18,10 +18,10 @@ import {
   UnauthorizedError,
 } from './domain/errors';
 import authPlugin from './plugins/auth';
-import { audioRoutes } from './routes/audioFile';
 import { authRoutes } from './routes/auth';
 import { producerRoutes } from './routes/producer';
 import { projectRoutes } from './routes/project';
+import { sampleRoutes } from './routes/sample';
 import { userRoutes } from './routes/user';
 import { websocketRoutes } from './routes/websocket';
 export async function buildApp(): Promise<FastifyInstance> {
@@ -81,13 +81,14 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(multipart, {
     limits: {
       files: 1,
-      fileSize: AUDIO_USER_QUOTA_BYTES,
+      fileSize: SAMPLE_USER_QUOTA_BYTES,
     },
   });
+
   await app.register(authPlugin);
   await app.register(websocket);
   await app.register(websocketRoutes, { prefix: '/api' });
-  await app.register(audioRoutes, { prefix: '/api/audio' });
+  await app.register(sampleRoutes, { prefix: '/api/samples' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(userRoutes, { prefix: '/api/user' });
   await app.register(producerRoutes, { prefix: '/api/users' });

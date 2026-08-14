@@ -77,7 +77,7 @@ Total file size is therefore always `8 + channels * buckets * 2`.
 ## Worked example
 
 A real seeded file
-(`infra/media_data/audio/<ownerId>/39f8bcd8-….peaks`, "DSP ACE Processed Loop 127 18.wav"):
+(`infra/media_data/samples/<ownerId>/39f8bcd8-….peaks`, "DSP ACE Processed Loop 127 18.wav"):
 
 ```
 $ ls -l 39f8bcd8-….peaks
@@ -110,15 +110,15 @@ centre-panned loop. A hard-panned sample shows the two runs diverging.
 
 ## Lifecycle
 
-- **On upload** — `controllers/audioFile.ts` decodes the WAV
+- **On upload** — `controllers/sample.ts` decodes the WAV
   (`wavManager.decodeWav(…, { channelData: true })`), passes the channel
   `Float32Array`s to `msnpManager.generatePeaks`, and writes the result next to
-  the `.wav` via `audioStorageService.write(uuid, ownerId, peaks, 'peaks')`.
+  the `.wav` via `sampleStorageService.write(uuid, ownerId, peaks, 'peaks')`.
 - **On seed** — same path, from `scripts/seed/`.
-- **On delete** — `audioStorageService.remove` unlinks both extensions.
-- **Served** — by nginx under `/audio/`, behind the same `auth_request` check as
-  the audio itself. There is no separate permission: if you may read the `.wav`,
-  you may read its `.peaks`.
+- **On delete** — `sampleStorageService.remove` unlinks both extensions.
+- **Served** — by nginx under `/samples/`, behind the same `auth_request` check
+  as the audio itself. There is no separate permission: if you may read the
+  `.wav`, you may read its `.peaks`.
 
-The API exposes it as `AudioFile.peaksUrl`, derived in the repository's
+The API exposes it as `Sample.peaksUrl`, derived in the repository's
 `_format` by swapping the extension — it is not a database column.

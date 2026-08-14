@@ -12,10 +12,10 @@ profile (start in dev); `back`, `front`, `studio`, `reverse-proxy` are under the
 `media_data`.
 
 `media_data` is the **media root**, mounted at `/var/www/media`. Uploaded content
-sits in one subdirectory per kind — `audio/` today, `avatars/` next — so adding a
-kind needs neither a new volume nor a new nginx service. Public URLs are
-unaffected by the layout: nginx roots at `/var/www/media`, so `/audio/…` still
-resolves to `/var/www/media/audio/…`.
+sits in one subdirectory per kind — `samples/` and `avatars/` today, `tracks/`
+next — so adding a kind needs neither a new volume nor a new nginx service.
+Public URLs are unaffected by the layout: nginx roots at `/var/www/media`, so
+`/samples/…` still resolves to `/var/www/media/samples/…`.
 
 ## Development
 
@@ -39,12 +39,12 @@ The override publishes `db` on `localhost:5432` and `nginx-media` on
 Each Vite dev server proxies the paths the reverse proxy owns in prod, so app
 code can use relative URLs in both environments and never has to know a host:
 
-| Path     | front (`:5173`)                | studio (`:5174`)               |
-| -------- | ------------------------------ | ------------------------------ |
-| `/api`   | → `localhost:8080` back        | → `localhost:8080` back        |
-| `/audio` | → `localhost:8081` nginx-media | → `localhost:8081` nginx-media |
+| Path       | front (`:5173`)                | studio (`:5174`)               |
+| ---------- | ------------------------------ | ------------------------------ |
+| `/api`     | → `localhost:8080` back        | → `localhost:8080` back        |
+| `/samples` | → `localhost:8081` nginx-media | → `localhost:8081` nginx-media |
 
-Both apps fetch from `/audio/`: the studio loads samples into the DAW, the front
+Both apps fetch from `/samples/`: the studio loads samples into the DAW, the front
 previews them and fetches their `.peaks` in the samples library. Going through
 the proxy rather than hitting `localhost:8081` directly keeps the requests
 same-origin, so the session cookie travels and nginx's `auth_request` is
@@ -70,7 +70,7 @@ browser ──► reverse-proxy (nginx, TLS)
               / ───────► front       (nginx:80)
               /studio/ ─► studio      (nginx:80)
               /api/ ────► back        (:8080)
-              /audio/ ──► nginx-media (nginx:80) ─auth_request─► back
+              /samples/ ► nginx-media (nginx:80) ─auth_request─► back
             back ──► db (postgres:5432)
 ```
 
@@ -80,7 +80,7 @@ browser ──► reverse-proxy (nginx, TLS)
 | `front`         | `apps/front/Dockerfile`  | Static Vite build served by nginx (`nginx-spa.conf`, SPA fallback).                                                   |
 | `studio`        | `apps/studio/Dockerfile` | Static Vite build served by nginx.                                                                                    |
 | `back`          | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `media_data` (rw).                                                  |
-| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/audio/` from `media_data` (ro) with `auth_request` (`media.conf`).                                           |
+| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/samples/` from `media_data` (ro) with `auth_request` (`media.conf`).                                        |
 | `db`            | `postgres:18-alpine`     | PostgreSQL, reached at host `db` on the network (not published).                                                      |
 
 Reach the app at **https://localhost:8443** (self-signed — accept the warning);

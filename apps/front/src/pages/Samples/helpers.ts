@@ -1,13 +1,13 @@
 import { apiFetch } from '@transcendence/auth';
 import {
-  type AudioFile,
   FAMILIES,
   type Family,
   type Key,
   KEYS,
   type Kind,
+  type Sample,
   USER_KINDS,
-} from '../../types/audioFile';
+} from '../../types/sample';
 import { FAMILY_COLOR, GROUP_BY_FAMILY } from './constants';
 import type { FamilyGroup, Option } from './types';
 
@@ -63,8 +63,8 @@ export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({
   value: key,
 }));
 
-export async function downloadSample(sample: AudioFile): Promise<void> {
-  const response = await apiFetch(`/audio/${encodeURI(sample.url)}`);
+export async function downloadSample(sample: Sample): Promise<void> {
+  const response = await apiFetch(`/samples/${encodeURI(sample.url)}`);
   if (!response.ok) {
     throw new Error(`HTTP: ${response.status}`);
   }

@@ -2,17 +2,17 @@ import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
-import type { AudioFile } from '../../types/audioFile';
+import type { Sample } from '../../types/sample';
 import { familyColor, formatBytes, formatDuration, formatKey } from './helpers';
 import styles from './SampleGrid.module.scss';
 import { SampleWaveform } from './SampleWaveform';
 
 interface SampleGridProps {
-  rows: AudioFile[];
+  rows: Sample[];
   ownerId: string;
-  onEdit: (sample: AudioFile) => void;
-  onDownload: (sample: AudioFile) => void;
-  onDelete: (sample: AudioFile) => void;
+  onEdit: (sample: Sample) => void;
+  onDownload: (sample: Sample) => void;
+  onDelete: (sample: Sample) => void;
 }
 
 export function SampleGrid({
@@ -52,7 +52,7 @@ export function SampleGrid({
               className={styles.play}
               data-active={player.currentId === row.id}
               onClick={() => {
-                player.toggle(row.id, `/audio/${row.url}`);
+                player.toggle(row.id, `/samples/${row.url}`);
               }}
             >
               <MsnIcon name={player.currentId === row.id ? 'list' : 'play'} size="11px" />

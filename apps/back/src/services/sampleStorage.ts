@@ -10,11 +10,11 @@ interface StoredFile {
   url: string;
 }
 
-class AudioStorageService {
-  private readonly _audioRoot: string;
+class SampleStorageService {
+  private readonly _samplesRoot: string;
 
-  constructor(audioRoot: string) {
-    this._audioRoot = audioRoot;
+  constructor(samplesRoot: string) {
+    this._samplesRoot = samplesRoot;
   }
 
   public async write(uuid: string, ownerId: string, data: Buffer, ext?: 'wav' | 'peaks') {
@@ -58,17 +58,17 @@ class AudioStorageService {
   }
 
   public async deleteDirectory(ownerId: string): Promise<void> {
-    const dir = path.join(this._audioRoot, ownerId);
+    const dir = path.join(this._samplesRoot, ownerId);
     await rm(dir, { force: true, recursive: true });
   }
 
   private _path(uuid: string, ownerId: string, ext?: 'wav' | 'peaks') {
-    const dir = path.join(this._audioRoot, ownerId);
+    const dir = path.join(this._samplesRoot, ownerId);
     const filePath = path.join(dir, `${uuid}.${ext ?? 'wav'}`);
     return { dir, filePath };
   }
 }
 
-export const audioStorageService = new AudioStorageService(
-  join(process.env.MEDIA_ROOT ?? '/var/www/media', 'audio'),
+export const sampleStorageService = new SampleStorageService(
+  join(process.env.MEDIA_ROOT ?? '/var/www/media', 'samples'),
 );

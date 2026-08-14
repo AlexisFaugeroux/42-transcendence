@@ -82,7 +82,7 @@ management, and a social layer (following producers).
 
 **Justification for major technical choices:**
 
-- **PostgreSQL** — the domain is strongly relational (users, owners, audio files, sessions,
+- **PostgreSQL** — the domain is strongly relational (users, owners, samples, sessions,
   a many-to-many follow graph) and benefits from referential integrity and constraints.
   Audio binaries are kept on disk; only metadata lives in the database.
 - **Prisma** — type-safe database access shared with the TypeScript codebase, plus a
@@ -125,12 +125,12 @@ erDiagram
     datetime createdAt
     datetime updatedAt
   }
-  AudioFile {
+  Sample {
     string id PK
     string ownerId FK
     string name
     Family family "nullable"
-    AudioFileKind kind "nullable"
+    SampleKind kind "nullable"
     int bpm "nullable"
     Key key "nullable"
     Mode mode "nullable"
@@ -165,33 +165,33 @@ erDiagram
   }
 
   Owner ||--o| User : "owned by"
-  Owner ||--o{ AudioFile : owns
+  Owner ||--o{ Sample : owns
   Owner ||--o{ StudioProject : owns
   User  ||--o{ Session : has
   User  }o--o{ User : follows
-  AudioFile }o--o{ StudioProject : "used in"
+  Sample }o--o{ StudioProject : "used in"
 ```
 
 **Tables and relationships:**
 
-- **Owner** — abstraction that owns audio files. `type` is `PLATEFORM` (shared/platform
-  content) or `USER`. An owner optionally maps to a single `User` and to many `AudioFile`s.
+- **Owner** — abstraction that owns samples. `type` is `PLATEFORM` (shared/platform
+  content) or `USER`. An owner optionally maps to a single `User` and to many `Sample`s.
 - **User** — account (`email`, `handle`, `artistName` — all unique — hashed
   `password`, profile fields `firstname` / `lastname` / `location` / `bio` /
   `links`, `role` ∈ {`ADMIN`, `ARTIST`}). Linked one-to-one to an `Owner`. Self
   many-to-many relation `UserFollows` (`following` / `followedBy`). Has many `Session`s.
-- **AudioFile** — sample/track metadata: `name`, optional `family` / `kind` /
+- **Sample** — sample metadata: `name`, optional `family` / `kind` /
   `bpm` / `key` / `mode`, `visibility` (`PRIVATE` / `SHARED` / `PUBLIC`), `url`,
   `duration` (ms) and `bytes` (both derived server-side from the file). The
   binary itself lives on disk. Many-to-many with `StudioProject`.
 - **StudioProject** — a studio session: serialized `state` (`Bytes`), `name`,
   `duration`, `bpm`, `visibility`, optional `key` / `mode`. Owned by an `Owner`,
-  references many `AudioFile`s (the samples it uses).
+  references many `Sample`s (the samples it uses).
 - **Session** — authentication session for a user (`expiresAt`, optional `revokedAt`,
   `userAgent`); cascades on user deletion.
 
-**Enums:** `Role`, `AudioType`, `Key`, `Mode`, `Family`, `OwnerType`,
-`VisibilityType`, `AudioFileKind`.
+**Enums:** `Role`, `Key`, `Mode`, `Family`, `OwnerType`, `VisibilityType`,
+`SampleKind`.
 
 ---
 
@@ -221,7 +221,7 @@ Then set the values:
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                                           |
 | `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod`                       |
 | `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                                              |
-| `MEDIA_ROOT`                                        | Root holding uploaded media, one subdirectory per kind (`audio/`). **Dev:** `infra/media_data`. **Prod:** `/var/www/media` (the `media_data` volume) |
+| `MEDIA_ROOT`                                        | Root holding uploaded media, one subdirectory per kind (`samples/`, `avatars/`). **Dev:** `infra/media_data`. **Prod:** `/var/www/media` (the `media_data` volume) |
 
 `POSTGRES_URL` and `JWT_SECRET` are validated at boot — the backend refuses to
 start without them rather than falling back to a default.
@@ -322,7 +322,7 @@ pnpm --filter @transcendence/studio dev           # studio
 - [`monorepo.md`](docs/monorepo.md) — workspace layout, packages, pnpm commands
 - [`infra.md`](docs/infra.md) — dev and prod Docker/nginx topology
 - [`architecture/database.md`](docs/architecture/database.md) — Postgres, the two DBs, schema, env vars
-- [`architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md) — audio storage & access control
+- [`architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md) — sample storage & access control
 - [`authentication.md`](docs/authentication.md) — JWT + session auth
 - [`prisma.md`](docs/prisma.md) · [`formatting.md`](docs/formatting.md) · [`linting.md`](docs/linting.md) · [`rebase-before-pr.md`](docs/rebase-before-pr.md)
 

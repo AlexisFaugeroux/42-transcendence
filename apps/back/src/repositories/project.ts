@@ -1,6 +1,6 @@
 import { formatISO } from '@transcendence/date';
 import type { GetProjectInput, Project, UpsertProjectInput } from '../domain/project';
-import type { AudioFile, PrismaClient, StudioProject } from '../generated/prisma/client';
+import type { PrismaClient, Sample, StudioProject } from '../generated/prisma/client';
 import { toArrayBuffer } from '../utils/bytes';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
@@ -83,7 +83,7 @@ class ProjectRepository {
     }
   }
 
-  private _format(project: StudioProject & { samples: Pick<AudioFile, 'id'>[] }): Project {
+  private _format(project: StudioProject & { samples: Pick<Sample, 'id'>[] }): Project {
     const { createdAt, key, mode, samples, state, updatedAt, visibility, ...rest } = project;
 
     const buffer = toArrayBuffer(state);

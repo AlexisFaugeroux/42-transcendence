@@ -1,33 +1,33 @@
 import { apiError, apiFetch } from '@transcendence/auth';
 import { type DecodedPeaks, decodePeak } from '../../lib/peaks';
-import type { AudioFile } from '../../types/audioFile';
+import type { Sample } from '../../types/sample';
 import type {
-  AudioStorageUsage,
   GetSamplesFilters,
+  SampleStorageUsage,
   UpdateSampleFields,
   UploadSampleFields,
 } from './types';
 
-export async function getSamples(filters: GetSamplesFilters): Promise<AudioFile[]> {
+export async function getSamples(filters: GetSamplesFilters): Promise<Sample[]> {
   const searchParams = new URLSearchParams();
 
   for (const kind of filters.kinds ?? []) searchParams.append('kinds', kind);
   for (const visibility of filters.visibilities ?? [])
     searchParams.append('visibilities', visibility);
 
-  const res = await apiFetch(`/api/audio/get?${searchParams.toString()}`);
-  if (!res.ok) throw await apiError(res, '/api/audio/get');
+  const res = await apiFetch(`/api/samples/get?${searchParams.toString()}`);
+  if (!res.ok) throw await apiError(res, '/api/samples/get');
 
-  const data = (await res.json()) as AudioFile[];
+  const data = (await res.json()) as Sample[];
 
   return data;
 }
 
-export async function getStorageUsage(): Promise<AudioStorageUsage> {
-  const res = await apiFetch('/api/audio/storage');
-  if (!res.ok) throw await apiError(res, '/api/audio/storage');
+export async function getStorageUsage(): Promise<SampleStorageUsage> {
+  const res = await apiFetch('/api/samples/storage');
+  if (!res.ok) throw await apiError(res, '/api/samples/storage');
 
-  const data = (await res.json()) as AudioStorageUsage;
+  const data = (await res.json()) as SampleStorageUsage;
 
   return data;
 }
@@ -36,7 +36,7 @@ export async function uploadSample(file: File, fields: UploadSampleFields): Prom
   const form = new FormData();
   // ⚠️ Append text fields BEFORE the file. With req.file() the busboy stream
   // only exposes fields that arrived *before* the file part — fields appended
-  // after `file` silently won't reach parseUploadAudioFileFields.
+  // after `file` silently won't reach parseUploadSampleFields.
   form.append('visibility', fields.visibility);
   if (fields.bpm !== undefined) form.append('bpm', String(fields.bpm));
   if (fields.family) form.append('family', fields.family);
@@ -46,26 +46,26 @@ export async function uploadSample(file: File, fields: UploadSampleFields): Prom
   form.append('sample', file);
 
   // do NOT set Content-Type — the browser sets the multipart boundary.
-  const res = await apiFetch('/api/audio/upload', {
+  const res = await apiFetch('/api/samples/upload', {
     body: form,
     method: 'POST',
   });
 
-  if (!res.ok) throw await apiError(res, '/api/audio/upload');
+  if (!res.ok) throw await apiError(res, '/api/samples/upload');
 }
 
-export async function updateSample(uuid: string, fields: UpdateSampleFields): Promise<AudioFile> {
+export async function updateSample(uuid: string, fields: UpdateSampleFields): Promise<Sample> {
   const searchParams = new URLSearchParams({ id: uuid });
 
-  const res = await apiFetch(`/api/audio/update?${searchParams.toString()}`, {
+  const res = await apiFetch(`/api/samples/update?${searchParams.toString()}`, {
     body: JSON.stringify(fields),
     headers: { 'Content-Type': 'application/json' },
     method: 'PUT',
   });
 
-  if (!res.ok) throw await apiError(res, '/api/audio/update');
+  if (!res.ok) throw await apiError(res, '/api/samples/update');
 
-  const data = (await res.json()) as AudioFile;
+  const data = (await res.json()) as Sample;
 
   return data;
 }
@@ -75,15 +75,15 @@ export async function deleteSample(uuid: string): Promise<void> {
     id: uuid,
   });
 
-  const res = await apiFetch(`/api/audio/delete?${searchParams.toString()}`, {
+  const res = await apiFetch(`/api/samples/delete?${searchParams.toString()}`, {
     method: 'DELETE',
   });
 
-  if (!res.ok) throw await apiError(res, '/api/audio/delete');
+  if (!res.ok) throw await apiError(res, '/api/samples/delete');
 }
 
 export async function getPeaks(peaksUrl: string): Promise<DecodedPeaks> {
-  const res = await apiFetch(`/audio/${peaksUrl}`);
+  const res = await apiFetch(`/samples/${peaksUrl}`);
   if (!res.ok) throw await apiError(res, peaksUrl);
   return decodePeak(await res.arrayBuffer());
 }

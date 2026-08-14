@@ -8,18 +8,22 @@ files and asks the backend for an access decision before handing any file over.
 ## Where files live
 
 ```
-<MEDIA_ROOT>/audio/<ownerId>/<audioFileId>.wav
-<MEDIA_ROOT>/audio/<ownerId>/<audioFileId>.peaks
+<MEDIA_ROOT>/samples/<ownerId>/<sampleId>.wav
+<MEDIA_ROOT>/samples/<ownerId>/<sampleId>.peaks
 ```
 
 `MEDIA_ROOT` defaults to `/var/www/media` and is the root shared by every kind of
-uploaded file, one subdirectory each (`audio/` here). In dev it maps to
-`infra/media_data/` on the host; in prod to the `media_data` Docker volume (see
-[infra.md](../infra.md)). The path key is `ownerId` (the `Owner` model), not
-`userId`.
+uploaded file, one subdirectory each (`samples/` here, `avatars/` alongside). In
+dev it maps to `infra/media_data/` on the host; in prod to the `media_data`
+Docker volume (see [infra.md](../infra.md)). The path key is `ownerId` (the
+`Owner` model), not `userId`.
+
+The subdirectory is named `samples/`, not `audio/`: tracks (rendered project
+exports) are coming and will get their own kind, so "audio" was too broad to
+identify what lives here.
 
 The disk layout is invisible to clients: nginx roots at `/var/www/media`, so the
-public URL stays `/audio/<ownerId>/<audioFileId>.wav`.
+public URL stays `/samples/<ownerId>/<sampleId>.wav`.
 
 Every `.wav` has a `.peaks` sidecar next to it — same UUID, different extension —
 holding a precomputed amplitude envelope so the browser can draw a waveform
@@ -27,7 +31,7 @@ without downloading the audio. See [peaks.md](../peaks.md) for the format.
 
 ## Data model
 
-`AudioFile` (`apps/back/prisma/schema.prisma`) — metadata only: `ownerId`,
+`Sample` (`apps/back/prisma/schema.prisma`) — metadata only: `ownerId`,
 `name`, `family?`, `kind?`, `bpm?`, `key?`, `mode?`, `visibility` (`PRIVATE` /
 `SHARED` / `PUBLIC`), `url`, `duration` (ms, `Float`), `bytes`, `createdAt`.
 There is no `mime_type` column; the binary is addressed by `ownerId`/`id` on disk
@@ -41,12 +45,12 @@ The API also returns `peaksUrl`, which is **not** a column: the repository's
 
 ## Access control (nginx `auth_request`)
 
-For every `/audio/` request, nginx fires an internal sub-request to the backend,
+For every `/samples/` request, nginx fires an internal sub-request to the backend,
 which answers 200 / 401 / 403:
 
 ```nginx
 # infra/nginx/media.conf  (prod; dev uses media.dev.conf → host.docker.internal:8080)
-location /audio/ {
+location /samples/ {
   auth_request /auth/check-access;
   root /var/www/media;
 }
@@ -61,12 +65,12 @@ location = /auth/check-access {
 ```
 
 The upstream path is `/api/auth/check-access` — the handler is registered under
-the `/api/auth` prefix, not `/api/audio`. Getting it wrong is silent and total:
-a mistyped path 404s, which `auth_request` turns into a 500, so _every_ audio
-file becomes unreachable while the app otherwise looks healthy.
+the `/api/auth` prefix, not `/api/samples`. Getting it wrong is silent and total:
+a mistyped path 404s, which `auth_request` turns into a 500, so _every_ sample
+becomes unreachable while the app otherwise looks healthy.
 
 The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
-`authenticate` hook, parses `<ownerId>/<audioFileId>.<ext>` out of the
+`authenticate` hook, parses `<ownerId>/<sampleId>.<ext>` out of the
 `X-Original-URI` path, then allows the file if it is `PUBLIC` / `SHARED` or the
 requester owns it.
 
@@ -82,28 +86,28 @@ Two rules that are easy to break:
   failure path here therefore returns 403 (fail closed), including "sample not
   found", which also avoids leaking whether an id exists.
 
-## API (`/api/audio`, `routes/audioFile.ts`)
+## API (`/api/samples`, `routes/sample.ts`)
 
-All authenticated. Registered with prefix `/api/audio` in `app.ts`.
+All authenticated. Registered with prefix `/api/samples` in `app.ts`.
 
-- `GET /get` — lists the caller's `AudioFile`s **plus** the platform owner's,
+- `GET /get` — lists the caller's `Sample`s **plus** the platform owner's,
   with optional filters (`ids/bpms/keys/modes/families/kinds/visibilities`).
 - `GET /storage` — the caller's quota usage:
   `{ usedBytes, quotaBytes, byFamily: [{ family, bytes }] }`. `usedBytes` and the
   per-family breakdown are aggregated in SQL (`sumBytes`, `sumBytesByFamily`),
-  never by summing rows in JS; `quotaBytes` is `AUDIO_USER_QUOTA_BYTES`. The
+  never by summing rows in JS; `quotaBytes` is `SAMPLE_USER_QUOTA_BYTES`. The
   `family` of a breakdown entry is nullable — files uploaded without one are
   grouped under `null` rather than dropped, so the parts always add up to
   `usedBytes`.
 - `POST /upload` — `multipart/form-data` (`@fastify/multipart`). Streams the file
-  to disk (`audioStorageService.writeStream`), parses the WAV server-side
+  to disk (`sampleStorageService.writeStream`), parses the WAV server-side
   (`services/wav.ts` → `wavManager.decodeWav` → `duration`, `bytes`, and the
   per-channel `Float32Array`s), writes the `.peaks` sidecar
   (`msnpManager.generatePeaks`), enforces the per-owner quota
-  (`AUDIO_USER_QUOTA_BYTES`, `413` on overflow), then creates the row. Fields
+  (`SAMPLE_USER_QUOTA_BYTES`, `413` on overflow), then creates the row. Fields
   (`visibility`, `bpm?`, `key?`, `mode?`, `family?`, `kind?`) are validated in
   `utils/validation.ts`; `duration` is **never** trusted from the client. On any
-  failure the streamed file is rolled back (`audioStorageService.remove`).
+  failure the streamed file is rolled back (`sampleStorageService.remove`).
 - `PUT /update?id=` — partial metadata edit: `name`, `visibility`, `bpm`, `key`,
   `mode`, `family`, `kind`. `minProperties: 1` rejects an empty body. The optional
   enums accept `null` so a field can be **cleared** (`family: null` unsets it),
@@ -116,14 +120,14 @@ All authenticated. Registered with prefix `/api/audio` in `app.ts`.
 Seeds still populate the platform/user samples directly (`scripts/seed/`);
 `seed/meta.ts` derives `family`/`kind`/`bpm` from the filename.
 
-`services/audioStorage.ts` provides `write`, `writeStream`, `remove`, and
+`services/sampleStorage.ts` provides `write`, `writeStream`, `remove`, and
 `deleteDirectory(ownerId)`. The caller generates the UUID and passes it in, so
 the `.wav` and its `.peaks` share one.
 
-Clients reach `/audio/` with a **relative** path (`/audio/<url>`), routed by the
-reverse proxy in prod and by each app's Vite dev proxy in dev — see
+Clients reach `/samples/` with a **relative** path (`/samples/<url>`), routed by
+the reverse proxy in prod and by each app's Vite dev proxy in dev — see
 [infra.md](../infra.md). `url` and `peaksUrl` are storage keys
-(`<ownerId>/<uuid>.<ext>`), not URLs: the `/audio/` prefix is added by the
+(`<ownerId>/<uuid>.<ext>`), not URLs: the `/samples/` prefix is added by the
 consumer, so the same value works behind any mount point. Requests go through
 `apiFetch` so the cookie travels (the `auth_request` above needs it) and a 401
 triggers the same global logout as any other call.
@@ -133,5 +137,5 @@ Those parameters are vestigial — `checkAccess` ignores the query string — an
 be dropped whenever that file is next touched.
 
 The on-disk filename is always a server-generated `{uuid}.{ext}` — the client
-filename is stored only as `AudioFile.name`, never used to build the path (no
+filename is stored only as `Sample.name`, never used to build the path (no
 `../` path traversal).

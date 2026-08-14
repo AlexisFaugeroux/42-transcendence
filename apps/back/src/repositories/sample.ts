@@ -1,18 +1,18 @@
 import { formatISO } from '@transcendence/date';
 import type {
-  AudioFile,
-  CreateAudioFileInput,
+  CreateSampleInput,
   FamilyUsage,
-  GetAudioFileInput,
-  UpdateAudioFileInput,
+  GetSampleInput,
+  Sample,
+  UpdateSampleInput,
   Visibility,
-} from '../domain/audioFile';
-import type { AudioFile as PrismaAudioFile, PrismaClient } from '../generated/prisma/client';
-import type { AudioFileWhereInput } from '../generated/prisma/models';
+} from '../domain/sample';
+import type { PrismaClient, Sample as PrismaSample } from '../generated/prisma/client';
+import type { SampleWhereInput } from '../generated/prisma/models';
 import { prisma } from '../utils/prisma';
 import { inFilter, mapError } from './helpers';
 
-class AudioFileRepository {
+class SampleRepository {
   private readonly prisma: PrismaClient;
   private readonly OTHERS_VISIBILITIES: Visibility[] = ['PUBLIC', 'SHARED'];
 
@@ -20,77 +20,77 @@ class AudioFileRepository {
     this.prisma = client;
   }
 
-  public async create(input: CreateAudioFileInput): Promise<AudioFile> {
+  public async create(input: CreateSampleInput): Promise<Sample> {
     try {
-      const createdAudioFile: PrismaAudioFile = await this.prisma.audioFile.create({
+      const createdSample: PrismaSample = await this.prisma.sample.create({
         data: input,
       });
 
-      const formattedAudioFile = this._format(createdAudioFile);
+      const formattedSample = this._format(createdSample);
 
-      return formattedAudioFile;
+      return formattedSample;
     } catch (error: unknown) {
-      throw mapError(error, 'AudioFile');
+      throw mapError(error, 'Sample');
     }
   }
 
-  public async findById(id: string): Promise<AudioFile> {
+  public async findById(id: string): Promise<Sample> {
     try {
-      const audioFile: PrismaAudioFile = await this.prisma.audioFile.findUniqueOrThrow({
+      const sample: PrismaSample = await this.prisma.sample.findUniqueOrThrow({
         where: {
           id,
         },
       });
 
-      const formattedAudioFile = this._format(audioFile);
+      const formattedSample = this._format(sample);
 
-      return formattedAudioFile;
+      return formattedSample;
     } catch (error: unknown) {
-      throw mapError(error, 'AudioFile');
+      throw mapError(error, 'Sample');
     }
   }
 
-  public async get(input: GetAudioFileInput): Promise<AudioFile[]> {
+  public async get(input: GetSampleInput): Promise<Sample[]> {
     const filters = this._buildFilters(input);
 
     const where = Object.keys(filters).length ? filters : undefined;
 
-    const audioFiles: PrismaAudioFile[] = await this.prisma.audioFile.findMany({
+    const samples: PrismaSample[] = await this.prisma.sample.findMany({
       where,
     });
 
-    const formattedAudioFiles = audioFiles.map((audioFile) => this._format(audioFile));
+    const formattedSamples = samples.map((sample) => this._format(sample));
 
-    return formattedAudioFiles;
+    return formattedSamples;
   }
 
-  public async update(id: string, input: UpdateAudioFileInput): Promise<AudioFile> {
+  public async update(id: string, input: UpdateSampleInput): Promise<Sample> {
     try {
-      const updatedAudioFile = await this.prisma.audioFile.update({
+      const updatedSample = await this.prisma.sample.update({
         data: input,
         where: { id },
       });
 
-      const formattedAudioFile = this._format(updatedAudioFile);
+      const formattedSample = this._format(updatedSample);
 
-      return formattedAudioFile;
+      return formattedSample;
     } catch (error: unknown) {
-      throw mapError(error, 'AudioFile');
+      throw mapError(error, 'Sample');
     }
   }
 
   public async delete(id: string): Promise<void> {
     try {
-      await this.prisma.audioFile.delete({
+      await this.prisma.sample.delete({
         where: { id },
       });
     } catch (error: unknown) {
-      throw mapError(error, 'AudioFile');
+      throw mapError(error, 'Sample');
     }
   }
 
   public async sumBytes(ownerId: string): Promise<number> {
-    const result = await prisma.audioFile.aggregate({
+    const result = await prisma.sample.aggregate({
       _sum: { bytes: true },
       where: { ownerId },
     });
@@ -99,7 +99,7 @@ class AudioFileRepository {
   }
 
   public async sumBytesByFamily(ownerId: string): Promise<FamilyUsage[]> {
-    const rows = await this.prisma.audioFile.groupBy({
+    const rows = await this.prisma.sample.groupBy({
       _sum: { bytes: true },
       by: ['family'],
       where: { ownerId },
@@ -108,8 +108,8 @@ class AudioFileRepository {
     return rows.map((row) => ({ bytes: row._sum.bytes ?? 0, family: row.family }));
   }
 
-  private _format(audioFile: PrismaAudioFile): AudioFile {
-    const { createdAt, updatedAt, ...rest } = audioFile;
+  private _format(sample: PrismaSample): Sample {
+    const { createdAt, updatedAt, ...rest } = sample;
 
     const formattedCreatedAt = formatISO(createdAt);
 
@@ -120,7 +120,7 @@ class AudioFileRepository {
     };
   }
 
-  private _criteriaFilter(input: GetAudioFileInput): AudioFileWhereInput {
+  private _criteriaFilter(input: GetSampleInput): SampleWhereInput {
     const { bpms, families, ids, keys, kinds, modes } = input;
 
     return {
@@ -133,7 +133,7 @@ class AudioFileRepository {
     };
   }
 
-  private _scopeFilter(input: GetAudioFileInput): AudioFileWhereInput {
+  private _scopeFilter(input: GetSampleInput): SampleWhereInput {
     const { ownerIds, visibilities } = input;
 
     const visibility = inFilter(visibilities);
@@ -142,7 +142,7 @@ class AudioFileRepository {
       return { visibility };
     }
 
-    const mine: AudioFileWhereInput = { ownerId: { in: ownerIds }, visibility };
+    const mine: SampleWhereInput = { ownerId: { in: ownerIds }, visibility };
 
     const othersVisibilities = visibilities?.length
       ? visibilities.filter((v) => this.OTHERS_VISIBILITIES.includes(v))
@@ -157,7 +157,7 @@ class AudioFileRepository {
     };
   }
 
-  private _buildFilters(input: GetAudioFileInput): AudioFileWhereInput {
+  private _buildFilters(input: GetSampleInput): SampleWhereInput {
     return {
       ...this._criteriaFilter(input),
       ...this._scopeFilter(input),
@@ -165,4 +165,4 @@ class AudioFileRepository {
   }
 }
 
-export const audioFileRepository = new AudioFileRepository(prisma);
+export const sampleRepository = new SampleRepository(prisma);

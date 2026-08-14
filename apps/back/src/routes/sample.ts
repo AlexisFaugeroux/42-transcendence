@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify';
-import { audioFileController } from '../controllers/audioFile';
-import { USER_KINDS } from '../domain/audioFile';
-import { AudioFileKind, Family, Key, Mode, VisibilityType } from '../generated/prisma/enums';
+import { sampleController } from '../controllers/sample';
+import { USER_KINDS } from '../domain/sample';
+import { Family, Key, Mode, SampleKind, VisibilityType } from '../generated/prisma/enums';
 
-const getAudioFileQuerySchema = {
+const getSampleQuerySchema = {
   additionalProperties: false,
   properties: {
     bpms: {
@@ -46,7 +46,7 @@ const getAudioFileQuerySchema = {
 
     kinds: {
       items: {
-        enum: Object.values(AudioFileKind),
+        enum: Object.values(SampleKind),
         type: 'string',
       },
       minItems: 1,
@@ -77,7 +77,7 @@ const getAudioFileQuerySchema = {
   type: 'object',
 };
 
-const storageAudioFileSchema = {
+const storageSampleSchema = {
   querystring: {
     additionalProperties: false,
     properties: {},
@@ -108,7 +108,7 @@ const storageAudioFileSchema = {
   },
 };
 
-const updateAudioFileSchema = {
+const updateSampleSchema = {
   body: {
     additionalProperties: false,
     minProperties: 1,
@@ -133,7 +133,7 @@ const updateAudioFileSchema = {
   },
 };
 
-const deleteAudioFileSchema = {
+const deleteSampleSchema = {
   querystring: {
     additionalProperties: false,
     properties: {
@@ -144,30 +144,30 @@ const deleteAudioFileSchema = {
   },
 };
 
-export function audioRoutes(app: FastifyInstance) {
+export function sampleRoutes(app: FastifyInstance) {
   app.get(
     '/get',
-    { preHandler: app.authenticate, schema: { querystring: getAudioFileQuerySchema } },
-    audioFileController.get,
+    { preHandler: app.authenticate, schema: { querystring: getSampleQuerySchema } },
+    sampleController.get,
   );
 
   app.get(
     '/storage',
-    { preHandler: app.authenticate, schema: storageAudioFileSchema },
-    audioFileController.storage,
+    { preHandler: app.authenticate, schema: storageSampleSchema },
+    sampleController.storage,
   );
 
-  app.post('/upload', { preHandler: app.authenticate }, audioFileController.upload);
+  app.post('/upload', { preHandler: app.authenticate }, sampleController.upload);
 
   app.put(
     '/update',
-    { preHandler: app.authenticate, schema: updateAudioFileSchema },
-    audioFileController.update,
+    { preHandler: app.authenticate, schema: updateSampleSchema },
+    sampleController.update,
   );
 
   app.delete(
     '/delete',
-    { preHandler: app.authenticate, schema: deleteAudioFileSchema },
-    audioFileController.delete,
+    { preHandler: app.authenticate, schema: deleteSampleSchema },
+    sampleController.delete,
   );
 }

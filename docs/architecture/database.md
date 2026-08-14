@@ -7,6 +7,10 @@ with the `@prisma/adapter-pg` driver adapter. Only relational data lives in the
 DB — audio binaries stay on disk (see
 [audio-file-storage.md](./audio-file-storage.md)).
 
+> `AudioFile` was renamed `Sample` (and `AudioFileKind` → `SampleKind`, minus its
+> dead `TRACK` member; the unused `AudioType` enum was dropped) so the model no
+> longer collides with the rendered project **tracks** coming next.
+
 ## Two databases, one instance
 
 | Database             | Used by     | Created by                                                    |
@@ -44,14 +48,14 @@ client is committed under `apps/back/src/generated/prisma/` (see
 
 | Model           | Purpose                                                                                                                                               |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Owner`         | Owns audio files and projects. `type` = `PLATEFORM` or `USER`. Optionally maps to one `User`.                                                         |
+| `Owner`         | Owns samples and projects. `type` = `PLATEFORM` or `USER`. Optionally maps to one `User`.                                                             |
 | `User`          | Account: `email` / `handle` / `artistName` (unique), hashed `password`, profile fields, `role`.                                                       |
-| `AudioFile`     | Metadata: `name`, `visibility`, `url`, `duration` (ms, `Float`), `bytes`, optional `bpm` / `key` / `mode` / `family` / `kind`. Belongs to an `Owner`. |
+| `Sample`        | Metadata: `name`, `visibility`, `url`, `duration` (ms, `Float`), `bytes`, optional `bpm` / `key` / `mode` / `family` / `kind`. Belongs to an `Owner`. |
 | `StudioProject` | A studio session: serialized `state` (`Bytes`), `name`, `duration`, `bpm`, `visibility`, optional `key` / `mode`. Belongs to an `Owner`.              |
 | `Session`       | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                                                                       |
 
-Relationships: `User` 1–1 `Owner`; `Owner` 1–N `AudioFile`; `Owner` 1–N
-`StudioProject`; `AudioFile` N–N `StudioProject` (the samples a project uses);
+Relationships: `User` 1–1 `Owner`; `Owner` 1–N `Sample`; `Owner` 1–N
+`StudioProject`; `Sample` N–N `StudioProject` (the samples a project uses);
 `User` 1–N `Session`; `User` N–N `User` (follow graph `UserFollows`).
 
 Enums:
@@ -64,8 +68,7 @@ Enums:
 | `Key`            | 17 values, naturals plus sharps and flats: `A_key`, `A_sharp_key`, `B_flat_key`, … `A_flat_key`                                                                    |
 | `Mode`           | `MAJOR`, `MINOR`                                                                                                                                                   |
 | `Family`         | 18 values: `KICK`, `SNARE`, `CLAP`, `HAT`, `TOM`, `PERC`, `CYMBAL`, `BASS`, `SYNTH`, `LEAD`, `PAD`, `KEYS`, `PLUCK`, `STRINGS`, `BRASS`, `VOCAL`, `FX`, `AMBIENCE` |
-| `AudioFileKind`  | `ONE_SHOT`, `LOOP`, `TRACK`                                                                                                                                        |
-| `AudioType`      | `SAMPLE`, `TRACK` — legacy, not referenced by any model                                                                                                            |
+| `SampleKind`     | `ONE_SHOT`, `LOOP`                                                                                                                                                 |
 
 `Key`'s members carry a `_key` suffix and spell out accidentals (`C_sharp_key`)
 because `C#` is not a valid identifier. Frontends map them to display labels

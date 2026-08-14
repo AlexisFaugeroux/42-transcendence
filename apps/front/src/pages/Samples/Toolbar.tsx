@@ -1,7 +1,7 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Button, Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { Family, Kind } from '../../types/audioFile';
+import type { Family, Kind } from '../../types/sample';
 import { SORT_LABEL } from './constants';
 import { FAMILY_OPTIONS, KIND_OPTIONS } from './helpers';
 import styles from './Toolbar.module.scss';

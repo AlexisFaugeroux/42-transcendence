@@ -1,6 +1,5 @@
 import type { JSX } from 'react';
 import { LeftNav } from '../../layout/LeftNav';
-import { useSocket } from '../../websocket/WebSocketProvider';
 import { Greeting } from './Greeting';
 import styles from './Home.module.scss';
 import { RecentActivity } from './RecentActivity';

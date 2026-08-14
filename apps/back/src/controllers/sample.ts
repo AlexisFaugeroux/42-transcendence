@@ -1,50 +1,50 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { AUDIO_USER_QUOTA_BYTES } from '../constants';
-import type {
-  AudioFile,
-  AudioStorageUsage,
-  GetAudioFileInput,
-  UpdateAudioFileInput,
-} from '../domain/audioFile';
+import { SAMPLE_USER_QUOTA_BYTES } from '../constants';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
-import { audioFileRepository } from '../repositories/audioFile';
+import type {
+  GetSampleInput,
+  Sample,
+  SampleStorageUsage,
+  UpdateSampleInput,
+} from '../domain/sample';
 import { ownerRepository } from '../repositories/owner';
+import { sampleRepository } from '../repositories/sample';
 import { userRepository } from '../repositories/user';
-import { audioStorageService } from '../services/audioStorage';
 import { msnpManager } from '../services/msnp';
+import { sampleStorageService } from '../services/sampleStorage';
 import { type WavInfo, wavManager } from '../services/wav';
-import { parseUploadAudioFileFields } from '../utils/validation';
+import { parseUploadSampleFields } from '../utils/validation';
 
-interface GetAudioFilesRoute extends RouteGenericInterface {
-  Querystring: GetAudioFileInput;
+interface GetsampleFilesRoute extends RouteGenericInterface {
+  Querystring: GetSampleInput;
 }
 
-interface UploadAudioFileRoute extends RouteGenericInterface {
-  Reply: AudioFile;
+interface UploadSampleFileRoute extends RouteGenericInterface {
+  Reply: Sample;
 }
 
-interface StorageAudioFileRoute extends RouteGenericInterface {
-  Reply: AudioStorageUsage;
+interface StorageSampleRoute extends RouteGenericInterface {
+  Reply: SampleStorageUsage;
 }
 
-interface UpdateAudioFileRoute extends RouteGenericInterface {
+interface UpdateSampleRoute extends RouteGenericInterface {
   Querystring: {
     id: string;
   };
-  Body: UpdateAudioFileInput;
-  Reply: AudioFile;
+  Body: UpdateSampleInput;
+  Reply: Sample;
 }
 
-interface DeleteAudioFileRoute extends RouteGenericInterface {
+interface DeleteSampleRoute extends RouteGenericInterface {
   Querystring: {
     id: string;
   };
 }
 
-class AudioFileController {
+class SampleFileController {
   public get = async (
-    req: FastifyRequest<GetAudioFilesRoute>,
+    req: FastifyRequest<GetsampleFilesRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
     const userId = req.authUser.id;
@@ -55,43 +55,43 @@ class AudioFileController {
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
-    const audio = await audioFileRepository.get({
+    const sample = await sampleRepository.get({
       ownerIds,
       ...req.query,
     });
 
-    reply.code(200).send(audio);
+    reply.code(200).send(sample);
   };
 
   public storage = async (
-    req: FastifyRequest<StorageAudioFileRoute>,
-    reply: FastifyReply<StorageAudioFileRoute>,
+    req: FastifyRequest<StorageSampleRoute>,
+    reply: FastifyReply<StorageSampleRoute>,
   ): Promise<void> => {
     const { ownerId } = await userRepository.findById(req.authUser.id);
 
     const [usedBytes, byFamily] = await Promise.all([
-      audioFileRepository.sumBytes(ownerId),
-      audioFileRepository.sumBytesByFamily(ownerId),
+      sampleRepository.sumBytes(ownerId),
+      sampleRepository.sumBytesByFamily(ownerId),
     ]);
 
-    reply.code(200).send({ byFamily, quotaBytes: AUDIO_USER_QUOTA_BYTES, usedBytes });
+    reply.code(200).send({ byFamily, quotaBytes: SAMPLE_USER_QUOTA_BYTES, usedBytes });
   };
 
   public upload = async (
-    req: FastifyRequest<UploadAudioFileRoute>,
-    reply: FastifyReply<UploadAudioFileRoute>,
+    req: FastifyRequest<UploadSampleFileRoute>,
+    reply: FastifyReply<UploadSampleFileRoute>,
   ): Promise<void> => {
     const { ownerId } = await userRepository.findById(req.authUser.id);
 
     const data = await req.file();
     if (!data) throw new BadRequestError();
 
-    const fields = parseUploadAudioFileFields(data.fields);
+    const fields = parseUploadSampleFields(data.fields);
 
     const uuid = randomUUID();
 
     // Write streamed file on disk
-    const { filePath, url } = await audioStorageService.writeStream(uuid, ownerId, data.file);
+    const { filePath, url } = await sampleStorageService.writeStream(uuid, ownerId, data.file);
 
     // Parse from file on disk
     try {
@@ -106,16 +106,16 @@ class AudioFileController {
       // Write .peaks file on disk
       if (info.channelData) {
         const peaks = msnpManager.generatePeaks(info.channelData);
-        await audioStorageService.write(uuid, ownerId, peaks, 'peaks');
+        await sampleStorageService.write(uuid, ownerId, peaks, 'peaks');
       } else console.warn(`Missing peaks from ${uuid}, could not generate .peaks file`);
 
       // Check user quota
-      const usedBytes = await audioFileRepository.sumBytes(ownerId);
-      if (usedBytes + info.size > AUDIO_USER_QUOTA_BYTES) {
+      const usedBytes = await sampleRepository.sumBytes(ownerId);
+      if (usedBytes + info.size > SAMPLE_USER_QUOTA_BYTES) {
         throw new PayloadTooLargeError(`Maximum storage capacity reached`);
       }
 
-      const uploadedFile = await audioFileRepository.create({
+      const uploadedFile = await sampleRepository.create({
         bpm: fields.bpm,
         bytes: info.size,
         duration: info.durationMs,
@@ -132,42 +132,42 @@ class AudioFileController {
 
       reply.code(201).send(uploadedFile);
     } catch (error) {
-      await audioStorageService.remove(uuid, ownerId);
+      await sampleStorageService.remove(uuid, ownerId);
       throw error;
     }
   };
 
   public update = async (
-    req: FastifyRequest<UpdateAudioFileRoute>,
-    reply: FastifyReply<UpdateAudioFileRoute>,
+    req: FastifyRequest<UpdateSampleRoute>,
+    reply: FastifyReply<UpdateSampleRoute>,
   ): Promise<void> => {
     if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
 
     const user = await userRepository.findById(req.authUser.id);
-    const audioFile = await audioFileRepository.findById(req.query.id);
+    const sample = await sampleRepository.findById(req.query.id);
 
-    if (audioFile.ownerId !== user.ownerId) throw new ForbiddenError();
+    if (sample.ownerId !== user.ownerId) throw new ForbiddenError();
 
-    const updatedFile = await audioFileRepository.update(req.query.id, req.body);
+    const updated = await sampleRepository.update(req.query.id, req.body);
 
-    reply.code(200).send(updatedFile);
+    reply.code(200).send(updated);
   };
 
   public delete = async (
-    req: FastifyRequest<DeleteAudioFileRoute>,
+    req: FastifyRequest<DeleteSampleRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
     const user = await userRepository.findById(req.authUser.id);
-    const audioFile = await audioFileRepository.findById(req.query.id);
+    const sample = await sampleRepository.findById(req.query.id);
 
-    if (audioFile.ownerId !== user.ownerId) throw new ForbiddenError();
+    if (sample.ownerId !== user.ownerId) throw new ForbiddenError();
 
-    await audioStorageService.remove(audioFile.id, user.ownerId);
+    await sampleStorageService.remove(sample.id, user.ownerId);
 
-    await audioFileRepository.delete(req.query.id);
+    await sampleRepository.delete(req.query.id);
 
     reply.code(204).send();
   };
 }
 
-export const audioFileController = new AudioFileController();
+export const sampleController = new SampleFileController();

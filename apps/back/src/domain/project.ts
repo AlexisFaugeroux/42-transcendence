@@ -1,5 +1,5 @@
 import type { VisibilityType } from '../generated/prisma/enums';
-import type { Key, Mode } from './audioFile';
+import type { Key, Mode } from './sample';
 
 export interface Project {
   id: string;

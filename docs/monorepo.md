@@ -20,7 +20,7 @@ transcendence/
     ui/              shared UI components
   design/            UI mockups & design reference (READ-ONLY, not shipped)
   docs/              documentation
-  infra/             nginx configs, postgres init, TLS certs, audio data
+  infra/             nginx configs, postgres init, TLS certs, media data
   scripts/           helper scripts
   docker-compose.yaml + docker-compose.override.yaml
   pnpm-workspace.yaml

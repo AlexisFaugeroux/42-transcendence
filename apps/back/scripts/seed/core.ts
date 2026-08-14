@@ -98,7 +98,7 @@ export async function seed(config: SeedConfig): Promise<void> {
   for (const sampleSet of config.sampleSets) {
     const ownerId = resolveOwnerId(sampleSet.owner);
     const label = sampleSet.owner === 'PLATFORM' ? 'platform' : sampleSet.owner.artistName;
-    console.log(`Create ${label} audio files...`);
+    console.log(`Create ${label} samples...`);
 
     const files = await walk(sampleSet.dir);
     const samples = await Promise.all(
@@ -124,7 +124,7 @@ export async function seed(config: SeedConfig): Promise<void> {
 
     await prisma.$transaction(async (tx) => {
       for (const sample of samples) {
-        await tx.audioFile.create({
+        await tx.sample.create({
           data: {
             bpm: sample.bpm,
             bytes: sample.size,
@@ -143,7 +143,7 @@ export async function seed(config: SeedConfig): Promise<void> {
 
     for (const sample of samples) {
       // write file on disk
-      const dest = join(config.mediaDir, 'audio', sample.url);
+      const dest = join(config.mediaDir, 'samples', sample.url);
       await mkdir(dirname(dest), { recursive: true });
       await copyFile(sample.abs, dest);
 
