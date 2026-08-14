@@ -1,9 +1,9 @@
 import { Trans, useTranslation } from '@transcendence/i18n';
 import { Modal } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { AudioFile } from '../../types/audioFile';
+import type { Sample } from '../../types/sample';
 
-export type DeleteTarget = AudioFile | 'selection' | null;
+export type DeleteTarget = Sample | 'selection' | null;
 
 interface DeleteSampleModalProps {
   target: DeleteTarget;

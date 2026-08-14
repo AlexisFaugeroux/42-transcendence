@@ -1,13 +1,13 @@
+import { BadRequestError } from '../domain/errors';
 import {
   type Family,
   type Key,
   type Kind,
   type Mode,
-  type UploadAudioFileFields,
+  type UploadSampleFields,
   USER_KINDS,
   type Visibility,
-} from '../domain/audioFile';
-import { BadRequestError } from '../domain/errors';
+} from '../domain/sample';
 import {
   Family as FamilyEnum,
   Key as KeyEnum,
@@ -28,7 +28,7 @@ const isFamily = (value: string): value is Family =>
   Object.values(FamilyEnum).includes(familyMap[value]);
 const isKind = (value: string): value is Kind => USER_KINDS.some((kind) => kind === value);
 
-export function parseUploadAudioFileFields(fields: Record<string, unknown>): UploadAudioFileFields {
+export function parseUploadSampleFields(fields: Record<string, unknown>): UploadSampleFields {
   const raw = (name: string): string | undefined => {
     const f = fields[name];
     if (f && typeof f === 'object' && 'value' in f && typeof f.value === 'string') return f.value;

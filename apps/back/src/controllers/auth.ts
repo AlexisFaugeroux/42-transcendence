@@ -4,7 +4,7 @@ import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/
 import { ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
 import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
-import { audioFileRepository } from '../repositories/audioFile';
+import { sampleRepository } from '../repositories/sample';
 import { sessionRepository } from '../repositories/session';
 import { toLinks } from '../repositories/user';
 import { userRepository } from '../repositories/user';
@@ -88,9 +88,9 @@ class AuthController {
     if (typeof originalUri !== 'string') throw new ForbiddenError();
 
     const [path] = originalUri.split('?');
-    const segments = path.split('/').filter(Boolean); // ['audio', ownerId, '<uuid>.<ext>']
+    const segments = path.split('/').filter(Boolean); // ['samples', ownerId, '<uuid>.<ext>']
 
-    if (segments.length !== 3 || segments[0] !== 'audio') throw new ForbiddenError();
+    if (segments.length !== 3 || segments[0] !== 'samples') throw new ForbiddenError();
 
     const filename = segments[2];
     const dot = filename.lastIndexOf('.');
@@ -100,7 +100,7 @@ class AuthController {
 
     try {
       const { ownerId } = await userRepository.findById(req.authUser.id);
-      const sample = await audioFileRepository.findById(sampleId);
+      const sample = await sampleRepository.findById(sampleId);
 
       if (
         sample.visibility != 'PUBLIC' &&

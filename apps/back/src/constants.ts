@@ -1,3 +1,3 @@
-export const AUDIO_USER_QUOTA_BYTES = 524_288_000; // 500 MiB
+export const SAMPLE_USER_QUOTA_BYTES = 524_288_000; // 500 MiB
 
 export const AVATAR_MAX_BYTES = 5_242_880;

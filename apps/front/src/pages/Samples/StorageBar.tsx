@@ -1,14 +1,14 @@
 import { useTranslation } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { AudioStorageUsage } from '../../api/audioFile/types';
+import type { SampleStorageUsage } from '../../api/samples/types';
 import { FAMILY_COLOR, FAMILY_GROUPS } from './constants';
 import { familyGroup, formatBytes } from './helpers';
 import styles from './StorageBar.module.scss';
 import type { FamilyGroup } from './types';
 
 interface StorageBarProps {
-  usage: AudioStorageUsage;
+  usage: SampleStorageUsage;
 }
 
 const EMPTY_GROUPS: Record<FamilyGroup, number> = {

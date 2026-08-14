@@ -2,16 +2,16 @@ import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from '@transcendence/i18n';
 import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
-import { updateSample } from '../../api/audioFile/audioFile';
-import type { UpdateSampleFields } from '../../api/audioFile/types';
-import { MODES, VISIBILITIES } from '../../types/audioFile';
-import type { AudioFile, Family, Key, Kind, Mode } from '../../types/audioFile';
+import { updateSample } from '../../api/samples/samples';
+import type { UpdateSampleFields } from '../../api/samples/types';
+import { MODES, VISIBILITIES } from '../../types/sample';
+import type { Family, Key, Kind, Mode, Sample } from '../../types/sample';
 import { MODE_LABEL, VISIBILITY_LABEL } from './constants';
 import styles from './EditSampleModal.module.scss';
 import { FAMILY_OPTIONS, KEY_OPTIONS, KIND_OPTIONS } from './helpers';
 
 interface EditSampleModalProps {
-  target: AudioFile | null;
+  target: Sample | null;
   onCancel: () => void;
   onSaved: () => Promise<void>;
   notifySuccess: (message: string, description: string) => void;
@@ -20,7 +20,7 @@ interface EditSampleModalProps {
 
 type Draft = Required<UpdateSampleFields>;
 
-function toDraft(sample: AudioFile): Draft {
+function toDraft(sample: Sample): Draft {
   return {
     bpm: sample.bpm,
     family: sample.family,

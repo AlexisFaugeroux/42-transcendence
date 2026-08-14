@@ -23,8 +23,8 @@ import { theme } from '@transcendence/ui/theme';
 import OfflineEngineUrl from '@opendaw/studio-core/offline-engine.js?worker&url';
 import WorkletsUrl from '@opendaw/studio-core/processors.js?url';
 import WorkersUrl from '@opendaw/studio-core/workers-main.js?worker&url';
-import { getAudioById } from '../api/audiofile';
 import { loadProject, saveProject } from '../api/project';
+import { getSampleById } from '../api/sample';
 import type { ProjectProperties } from '../lib/types';
 import type { Track } from '../lib/types';
 import type { Clip } from '../lib/types';
@@ -173,7 +173,7 @@ export async function _doInitializeOpenDaw(
         audioBuffer = localAudioBuffers.get(uuidString);
       } else {
         const id = UUID.toString(uuid);
-        const sample = await getAudioById(id);
+        const sample = await getSampleById(id);
         if (!sample) throw new Error('Failed to fetch sample in OpenDaw init');
         audioBuffer = await loadAudioFile(audioContext, sample.url, sample.id, '');
       }

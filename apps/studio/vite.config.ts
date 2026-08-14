@@ -11,7 +11,7 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
     port: 5174,
-    proxy: { '/api': 'http://localhost:8080', '/audio': 'http://localhost:8081' },
+    proxy: { '/api': 'http://localhost:8080', '/samples': 'http://localhost:8081' },
     strictPort: true,
   },
 });

@@ -11,20 +11,20 @@ import {
 } from '@transcendence/ui';
 import type { JSX, Key } from 'react';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
-import type { AudioFile } from '../../types/audioFile';
+import type { Sample } from '../../types/sample';
 import { MODE_ABBR } from './constants';
 import { familyColor, formatBytes, formatDuration, formatKey, formatKind } from './helpers';
 import styles from './SampleTable.module.scss';
 import { SampleWaveform } from './SampleWaveform';
 
 interface SampleTableProps {
-  rows: AudioFile[];
+  rows: Sample[];
   ownerId: string;
   selectedKeys: Key[];
   onSelectionChange: (keys: Key[]) => void;
-  onEdit: (sample: AudioFile) => void;
-  onDownload: (sample: AudioFile) => void;
-  onDelete: (sample: AudioFile) => void;
+  onEdit: (sample: Sample) => void;
+  onDownload: (sample: Sample) => void;
+  onDelete: (sample: Sample) => void;
 }
 
 export function SampleTable({
@@ -40,7 +40,7 @@ export function SampleTable({
   const locale = i18n.language;
   const player = useSamplePlayer();
 
-  const columns: TableColumnsType<AudioFile> = [
+  const columns: TableColumnsType<Sample> = [
     {
       key: 'play',
       render: (_, row) => (
@@ -48,7 +48,7 @@ export function SampleTable({
           className={styles.play}
           data-active={player.currentId === row.id}
           onClick={() => {
-            player.toggle(row.id, `/audio/${row.url}`);
+            player.toggle(row.id, `/samples/${row.url}`);
           }}
         >
           <MsnIcon name={player.currentId === row.id ? 'list' : 'play'} size="11px" />

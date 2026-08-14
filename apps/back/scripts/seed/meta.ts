@@ -1,8 +1,8 @@
-import { AudioFileKind, Family } from '../../src/generated/prisma/enums';
+import { Family, SampleKind } from '../../src/generated/prisma/enums';
 
 export interface SampleMeta {
   family: Family | null;
-  kind: AudioFileKind;
+  kind: SampleKind;
   bpm: number | null;
 }
 
@@ -33,7 +33,7 @@ export function deriveSampleMeta(filename: string): SampleMeta {
   const base = filename.replace(/\.wav$/i, '');
 
   const isLoop = /\bloop\b/i.test(base) || /\bbpm\b/i.test(base) || /\d\s*bpm/i.test(base);
-  const kind = isLoop ? AudioFileKind.LOOP : AudioFileKind.ONE_SHOT;
+  const kind = isLoop ? SampleKind.LOOP : SampleKind.ONE_SHOT;
 
   const bpmMatch = /(\d{2,3})\s*bpm/i.exec(base) ?? /loop\D*(\d{2,3})/i.exec(base);
   const bpm = bpmMatch ? Number(bpmMatch[1]) : null;

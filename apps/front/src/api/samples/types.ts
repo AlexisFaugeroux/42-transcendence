@@ -1,4 +1,4 @@
-import type { Family, Key, Kind, Mode, Visibility } from '../../types/audioFile';
+import type { Family, Key, Kind, Mode, Visibility } from '../../types/sample';
 
 export interface GetSamplesFilters {
   kinds?: Kind[];
@@ -10,7 +10,7 @@ export interface FamilyUsage {
   bytes: number;
 }
 
-export interface AudioStorageUsage {
+export interface SampleStorageUsage {
   usedBytes: number;
   quotaBytes: number;
   byFamily: FamilyUsage[];

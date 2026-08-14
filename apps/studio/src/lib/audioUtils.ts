@@ -14,11 +14,11 @@ export async function loadAudioFile(
       sampleId: uuid,
       userId,
     });
-    // Relative path on purpose: nginx routes /audio/ to the audio server in prod
+    // Relative path on purpose: nginx routes /samples/ to the audio server in prod
     // (infra/nginx/reverse-proxy.conf), the Vite proxy does the same in dev. Going
     // through apiFetch keeps the cookie (nginx authorizes each file via auth_request)
     // and the global logout on 401.
-    const response = await apiFetch(`/audio/${url}?${queryString.toString()}`);
+    const response = await apiFetch(`/samples/${url}?${queryString.toString()}`);
     if (!response.ok) throw new ApiErrorReponse();
 
     const arrayBuffer = await response.arrayBuffer();

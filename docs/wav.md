@@ -131,7 +131,7 @@ it isn't the one you want, skip past it using its size — advance by
 ## Worked example
 
 A real sample from the project
-(`infra/media_data/audio/<ownerId>/<uuid>.wav`, "SOR Hats"):
+(`infra/media_data/samples/<ownerId>/<uuid>.wav`, "SOR Hats"):
 
 ```
 offset  bytes           meaning

@@ -39,11 +39,11 @@ export type Family =
   | 'FX'
   | 'AMBIENCE';
 
-export type Kind = 'ONE_SHOT' | 'LOOP' | 'TRACK';
+export type Kind = 'ONE_SHOT' | 'LOOP';
 
 export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
 
-export interface AudioFile {
+export interface Sample {
   id: string;
   bpm: number | null;
   ownerId: string;
@@ -105,6 +105,6 @@ export const FAMILIES: Family[] = [
   'AMBIENCE',
 ];
 
-export const KINDS: Kind[] = ['ONE_SHOT', 'LOOP', 'TRACK'];
+export const KINDS: Kind[] = ['ONE_SHOT', 'LOOP'];
 
 export const USER_KINDS: Kind[] = ['ONE_SHOT', 'LOOP'];

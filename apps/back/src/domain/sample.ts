@@ -39,13 +39,13 @@ export type Family =
   | 'FX'
   | 'AMBIENCE';
 
-export type Kind = 'ONE_SHOT' | 'LOOP' | 'TRACK';
+export type Kind = 'ONE_SHOT' | 'LOOP';
 
 export const USER_KINDS: Kind[] = ['ONE_SHOT', 'LOOP'];
 
 export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
 
-export interface AudioFile {
+export interface Sample {
   id: string;
   bpm: number | null;
   ownerId: string;
@@ -62,7 +62,7 @@ export interface AudioFile {
   createdAt: string;
 }
 
-export interface CreateAudioFileInput {
+export interface CreateSampleInput {
   id: string;
   name: string;
   ownerId: string;
@@ -77,7 +77,7 @@ export interface CreateAudioFileInput {
   kind?: Kind | null;
 }
 
-export interface GetAudioFileInput {
+export interface GetSampleInput {
   visibilities?: Visibility[];
   ids?: string[];
   bpms?: number[];
@@ -88,7 +88,7 @@ export interface GetAudioFileInput {
   ownerIds?: string[];
 }
 
-export interface UpdateAudioFileInput {
+export interface UpdateSampleInput {
   name?: string;
   visibility?: Visibility;
   url?: string;
@@ -106,13 +106,13 @@ export interface FamilyUsage {
   bytes: number;
 }
 
-export interface AudioStorageUsage {
+export interface SampleStorageUsage {
   usedBytes: number;
   quotaBytes: number;
   byFamily: FamilyUsage[];
 }
 
-export interface UploadAudioFileFields {
+export interface UploadSampleFields {
   visibility: Visibility;
   bpm?: number;
   key?: Key;
