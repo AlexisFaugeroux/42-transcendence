@@ -48,7 +48,7 @@ export function LeaveStudioModal({
           type="error"
           showIcon
           style={{ marginTop: 12 }}
-          message={t('studio.header.leave.saveFailed')}
+          title={t('studio.header.leave.saveFailed')}
           description={error}
         />
       ) : null}
