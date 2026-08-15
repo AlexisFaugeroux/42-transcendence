@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { SAMPLE_USER_QUOTA_BYTES } from '../constants';
+import { MAX_UPLOAD_BYTES, SAMPLE_USER_QUOTA_BYTES } from '../constants';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import type {
   GetSampleInput,
@@ -74,7 +74,12 @@ class SampleFileController {
       sampleRepository.sumBytesByFamily(ownerId),
     ]);
 
-    reply.code(200).send({ byFamily, quotaBytes: SAMPLE_USER_QUOTA_BYTES, usedBytes });
+    reply.code(200).send({
+      byFamily,
+      maxUploadBytes: MAX_UPLOAD_BYTES,
+      quotaBytes: SAMPLE_USER_QUOTA_BYTES,
+      usedBytes,
+    });
   };
 
   public upload = async (

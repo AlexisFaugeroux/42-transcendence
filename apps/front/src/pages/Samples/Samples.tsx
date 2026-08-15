@@ -293,6 +293,7 @@ export function Samples(): JSX.Element {
           notifyError={notifyError}
         />
         <UploadModal
+          maxUploadBytes={storage?.maxUploadBytes ?? 0}
           open={uploadOpen}
           onClose={() => {
             setUploadOpen(false);

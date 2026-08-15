@@ -461,6 +461,7 @@
       "afterUpload": "Après l'envoi",
       "dropTitle": "Déposez vos fichiers audio ici",
       "errorTitle": "Envoi échoué",
+      "fileTooLarge": "Fichier trop grand (max {{max}} par fichier)",
       "partialFailure": "{{failed}} fichier(s) sur {{total}} n'ont pas pu être envoyés",
       "queue_one": "File · {{count}} fichier · {{size}}",
       "queue_other": "File · {{count}} fichiers · {{size}}",

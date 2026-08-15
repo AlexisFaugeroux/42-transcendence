@@ -13,6 +13,7 @@ export interface FamilyUsage {
 export interface SampleStorageUsage {
   usedBytes: number;
   quotaBytes: number;
+  maxUploadBytes: number;
   byFamily: FamilyUsage[];
 }
 

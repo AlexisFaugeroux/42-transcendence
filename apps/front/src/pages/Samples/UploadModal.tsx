@@ -37,9 +37,11 @@ interface UploadModalProps {
   onUploaded: () => Promise<void>;
   usedBytes: number;
   quotaBytes: number;
+  maxUploadBytes: number;
 }
 
 export function UploadModal({
+  maxUploadBytes,
   onClose,
   onUploaded,
   open,
@@ -52,6 +54,22 @@ export function UploadModal({
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const addToQueue = (file: File): void => {
+    if (file.size > maxUploadBytes) {
+      setQueue((q) => [
+        ...q,
+        {
+          error: t('samples.upload.fileTooLarge', {
+            max: formatBytes(maxUploadBytes, locale),
+          }),
+          fields: { visibility: 'PRIVATE' },
+          file,
+          status: 'error',
+          uuid: crypto.randomUUID(),
+        },
+      ]);
+      return;
+    }
+
     setQueue((q) => [
       ...q,
       { fields: { visibility: 'PRIVATE' }, file, status: 'queued', uuid: crypto.randomUUID() },
@@ -74,7 +92,7 @@ export function UploadModal({
 
   const { isPending, mutate: startUpload } = useMutation({
     mutationFn: async () => {
-      const pending = queue.filter((item) => item.status !== 'uploading');
+      const pending = queue.filter((item) => item.status === 'queued');
       let failed = 0;
 
       for (const item of pending) {
@@ -119,7 +137,7 @@ export function UploadModal({
   });
 
   const queueTotal = queue.reduce((acc, { file }) => acc + file.size, 0);
-  const uploadableCount = queue.filter((item) => item.status !== 'uploading').length;
+  const uploadableCount = queue.filter((item) => item.status === 'queued').length;
 
   return (
     <Modal
