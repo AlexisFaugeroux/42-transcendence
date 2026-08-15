@@ -1,7 +1,7 @@
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
-import { useSession } from '../../../hooks/useSession';
+import { useSavedSessions } from '../../hooks/useSavedSessions';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
@@ -29,7 +29,7 @@ export function Sessions(): JSX.Element {
   const [newOpen, setNewOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Session | null>(null);
   const [renameTarget, setRenameTarget] = useState<Session | null>(null);
-  const { data, error, isError } = useSession();
+  const { data, error, isError } = useSavedSessions();
 
   if (isError) throw error;
 

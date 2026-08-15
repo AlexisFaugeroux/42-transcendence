@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
-import { getSavedSessions } from '../src/api/session.ts';
-import type { Session } from '../src/pages/Sessions/sessions.data.ts';
+import { getSavedSessions } from '../api/session';
+import type { Session } from '../pages/Sessions/sessions.data';
 
-export function useSession() {
+export function useSavedSessions() {
   const user = useAuthUser();
 
   return useQuery<Session[]>({

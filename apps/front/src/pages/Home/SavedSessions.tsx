@@ -1,7 +1,7 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Carousel, MsnIcon } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
-import { useSession } from '../../../hooks/useSession';
+import { useSavedSessions } from '../../hooks/useSavedSessions';
 import type { Session } from '../Sessions/sessions.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';
@@ -9,7 +9,7 @@ import { SavedSessionTile } from './SavedSessionTile';
 export function SavedSessions(): JSX.Element {
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
   const { t } = useTranslation();
-  const { data, error, isError, isLoading } = useSession();
+  const { data, error, isError, isLoading } = useSavedSessions();
 
   if (isError) throw error;
 
