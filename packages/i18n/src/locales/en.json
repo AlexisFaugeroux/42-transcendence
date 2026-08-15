@@ -461,6 +461,7 @@
       "afterUpload": "After upload",
       "dropTitle": "Drop audio files here",
       "errorTitle": "Upload failed",
+      "fileTooLarge": "File is too large (max {{max}} per file).",
       "partialFailure": "{{failed}} of {{total}} files could not be uploaded",
       "queue_one": "Queue · {{count}} file · {{size}}",
       "queue_other": "Queue · {{count}} files · {{size}}",

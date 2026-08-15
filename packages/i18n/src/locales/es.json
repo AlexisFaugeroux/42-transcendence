@@ -461,6 +461,7 @@
       "afterUpload": "Después de subir",
       "dropTitle": "Suelta aquí los archivos de audio",
       "errorTitle": "Error al subir",
+      "fileTooLarge": "Archivo demasiado grande (máx. {{max}} por archivo)",
       "partialFailure": "No se han podido subir {{failed}} de {{total}} archivos",
       "queue_one": "Cola · {{count}} archivo · {{size}}",
       "queue_other": "Cola · {{count}} archivos · {{size}}",
