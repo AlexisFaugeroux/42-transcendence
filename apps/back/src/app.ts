@@ -6,7 +6,7 @@ import Fastify, {
   type FastifyReply,
   type FastifyRequest,
 } from 'fastify';
-import { SAMPLE_USER_QUOTA_BYTES } from './constants';
+import { MAX_UPLOAD_BYTES } from './constants';
 import {
   BadRequestError,
   ConflictError,
@@ -84,7 +84,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(multipart, {
     limits: {
       files: 1,
-      fileSize: SAMPLE_USER_QUOTA_BYTES,
+      fileSize: MAX_UPLOAD_BYTES,
     },
   });
 

@@ -1,3 +1,5 @@
 export const SAMPLE_USER_QUOTA_BYTES = 524_288_000; // 500 MiB
 
+export const MAX_UPLOAD_BYTES = 104_857_600; // 100 MiB
+
 export const AVATAR_MAX_BYTES = 5_242_880;
