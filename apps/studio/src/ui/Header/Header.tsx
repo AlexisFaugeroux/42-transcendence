@@ -2,18 +2,24 @@ import { UUID } from '@opendaw/lib-std';
 import { useMutation } from '@tanstack/react-query';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import { Button, IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, type MouseEvent, useEffect, useState } from 'react';
 import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
+import type { ProjectProperties } from '../../lib/types';
 import { arrayBufferToBase64 } from '../../utils/base64';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './Header.module.scss';
+import { LeaveStudioModal } from './LeaveStudioModal';
 import { Meter } from './Meter/Meter';
 import { Metrics } from './Metrics/Metrics';
 import { Transport } from './Transport/Transport';
 
+const FRONT_URL = import.meta.env.VITE_FRONT_URL;
+
 export function Header(): JSX.Element {
   const [saved, setSaved] = useState(true);
+  const [leaveOpen, setLeaveOpen] = useState(false);
+  const [leaveError, setLeaveError] = useState<string | null>(null);
   const { meta, project } = useProject();
   const { t } = useTranslation();
 
@@ -36,21 +42,44 @@ export function Header(): JSX.Element {
     },
   });
 
-  const onSave = () => {
-    save({
-      ...meta,
-      bpm: project.timelineBox.bpm.getValue(),
-      samples: project.collectSampleUUIDs().map((uuid) => {
-        return UUID.toString(uuid);
-      }),
-      state: arrayBufferToBase64(project.toArrayBuffer()),
+  const buildPayload = (): ProjectProperties => ({
+    ...meta,
+    bpm: project.timelineBox.bpm.getValue(),
+    samples: project.collectSampleUUIDs().map((uuid) => UUID.toString(uuid)),
+    state: arrayBufferToBase64(project.toArrayBuffer()),
+  });
+
+  const goHome = (): void => {
+    window.location.href = `${FRONT_URL}/home`;
+  };
+
+  const onSave = (): void => {
+    save(buildPayload());
+  };
+
+  const onLogoClick = (event: MouseEvent<HTMLAnchorElement>): void => {
+    event.preventDefault();
+    if (saved) {
+      goHome();
+      return;
+    }
+    setLeaveError(null);
+    setLeaveOpen(true);
+  };
+
+  const onSaveAndLeave = (): void => {
+    setLeaveError(null);
+    save(buildPayload(), {
+      onError: (error) => {
+        setLeaveError(error instanceof Error ? error.message : String(error));
+      },
+      onSuccess: goHome,
     });
   };
 
   return (
     <header className={styles.header}>
-      {/* TODO: must link to sessions page from front app */}
-      <a className={styles.sessionsLink} href="">
+      <a className={styles.sessionsLink} href={`${FRONT_URL}/home`} onClick={onLogoClick}>
         <MsnIcon name="msn" size="18px" color={theme.orange} />
         <MsnWordmark size={13} accent="var(--color-orange)" />
       </a>
@@ -102,6 +131,20 @@ export function Header(): JSX.Element {
         {' '}
         Save{' '}
       </Button>
+
+      <LeaveStudioModal
+        open={leaveOpen}
+        saving={isPending}
+        error={leaveError}
+        onCancel={() => {
+          if (!isPending) {
+            setLeaveOpen(false);
+            setLeaveError(null);
+          }
+        }}
+        onLeaveWithoutSaving={goHome}
+        onSaveAndLeave={onSaveAndLeave}
+      />
     </header>
   );
 }

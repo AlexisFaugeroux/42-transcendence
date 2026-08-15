@@ -684,10 +684,18 @@
       "users": "Utilisateurs"
     },
     "header": {
+      "leave": {
+        "body": "Vous avez des modifications non enregistrées. Que voulez-vous faire ?",
+        "leaveWithoutSaving": "Quitter sans enregistrer",
+        "saveAndLeave": "Enregistrer et quitter",
+        "saveFailed": "La sauvegarde a échoué. Le studio n’a pas été quitté.",
+        "title": "Quitter le studio ?"
+      },
       "project": "Projet",
       "redo": "Rétablir",
       "saved": "enregistré",
-      "undo": "Annuler"
+      "undo": "Annuler",
+      "unsaved": "non enregistré"
     },
     "metrics": {
       "bar": "mes.",

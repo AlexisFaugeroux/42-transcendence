@@ -684,10 +684,18 @@
       "users": "Usuarios"
     },
     "header": {
+      "leave": {
+        "body": "Tienes cambios sin guardar. ¿Qué quieres hacer?",
+        "leaveWithoutSaving": "Salir sin guardar",
+        "saveAndLeave": "Guardar y salir",
+        "saveFailed": "Error al guardar. Sigues en el estudio.",
+        "title": "¿Salir del estudio?"
+      },
       "project": "Proyecto",
       "redo": "Rehacer",
       "saved": "guardado",
-      "undo": "Deshacer"
+      "undo": "Deshacer",
+      "unsaved": "sin guardar"
     },
     "metrics": {
       "bar": "comp.",

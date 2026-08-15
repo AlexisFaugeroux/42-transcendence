@@ -684,10 +684,18 @@
       "users": "Users"
     },
     "header": {
+      "leave": {
+        "body": "You have unsaved changes. What do you want to do?",
+        "leaveWithoutSaving": "Leave without saving",
+        "saveAndLeave": "Save and leave",
+        "saveFailed": "Save failed. You are still in the studio.",
+        "title": "Leave the studio?"
+      },
       "project": "Project",
       "redo": "Redo",
       "saved": "saved",
-      "undo": "Undo"
+      "undo": "Undo",
+      "unsaved": "unsaved"
     },
     "metrics": {
       "bar": "bar",
