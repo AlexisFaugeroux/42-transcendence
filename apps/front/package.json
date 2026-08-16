@@ -11,7 +11,7 @@
     "build": "vite build",
     "check": "prettier --check . && eslint .",
     "dev": "vite",
-    "fix": "prettier --write . && eslint --fix .",
+    "fix": "prettier --write . && ESLINT_SORT=on eslint --fix .",
     "typecheck": "tsc -p tsconfig.app.json --noEmit"
   },
   "prettier": "@transcendence/prettier-config",
