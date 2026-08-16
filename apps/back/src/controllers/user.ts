@@ -16,9 +16,10 @@ import type {
 } from '../domain/user';
 import type { OnlineUser } from '../domain/user';
 import { userRepository } from '../repositories/user';
+import { sampleStorageService } from '../services/audio/sampleStorage';
+import { trackStorageService } from '../services/audio/trackStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
-import { sampleStorageService } from '../services/sampleStorage';
 import { hashPassword, verifyPassword } from '../utils/password';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
@@ -97,7 +98,8 @@ class UserController {
 
     await userRepository.delete(req.authUser.id);
 
-    if (user.ownerId) await sampleStorageService.deleteDirectory(user.ownerId);
+    await sampleStorageService.deleteDirectory(user.ownerId);
+    await trackStorageService.deleteDirectory(user.ownerId);
     await avatarStorageService.remove(req.authUser.id);
 
     reply.code(204).send();

@@ -6,6 +6,7 @@ import type { User } from '../generated/prisma/client';
 import { authCookieOptions } from '../plugins/auth';
 import { sampleRepository } from '../repositories/sample';
 import { sessionRepository } from '../repositories/session';
+import { trackRepository } from '../repositories/track';
 import { toLinks } from '../repositories/user';
 import { userRepository } from '../repositories/user';
 import { hashPassword, verifyPassword } from '../utils/password';
@@ -90,7 +91,9 @@ class AuthController {
     const [path] = originalUri.split('?');
     const segments = path.split('/').filter(Boolean); // ['samples', ownerId, '<uuid>.<ext>']
 
-    if (segments.length !== 3 || segments[0] !== 'samples') throw new ForbiddenError();
+    const audioFileType = segments[0];
+    if (segments.length !== 3 || (audioFileType !== 'samples' && audioFileType !== 'tracks'))
+      throw new ForbiddenError();
 
     const filename = segments[2];
     const dot = filename.lastIndexOf('.');
@@ -100,12 +103,14 @@ class AuthController {
 
     try {
       const { ownerId } = await userRepository.findById(req.authUser.id);
-      const sample = await sampleRepository.findById(sampleId);
+      const audioFile = await (
+        audioFileType === 'samples' ? sampleRepository : trackRepository
+      ).findById(sampleId);
 
       if (
-        sample.visibility != 'PUBLIC' &&
-        sample.visibility != 'SHARED' &&
-        sample.ownerId != ownerId
+        audioFile.visibility !== 'PUBLIC' &&
+        audioFile.visibility !== 'SHARED' &&
+        audioFile.ownerId !== ownerId
       )
         throw new ForbiddenError();
     } catch {

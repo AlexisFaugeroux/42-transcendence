@@ -8,6 +8,7 @@ import {
   USER_KINDS,
   type Visibility,
 } from '../domain/sample';
+import type { UploadTrackFields } from '../domain/track';
 import {
   Family as FamilyEnum,
   Key as KeyEnum,
@@ -77,4 +78,49 @@ export function parseUploadSampleFields(fields: Record<string, unknown>): Upload
   }
 
   return { bpm, family, key, kind, mode, visibility };
+}
+
+export function parseUploadTrackFields(fields: Record<string, unknown>): UploadTrackFields {
+  const raw = (name: string): string | undefined => {
+    const f = fields[name];
+    if (f && typeof f === 'object' && 'value' in f && typeof f.value === 'string') return f.value;
+    return undefined;
+  };
+
+  const title = raw('title');
+  if (!title || typeof title !== 'string') {
+    throw new BadRequestError(`Invalid title: ${title ?? 'missing'}`);
+  }
+
+  const description = raw('description');
+  const projectId = raw('projectId');
+
+  const visibility = raw('visibility');
+  if (!visibility || !isVisibility(visibility)) {
+    throw new BadRequestError(`Invalid visibility: ${visibility ?? 'missing'}`);
+  }
+
+  const bpmRaw = raw('bpm');
+  let bpm: number | undefined;
+  if (bpmRaw !== undefined) {
+    const n = Number(bpmRaw);
+    if (!Number.isInteger(n) || n <= 0) throw new BadRequestError(`Invalid bpm: ${bpmRaw}`);
+    bpm = n;
+  }
+
+  const keyRaw = raw('key');
+  let key: Key | undefined;
+  if (keyRaw !== undefined) {
+    if (!isKey(keyRaw)) throw new BadRequestError(`Invalid key: ${keyRaw}`);
+    key = keyRaw;
+  }
+
+  const modeRaw = raw('mode');
+  let mode: Mode | undefined;
+  if (modeRaw !== undefined) {
+    if (!isMode(modeRaw)) throw new BadRequestError(`Invalid mode: ${modeRaw}`);
+    mode = modeRaw;
+  }
+
+  return { bpm, description, key, mode, projectId, title, visibility };
 }
