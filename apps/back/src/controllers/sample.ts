@@ -11,16 +11,16 @@ import type {
 import { ownerRepository } from '../repositories/owner';
 import { sampleRepository } from '../repositories/sample';
 import { userRepository } from '../repositories/user';
+import { sampleStorageService } from '../services/audio/sampleStorage';
 import { msnpManager } from '../services/msnp';
-import { sampleStorageService } from '../services/sampleStorage';
 import { type WavInfo, wavManager } from '../services/wav';
 import { parseUploadSampleFields } from '../utils/validation';
 
-interface GetsampleFilesRoute extends RouteGenericInterface {
+interface GetSamplesRoute extends RouteGenericInterface {
   Querystring: GetSampleInput;
 }
 
-interface UploadSampleFileRoute extends RouteGenericInterface {
+interface UploadSampleRoute extends RouteGenericInterface {
   Reply: Sample;
 }
 
@@ -43,10 +43,7 @@ interface DeleteSampleRoute extends RouteGenericInterface {
 }
 
 class SampleFileController {
-  public get = async (
-    req: FastifyRequest<GetsampleFilesRoute>,
-    reply: FastifyReply,
-  ): Promise<void> => {
+  public get = async (req: FastifyRequest<GetSamplesRoute>, reply: FastifyReply): Promise<void> => {
     const userId = req.authUser.id;
 
     const platformOwnerID = (await ownerRepository.get('PLATEFORM')).id;
@@ -83,8 +80,8 @@ class SampleFileController {
   };
 
   public upload = async (
-    req: FastifyRequest<UploadSampleFileRoute>,
-    reply: FastifyReply<UploadSampleFileRoute>,
+    req: FastifyRequest<UploadSampleRoute>,
+    reply: FastifyReply<UploadSampleRoute>,
   ): Promise<void> => {
     const { ownerId } = await userRepository.findById(req.authUser.id);
 

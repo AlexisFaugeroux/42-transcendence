@@ -1,20 +1,20 @@
 import { createWriteStream } from 'node:fs';
 import { mkdir, rm, unlink, writeFile } from 'node:fs/promises';
-import path, { join } from 'node:path';
+import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { PayloadTooLargeError } from '../domain/errors';
+import { PayloadTooLargeError } from '../../domain/errors';
 
-interface StoredFile {
+export interface StoredFile {
   filePath: string;
   url: string;
 }
 
-class SampleStorageService {
-  private readonly _samplesRoot: string;
+export class AudioStorageService {
+  private readonly _root: string;
 
-  constructor(samplesRoot: string) {
-    this._samplesRoot = samplesRoot;
+  constructor(root: string) {
+    this._root = root;
   }
 
   public async write(uuid: string, ownerId: string, data: Buffer, ext?: 'wav' | 'peaks') {
@@ -58,17 +58,13 @@ class SampleStorageService {
   }
 
   public async deleteDirectory(ownerId: string): Promise<void> {
-    const dir = path.join(this._samplesRoot, ownerId);
+    const dir = path.join(this._root, ownerId);
     await rm(dir, { force: true, recursive: true });
   }
 
   private _path(uuid: string, ownerId: string, ext?: 'wav' | 'peaks') {
-    const dir = path.join(this._samplesRoot, ownerId);
+    const dir = path.join(this._root, ownerId);
     const filePath = path.join(dir, `${uuid}.${ext ?? 'wav'}`);
     return { dir, filePath };
   }
 }
-
-export const sampleStorageService = new SampleStorageService(
-  join(process.env.MEDIA_ROOT ?? '/var/www/media', 'samples'),
-);
