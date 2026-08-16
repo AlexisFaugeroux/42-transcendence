@@ -10,6 +10,10 @@ import sort from "eslint-plugin-sort";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+// Éteint partout sauf dans les scripts `fix`, qui posent ESLINT_SORT=on : pas de
+// warning de tri dans l'éditeur, mais `pnpm -r fix` réordonne quand même.
+const sortImports = process.env.ESLINT_SORT === "on" ? "warn" : "off";
+
 // Base config — used by ALL apps (back, front, studio)
 export function createBaseConfig({ ignores, tsconfigRootDir }) {
   return defineConfig(
@@ -64,6 +68,13 @@ export function createBaseConfig({ ignores, tsconfigRootDir }) {
       rules: {
         "no-constant-binary-expression": "off",
         "promise/always-return": "off",
+        // Sévérité seule : les options `groups` du preset sont conservées.
+        "sort/destructuring-properties": "off",
+        "sort/export-members": sortImports,
+        "sort/exports": sortImports,
+        "sort/import-members": sortImports,
+        "sort/imports": sortImports,
+        "sort/object-properties": "off",
       },
     },
 

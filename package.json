@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "check": "prettier --check . && eslint .",
-    "fix": "prettier --write . && eslint --fix .",
+    "fix": "prettier --write . && ESLINT_SORT=on eslint --fix .",
     "services:up": "docker compose up -d",
     "services:down": "docker compose --profile prod down",
     "services:logs": "docker compose logs -f",
