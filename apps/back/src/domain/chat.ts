@@ -1,15 +1,23 @@
 export interface Message {
   id: string;
   content: string;
-  participantId: string;
+  authorId: string;
   conversationId: string;
-  createdAt: Date | null;
+  createdAt: Date;
+  toId: string;
 }
+
+export type CreateMessageInput = Omit<Message, 'id' | 'createdAt'>;
 
 export interface Conversation {
   id: string;
   lastMessageAt: Date;
+  lastMessage: Omit<Message, 'conversationId' | 'id'> | null;
   updatedAt: Date;
-  participantsId: string[];
-  messageSorted: Message[];
+  participants: {
+    id: string;
+    unreadCount: number;
+    artistName: string;
+  }[];
+  messageSorted: Omit<Message, 'conversationId' | 'id'>[];
 }

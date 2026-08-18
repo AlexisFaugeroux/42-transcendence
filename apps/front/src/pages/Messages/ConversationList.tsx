@@ -1,12 +1,12 @@
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
-import type { ConversationSummary } from '../../api/chat/types';
+import type { Conversation } from '../../api/chat/types';
 import styles from './ConversationList.module.scss';
 import { ConversationRow } from './ConversationRow';
 import { ListEmpty, ListError, ListSkeleton } from './ListStates';
 
 interface ConversationListProps {
-  conversations: ConversationSummary[];
+  conversations: Conversation[];
   error: Error | null;
   isLoading: boolean;
   meId: string;
@@ -21,7 +21,13 @@ export function ConversationList({
   onRetry,
 }: ConversationListProps): JSX.Element {
   const { t } = useTranslation();
-  const unread = conversations.reduce((total, conv) => total + conv.unreadCount, 0);
+
+  const unread = conversations.reduce((acc, curr) => {
+    curr.participants.forEach((participant) => {
+      if (participant.id === meId) acc += participant.unreadCount;
+    });
+    return acc;
+  }, 0);
 
   return (
     <section className={styles.column}>

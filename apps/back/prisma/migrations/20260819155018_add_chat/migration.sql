@@ -13,6 +13,7 @@ CREATE TABLE "Conversation" (
 CREATE TABLE "ConversationParticipant" (
     "conversationId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "unreadCount" INTEGER NOT NULL DEFAULT 0,
     "lastReadAt" TIMESTAMP(3),
 
     CONSTRAINT "ConversationParticipant_pkey" PRIMARY KEY ("conversationId","userId")
@@ -22,7 +23,9 @@ CREATE TABLE "ConversationParticipant" (
 CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "participantId" TEXT NOT NULL,
+    "authorId" TEXT NOT NULL,
+    "toId" TEXT NOT NULL,
+    "conversationId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
@@ -31,9 +34,6 @@ CREATE TABLE "Message" (
 -- CreateIndex
 CREATE UNIQUE INDEX "Conversation_pairKey_key" ON "Conversation"("pairKey");
 
--- CreateIndex
-CREATE UNIQUE INDEX "ConversationParticipant_userId_key" ON "ConversationParticipant"("userId");
-
 -- AddForeignKey
 ALTER TABLE "ConversationParticipant" ADD CONSTRAINT "ConversationParticipant_conversationId_fkey" FOREIGN KEY ("conversationId") REFERENCES "Conversation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -41,4 +41,7 @@ ALTER TABLE "ConversationParticipant" ADD CONSTRAINT "ConversationParticipant_co
 ALTER TABLE "ConversationParticipant" ADD CONSTRAINT "ConversationParticipant_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "ConversationParticipant"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_conversationId_authorId_fkey" FOREIGN KEY ("conversationId", "authorId") REFERENCES "ConversationParticipant"("conversationId", "userId") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_conversationId_toId_fkey" FOREIGN KEY ("conversationId", "toId") REFERENCES "ConversationParticipant"("conversationId", "userId") ON DELETE CASCADE ON UPDATE CASCADE;

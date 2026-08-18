@@ -1,4 +1,4 @@
-import type { Message } from '../domain/chat';
+import type { CreateMessageInput, Message } from '../domain/chat';
 import type { Conversation } from '../domain/chat';
 import type { Conversation as PrismaConversation, PrismaClient } from '../generated/prisma/client';
 import type { ConversationParticipant } from '../generated/prisma/client';
@@ -6,8 +6,71 @@ import type { Message as PrismaMessage } from '../generated/prisma/client';
 import { prisma } from '../utils/prisma';
 import { mapError } from './helpers';
 
+interface HydratedConversation extends PrismaConversation {
+  participants: {
+    unreadCount: number;
+    user: {
+      id: string;
+      artistName: string;
+    };
+    messagesReceived: {
+      content: string;
+      createdAt: Date;
+      authorId: string;
+      toId: string;
+    }[];
+    messagesSent: {
+      content: string;
+      createdAt: Date;
+      authorId: string;
+      toId: string;
+    }[];
+  }[];
+}
+
 class ChatRepository {
   private readonly prisma: PrismaClient;
+  private readonly include = {
+    include: {
+      participants: {
+        include: {
+          messagesReceived: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              authorId: true,
+              content: true,
+              createdAt: true,
+              id: true,
+              toId: true,
+            },
+          },
+          messagesSent: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+            select: {
+              authorId: true,
+              content: true,
+              createdAt: true,
+              id: true,
+              toId: true,
+            },
+          },
+          user: {
+            select: {
+              artistName: true,
+              id: true,
+            },
+          },
+        },
+        select: {
+          unreadCount: true,
+        },
+      },
+    },
+  } as const;
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -18,7 +81,7 @@ class ChatRepository {
     const now = new Date();
     try {
       const conv: PrismaConversation = await this.prisma.$transaction(async (tx) => {
-        const conversation = await tx.conversation.create({
+        const conversationCreated = await tx.conversation.create({
           data: {
             lastMessageAt: now,
             pairKey: pairKey,
@@ -27,45 +90,77 @@ class ChatRepository {
 
         await tx.conversationParticipant.createMany({
           data: [idUserA, idUserB].map((userId) => ({
-            conversationId: conversation.id,
+            conversationId: conversationCreated.id,
             userId,
           })),
         });
-        return conversation;
+        return conversationCreated;
       });
-      return { messageSorted: [], participantsId: [idUserA, idUserB], ...conv };
+
+      const conversation = await prisma.conversation.findFirstOrThrow({
+        where: { id: conv.id },
+        ...this.include,
+      });
+      const participants = conversation.participants.map(({ unreadCount, user }) => ({
+        artistName: user.artistName,
+        id: user.id,
+        unreadCount,
+      }));
+
+      return {
+        lastMessage: null,
+        messageSorted: [],
+        participants: participants,
+        ...conv,
+      };
     } catch (e) {
       throw mapError(e, 'conversation creation');
     }
   }
 
-  public async createMessage(input: Message): Promise<Message> {
+  public async createMessage(input: CreateMessageInput): Promise<Message> {
     const now = new Date();
     try {
       const storedMessgage: Message = await this.prisma.$transaction(async (tx) => {
         const newMessage = await tx.message.create({
           data: {
             ...input,
+            createdAt: now,
           },
         });
-        const participant = await tx.conversationParticipant.findUniqueOrThrow({
+        const sender = await tx.conversationParticipant.findUniqueOrThrow({
           select: {
             conversationId: true,
           },
           where: {
-            userId: input.participantId,
+            conversationId_userId: {
+              conversationId: input.conversationId,
+              userId: input.authorId,
+            },
           },
         });
 
-        const conversation = await tx.conversation.update({
+        await tx.conversation.update({
           data: {
             lastMessageAt: now,
           },
           where: {
-            id: participant.conversationId,
+            id: sender.conversationId,
           },
         });
-        return { conversationId: conversation.id, ...newMessage };
+
+        await tx.conversationParticipant.updateMany({
+          data: {
+            unreadCount: { increment: 1 },
+          },
+          where: {
+            NOT: {
+              userId: input.authorId,
+            },
+          },
+        });
+
+        return newMessage;
       });
 
       return storedMessgage;
@@ -75,30 +170,32 @@ class ChatRepository {
   }
 
   public async listMessageByConversationId(idConv: string): Promise<Message[]> {
-    const data: PrismaMessage[] = await this.prisma.message.findMany({
-      where: {
-        author: {
-          is: { conversationId: idConv },
-        },
-      },
+    const conversation = await prisma.conversation.findFirstOrThrow({
+      where: { id: idConv },
+      ...this.include,
     });
-    const messages: Message[] = data.map((message) => ({ conversationId: idConv, ...message }));
-    return messages.sort((a, b) => ( a.createdAt?.getTime() ?? 0 ) - ( b.createdAt?.getTime() ?? 0 ));
+    const messages = conversation.participants[0].messagesSent.concat(
+      conversation.participants[0].messagesReceived,
+    );
+    messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    return messages.map((message) => ({ ...message, conversationId: idConv }));
   }
 
-  public async listConversationForUser(userId: string): Promise<Conversation[]> {
-    const conversations: PrismaConversation[] = await this.prisma.conversation.findMany({
+  public async listConversationsForUser(userId: string): Promise<Conversation[]> {
+    const conversations = await this.prisma.conversation.findMany({
       where: {
         participants: {
-          every: {
+          some: {
             userId,
           },
         },
       },
+      ...this.include,
+      orderBy: {
+        lastMessageAt: 'desc',
+      },
     });
-    return await this._formatConversation(
-      conversations.sort((a, b) => a.lastMessageAt.getTime() - b.lastMessageAt.getTime()),
-    );
+    return conversations.map((conv) => this._formatConversation(conv));
   }
 
   public async listConversationParticipants(idConv: string): Promise<ConversationParticipant[]> {
@@ -109,17 +206,34 @@ class ChatRepository {
     });
   }
 
-  public async markAsRead(convId: string, userId: string) {
-    const now = new Date();
-    await this.prisma.conversationParticipant.update({
-      data: {
-        lastReadAt: now,
-      },
+  public async listOneConversation(idConv: string): Promise<Conversation> {
+    const conversation = await this.prisma.conversation.findFirstOrThrow({
       where: {
-        conversationId: convId,
-        userId,
+        id: idConv,
       },
+      ...this.include,
     });
+    return this._formatConversation(conversation);
+  }
+
+  public async markAsRead(conversationId: string, userId: string) {
+    const now = new Date();
+    try {
+      await this.prisma.conversationParticipant.update({
+        data: {
+          lastReadAt: now,
+          unreadCount: { set: 0 },
+        },
+        where: {
+          conversationId_userId: {
+            conversationId,
+            userId,
+          },
+        },
+      });
+    } catch (e) {
+      throw mapError(e, 'Failed to update read state');
+    }
   }
 
   public async updateMessage(newContent: string, id: string): Promise<PrismaMessage> {
@@ -134,21 +248,43 @@ class ChatRepository {
   }
 
   public async deleteConversation(idConv: string) {
-    await this.prisma.conversation.delete({ where: { id: idConv } });
+    try {
+      await this.prisma.conversation.delete({ where: { id: idConv } });
+    } catch (e) {
+      throw mapError(e, 'Failed to conversation');
+    }
   }
 
   public async deleteMessage(id: string) {
-    await this.prisma.message.delete({ where: { id } });
+    try {
+      await this.prisma.message.delete({ where: { id } });
+    } catch (e) {
+      throw mapError(e, 'Failed to message');
+    }
   }
 
-  private async _formatConversation(convs: PrismaConversation[]): Promise<Conversation[]> {
-    const format: Conversation[] = [];
-    for (const conv of convs) {
-      const { pairKey, ...rest } = conv;
-      const messages = await this.listMessageByConversationId(conv.id);
-      format.push({ messageSorted: messages, participantsId: conv.pairKey.split(':'), ...rest });
-    }
-    return format;
+  private _formatConversation(conv: HydratedConversation): Conversation {
+    // participants array contain received and sent messages : concataning the both in
+    // order to build the whole conversation
+    const messages = conv.participants[0].messagesReceived.concat(
+      conv.participants[0].messagesSent,
+    );
+    messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+    const participants = conv.participants.map(({ unreadCount, user }) => ({
+      artistName: user.artistName,
+      id: user.id,
+      unreadCount,
+    }));
+
+    return {
+      id: conv.id,
+      lastMessage: messages.at(-1) ?? null,
+      lastMessageAt: conv.lastMessageAt,
+      messageSorted: messages,
+      participants,
+      updatedAt: conv.updatedAt,
+    };
   }
 }
 

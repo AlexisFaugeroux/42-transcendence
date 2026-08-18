@@ -22,9 +22,10 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
   const [socket, setsocket] = useState<WebSocket>();
   const [followingConnected, setFollowingConnected] = useState<string[]>([]);
   const { loading, user } = useUser();
+  const userId = user?.id;
 
   useEffect(() => {
-    if (loading || !user) return;
+    if (loading || !userId) return;
 
     const ws = new WebSocket(`${BASE_URL}api/ws`);
 
@@ -33,8 +34,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
       setsocket(ws);
     };
 
-    ws.onmessage = (event: MessageEvent) => {
-      const message: { event: string; data: string[] } = JSON.parse(event.data);
+    ws.onmessage = (event: MessageEvent<string>) => {
+      const message = JSON.parse(event.data) as { event: string; data: string[] };
 
       // connexion
       if (message.event == 'OnlineFollowingAtConnection') {
@@ -58,12 +59,14 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
       }
     };
 
-    ws.onclose = (event) => {};
+    ws.onclose = (event) => {
+      console.log('ws close:', event);
+    };
 
     return () => {
       ws.close();
     };
-  }, [loading, user?.id]);
+  }, [loading, userId]);
 
   useEffect(() => {
     console.log('Current following connexted:', followingConnected);
