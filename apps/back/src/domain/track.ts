@@ -41,7 +41,7 @@ export interface GetTracksInput {
   bpms?: number[];
   keys?: Key[];
   modes?: Mode[];
-  userIds?: string[];
+  userIds: string[];
 }
 
 export interface UpdateTrackInput {

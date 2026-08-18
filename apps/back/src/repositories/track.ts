@@ -53,7 +53,7 @@ class TrackRepository {
       let artistName: string | undefined, handle: string | undefined;
 
       if (owner.user) {
-        ({ handle, artistName } = owner.user);
+        ({ artistName, handle } = owner.user);
       }
 
       return {
@@ -117,12 +117,12 @@ class TrackRepository {
     const { bpms, handles, ids, keys, modes, userIds, visibilities } = input;
 
     return {
-      visibility: inFilter(visibilities),
-      id: inFilter(ids),
       bpm: inFilter(bpms),
-      mode: inFilter(modes),
+      id: inFilter(ids),
       key: inFilter(keys),
+      mode: inFilter(modes),
       owner: { user: { handle: inFilter(handles), id: inFilter(userIds) } },
+      visibility: inFilter(visibilities),
     };
   }
 
