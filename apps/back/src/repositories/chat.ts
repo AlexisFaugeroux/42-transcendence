@@ -83,7 +83,7 @@ class ChatRepository {
       },
     });
     const messages: Message[] = data.map((message) => ({ conversationId: idConv, ...message }));
-    return messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    return messages.sort((a, b) => ( a.createdAt?.getTime() ?? 0 ) - ( b.createdAt?.getTime() ?? 0 ));
   }
 
   public async listConversationForUser(userId: string): Promise<Conversation[]> {

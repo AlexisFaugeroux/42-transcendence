@@ -3,7 +3,7 @@ export interface Message {
   content: string;
   participantId: string;
   conversationId: string;
-  createdAt: Date;
+  createdAt: Date | null;
 }
 
 export interface Conversation {
