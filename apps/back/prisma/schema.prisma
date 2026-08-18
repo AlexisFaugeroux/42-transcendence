@@ -169,19 +169,24 @@ model Conversation {
 }
 
 model ConversationParticipant {
-  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete : Cascade)
-  conversationId  String
-  messages        Message[]
-  user            User @relation(fields: [userId], references: [id], onDelete : Cascade)
-  userId          String @unique
-  lastReadAt      DateTime?
+  conversation      Conversation @relation(fields: [conversationId], references: [id], onDelete : Cascade)
+  conversationId    String
+  messagesReceived  Message[] @relation("MessageReceiver")
+  messagesSent      Message[] @relation("MessageSender")
+  user              User @relation(fields: [userId], references: [id], onDelete : Cascade)
+  userId            String
+  unreadCount       Int @default(0)
+  lastReadAt        DateTime?
   @@id([conversationId, userId])
 }
 
 model Message {
   id              String @id @default(uuid())
   content         String
-  author          ConversationParticipant @relation(fields: [participantId], references: [userId], onDelete : Cascade)
-  participantId   String
+  author          ConversationParticipant @relation("MessageSender", fields: [conversationId, authorId], references: [conversationId, userId], onDelete : Cascade )
+  authorId        String
+  to              ConversationParticipant @relation("MessageReceiver", fields: [conversationId, toId], references: [conversationId, userId], onDelete : Cascade )
+  toId            String
+  conversationId  String
   createdAt       DateTime @default(now())
 }

@@ -9,8 +9,8 @@ than a full-featured production tool.
 
 1. **Load samples into a timeline/grid** — drag or click to place a clip onto a track.
 2. **Browse audio samples** — panel listing the samples the backend returns (`api/sample.ts` →
-   `hooks/useSamples`); the audio itself is fetched from `/samples/<ownerId>/<uuid>.wav`, which nginx
-   guards with `auth_request`.
+   `hooks/useSamples`); the audio itself is fetched from `/samples/<ownerId>/<uuid>.wav`, which
+   nginx guards with `auth_request`.
 3. **Transport controls** — play / stop / (later: loop, record-arm visual only).
 4. **Playback** — plays arranged clips through the openDAW audio engine with a moving playhead.
 

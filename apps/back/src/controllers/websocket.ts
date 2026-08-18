@@ -1,8 +1,8 @@
 import type { WebSocket } from '@fastify/websocket';
 import type { FastifyRequest } from 'fastify';
-import { userRepository } from '../repositories/user';
-import { Message } from '../domain/chat';
+import type { Message } from '../domain/chat';
 import { chatRepository } from '../repositories/chat';
+import { userRepository } from '../repositories/user';
 
 class WebsocketController {
   private readonly _sockets: Map<string, Set<WebSocket>> = new Map<string, Set<WebSocket>>();
@@ -66,23 +66,18 @@ class WebsocketController {
     await this._broadcastToFollowers(userId, 'FollowingConnected');
   };
 
-  public sendMessage = async ( message : Message ) => {
-    const participants = await chatRepository.listConversationParticipants( message.conversationId );
-    for ( const participant of participants ) {
-      if (participant.userId != message.participantId )
-      {
-        const payload = JSON.stringify({
-          data: message,
-          event: "message"
-        });
-        const socketSet = this._sockets.get( participant.userId );
-        if (!socketSet)
-          continue ;
-        for ( const socket of socketSet )
-          socket.send( payload );
-      }
+  public sendMessage = async (message: Message) => {
+    const participants = await chatRepository.listConversationParticipants(message.conversationId);
+    const payload = JSON.stringify({
+      data: message,
+      event: 'message',
+    });
+    for (const participant of participants) {
+      const socketSet = this._sockets.get(participant.userId);
+      if (!socketSet) continue;
+      for (const socket of socketSet) socket.send(payload);
     }
-  }
+  };
 
   private _broadcastToFollowers = async (userId: string, event: string) => {
     const followers = await userRepository.listFollowerIdsByUserId(userId);
