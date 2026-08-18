@@ -130,7 +130,7 @@ class TrackFileController {
 
     if (track.ownerId !== user.ownerId) throw new ForbiddenError();
 
-    await trackStorageService.remove(track.id, user.ownerId);
+    await trackStorageService.remove(track.id, track.ownerId);
 
     await trackRepository.delete(req.query.id);
 

@@ -2,51 +2,71 @@ import type { FastifyInstance } from 'fastify';
 import { trackController } from '../controllers/track';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
 
+const trackFilterProperties = {
+  bpms: {
+    items: {
+      type: 'integer',
+    },
+    minItems: 1,
+    type: 'array',
+    uniqueItems: true,
+  },
+
+  ids: {
+    items: {
+      format: 'uuid',
+      type: 'string',
+    },
+    minItems: 1,
+    type: 'array',
+    uniqueItems: true,
+  },
+
+  keys: {
+    items: {
+      enum: Object.values(Key),
+      type: 'string',
+    },
+    minItems: 1,
+    type: 'array',
+    uniqueItems: true,
+  },
+
+  modes: {
+    items: {
+      enum: Object.values(Mode),
+      type: 'string',
+    },
+    minItems: 1,
+    type: 'array',
+    uniqueItems: true,
+  },
+
+  visibilities: {
+    items: {
+      enum: Object.values(VisibilityType),
+      type: 'string',
+    },
+    minItems: 1,
+    type: 'array',
+    uniqueItems: true,
+  },
+};
+
+export const producerTracksQuerySchema = {
+  additionalProperties: false,
+  properties: trackFilterProperties,
+  type: 'object',
+};
+
 const getTrackQuerySchema = {
   additionalProperties: false,
   properties: {
-    bpms: {
-      items: {
-        type: 'integer',
-      },
-      minItems: 1,
-      type: 'array',
-      uniqueItems: true,
-    },
+    ...trackFilterProperties,
 
-    ids: {
+    userIds: {
       items: {
         format: 'uuid',
-        type: 'string',
-      },
-      minItems: 1,
-      type: 'array',
-      uniqueItems: true,
-    },
-
-    keys: {
-      items: {
-        enum: Object.values(Key),
-        type: 'string',
-      },
-      minItems: 1,
-      type: 'array',
-      uniqueItems: true,
-    },
-
-    modes: {
-      items: {
-        enum: Object.values(Mode),
-        type: 'string',
-      },
-      minItems: 1,
-      type: 'array',
-      uniqueItems: true,
-    },
-
-    visibilities: {
-      items: {
-        enum: Object.values(VisibilityType),
         type: 'string',
       },
       minItems: 1,
