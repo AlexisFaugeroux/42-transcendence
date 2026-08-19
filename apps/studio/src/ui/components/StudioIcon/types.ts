@@ -32,4 +32,16 @@ export type StudioIconLabel =
   | 'collapseV'
   | 'pencil'
   | 'cursor'
-  | 'scissors';
+  | 'scissors'
+  // effect devices — glyphs from openDAW, one per EffectFactory.defaultIcon
+  | 'maximizer'
+  | 'fold'
+  | 'waveshaper'
+  | 'crusher'
+  | 'reverb'
+  | 'stereoTool'
+  | 'tremolo'
+  | 'gate'
+  | 'dattorro'
+  | 'compressor'
+  | 'delay';
