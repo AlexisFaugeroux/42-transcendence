@@ -7,43 +7,46 @@ import { useEditedAudioUnit } from '../../hooks/useEditedAudioUnit';
 import { useTracks } from '../../contexts/TracksContext';
 import { useEffectChain } from '../../hooks/useEffectChain';
 import type { Track } from '../../lib/types';
+import { AddEffectButton } from './AddEffectButton';
+import type { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
 
-function InstrumentTile({ editingInstrument }: { editingInstrument: Track }): JSX.Element {
+function InstrumentTile({ editingTrack }: { editingTrack: Track }): JSX.Element {
   const { t } = useTranslation();
 
   return (
     <div className={styles.instrumentTile}>
-      <span className={styles.trackName}>{editingInstrument.name}</span>
+      <span className={styles.trackName}>{editingTrack.name}</span>
       <span className={styles.instrumentTileLabel}>{t('studio.devices.instrument')}</span>
       <StudioIcon
         name="piano"
         size={24}
         style={{ border: `1px solid ${theme.fg3}`, borderRadius: '4px' }}
       />
-      <span className={styles.instrumentTileName}>{editingInstrument.instrumentName}</span>
+      <span className={styles.instrumentTileName}>{editingTrack.instrumentName}</span>
     </div>
   );
 }
 
-function EffectChain(): JSX.Element {
+function EffectChain({ audioUnit }: { audioUnit: AudioUnitBoxAdapter }): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.effectChain}>
       <div className={styles.effectTile}>
         <span className={styles.effectTileLabel}></span>
         <span className={styles.effectTileName}></span>
       </div>
+      <AddEffectButton audioUnit={audioUnit} title={t('studio.devices.addEffect')} />
     </div>
   );
 }
 
-function EmptyEffectChain(): JSX.Element {
+function EmptyEffectChain({ audioUnit }: { audioUnit: AudioUnitBoxAdapter }): JSX.Element {
   const { t } = useTranslation();
 
   return (
     <div className={styles.effectChain}>
-      <button type="button" className={styles.add} title={t('studio.devices.addEffect')}>
-        +
-      </button>
+      <AddEffectButton audioUnit={audioUnit} title={t('studio.devices.addEffect')} />
       <div className={styles.empty}>{t('studio.devices.noEffect')}</div>
     </div>
   );
@@ -60,17 +63,19 @@ export function Devices(): JSX.Element {
   const effects = useEffectChain(editingAudioUnit);
   const { tracks } = useTracks();
 
-  const editingInstrument = tracks.find((t) => t.audioUnitBox === editingAudioUnit?.box);
+  const editingTrack = tracks.find((t) => t.audioUnitBox === editingAudioUnit?.box);
 
   return (
     <div className={styles.devicesRail}>
-      {editingInstrument && effects.length ? (
+      {editingAudioUnit && editingTrack && effects.length ? (
         <>
-          <InstrumentTile editingInstrument={editingInstrument} /> <EffectChain />
+          <InstrumentTile editingTrack={editingTrack} />{' '}
+          <EffectChain audioUnit={editingAudioUnit} />
         </>
-      ) : editingInstrument ? (
+      ) : editingAudioUnit && editingTrack ? (
         <>
-          <InstrumentTile editingInstrument={editingInstrument} /> <EmptyEffectChain />
+          <InstrumentTile editingTrack={editingTrack} />{' '}
+          <EmptyEffectChain audioUnit={editingAudioUnit} />
         </>
       ) : (
         <NoSelectedTrack />
