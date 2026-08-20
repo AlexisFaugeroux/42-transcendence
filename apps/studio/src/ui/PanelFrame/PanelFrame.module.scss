@@ -3,7 +3,10 @@
   flex-direction: column;
   min-height: 0;
   min-width: 0;
-  border: 1px solid var(--bg-panel);
+  // Un token de ligne, pas une couleur de surface : `--bg-panel` se fondait dans
+  // les panneaux qui ont ce fond et ressortait contre ceux qui sont plus sombres,
+  // donc la même bordure n'avait pas la même couleur selon le voisin.
+  border: 1px solid var(--line-faint);
 
   .panelBody {
     flex: 1;
