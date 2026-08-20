@@ -23,7 +23,7 @@ export function useEditedAudioUnit(): AudioUnitBoxAdapter | null {
     return () => {
       sub.terminate();
     };
-  }, [project.userEditingManager.audioUnit]);
+  }, [project.userEditingManager.audioUnit, project.boxAdapters]);
 
   return audioUnit;
 }

@@ -1,0 +1,99 @@
+.devicesRail {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--bg-panel);
+  border-block: 1px solid var(--line-soft);
+  scrollbar-color: var(--bg-elevated) var(--bg-panel);
+  box-sizing: border-box;
+
+  .empty {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 0 24px;
+    font-size: 11px;
+    color: var(--fg3);
+    text-align: center;
+  }
+
+  .instrumentTile,
+  .effectChain {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .instrumentTile {
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    width: 96px;
+    padding: 0 10px;
+    border-top: 1px solid var(--fg3);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent 450px);
+    color: var(--fg2);
+
+    .trackName {
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      color: var(--fg2);
+      font-weight: bold;
+    }
+
+    .instrumentTileLabel {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.09rem;
+      color: var(--fg1);
+    }
+
+    .instrumentTileName {
+      font-size: 12px;
+      color: var(--fg1);
+    }
+  }
+
+  .effectChain {
+    flex: 1 0 auto;
+    min-width: max-content;
+    gap: 0.125rem;
+    border-top: 1px solid var(--line-hover);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent 24px);
+
+    .add {
+      flex: 0 0 auto;
+      width: 34px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--fg2);
+      background: var(--bg-card);
+      border: 1px dashed var(--fg3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition:
+        color 120ms ease,
+        background-color 120ms ease,
+        border-color 120ms ease;
+    }
+
+    .add:hover {
+      color: var(--fg1);
+      background: color-mix(in srgb, var(--color-blue) 18%, var(--bg-card));
+      border-color: var(--color-blue);
+      border-style: solid;
+    }
+
+    .add:focus-visible {
+      outline: 1px solid var(--color-blue);
+      outline-offset: 1px;
+    }
+  }
+}

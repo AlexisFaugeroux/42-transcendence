@@ -18,7 +18,6 @@ import { Grid } from './Grid/Grid';
 import { LoopRegionHandleStrip } from './LoopRegion/LoopRegionHandleStrip';
 import { Rack } from './Rack/Rack';
 import styles from './Timeline.module.scss';
-import { useEditedAudioUnit } from '../../hooks/useEditedAudioUnit';
 
 function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
   const bars = computeBarsFromSDK(project);
@@ -44,7 +43,6 @@ export function Timeline(): JSX.Element {
   const [totalDuration, setTotalDuration] = useState(() =>
     project.timelineBox.durationInPulses.getValue(),
   );
-  const editingRack = useEditedAudioUnit();
   const rackListRef = useRef<HTMLDivElement>(null);
   const barLabelsRef = useRef<HTMLDivElement>(null);
   const gridViewportRef = useRef<HTMLDivElement>(null);
@@ -121,11 +119,7 @@ export function Timeline(): JSX.Element {
       <div className={styles.bottomRow}>
         <div ref={rackListRef} className={styles.rackViewport} onWheel={handleRackListScroll}>
           {tracks.map((track, index) => (
-            <Rack
-              key={`rack-${index}`}
-              track={track}
-              isEditing={editingRack && editingRack.box === track.audioUnitBox ? true : false}
-            />
+            <Rack key={`rack-${index}`} track={track} />
           ))}
         </div>
         <div ref={gridViewportRef} className={styles.gridViewport} onScroll={handleGridScroll}>

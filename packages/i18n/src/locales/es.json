@@ -676,6 +676,12 @@
         "name": "Nombre"
       }
     },
+    "devices": {
+      "addEffect": "Añadir un efecto",
+      "instrument": "Instrumento",
+      "noEffect": "Ningún efecto en esta pista",
+      "noTrackSelected": "Ninguna pista seleccionada"
+    },
     "footer": {
       "latency": "Latencia",
       "latencyValue": "{{ms}} ms",

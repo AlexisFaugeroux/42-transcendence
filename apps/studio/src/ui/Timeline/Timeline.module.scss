@@ -17,8 +17,7 @@
   flex-shrink: 0;
   width: 250px;
   box-sizing: border-box;
-  border: 1px solid var(--line-soft);
-  border-top: 0;
+  border-bottom: 1px solid var(--line-soft);
   background-color: var(--bg-panel);
   display: flex;
   align-items: center;
@@ -29,7 +28,6 @@
 .barLabelsViewport {
   flex: 1;
   overflow: hidden;
-  border-bottom: 1px solid var(--line-soft);
   background-color: var(--bg-panel);
   display: flex;
   flex-direction: column;
@@ -69,7 +67,6 @@
   overflow: hidden;
   background-color: var(--bg-panel);
   border-right: 2px solid var(--line-soft);
-  border-left: 1px solid var(--line-soft);
   box-sizing: border-box;
   position: relative;
   z-index: 1;
