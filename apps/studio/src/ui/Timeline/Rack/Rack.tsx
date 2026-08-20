@@ -10,9 +10,10 @@ import styles from './Rack.module.scss';
 
 interface RackProps {
   track: Track;
+  isEditing: boolean;
 }
 
-export function Rack({ track }: RackProps): JSX.Element {
+export function Rack({ track, isEditing }: RackProps): JSX.Element {
   const { project } = useProject();
   const { setTracks, tracks } = useTracks();
   const { t } = useTranslation();
@@ -78,7 +79,13 @@ export function Rack({ track }: RackProps): JSX.Element {
   }
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={isEditing ? { border: `1px solid ${theme.purple}` } : undefined}
+      onClick={() => {
+        project.userEditingManager.audioUnit.edit(track.audioUnitBox.editing);
+      }}
+    >
       {/* Header */}
       <div className={styles.headerContainer}>
         <IconBtn
