@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import type { AudioEffectDeviceAdapter, AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
+import { useEffect, useState } from 'react';
 
 export function useEffectChain(audioUnit: AudioUnitBoxAdapter | null) {
   const [effects, setEffects] = useState<readonly AudioEffectDeviceAdapter[]>([]);

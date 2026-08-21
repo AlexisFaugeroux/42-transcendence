@@ -1,7 +1,7 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
+import { AudioUnitBox } from '@opendaw/studio-boxes';
 import { useEffect, useState } from 'react';
 import { useProject } from '../contexts/ProjectContext';
-import { AudioUnitBox } from '@opendaw/studio-boxes';
 
 export function useEditedAudioUnit(): AudioUnitBoxAdapter | null {
   const { project } = useProject();

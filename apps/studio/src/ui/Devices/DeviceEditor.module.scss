@@ -1,0 +1,97 @@
+.dev {
+  --accent: var(--fg2);
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border-inline: 1px solid var(--line-faint);
+}
+
+.dev__bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 5px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--line-faint);
+}
+
+.dev__name {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.09rem;
+  color: var(--fg1);
+  white-space: nowrap;
+}
+
+.dev__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dev__btn {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--fg3);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.dev__btn:hover {
+  color: var(--fg1);
+  border-color: var(--line-hover);
+}
+
+.dev__btn:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.dev__btn[aria-pressed='true'] {
+  color: var(--accent);
+}
+
+.dev__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+.dev.bypassed {
+  filter: saturate(0) brightness(0.6);
+}
+
+.dev.minimized .dev__body,
+.dev.minimized .dev__count {
+  display: none;
+}
+
+.dev.minimized .dev__bar {
+  flex-direction: column;
+  gap: 8px;
+  width: 42px;
+  height: 100%;
+  padding: 5px 0;
+  border-bottom: 0;
+  border-right: 1px solid var(--line-faint);
+}
+
+.dev.minimized .dev__name {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
