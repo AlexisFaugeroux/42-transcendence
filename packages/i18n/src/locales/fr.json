@@ -678,9 +678,16 @@
     },
     "devices": {
       "addEffect": "Ajouter un effet",
+      "bypass": "Contourner",
+      "enabled": "Activé",
+      "expand": "Déplier",
       "instrument": "Instrument",
+      "minimize": "Replier",
+      "moveLeft": "Déplacer vers la gauche",
+      "moveRight": "Déplacer vers la droite",
       "noEffect": "Aucun effet dans cette piste",
-      "noTrackSelected": "Aucune piste sélectionnée"
+      "noTrackSelected": "Aucune piste sélectionnée",
+      "remove": "Retirer"
     },
     "footer": {
       "latency": "Latence",

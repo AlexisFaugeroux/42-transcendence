@@ -678,9 +678,16 @@
     },
     "devices": {
       "addEffect": "Add an effect",
+      "bypass": "Bypass",
+      "enabled": "Enabled",
+      "expand": "Expand",
       "instrument": "Instrument",
+      "minimize": "Minimize",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
       "noEffect": "No effect in this track",
-      "noTrackSelected": "No track selected"
+      "noTrackSelected": "No track selected",
+      "remove": "Remove"
     },
     "footer": {
       "latency": "Latency",

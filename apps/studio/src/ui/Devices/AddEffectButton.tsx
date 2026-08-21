@@ -1,10 +1,10 @@
-import type { JSX } from 'react';
+import type { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
 import { Dropdown, type MenuProps } from '@transcendence/ui';
+import type { JSX } from 'react';
+import { useProject } from '../../contexts/ProjectContext';
+import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './Devices.module.scss';
 import { EFFECT_ENTRIES } from './effectFactories';
-import { useProject } from '../../contexts/ProjectContext';
-import type { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
-import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 
 interface AddEffectButtonProps {
   audioUnit: AudioUnitBoxAdapter;
