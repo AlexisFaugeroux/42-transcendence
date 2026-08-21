@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+
+# Référence visuelle en lecture seule, pas du code livré
+design/
+
+**/generated/

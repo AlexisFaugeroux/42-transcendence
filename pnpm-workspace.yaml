@@ -1,6 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+catalog:
+  eslint: 10.4.0
+
 allowBuilds:
   "@parcel/watcher": false
   "@prisma/engines": false

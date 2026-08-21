@@ -118,7 +118,7 @@ export function createReactConfig() {
         "react-hooks/rules-of-hooks": "error",
       },
       settings: {
-        react: { version: "detect" },
+        react: { version: "19.2" },
       },
     },
   ];

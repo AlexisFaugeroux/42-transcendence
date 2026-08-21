@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "check": "prettier --check . && eslint .",
-    "fix": "prettier --write . && ESLINT_SORT=on eslint --fix .",
+    "check": "prettier --check . && pnpm -r run check",
+    "fix": "prettier --write . && pnpm -r run fix",
     "services:up": "docker compose up -d",
     "services:down": "docker compose --profile prod down",
     "services:logs": "docker compose logs -f",
@@ -25,7 +25,7 @@
   "type": "module",
   "private": "true",
   "devDependencies": {
-    "eslint": "9.39.4",
+    "eslint": "catalog:",
     "prettier": "3.8.3",
     "typescript": "6.0.2"
   }
