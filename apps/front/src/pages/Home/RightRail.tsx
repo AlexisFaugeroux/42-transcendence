@@ -1,16 +1,16 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { useOnlineFollowing } from '../../hooks/useOnlineFollowing';
 import { ONLINE } from './home.data';
 import styles from './RightRail.module.scss';
 import { LiveUserRow, OnlineUserRow } from './UserRows';
+import { usePresence } from '../../presence/PresenceProvider';
 
 export function RightRail(): JSX.Element {
   const { t } = useTranslation();
   const live = ONLINE.filter((u) => u.status === 'live');
-  const online = useOnlineFollowing();
-  const users = online.data;
+  const presence = usePresence();
+  const users = presence?.onlineUsers;
 
   return (
     <aside className={styles.rail}>
@@ -18,7 +18,7 @@ export function RightRail(): JSX.Element {
         <h3 className={styles.title}>{t('home.rail.connected')}</h3>
         <span className={styles.count}>
           <span className={styles.dot}>●</span>{' '}
-          {t('home.rail.onlineCount', { count: online.count })}
+          {t('home.rail.onlineCount', { count: presence?.count })}
         </span>
       </div>
 

@@ -1,6 +1,8 @@
 import { useUser } from '@transcendence/auth';
 import type { JSX } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { PresenceProvider } from '../presence/PresenceProvider';
+import { WebSocketProvider } from '../websocket/WebSocketProvider';
 
 export function RequireAuth(): JSX.Element | null {
   const { loading, user } = useUser();
@@ -13,5 +15,11 @@ export function RequireAuth(): JSX.Element | null {
     return <Navigate to={`/login?redirect=${redirect}`} replace />;
   }
 
-  return <Outlet />;
+  return ( 
+    <WebSocketProvider>      
+      <PresenceProvider>  
+        <Outlet /> 
+      </PresenceProvider> 
+    </WebSocketProvider>
+    );
 }

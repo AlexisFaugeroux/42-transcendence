@@ -66,11 +66,12 @@ class ChatController {
     reply: FastifyReply<SendMessageRequest>,
   ) => {
     const message = req.body.message;
+    const userId = req.authUser.id;
     const { authorId, conversationId } = message;
 
     const conversation = await chatRepository.listOneConversation(conversationId);
 
-    if (message.authorId != authorId || !this.isAParticipant(authorId, conversation.participants))
+    if (authorId != userId || !this.isAParticipant(authorId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
 
     const toSend = await chatRepository.createMessage(message);

@@ -6,6 +6,7 @@ import {
   ForbiddenError,
   NotFoundError,
   PayloadTooLargeError,
+  UnauthorizedError,
 } from '../domain/errors';
 import type {
   PublicProducerProfileResponse,
@@ -61,9 +62,6 @@ interface UploadAvatarRoute extends RouteGenericInterface {
 }
 
 interface ListUser extends RouteGenericInterface {
-  Querystring: {
-    ids?: string[];
-  };
   Reply: OnlineUser[];
 }
 
@@ -195,15 +193,14 @@ class UserController {
     reply.code(204).send();
   };
 
-  public listUser = async (req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser>) => {
-    const ids = req.query.ids;
-    if (!ids) {
+  public listFollowingById = async (req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser>) => {
+    const userId = req.authUser.id;
+    const usersIds = await userRepository.listFollowingIdsByUserId( userId );
+    if ( usersIds.length === 0 ) {
       reply.code(200).send([]);
       return;
     }
-
-    const users = await userRepository.get({ ids });
-    if (!users) throw new NotFoundError('[listUser] users not found');
+    const users = await userRepository.get( { ids : usersIds });
     reply.code(200).send(this._formatOnlineUser(users));
   };
 
@@ -212,10 +209,11 @@ class UserController {
 
     users.forEach((user) => {
       onlineUsers.push({
-        ...user,
+        id : user.id,
+        handle : user.artistName,
         activity: 'producer',
         listeners: 0,
-        name: user.artistName,
+        name: user.firstname,
         status: 'online',
       });
     });

@@ -66,6 +66,7 @@ export interface SavedSession {
 // times are sample content, not UI copy, so they are not translated.
 
 export interface OnlineUser {
+  id : string;
   name: string;
   handle: string;
   status: PresenceStatus;
