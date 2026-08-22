@@ -1,0 +1,32 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.group.separated {
+  padding-left: 8px;
+  border-left: 1px solid var(--line-soft);
+}
+
+.heading {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg3);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.content {
+  display: flex;
+  gap: 8px;
+}
+
+.content.row {
+  align-items: flex-start;
+}
+
+.content.column {
+  flex-direction: column;
+}
