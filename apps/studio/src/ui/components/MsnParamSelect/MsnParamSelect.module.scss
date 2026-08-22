@@ -1,0 +1,22 @@
+.select {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--fg2);
+  white-space: nowrap;
+}
+
+.label {
+  flex: 0 0 auto;
+  width: 28px;
+}
+
+.control {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.popup {
+  font-family: var(--font-mono);
+}

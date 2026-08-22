@@ -1,0 +1,18 @@
+.param {
+  font-size: 16px; // 1.75em → knob de 28 px
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 42px;
+}
+
+.param.small {
+  font-size: 11.5px; // → knob de 20 px
+  width: 30px;
+}
+
+.param.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
