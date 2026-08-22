@@ -1,18 +1,12 @@
 import { useUser } from '@transcendence/auth';
-import { createContext, type JSX, type ReactNode, useContext, useEffect, useState } from 'react';
-
-interface Message {
-  from: string;
-  to: string;
-  time: string;
-  message: string;
-}
+import { createContext, type JSX, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 interface WebsocketContextValue {
-  sendMessage: (message: Message) => void;
-  followingConnected: string[];
-  socket: WebSocket | undefined;
+  subscribe : ( handler : eventHandler) => () => void;
 }
+
+type eventHandler = ( input : { event: string; data: string[] }) => void;
+
 
 const websocketContext = createContext<WebsocketContextValue | null>(null);
 
@@ -20,9 +14,18 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 export function WebSocketProvider({ children }: { children: ReactNode }): JSX.Element {
   const [socket, setsocket] = useState<WebSocket>();
-  const [followingConnected, setFollowingConnected] = useState<string[]>([]);
   const { loading, user } = useUser();
   const userId = user?.id;
+  const handlers = useRef<Set<eventHandler>>(new Set<eventHandler>());
+
+  const subscribe = useCallback( (handler : eventHandler) => {
+      handlers.current.add(handler);
+      console.log("SUBSCRIBE")
+      return () => {
+        console.log("UNSUBSCIBE");
+        handlers.current.delete(handler);
+      }
+    }, [] );
 
   useEffect(() => {
     if (loading || !userId) return;
@@ -36,27 +39,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
 
     ws.onmessage = (event: MessageEvent<string>) => {
       const message = JSON.parse(event.data) as { event: string; data: string[] };
-
-      // connexion
-      if (message.event == 'OnlineFollowingAtConnection') {
-        const usersAlreadyConnected = message.data;
-        console.log('Already Connected : ', message);
-        setFollowingConnected(usersAlreadyConnected);
-      }
-      // folllowing connected
-      else if (message.event == 'FollowingConnected') {
-        const userConnectedId = message.data[0];
-        console.log('conected : ', userConnectedId);
-        setFollowingConnected((current) =>
-          current.includes(userConnectedId) ? current : [...current, userConnectedId],
-        );
-      }
-      // following disconnected
-      else if (message.event == 'FollowingDisconnected') {
-        const userDisconnectedId = message.data[0];
-        console.log('disconneect : ', userDisconnectedId);
-        setFollowingConnected((current) => current.filter((id) => id !== userDisconnectedId));
-      }
+      handlers.current.forEach( ( handler ) => handler( message ));
     };
 
     ws.onclose = (event) => {
@@ -68,16 +51,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
     };
   }, [loading, userId]);
 
-  useEffect(() => {
-    console.log('Current following connexted:', followingConnected);
-  }, [followingConnected]);
-
-  const sendMessage = (message: Message) => {
-    if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(message));
-  };
-
   return (
-    <websocketContext.Provider value={{ followingConnected, sendMessage, socket }}>
+    <websocketContext.Provider value={{ subscribe }}>
       {children}
     </websocketContext.Provider>
   );
@@ -88,3 +63,5 @@ export function useSocket() {
   if (!ctx) throw new Error('useContext used outside a WebSocketProvider');
   return ctx;
 }
+
+

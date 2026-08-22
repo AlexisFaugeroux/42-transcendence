@@ -276,7 +276,7 @@ class UserRepository {
     try {
       await this.prisma.$transaction(async (tx) => {
         const user = await tx.user.delete({ where: { id } });
-        await tx.sample.deleteMany({ where: { ownerId: user.ownerId } });
+        await tx.audioFile.deleteMany({ where: { ownerId: user.ownerId } });
         await tx.owner.delete({ where: { id: user.ownerId } });
       });
     } catch (error: unknown) {
