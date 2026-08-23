@@ -83,7 +83,9 @@ export async function deleteSample(uuid: string): Promise<void> {
 }
 
 export async function getPeaks(peaksUrl: string): Promise<DecodedPeaks> {
-  const res = await apiFetch(`/samples/${peaksUrl}`);
+  // Absolute paths (/tracks/…, /samples/…) are used as-is; bare urls stay under /samples/.
+  const path = peaksUrl.startsWith('/') ? peaksUrl : `/samples/${peaksUrl}`;
+  const res = await apiFetch(path);
   if (!res.ok) throw await apiError(res, peaksUrl);
   return decodePeak(await res.arrayBuffer());
 }

@@ -13,6 +13,7 @@ export default defineConfig({
       },
       '/avatars': 'http://localhost:8081',
       '/samples': 'http://localhost:8081',
+      '/tracks': 'http://localhost:8081',
     },
     strictPort: true,
   },
