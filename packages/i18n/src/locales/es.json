@@ -685,6 +685,24 @@
       "users": "Usuarios"
     },
     "header": {
+      "export": {
+        "button": "Exportar",
+        "failed": "Error al exportar",
+        "missingProject": "Proyecto no encontrado. Guarda la sesión e inténtalo de nuevo.",
+        "rendering": "Renderizando…",
+        "submit": "Exportar",
+        "title": "Exportar pista",
+        "titleRequired": "El título es obligatorio.",
+        "trackTitle": "Título",
+        "untitled": "Sin título",
+        "uploading": "Subiendo…",
+        "visibility": "Visibilidad",
+        "visibilityOptions": {
+          "private": "Privado",
+          "public": "Público",
+          "shared": "Compartido"
+        }
+      },
       "leave": {
         "body": "Tienes cambios sin guardar. ¿Qué quieres hacer?",
         "leaveWithoutSaving": "Salir sin guardar",

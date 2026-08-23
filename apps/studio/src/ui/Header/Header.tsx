@@ -8,6 +8,7 @@ import { useProject } from '../../contexts/ProjectContext';
 import type { ProjectProperties } from '../../lib/types';
 import { arrayBufferToBase64 } from '../../utils/base64';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
+import { ExportModal } from './ExportModal';
 import styles from './Header.module.scss';
 import { LeaveStudioModal } from './LeaveStudioModal';
 import { Meter } from './Meter/Meter';
@@ -20,6 +21,7 @@ export function Header(): JSX.Element {
   const [saved, setSaved] = useState(true);
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [leaveError, setLeaveError] = useState<string | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
   const { meta, project } = useProject();
   const { t } = useTranslation();
 
@@ -131,6 +133,23 @@ export function Header(): JSX.Element {
         {' '}
         Save{' '}
       </Button>
+      <Button
+        onClick={() => {
+          setExportOpen(true);
+        }}
+      >
+        {t('studio.header.export.button')}
+      </Button>
+
+      <ExportModal
+        open={exportOpen}
+        defaultTitle={meta.name ?? ''}
+        projectId={meta.id}
+        bpm={project.timelineBox.bpm.getValue()}
+        onClose={() => {
+          setExportOpen(false);
+        }}
+      />
 
       <LeaveStudioModal
         open={leaveOpen}

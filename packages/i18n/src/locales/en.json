@@ -685,6 +685,24 @@
       "users": "Users"
     },
     "header": {
+      "export": {
+        "button": "Export",
+        "failed": "Export failed",
+        "missingProject": "Project not found. Save the session and try again.",
+        "rendering": "Rendering…",
+        "submit": "Export",
+        "title": "Export track",
+        "titleRequired": "Title is required.",
+        "trackTitle": "Title",
+        "untitled": "Untitled",
+        "uploading": "Uploading…",
+        "visibility": "Visibility",
+        "visibilityOptions": {
+          "private": "Private",
+          "public": "Public",
+          "shared": "Shared"
+        }
+      },
       "leave": {
         "body": "You have unsaved changes. What do you want to do?",
         "leaveWithoutSaving": "Leave without saving",
