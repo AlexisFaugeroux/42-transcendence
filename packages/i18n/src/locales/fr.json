@@ -698,6 +698,24 @@
       "users": "Utilisateurs"
     },
     "header": {
+      "export": {
+        "button": "Exporter",
+        "failed": "Échec de l’export",
+        "missingProject": "Projet introuvable. Enregistre la session puis réessaie.",
+        "rendering": "Rendu en cours…",
+        "submit": "Exporter",
+        "title": "Exporter le morceau",
+        "titleRequired": "Le titre est obligatoire.",
+        "trackTitle": "Titre",
+        "untitled": "Sans titre",
+        "uploading": "Envoi en cours…",
+        "visibility": "Visibilité",
+        "visibilityOptions": {
+          "private": "Privé",
+          "public": "Public",
+          "shared": "Partagé"
+        }
+      },
       "leave": {
         "body": "Vous avez des modifications non enregistrées. Que voulez-vous faire ?",
         "leaveWithoutSaving": "Quitter sans enregistrer",
