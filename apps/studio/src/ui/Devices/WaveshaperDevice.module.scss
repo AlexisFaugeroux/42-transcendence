@@ -1,0 +1,14 @@
+.waveshaper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.glyph {
+  align-self: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--fg3);
+}
