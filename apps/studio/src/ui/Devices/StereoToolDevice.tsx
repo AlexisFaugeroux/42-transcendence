@@ -37,9 +37,9 @@ export function StereoToolDevice({ effect }: DeviceProps): JSX.Element {
         />
       </div>
       <div className={styles.toggles}>
-        <MsnParamToggle param={invertL} label="ø L" color="var(--accent)" />
-        <MsnParamToggle param={invertR} label="ø R" color="var(--accent)" />
-        <MsnParamToggle param={swap} label="⇄ swap" color="var(--accent)" />
+        <MsnParamToggle param={invertL} label="ø L" />
+        <MsnParamToggle param={invertR} label="ø R" />
+        <MsnParamToggle param={swap} label="⇄ swap" />
       </div>
     </div>
   );

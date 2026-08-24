@@ -6,10 +6,8 @@ import styles from './MsnParamToggle.module.scss';
 
 interface MsnParamToggleProps {
   param: AutomatableParameterFieldAdapter<boolean>;
-  color: string;
+  color?: string;
   label?: string;
-  // aligne la pastille sur la largeur d'une colonne de knob, pour qu'elle tombe
-  // sous le paramètre qu'elle pilote
   column?: boolean;
   size?: 'normal' | 'small';
 }
@@ -45,7 +43,7 @@ export function MsnParamToggle({
       <button
         type="button"
         className={styles.pill}
-        style={{ '--accent': color } as CSSProperties}
+        style={color ? ({ '--accent': color } as CSSProperties) : undefined}
         aria-pressed={isActive}
         title={param.name}
         onClick={toggle}
