@@ -1,6 +1,6 @@
 import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
-import { MsnIcon, Spin } from '@transcendence/ui';
+import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
@@ -8,13 +8,17 @@ import { useFollowing } from '../../hooks/useProducers';
 import { ProducerCard } from '../Producers/ProducerCard';
 import styles from '../Producers/Producers.module.scss';
 
+const PAGE_SIZE = 20;
+
 export function Following(): JSX.Element {
   const me = useAuthUser();
   const { t } = useTranslation();
+  const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { data, error, isLoading } = useFollowing(me.handle);
+  const { data, error, isLoading } = useFollowing(me.handle, true, page, PAGE_SIZE);
 
-  const list = useMemo(() => data ?? [], [data]);
+  const list = data?.items ?? [];
+  const total = data?.total ?? 0;
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -34,7 +38,7 @@ export function Following(): JSX.Element {
             <div className={styles.eyebrow}>{t('following.eyebrow')}</div>
             <h1 className={styles.title}>{t('following.title')}</h1>
             <p className={styles.subtitle}>
-              {isLoading ? '...' : t('following.count', { count: filtered.length })}
+              {isLoading ? '...' : t('following.count', { count: total })}
             </p>
           </div>
 
@@ -57,19 +61,35 @@ export function Following(): JSX.Element {
           </div>
         ) : error ? (
           <div className={styles.state}>{t('following.loadError')}</div>
-        ) : list.length === 0 ? (
+        ) : total === 0 ? (
           <div className={styles.state}>
             <p>{t('following.empty')}</p>
             <Link to="/producers">{t('following.browseProducers')}</Link>
           </div>
-        ) : filtered.length === 0 ? (
-          <div className={styles.state}>{t('following.emptySearch')}</div>
         ) : (
-          <div className={styles.grid}>
-            {filtered.map((producer) => (
-              <ProducerCard key={producer.id} producer={producer} showUnfollow />
-            ))}
-          </div>
+          <>
+            {filtered.length === 0 ? (
+              <div className={styles.state}>{t('following.emptySearch')}</div>
+            ) : (
+              <div className={styles.grid}>
+                {filtered.map((producer) => (
+                  <ProducerCard key={producer.id} producer={producer} showUnfollow />
+                ))}
+              </div>
+            )}
+
+            <div className={styles.pager}>
+              <Pagination
+                current={page}
+                pageSize={PAGE_SIZE}
+                total={total}
+                showSizeChanger={false}
+                onChange={(next) => {
+                  setPage(next);
+                }}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>

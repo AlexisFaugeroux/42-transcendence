@@ -1,24 +1,29 @@
 import { useTranslation } from '@transcendence/i18n';
-import { MsnIcon, Spin } from '@transcendence/ui';
+import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useProducers } from '../../hooks/useProducers';
 import { ProducerCard } from './ProducerCard';
 import styles from './Producers.module.scss';
 
+const PAGE_SIZE = 20;
+
 export function Producers(): JSX.Element {
   const { t } = useTranslation();
+  const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { data, error, isLoading } = useProducers();
+  const { data, error, isLoading } = useProducers(page, PAGE_SIZE);
+
+  const list = data?.items ?? [];
+  const total = data?.total ?? 0;
 
   const filtered = useMemo(() => {
-    const list = data ?? [];
     const q = query.trim().toLowerCase();
     if (!q) return list;
     return list.filter(
       (p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q),
     );
-  }, [data, query]);
+  }, [list, query]);
 
   return (
     <div className={styles.page}>
@@ -30,7 +35,7 @@ export function Producers(): JSX.Element {
             <div className={styles.eyebrow}>{t('producers.eyebrow')}</div>
             <h1 className={styles.title}>{t('producers.title')}</h1>
             <p className={styles.subtitle}>
-              {isLoading ? '...' : t('producers.count', { count: filtered.length })}
+              {isLoading ? '...' : t('producers.count', { count: total })}
             </p>
           </div>
 
@@ -53,14 +58,32 @@ export function Producers(): JSX.Element {
           </div>
         ) : error ? (
           <div className={styles.state}>{t('producers.loadError')}</div>
-        ) : filtered.length === 0 ? (
-          <div className={styles.state}>{t('producers.empty')}</div>
         ) : (
-          <div className={styles.grid}>
-            {filtered.map((producer) => (
-              <ProducerCard key={producer.id} producer={producer} />
-            ))}
-          </div>
+          <>
+            {filtered.length === 0 ? (
+              <div className={styles.state}>{t('producers.empty')}</div>
+            ) : (
+              <div className={styles.grid}>
+                {filtered.map((producer) => (
+                  <ProducerCard key={producer.id} producer={producer} />
+                ))}
+              </div>
+            )}
+
+            {total > 0 ? (
+              <div className={styles.pager}>
+                <Pagination
+                  current={page}
+                  pageSize={PAGE_SIZE}
+                  total={total}
+                  showSizeChanger={false}
+                  onChange={(next) => {
+                    setPage(next);
+                  }}
+                />
+              </div>
+            ) : null}
+          </>
         )}
       </div>
     </div>

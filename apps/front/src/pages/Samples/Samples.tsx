@@ -7,6 +7,7 @@ import {
   CloseCircleOutlined,
   MsnIcon,
   notification,
+  Pagination,
   Result,
   Spin,
   theme,
@@ -30,12 +31,15 @@ import { Toolbar, type ViewMode } from './Toolbar';
 import type { SortKey } from './types';
 import { UploadModal } from './UploadModal';
 
+const PAGE_SIZE = 20;
+
 export function Samples(): JSX.Element {
   const user = useAuthUser();
   const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
+  const [page, setPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const [query, setQuery] = useState('');
   const [families, setFamilies] = useState<Family[]>([]);
@@ -74,8 +78,8 @@ export function Samples(): JSX.Element {
   };
 
   const samplesQuery = useQuery({
-    queryFn: () => getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }),
-    queryKey: ['samples', user.id],
+    queryFn: () => getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }, page, PAGE_SIZE),
+    queryKey: ['samples', user.id, page, PAGE_SIZE],
   });
 
   const storageQuery = useQuery({
@@ -83,7 +87,8 @@ export function Samples(): JSX.Element {
     queryKey: ['audio-storage', user.id],
   });
 
-  const samples = useMemo(() => samplesQuery.data ?? [], [samplesQuery.data]);
+  const samples = samplesQuery.data?.items ?? [];
+  const total = samplesQuery.data?.total ?? 0;
   const storage = storageQuery.data;
 
   const filtered = useMemo(() => {
@@ -170,7 +175,7 @@ export function Samples(): JSX.Element {
               <div className={styles.eyebrow}>{t('samples.eyebrow')}</div>
               <h1 className={styles.title}>{t('samples.title')}</h1>
               <p className={styles.subtitle}>
-                {t('samples.soundCount', { count: samples.length })}
+                {t('samples.soundCount', { count: total })}
                 {storage
                   ? ` · ${t('samples.storageSummary', {
                       quota: formatBytes(storage.quotaBytes, i18n.language),
@@ -226,7 +231,7 @@ export function Samples(): JSX.Element {
                 view={view}
                 setView={setView}
                 shownCount={filtered.length}
-                totalCount={samples.length}
+                totalCount={total}
               />
 
               {selectedKeys.length > 0 && (
@@ -270,6 +275,21 @@ export function Samples(): JSX.Element {
                   }}
                 />
               )}
+
+              {total > 0 ? (
+                <div className={styles.pager}>
+                  <Pagination
+                    current={page}
+                    pageSize={PAGE_SIZE}
+                    total={total}
+                    showSizeChanger={false}
+                    onChange={(next) => {
+                      setPage(next);
+                      setSelectedKeys([]);
+                    }}
+                  />
+                </div>
+              ) : null}
             </>
           )}
         </div>

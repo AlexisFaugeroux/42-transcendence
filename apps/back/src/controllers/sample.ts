@@ -15,9 +15,12 @@ import { sampleStorageService } from '../services/audio/sampleStorage';
 import { msnpManager } from '../services/msnp';
 import { type WavInfo, wavManager } from '../services/wav';
 import { parseUploadSampleFields } from '../utils/validation';
+import type { PaginatedResponse } from '../domain/pagination';
+import { parsePagination } from '../utils/pagination';
 
 interface GetSamplesRoute extends RouteGenericInterface {
-  Querystring: GetSampleInput;
+  Querystring: GetSampleInput & { page?: string; limit?: string };
+  Reply: PaginatedResponse<Sample>;
 }
 
 interface UploadSampleRoute extends RouteGenericInterface {
@@ -43,7 +46,10 @@ interface DeleteSampleRoute extends RouteGenericInterface {
 }
 
 class SampleFileController {
-  public get = async (req: FastifyRequest<GetSamplesRoute>, reply: FastifyReply): Promise<void> => {
+  public get = async (
+    req: FastifyRequest<GetSamplesRoute>,
+    reply: FastifyReply<GetSamplesRoute>,
+  ): Promise<void> => {
     const userId = req.authUser.id;
 
     const platformOwnerID = (await ownerRepository.get('PLATEFORM')).id;
@@ -52,12 +58,12 @@ class SampleFileController {
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
-    const sample = await sampleRepository.get({
-      ownerIds,
-      ...req.query,
-    });
+    const { page: pageRaw, limit: limitRaw, ...filters } = req.query;
+    const { page, limit, skip, take } = parsePagination(pageRaw, limitRaw);
 
-    reply.code(200).send(sample);
+    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take);
+
+    reply.code(200).send({ items, total, page, limit });
   };
 
   public storage = async (

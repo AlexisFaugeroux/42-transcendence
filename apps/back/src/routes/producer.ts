@@ -12,11 +12,21 @@ const handleParamsSchema = {
   type: 'object',
 };
 
+const paginationQuerySchema = {
+  additionalProperties: false,
+  properties: {
+    page: { type: 'string' },
+    limit: { type: 'string' },
+  },
+  type: 'object',
+};
+
 export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/',
     {
       preHandler: app.authenticate,
+      schema: { querystring: paginationQuerySchema },
     },
     userController.listProducers,
   );
@@ -34,7 +44,7 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle/followers',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema },
+      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
     },
     userController.listFollowers,
   );
@@ -43,7 +53,7 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle/following',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema },
+      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
     },
     userController.listFollowing,
   );

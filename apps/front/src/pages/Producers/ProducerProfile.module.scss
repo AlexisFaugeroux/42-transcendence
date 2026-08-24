@@ -163,6 +163,12 @@
   padding-top: 18px;
 }
 
+.pager {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
 .empty {
   margin: 24px 0;
   color: var(--fg3);

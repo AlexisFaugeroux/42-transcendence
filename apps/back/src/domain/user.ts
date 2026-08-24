@@ -1,5 +1,7 @@
 import type { Role } from '@transcendence/permissions';
 import type { Role as PrismaRole } from '@prisma/client';
+import type { PaginatedResponse } from './pagination';
+
 export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface User {
@@ -78,10 +80,8 @@ export interface UserResponse {
   user: User;
 }
 
-export interface PublicProducersResponse {
-  producers: PublicProducer[];
-}
-
 export interface PublicProducerProfileResponse {
   producer: PublicProducerProfile;
 }
+
+export type PaginatedProducersResponse = PaginatedResponse<PublicProducer>;

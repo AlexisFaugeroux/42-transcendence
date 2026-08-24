@@ -3,8 +3,8 @@ import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastif
 import { AVATAR_MAX_BYTES } from '../constants';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import type {
+  PaginatedProducersResponse,
   PublicProducerProfileResponse,
-  PublicProducersResponse,
   UpdateUserInput,
   User,
   UserResponse,
@@ -16,6 +16,7 @@ import { trackStorageService } from '../services/audio/trackStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
 import { hashPassword, verifyPassword } from '../utils/password';
+import { parsePagination } from '../utils/pagination';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -30,7 +31,11 @@ interface UpdatePasswordRoute extends RouteGenericInterface {
 }
 
 interface ListProducersRoute extends RouteGenericInterface {
-  Reply: PublicProducersResponse;
+  Querystring: {
+    page?: string;
+    limit?: string;
+  };
+  Reply: PaginatedProducersResponse;
 }
 
 interface HandleParam {
@@ -44,7 +49,8 @@ interface GetProfileRoute extends RouteGenericInterface {
 
 interface ListFollowRoute extends RouteGenericInterface {
   Params: HandleParam;
-  Reply: PublicProducersResponse;
+  Querystring: { page?: string; limit?: string };
+  Reply: PaginatedProducersResponse;
 }
 
 interface FollowRoute extends RouteGenericInterface {
@@ -98,11 +104,13 @@ class UserController {
   };
 
   public listProducers = async (
-    _req: FastifyRequest<ListProducersRoute>,
+    req: FastifyRequest<ListProducersRoute>,
     reply: FastifyReply<ListProducersRoute>,
   ): Promise<void> => {
-    const producers = await userRepository.listPublic();
-    reply.code(200).send({ producers });
+    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const { items, total } = await userRepository.listPublic(skip, take);
+
+    reply.code(200).send({ items, total, page, limit });
   };
 
   public getProfile = async (
@@ -117,16 +125,18 @@ class UserController {
     req: FastifyRequest<ListFollowRoute>,
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
-    const producers = await userRepository.listFollowers(req.params.handle);
-    reply.code(200).send({ producers });
+    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const { items, total } = await userRepository.listFollowers(req.params.handle, skip, take);
+    reply.code(200).send({ items, total, page, limit });
   };
 
   public listFollowing = async (
     req: FastifyRequest<ListFollowRoute>,
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
-    const producers = await userRepository.listFollowing(req.params.handle);
-    reply.code(200).send({ producers });
+    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const { items, total } = await userRepository.listFollowing(req.params.handle, skip, take);
+    reply.code(200).send({ items, total, page, limit });
   };
 
   public follow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {

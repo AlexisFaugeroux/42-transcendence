@@ -7,9 +7,17 @@ import type {
   UpdateSampleFields,
   UploadSampleFields,
 } from './types';
+import type { Paginated } from '../../types/pagination';
 
-export async function getSamples(filters: GetSamplesFilters): Promise<Sample[]> {
-  const searchParams = new URLSearchParams();
+export async function getSamples(
+  filters: GetSamplesFilters,
+  page = 1,
+  limit = 20,
+): Promise<Paginated<Sample>> {
+  const searchParams = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
 
   for (const kind of filters.kinds ?? []) searchParams.append('kinds', kind);
   for (const visibility of filters.visibilities ?? [])
@@ -18,7 +26,7 @@ export async function getSamples(filters: GetSamplesFilters): Promise<Sample[]> 
   const res = await apiFetch(`/api/samples/get?${searchParams.toString()}`);
   if (!res.ok) throw await apiError(res, '/api/samples/get');
 
-  const data = (await res.json()) as Sample[];
+  const data = (await res.json()) as Paginated<Sample>;
 
   return data;
 }

@@ -23,6 +23,9 @@ samples/julien/
 avatars/*
 !avatars/avatars.zip
 infra/media_data
+infra/audio_data
 
 docs/superpowers
 docs/brainstorm/
+
+testAntoine/
