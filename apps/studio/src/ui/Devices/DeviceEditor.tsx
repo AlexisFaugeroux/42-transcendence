@@ -5,7 +5,7 @@ import {
 } from '@opendaw/studio-adapters';
 import { useTranslation } from '@transcendence/i18n';
 import clsx from 'clsx';
-import { type JSX, useEffect, useState } from 'react';
+import { type CSSProperties, type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import styles from './DeviceEditor.module.scss';
@@ -76,6 +76,7 @@ export function DeviceEditor({ audioUnit, effect, entry }: DeviceEditorProps): J
     <section
       className={clsx(styles.dev, isMinimized && styles.minimized, !isEnabled && styles.bypassed)}
       data-family={entry.family}
+      style={{ '--accent': entry.accent } as CSSProperties}
     >
       <div className={styles.dev__bar}>
         <div className={styles.dev__head}>
