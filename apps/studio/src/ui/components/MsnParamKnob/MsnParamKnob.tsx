@@ -36,8 +36,10 @@ export function MsnParamKnob({
         design={size === 'normal' ? DefaultDesign : TinyDesign}
       />
       <span className={styles.label}>{label}</span>
-      <span className={styles.value}>{print.value}</span>
-      <span>{print.unit}</span>
+      <span className={styles.value}>
+        {print.value}
+        <span className={styles.unit}>{print.unit}</span>
+      </span>
     </div>
   );
 }
