@@ -1,0 +1,65 @@
+.bitcrusher {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.bits {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bitsHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 9px;
+  color: var(--fg2);
+}
+
+.bitsValue {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  color: var(--fg1);
+}
+
+.bitsBar {
+  display: flex;
+  gap: 1px;
+}
+
+.segment {
+  width: 7px;
+  height: 12px;
+  padding: 0;
+  background: var(--bg-card);
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+}
+
+.segment:hover {
+  background: var(--bg-elevated);
+}
+
+.segment:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.segment.on {
+  background: var(--accent);
+}
+
+.knobs {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
