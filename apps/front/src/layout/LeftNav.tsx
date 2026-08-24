@@ -24,7 +24,7 @@ export function LeftNav(): JSX.Element {
         <NavItem
           key={item.to}
           {...item}
-          badge={item.to === '/following' ? String(following?.length ?? 0) : item.badge}
+          badge={item.to === '/following' ? String(following?.total ?? 0) : item.badge}
         />
       ))}
 

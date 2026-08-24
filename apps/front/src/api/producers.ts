@@ -1,13 +1,17 @@
 import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
 import type { PublicProducer, PublicProducerProfile } from '../types/producer';
+import type { Paginated } from '../types/pagination';
 
-export async function listProducers(): Promise<PublicProducer[]> {
-  const res = await apiFetch('/api/users');
+export async function listProducers(page = 1, limit = 20): Promise<Paginated<PublicProducer>> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  const res = await apiFetch(`/api/users?${params.toString()}`);
   if (!res.ok)
     throw new ApiErrorReponse(`[api/users] List producers failed: ${res.status}`, res.status);
 
-  const data = (await res.json()) as { producers: PublicProducer[] };
-  return data.producers;
+  return (await res.json()) as Paginated<PublicProducer>;
 }
 
 export async function getProducer(handle: string): Promise<PublicProducerProfile> {
@@ -22,28 +26,45 @@ export async function getProducer(handle: string): Promise<PublicProducerProfile
   return data.producer;
 }
 
-export async function getFollowers(handle: string): Promise<PublicProducer[]> {
-  const res = await apiFetch(`/api/users/${encodeURIComponent(handle)}/followers`);
+export async function getFollowers(
+  handle: string,
+  page = 1,
+  limit = 20,
+): Promise<Paginated<PublicProducer>> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  const res = await apiFetch(
+    `/api/users/${encodeURIComponent(handle)}/followers?${params.toString()}`,
+  );
   if (!res.ok)
     throw new ApiErrorReponse(
       `[api/users/${encodeURIComponent(handle)}/followers] Get followers failed: ${res.status}`,
       res.status,
     );
 
-  const data = (await res.json()) as { producers: PublicProducer[] };
-  return data.producers;
+  return (await res.json()) as Paginated<PublicProducer>;
 }
 
-export async function getFollowing(handle: string): Promise<PublicProducer[]> {
-  const res = await apiFetch(`/api/users/${encodeURIComponent(handle)}/following`);
+export async function getFollowing(
+  handle: string,
+  page = 1,
+  limit = 20,
+): Promise<Paginated<PublicProducer>> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  const res = await apiFetch(
+    `/api/users/${encodeURIComponent(handle)}/following?${params.toString()}`,
+  );
   if (!res.ok)
     throw new ApiErrorReponse(
       `[api/users/${encodeURIComponent(handle)}/following] Get following failed: ${res.status}`,
       res.status,
     );
-
-  const data = (await res.json()) as { producers: PublicProducer[] };
-  return data.producers;
+  return (await res.json()) as Paginated<PublicProducer>;
 }
 
 export async function followProducer(handle: string): Promise<void> {

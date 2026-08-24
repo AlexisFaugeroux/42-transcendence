@@ -8,38 +8,39 @@ import {
   listProducers,
   unfollowProducer,
 } from '../api/producers';
+import type { Paginated } from '../types/pagination';
 import type { PublicProducer, PublicProducerProfile } from '../types/producer';
 
 // Reads hooks
 
-export function useProducers() {
+export function useProducers(page: number, limit = 20) {
   return useQuery({
-    queryFn: () => listProducers(),
-    queryKey: ['producers'],
+    queryKey: ['producers', page, limit],
+    queryFn: () => listProducers(page, limit),
   });
 }
 
 export function useProducer(handle: string) {
   return useQuery({
     enabled: Boolean(handle),
-    queryFn: () => getProducer(handle),
     queryKey: ['producer', handle],
+    queryFn: () => getProducer(handle),
   });
 }
 
-export function useFollowers(handle: string, enabled = true) {
+export function useFollowers(handle: string, enabled = true, page = 1, limit = 20) {
   return useQuery({
     enabled: Boolean(handle) && enabled,
-    queryFn: () => getFollowers(handle),
-    queryKey: ['producer', handle, 'followers'],
+    queryKey: ['producer', handle, 'followers', page, limit],
+    queryFn: () => getFollowers(handle, page, limit),
   });
 }
 
-export function useFollowing(handle: string, enabled = true) {
+export function useFollowing(handle: string, enabled = true, page = 1, limit = 20) {
   return useQuery({
     enabled: Boolean(handle) && enabled,
-    queryFn: () => getFollowing(handle),
-    queryKey: ['producer', handle, 'following'],
+    queryKey: ['producer', handle, 'following', page, limit],
+    queryFn: () => getFollowing(handle, page, limit),
   });
 }
 
@@ -96,10 +97,12 @@ export function useUnfollow() {
 
     onError: (_err, handle, context) => {
       if (context?.previous) {
-        queryClient.setQueryData<PublicProducerProfile>(['producer', handle], context.previous);
+        queryClient.setQueryData(['producer', handle], context.previous);
       }
       if (context?.previousFollowing) {
-        queryClient.setQueryData(myFollowingKey, context.previousFollowing);
+        for (const [key, data] of context.previousFollowing) {
+          queryClient.setQueryData(key, data);
+        }
       }
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] });
       void queryClient.invalidateQueries({ queryKey: myFollowingKey });
@@ -110,7 +113,9 @@ export function useUnfollow() {
       await queryClient.cancelQueries({ queryKey: myFollowingKey });
 
       const previous = queryClient.getQueryData<PublicProducerProfile>(['producer', handle]);
-      const previousFollowing = queryClient.getQueryData<PublicProducer[]>(myFollowingKey);
+      const previousFollowing = queryClient.getQueriesData<Paginated<PublicProducer>>({
+        queryKey: myFollowingKey,
+      });
 
       if (previous) {
         queryClient.setQueryData<PublicProducerProfile>(['producer', handle], {
@@ -120,12 +125,15 @@ export function useUnfollow() {
         });
       }
 
-      if (previousFollowing) {
-        queryClient.setQueryData<PublicProducer[]>(
-          myFollowingKey,
-          previousFollowing.filter((p) => p.handle !== handle),
-        );
-      }
+      queryClient.setQueriesData<Paginated<PublicProducer>>({ queryKey: myFollowingKey }, (old) => {
+        if (!old) return old;
+        // update the cache with the new data
+        return {
+          ...old,
+          items: old.items.filter((p) => p.handle !== handle),
+          total: Math.max(0, old.total - 1),
+        };
+      });
 
       return { previous, previousFollowing };
     },

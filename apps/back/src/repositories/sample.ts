@@ -50,18 +50,29 @@ class SampleRepository {
     }
   }
 
-  public async get(input: GetSampleInput): Promise<Sample[]> {
+  public async get(
+    input: GetSampleInput,
+    skip: number,
+    take: number,
+  ): Promise<{ items: Sample[]; total: number }> {
     const filters = this._buildFilters(input);
 
     const where = Object.keys(filters).length ? filters : undefined;
 
-    const samples: PrismaSample[] = await this.prisma.sample.findMany({
-      where,
-    });
+    const [samples, total] = await Promise.all([
+      this.prisma.sample.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.sample.count({
+        where,
+      }),
+    ]);
 
     const formattedSamples = samples.map((sample) => this._format(sample));
-
-    return formattedSamples;
+    return { items: formattedSamples, total };
   }
 
   public async update(id: string, input: UpdateSampleInput): Promise<Sample> {

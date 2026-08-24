@@ -150,6 +150,12 @@
   text-align: center;
 }
 
+.pager {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 20px 16px 64px;
