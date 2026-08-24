@@ -88,7 +88,6 @@ export function DeviceEditor({ audioUnit, effect, entry }: DeviceEditorProps): J
 
         {isMinimized ? null : (
           <>
-            {foldButton}
             <button
               aria-pressed={isEnabled}
               className={styles.dev__btn}
@@ -103,35 +102,38 @@ export function DeviceEditor({ audioUnit, effect, entry }: DeviceEditorProps): J
             >
               ⏻
             </button>
-            <button
-              className={styles.dev__btn}
-              title={t('studio.devices.moveLeft')}
-              onClick={() => {
-                move(-1);
-              }}
-            >
-              {'<'}
-            </button>
-            <button
-              className={styles.dev__btn}
-              title={t('studio.devices.moveRight')}
-              onClick={() => {
-                move(2); // to move one to the right, SDK requires delta 2
-              }}
-            >
-              {'>'}
-            </button>
-            <button
-              className={styles.dev__btn}
-              title={t('studio.devices.remove')}
-              onClick={() => {
-                project.editing.modify(() => {
-                  Devices.deleteEffectDevices([effect]);
-                });
-              }}
-            >
-              ✕
-            </button>
+            <div className={styles.dev__actions}>
+              {foldButton}
+              <button
+                className={styles.dev__btn}
+                title={t('studio.devices.moveLeft')}
+                onClick={() => {
+                  move(-1);
+                }}
+              >
+                {'<'}
+              </button>
+              <button
+                className={styles.dev__btn}
+                title={t('studio.devices.moveRight')}
+                onClick={() => {
+                  move(2); // to move one to the right, SDK requires delta 2
+                }}
+              >
+                {'>'}
+              </button>
+              <button
+                className={clsx(styles.dev__btn, styles.dev__remove)}
+                title={t('studio.devices.remove')}
+                onClick={() => {
+                  project.editing.modify(() => {
+                    Devices.deleteEffectDevices([effect]);
+                  });
+                }}
+              >
+                ✕
+              </button>
+            </div>
           </>
         )}
       </div>
