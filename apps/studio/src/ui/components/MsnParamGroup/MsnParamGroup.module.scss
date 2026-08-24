@@ -4,9 +4,14 @@
   gap: 3px;
 }
 
-.group.separated {
+.group.separatedLeft {
   padding-left: 8px;
   border-left: 1px solid var(--line-soft);
+}
+
+.group.separatedTop {
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
 }
 
 .heading {
@@ -25,6 +30,7 @@
 
 .content.row {
   align-items: flex-start;
+  justify-content: center;
 }
 
 .content.column {
