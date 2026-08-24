@@ -26,6 +26,15 @@
   white-space: nowrap;
 }
 
+.dev__actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding-left: 8px;
+}
+
 .dev__head {
   flex: 0 0 auto;
   display: flex;
@@ -61,6 +70,15 @@
 
 .dev__btn[aria-pressed='true'] {
   color: var(--accent);
+}
+
+.dev__btn.dev__remove {
+  color: var(--color-red);
+}
+
+.dev__btn.dev__remove:hover {
+  color: var(--color-red);
+  border-color: var(--color-red);
 }
 
 .dev__body {
