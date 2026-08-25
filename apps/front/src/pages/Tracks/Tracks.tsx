@@ -4,7 +4,8 @@ import type { JSX } from 'react';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import { useTracks } from '../../hooks/useTracks';
-import styles from '../Samples/Samples.module.scss';
+import { TrackList } from './TrackList';
+import styles from './Tracks.module.scss';
 
 export function Tracks(): JSX.Element {
   const { t } = useTranslation();
@@ -33,11 +34,7 @@ export function Tracks(): JSX.Element {
           ) : tracks.length === 0 ? (
             <p>{t('tracks.empty')}</p>
           ) : (
-            <ul>
-              {tracks.map((track) => (
-                <li key={track.id}>{track.title}</li>
-              ))}
-            </ul>
+            <TrackList tracks={tracks} />
           )}
         </div>
       </div>

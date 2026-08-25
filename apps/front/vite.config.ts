@@ -13,7 +13,15 @@ export default defineConfig({
       },
       '/avatars': 'http://localhost:8081',
       '/samples': 'http://localhost:8081',
-      '/tracks': 'http://localhost:8081',
+      // Media files under /tracks/… — not the SPA page GET /tracks (Accept: text/html).
+      '/tracks': {
+        bypass(req) {
+          if (req.headers.accept?.includes('text/html')) {
+            return '/index.html';
+          }
+        },
+        target: 'http://localhost:8081',
+      },
     },
     strictPort: true,
   },
