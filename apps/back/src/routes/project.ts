@@ -63,6 +63,26 @@ const deleteProjectSchema = {
   },
 };
 
+const updateProjectSchema = {
+  body: {
+    additionalProperties: false,
+    minProperties: 1,
+    properties: {
+      archived: { type: 'boolean' },
+      name: { maxLength: 128, minLength: 1, type: 'string' },
+    },
+    type: 'object',
+  },
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      id: { minLength: 1, type: 'string' },
+    },
+    required: ['id'],
+    type: 'object',
+  },
+};
+
 export function projectRoutes(app: FastifyInstance) {
   app.put(
     '/save',
@@ -77,6 +97,12 @@ export function projectRoutes(app: FastifyInstance) {
   );
 
   app.get('/list', { preHandler: app.authenticate }, projectController.list);
+
+  app.put(
+    '/update',
+    { preHandler: app.authenticate, schema: updateProjectSchema },
+    projectController.update,
+  );
 
   app.delete(
     '/delete',

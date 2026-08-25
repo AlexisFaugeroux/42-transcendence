@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { ForbiddenError, NotFoundError } from '../domain/errors';
-import type { Project, SaveProjectBody } from '../domain/project';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../domain/errors';
+import type { Project, SaveProjectBody, UpdateProjectInput } from '../domain/project';
 import { projectRepository } from '../repositories/project';
 import { userRepository } from '../repositories/user';
 
@@ -17,6 +17,14 @@ interface LoadProjectRoute extends RouteGenericInterface {
 
 interface ListProjectRoute extends RouteGenericInterface {
   Reply: Project[];
+}
+
+interface UpdateProjectRoute extends RouteGenericInterface {
+  Body: UpdateProjectInput;
+  Querystring: {
+    id: string;
+  };
+  Reply: Project;
 }
 
 interface RemoveProjectRoute extends RouteGenericInterface {
@@ -78,6 +86,22 @@ class ProjectController {
     if (user.ownerId !== project.ownerId) throw new ForbiddenError();
 
     reply.code(200).send(project);
+  };
+
+  public update = async (
+    req: FastifyRequest<UpdateProjectRoute>,
+    reply: FastifyReply<UpdateProjectRoute>,
+  ) => {
+    if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
+
+    const user = await userRepository.findById(req.authUser.id);
+    const project = await projectRepository.findById(req.query.id);
+
+    if (user.ownerId !== project.ownerId) throw new ForbiddenError();
+
+    const updated = await projectRepository.update(req.query.id, req.body);
+
+    reply.code(200).send(updated);
   };
 
   public detele = async (req: FastifyRequest<RemoveProjectRoute>, reply: FastifyReply) => {

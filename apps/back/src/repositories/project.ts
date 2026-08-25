@@ -1,5 +1,10 @@
 import { formatISO } from '@transcendence/date';
-import type { GetProjectInput, Project, UpsertProjectInput } from '../domain/project';
+import type {
+  GetProjectInput,
+  Project,
+  UpdateProjectInput,
+  UpsertProjectInput,
+} from '../domain/project';
 import type { PrismaClient, Sample, StudioProject } from '../generated/prisma/client';
 import { toArrayBuffer } from '../utils/bytes';
 import { prisma } from '../utils/prisma';
@@ -73,6 +78,20 @@ class ProjectRepository {
     const formattedProjects = projects.map((project) => this._format(project));
 
     return formattedProjects;
+  }
+
+  public async update(id: string, input: UpdateProjectInput): Promise<Project> {
+    try {
+      const updatedProject = await this.prisma.studioProject.update({
+        data: input,
+        include: { samples: { select: { id: true } } },
+        where: { id },
+      });
+
+      return this._format(updatedProject);
+    } catch (error: unknown) {
+      throw mapError(error, 'Project');
+    }
   }
 
   public async delete(id: string): Promise<void> {
