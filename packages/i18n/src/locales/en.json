@@ -761,7 +761,7 @@
     "count_one": "{{count}} track",
     "count_other": "{{count}} tracks",
     "delete": {
-      "body": "The track <code>{{title}}</code> and its files will be permanently deleted.",
+      "body": "The track <code>{{title}}</code> will be permanently deleted.",
       "errorTitle": "Deletion failed",
       "successDescription": "{{title}} has been deleted",
       "successTitle": "Track deleted",
