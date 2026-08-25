@@ -17,6 +17,7 @@ import Register from './pages/Register/Register';
 import { Samples } from './pages/Samples/Samples';
 import { Sessions } from './pages/Sessions/Sessions';
 import { Terms } from './pages/Terms/Terms';
+import { Tracks } from './pages/Tracks/Tracks';
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ export function App(): JSX.Element {
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />
             <Route path="/library" element={<Samples />} />
+            <Route path="/tracks" element={<Tracks />} />
             <Route path="/sessions" element={<Sessions />} />
             <Route path="/settings" element={<Dashboard />} />
             <Route path="/producers" element={<Producers />} />
@@ -49,7 +51,6 @@ export function App(): JSX.Element {
 
           {/*
           <Route element={<AppLayout />}>
-            <Route path="/tracks" element={<Tracks />} />
             <Route path="/exports" element={<Exports />} />
             <Route path="/liked" element={<Liked />} />
             <Route path="/playlists" element={<Playlists />} />
