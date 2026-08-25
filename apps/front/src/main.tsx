@@ -14,7 +14,7 @@ createRoot(root).render(
     <MsnThemeProvider>
       <I18nProvider>
         <AuthProvider>
-            <App />
+          <App />
         </AuthProvider>
       </I18nProvider>
     </MsnThemeProvider>

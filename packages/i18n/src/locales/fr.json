@@ -71,6 +71,7 @@
       "you": "Vous :"
     },
     "loadError": "Impossible de charger les conversations",
+    "sendError": "Impossible d’envoyer votre message",
     "threadEmpty": {
       "cta": "Écrire à un producteur",
       "text": "Choisissez une conversation à gauche, ou cherchez un producteur par alias ou par handle pour en démarrer une nouvelle.",

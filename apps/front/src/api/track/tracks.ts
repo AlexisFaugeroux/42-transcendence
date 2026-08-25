@@ -1,6 +1,6 @@
 import { apiError, apiFetch } from '@transcendence/auth';
-import { getPeaks } from '../samples/samples';
 import type { Track, UpdateTrackInput } from '../../types/track';
+import { getPeaks } from '../samples/samples';
 import type { GetTracksFilters } from './types';
 
 /** Public media URL for a track `.wav` / `.peaks` path returned by the API. */

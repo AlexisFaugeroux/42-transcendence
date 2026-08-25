@@ -65,9 +65,6 @@ class ChatRepository {
             },
           },
         },
-        select: {
-          unreadCount: true,
-        },
       },
     },
   } as const;

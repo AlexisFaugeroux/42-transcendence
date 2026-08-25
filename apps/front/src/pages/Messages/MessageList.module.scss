@@ -1,0 +1,33 @@
+.otherMessage,
+.meMessage {
+  width: fit-content;
+  padding: 1rem;
+  font-family: var(--font-disply);
+  font-size: 0, 8rem;
+  border-radius: 3px;
+  color: white;
+}
+
+.otherMessage {
+  background-color: var(--color-shadow);
+}
+
+.meMessage {
+  background-color: var(--color-orange);
+}
+.messageLeft {
+  align-self: flex-start;
+}
+
+.messageRight {
+  align-self: flex-end;
+}
+
+.messageWrapper {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  gap: 1rem;
+}

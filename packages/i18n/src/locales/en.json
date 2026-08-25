@@ -71,6 +71,7 @@
       "you": "You:"
     },
     "loadError": "Couldn’t load conversations",
+    "sendError": "Couldn’t send your message",
     "threadEmpty": {
       "cta": "Message a producer",
       "text": "Pick a conversation on the left, or search a producer by alias or handle to start a new one.",

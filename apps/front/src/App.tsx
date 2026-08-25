@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
@@ -59,6 +60,7 @@ export function App(): JSX.Element {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
+      {import.meta.env.DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     </QueryClientProvider>
   );
 }

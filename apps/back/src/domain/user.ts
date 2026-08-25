@@ -18,7 +18,7 @@ export interface User {
 }
 
 export interface OnlineUser {
-  id : string
+  id: string;
   name: string;
   handle: string;
   status: PresenceStatus;

@@ -13,6 +13,53 @@ export const devConfig: SeedConfig = {
     { artistName: 'alex', file: join(avatarsDir, 'alex.jpeg') },
     { artistName: 'julien', file: join(avatarsDir, 'julien.webp') },
   ],
+  conversations: [
+    {
+      messages: [
+        { author: 'julien', content: "T'es encore connecte ?" },
+        { author: 'Maya', content: "J'aime trop la musique tu connais ^^" },
+      ],
+      participants: ['julien', 'Maya'],
+    },
+    {
+      messages: [
+        { author: 'antoine', content: 'Yo' },
+        { author: 'alex', content: 'Lo' },
+        { author: 'antoine', content: 'AHAHA toi puceau ?' },
+      ],
+      participants: ['antoine', 'alex'],
+    },
+    {
+      messages: [
+        { author: 'Naelle', content: "Mon cpp9 n'est pas rapide" },
+        { author: 'julien', content: "C'est la dur loi de la jungle" },
+        { author: 'Naelle', content: 'Ford et Johnson sont de bonnes voiture' },
+      ],
+      participants: ['julien', 'Naelle'],
+    },
+    {
+      messages: [
+        {
+          author: 'Maya',
+          content: "J'ai entendu dire que Ford et johnson etaient des voitures ?",
+        },
+        {
+          author: 'alex',
+          content:
+            "Mdrrrr qu'est ce tu racontes ca n'existe pas les voitures. Revoie tes classiques (musicaux)",
+        },
+      ],
+      participants: ['Maya', 'alex'],
+    },
+    {
+      messages: [
+        { author: 'antoine', content: 'Salut' },
+        { author: 'Naelle', content: 'Salut' },
+        { author: 'antoine', content: 'salut.......' },
+      ],
+      participants: ['antoine', 'Naelle'],
+    },
+  ],
   follows: {
     alex: ['julien'],
     antoine: [],
