@@ -741,5 +741,13 @@
       "editor": "Editor",
       "timeline": "Línea de tiempo"
     }
+  },
+  "tracks": {
+    "count_one": "{{count}} pista",
+    "count_other": "{{count}} pistas",
+    "empty": "Todavía no hay pistas. Exporta una desde el studio.",
+    "eyebrow": "Pistas",
+    "loadError": "No se pudieron cargar las pistas",
+    "title": "Mis pistas"
   }
 }

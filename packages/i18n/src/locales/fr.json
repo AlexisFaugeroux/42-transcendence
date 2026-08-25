@@ -741,5 +741,13 @@
       "editor": "Éditeur",
       "timeline": "Timeline"
     }
-  }
+  },
+  "tracks": {
+    "count_one": "{{count}} morceau",
+    "count_other": "{{count}} morceaux",
+    "empty": "Aucun morceau pour l’instant. Exporte-en un depuis le studio.",
+    "eyebrow": "Morceaux",
+    "loadError": "Impossible de charger les morceaux",
+    "title": "Mes morceaux"
+    }
 }
