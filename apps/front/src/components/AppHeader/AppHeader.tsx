@@ -20,7 +20,7 @@ import { HeaderIconButton } from '../HeaderIconButton/HeaderIconButton';
 import { UserChip } from '../UserChip/UserChip';
 import styles from './AppHeader.module.scss';
 
-export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'producers' | 'following' | 'settings';
+export type AppHeaderKey = 'home' | 'sessions' | 'library' | 'tracks' | 'producers' | 'following' | 'settings';
 
 interface HeaderLink {
   key: AppHeaderKey;
