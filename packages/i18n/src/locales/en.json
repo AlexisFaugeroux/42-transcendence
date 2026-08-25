@@ -757,13 +757,37 @@
     }
   },
   "tracks": {
+    "actions": "Track actions",
     "count_one": "{{count}} track",
     "count_other": "{{count}} tracks",
+    "delete": {
+      "body": "The track <code>{{title}}</code> and its files will be permanently deleted.",
+      "errorTitle": "Deletion failed",
+      "successDescription": "{{title}} has been deleted",
+      "successTitle": "Track deleted",
+      "title": "Delete this track?"
+    },
+    "edit": "Edit",
+    "editModal": {
+      "errorTitle": "Could not save the track",
+      "successDescription": "{{title}} has been saved",
+      "successTitle": "Track updated",
+      "title": "Edit track"
+    },
     "empty": "No tracks yet. Export one from the studio.",
     "eyebrow": "Tracks",
+    "fields": {
+      "bpm": "BPM",
+      "description": "Description",
+      "key": "Key",
+      "mode": "Mode",
+      "title": "Title"
+    },
     "loadError": "Could not load tracks",
     "pause": "Pause",
     "play": "Play",
-    "title": "My tracks"
+    "title": "My tracks",
+    "updateError": "Could not update the track",
+    "visibility": "Visibility"
   }
 }

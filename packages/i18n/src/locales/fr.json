@@ -757,13 +757,37 @@
     }
   },
   "tracks": {
+    "actions": "Actions du morceau",
     "count_one": "{{count}} morceau",
     "count_other": "{{count}} morceaux",
+    "delete": {
+      "body": "Le morceau <code>{{title}}</code> et ses fichiers seront supprimés définitivement.",
+      "errorTitle": "Suppression échouée",
+      "successDescription": "{{title}} a été supprimé",
+      "successTitle": "Morceau supprimé",
+      "title": "Supprimer ce morceau ?"
+    },
+    "edit": "Modifier",
+    "editModal": {
+      "errorTitle": "Impossible d'enregistrer le morceau",
+      "successDescription": "{{title}} a été enregistré",
+      "successTitle": "Morceau mis à jour",
+      "title": "Modifier le morceau"
+    },
     "empty": "Aucun morceau pour l’instant. Exporte-en un depuis le studio.",
     "eyebrow": "Morceaux",
+    "fields": {
+      "bpm": "BPM",
+      "description": "Description",
+      "key": "Tonalité",
+      "mode": "Mode",
+      "title": "Titre"
+    },
     "loadError": "Impossible de charger les morceaux",
     "pause": "Pause",
     "play": "Lecture",
-    "title": "Mes morceaux"
+    "title": "Mes morceaux",
+    "updateError": "Impossible de mettre à jour le morceau",
+    "visibility": "Visibilité"
   }
 }
