@@ -5,11 +5,13 @@ import type { Session } from './sessions.data';
 
 interface DeleteSessionModalProps {
   session: Session | null;
+  confirmLoading?: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
 export function DeleteSessionModal({
+  confirmLoading = false,
   onCancel,
   onConfirm,
   session,
@@ -23,6 +25,7 @@ export function DeleteSessionModal({
       okText={t('sessions.delete.submit')}
       okButtonProps={{ danger: true }}
       cancelText={t('common.cancel')}
+      confirmLoading={confirmLoading}
       onOk={onConfirm}
       onCancel={onCancel}
     >

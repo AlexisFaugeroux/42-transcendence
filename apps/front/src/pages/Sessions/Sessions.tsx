@@ -1,8 +1,14 @@
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
-import { Button, MsnIcon } from '@transcendence/ui';
+import {
+  Button,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  MsnIcon,
+  notification,
+} from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
-import { useSavedSessions } from '../../hooks/useSavedSessions';
+import { useDeleteSession, useSavedSessions, useUpdateSession } from '../../hooks/useSavedSessions';
 import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
 import { RenameSessionModal } from './RenameSessionModal';
@@ -29,9 +35,80 @@ export function Sessions(): JSX.Element {
   const [newOpen, setNewOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Session | null>(null);
   const [renameTarget, setRenameTarget] = useState<Session | null>(null);
+  const [notificationApi, notificationContext] = notification.useNotification();
   const { data, error, isError } = useSavedSessions();
+  const deleteSession = useDeleteSession();
+  const updateSession = useUpdateSession();
 
   if (isError) throw error;
+
+  const notifyError = (message: string, description: string): void => {
+    notificationApi.error({ description, icon: <CloseCircleOutlined />, message });
+  };
+
+  const notifySuccess = (message: string, description: string): void => {
+    notificationApi.success({ description, icon: <CheckCircleOutlined />, message });
+  };
+
+  const confirmDeletion = (): void => {
+    if (!confirmDelete) return;
+
+    const name = confirmDelete.name;
+    deleteSession.mutate(confirmDelete.id, {
+      onError: (err) => {
+        notifyError(t('sessions.delete.errorTitle'), err.message);
+      },
+      onSuccess: () => {
+        notifySuccess(
+          t('sessions.delete.successTitle'),
+          t('sessions.delete.successDescription', { name }),
+        );
+        setConfirmDelete(null);
+      },
+    });
+  };
+
+  const confirmRename = (name: string): void => {
+    if (!renameTarget) return;
+
+    updateSession.mutate(
+      { fields: { name }, id: renameTarget.id },
+      {
+        onError: (err) => {
+          notifyError(t('sessions.rename.errorTitle'), err.message);
+        },
+        onSuccess: () => {
+          notifySuccess(
+            t('sessions.rename.successTitle'),
+            t('sessions.rename.successDescription', { name }),
+          );
+          setRenameTarget(null);
+        },
+      },
+    );
+  };
+
+  const handleArchive = (session: Session): void => {
+    const nextArchived = !session.archived;
+    updateSession.mutate(
+      { fields: { archived: nextArchived }, id: session.id },
+      {
+        onError: (err) => {
+          notifyError(t('sessions.archive.errorTitle'), err.message);
+        },
+        onSuccess: () => {
+          notifySuccess(
+            nextArchived
+              ? t('sessions.archive.successTitle')
+              : t('sessions.archive.unarchiveSuccessTitle'),
+            nextArchived
+              ? t('sessions.archive.successDescription', { name: session.name })
+              : t('sessions.archive.unarchiveSuccessDescription', { name: session.name }),
+          );
+        },
+      },
+    );
+  };
 
   const counts = {
     archived: (data ?? []).filter((s) => s.archived).length,
@@ -39,7 +116,7 @@ export function Sessions(): JSX.Element {
   };
 
   const filtered = useMemo(() => {
-    let list = data ?? [];
+    let list = (data ?? []).filter((s) => (bucket === 'archived' ? s.archived : !s.archived));
     const q = query.trim().toLowerCase();
     if (q) list = list.filter((r) => r.name.toLowerCase().includes(q));
 
@@ -54,7 +131,7 @@ export function Sessions(): JSX.Element {
       }
     });
     return list;
-  }, [data, query, sort]);
+  }, [bucket, data, query, sort]);
 
   const clearFilters = (): void => {
     setQuery('');
@@ -74,6 +151,7 @@ export function Sessions(): JSX.Element {
 
   return (
     <div className={styles.page}>
+      {notificationContext}
       <AppHeader active="sessions" />
 
       <div className={styles.container}>
@@ -129,6 +207,7 @@ export function Sessions(): JSX.Element {
             rows={filtered}
             archived={bucket === 'archived'}
             onRename={handleRename}
+            onArchive={handleArchive}
             onDelete={handleDelete}
           />
         )}
@@ -142,21 +221,19 @@ export function Sessions(): JSX.Element {
       />
       <DeleteSessionModal
         session={confirmDelete}
+        confirmLoading={deleteSession.isPending}
         onCancel={() => {
           setConfirmDelete(null);
         }}
-        onConfirm={() => {
-          setConfirmDelete(null);
-        }}
+        onConfirm={confirmDeletion}
       />
       <RenameSessionModal
         session={renameTarget}
+        confirmLoading={updateSession.isPending}
         onCancel={() => {
           setRenameTarget(null);
         }}
-        onConfirm={() => {
-          setRenameTarget(null);
-        }}
+        onConfirm={confirmRename}
       />
     </div>
   );

@@ -5,29 +5,37 @@ import type { Session } from './sessions.data';
 
 interface RenameSessionModalProps {
   session: Session | null;
+  confirmLoading?: boolean;
   onCancel: () => void;
   onConfirm: (title: string) => void;
 }
 
 function RenameForm({
+  confirmLoading,
   onCancel,
   onConfirm,
   session,
 }: {
   session: Session;
+  confirmLoading: boolean;
   onCancel: () => void;
   onConfirm: (t: string) => void;
 }): JSX.Element {
   const [title, setTitle] = useState(session.name);
   const { t } = useTranslation();
+  const trimmed = title.trim();
+  const unchanged = trimmed === session.name;
+  const empty = trimmed.length === 0;
 
   return (
     <Modal
       open
       title={t('sessions.rename.title')}
       okText={t('common.save')}
+      okButtonProps={{ disabled: empty || unchanged }}
+      confirmLoading={confirmLoading}
       onOk={() => {
-        onConfirm(title);
+        onConfirm(trimmed);
       }}
       onCancel={onCancel}
     >
@@ -50,6 +58,7 @@ function RenameForm({
 }
 
 export function RenameSessionModal({
+  confirmLoading = false,
   onCancel,
   onConfirm,
   session,
@@ -57,6 +66,12 @@ export function RenameSessionModal({
   if (!session) return null;
   // Remount per-session so the input starts from the right title each time.
   return (
-    <RenameForm key={session.id} session={session} onCancel={onCancel} onConfirm={onConfirm} />
+    <RenameForm
+      key={session.id}
+      session={session}
+      confirmLoading={confirmLoading}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+    />
   );
 }

@@ -502,7 +502,10 @@
     "delete": {
       "body": "<code>{{title}}</code> and all its tracks, automation and edits will be permanently removed. Sample files referenced from your library are kept.",
       "submit": "Delete session",
-      "title": "Delete this session?"
+      "title": "Delete this session?",
+      "errorTitle": "Delete failed",
+      "successTitle": "Session deleted",
+      "successDescription": "{{name}} has been deleted"
     },
     "emptyArchived": {
       "text": "Archived sessions will live here when you're done with them.",
@@ -528,7 +531,10 @@
       "title": "No sessions match these filters"
     },
     "rename": {
-      "title": "Rename session"
+      "title": "Rename session",
+      "errorTitle": "Rename failed",
+      "successTitle": "Session renamed",
+      "successDescription": "New name: {{name}}"
     },
     "sort": {
       "bpm": "BPM",
@@ -554,6 +560,13 @@
       "mixing": "Stems in, mix out. Faders, busses, FX chains.",
       "production": "Full DAW: tracks, MIDI, effects, automation.",
       "recording": "Get a take down. Multi-mic, punch-in, comp."
+    },
+    "archive": {
+      "errorTitle": "Archive failed",
+      "successTitle": "Session archived",
+      "successDescription": "{{name}} has been archived",
+      "unarchiveSuccessTitle": "Session restored",
+      "unarchiveSuccessDescription": "{{name}} has been unarchived"
     }
   },
   "producers": {

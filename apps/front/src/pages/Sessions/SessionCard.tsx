@@ -9,11 +9,13 @@ interface SessionCardProps {
   session: Session;
   archived: boolean;
   onRename: (session: Session) => void;
+  onArchive: (session: Session) => void;
   onDelete: (session: Session) => void;
 }
 
 export function SessionCard({
   archived,
+  onArchive,
   onDelete,
   onRename,
   session,
@@ -21,11 +23,25 @@ export function SessionCard({
   const { t } = useTranslation();
   const color = TYPE_COLOR[session.type];
 
+  const loadProject = (): void => {
+    const query = new URLSearchParams({
+      bpm: String(session.bpm),
+      name: session.name,
+      projectId: session.id,
+    });
+
+    for (const sampleId of session.samples) {
+      query.append('sampleId', sampleId);
+    }
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
+  };
+
   const menuItems: MenuProps['items'] = [
     {
       icon: <MsnIcon name="play" size="12px" />,
       key: 'open',
       label: t('sessions.card.openInEditor'),
+      onClick: loadProject,
     },
     {
       icon: <MsnIcon name="settings" size="12px" />,
@@ -44,6 +60,9 @@ export function SessionCard({
       icon: <MsnIcon name="folder" size="12px" />,
       key: 'archive',
       label: archived ? t('sessions.card.unarchive') : t('sessions.card.archive'),
+      onClick: () => {
+        onArchive(session);
+      },
     },
     { type: 'divider' },
     {
@@ -56,19 +75,6 @@ export function SessionCard({
       },
     },
   ];
-
-  const loadProject = () => {
-    const query = new URLSearchParams({
-      bpm: String(session.bpm),
-      name: session.name,
-      projectId: session.id,
-    });
-
-    for (const sampleId of session.samples) {
-      query.append('sampleId', sampleId);
-    }
-    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
-  };
 
   return (
     <div className={styles.card} data-archived={archived}>
@@ -107,7 +113,17 @@ export function SessionCard({
           <span className={styles.edited}>
             {t('sessions.card.edited', { when: formatDate(session.updatedAt) })}
           </span>
-          <Button size="small" type={archived ? 'default' : 'primary'} onClick={loadProject}>
+          <Button
+            size="small"
+            type={archived ? 'default' : 'primary'}
+            onClick={
+              archived
+                ? () => {
+                    onArchive(session);
+                  }
+                : loadProject
+            }
+          >
             {archived ? t('sessions.card.restore') : t('sessions.card.open')}{' '}
             <MsnIcon name="arrowR" size="11px" />
           </Button>

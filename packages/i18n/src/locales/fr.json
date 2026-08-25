@@ -502,7 +502,10 @@
     "delete": {
       "body": "<code>{{title}}</code> et toutes ses pistes, automations et modifications seront supprimées définitivement. Les samples référencés depuis votre bibliothèque sont conservés.",
       "submit": "Supprimer la session",
-      "title": "Supprimer cette session ?"
+      "title": "Supprimer cette session ?",
+      "errorTitle": "Suppression échouée",
+      "successTitle": "Session supprimée",
+      "successDescription": "{{name}} a été supprimée"
     },
     "emptyArchived": {
       "text": "Les sessions archivées apparaîtront ici quand vous en aurez terminé avec elles.",
@@ -528,7 +531,10 @@
       "title": "Aucune session ne correspond à ces filtres"
     },
     "rename": {
-      "title": "Renommer la session"
+      "title": "Renommer la session",
+      "errorTitle": "Renommage échoué",
+      "successTitle": "Session renommée",
+      "successDescription": "Nouveau nom : {{name}}"
     },
     "sort": {
       "bpm": "BPM",
@@ -554,6 +560,13 @@
       "mixing": "Stems en entrée, mix en sortie. Faders, bus, chaînes d'effets.",
       "production": "DAW complet : pistes, MIDI, effets, automation.",
       "recording": "Capturez une prise. Multi-micro, punch-in, montage."
+    },
+    "archive": {
+      "errorTitle": "Archivage échoué",
+      "successTitle": "Session archivée",
+      "successDescription": "{{name}} a été archivée",
+      "unarchiveSuccessTitle": "Session restaurée",
+      "unarchiveSuccessDescription": "{{name}} a été désarchivée"
     }
   },
   "producers": {

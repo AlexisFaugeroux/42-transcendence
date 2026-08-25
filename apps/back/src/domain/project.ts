@@ -46,3 +46,8 @@ export interface GetProjectInput {
   ownerIds: string[];
   visibilities: VisibilityType[];
 }
+
+export interface UpdateProjectInput {
+  name?: string;
+  archived?: boolean;
+}
