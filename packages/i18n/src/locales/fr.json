@@ -116,7 +116,8 @@
     "sessions": "Sessions",
     "settings": "Paramètres",
     "producers": "Producteurs",
-    "following": "Abonnements"
+    "following": "Abonnements",
+    "tracks": "Morceaux"
   },
   "home": {
     "activity": {
@@ -748,6 +749,8 @@
     "empty": "Aucun morceau pour l’instant. Exporte-en un depuis le studio.",
     "eyebrow": "Morceaux",
     "loadError": "Impossible de charger les morceaux",
+    "pause": "Pause",
+    "play": "Lecture",
     "title": "Mes morceaux"
-    }
+  }
 }

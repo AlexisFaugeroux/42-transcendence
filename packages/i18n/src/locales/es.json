@@ -116,7 +116,8 @@
     "sessions": "Sesiones",
     "settings": "Ajustes",
     "producers": "Productores",
-    "following": "Siguiendo"
+    "following": "Siguiendo",
+    "tracks": "Pistas"
   },
   "home": {
     "activity": {
@@ -748,6 +749,8 @@
     "empty": "Todavía no hay pistas. Exporta una desde el studio.",
     "eyebrow": "Pistas",
     "loadError": "No se pudieron cargar las pistas",
+    "pause": "Pausa",
+    "play": "Reproducir",
     "title": "Mis pistas"
   }
 }

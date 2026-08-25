@@ -116,7 +116,8 @@
     "sessions": "Sessions",
     "settings": "Settings",
     "producers": "Producers",
-    "following": "Following"
+    "following": "Following",
+    "tracks": "Tracks"
   },
   "home": {
     "activity": {
@@ -748,6 +749,8 @@
     "empty": "No tracks yet. Export one from the studio.",
     "eyebrow": "Tracks",
     "loadError": "Could not load tracks",
+    "pause": "Pause",
+    "play": "Play",
     "title": "My tracks"
   }
 }
