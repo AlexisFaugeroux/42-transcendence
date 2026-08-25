@@ -757,13 +757,37 @@
     }
   },
   "tracks": {
+    "actions": "Acciones de la pista",
     "count_one": "{{count}} pista",
     "count_other": "{{count}} pistas",
+    "delete": {
+      "body": "La pista <code>{{title}}</code> y sus archivos se eliminarán definitivamente.",
+      "errorTitle": "Error al eliminar",
+      "successDescription": "{{title}} se ha eliminado",
+      "successTitle": "Pista eliminada",
+      "title": "¿Eliminar esta pista?"
+    },
+    "edit": "Editar",
+    "editModal": {
+      "errorTitle": "No se pudo guardar la pista",
+      "successDescription": "{{title}} se ha guardado",
+      "successTitle": "Pista actualizada",
+      "title": "Editar pista"
+    },
     "empty": "Todavía no hay pistas. Exporta una desde el studio.",
     "eyebrow": "Pistas",
+    "fields": {
+      "bpm": "BPM",
+      "description": "Descripción",
+      "key": "Tonalidad",
+      "mode": "Modo",
+      "title": "Título"
+    },
     "loadError": "No se pudieron cargar las pistas",
     "pause": "Pausa",
     "play": "Reproducir",
-    "title": "Mis pistas"
+    "title": "Mis pistas",
+    "updateError": "No se pudo actualizar la pista",
+    "visibility": "Visibilidad"
   }
 }

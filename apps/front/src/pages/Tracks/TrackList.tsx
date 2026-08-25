@@ -1,9 +1,10 @@
 import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
-import { MsnIcon, Tag } from '@transcendence/ui';
+import { Dropdown, type MenuProps, MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { trackMediaUrl } from '../../api/track/tracks';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
+import { VISIBILITIES, type Visibility } from '../../types/sample';
 import type { Track } from '../../types/track';
 import { VISIBILITY_LABEL } from '../Samples/constants';
 import { SampleWaveform } from '../Samples/SampleWaveform';
@@ -11,6 +12,9 @@ import styles from './TrackList.module.scss';
 
 interface TrackListProps {
   tracks: Track[];
+  onEdit: (track: Track) => void;
+  onDelete: (track: Track) => void;
+  onVisibilityChange: (track: Track, visibility: Visibility) => void;
 }
 
 function formatTrackDuration(durationMs: number): string {
@@ -20,7 +24,12 @@ function formatTrackDuration(durationMs: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export function TrackList({ tracks }: TrackListProps): JSX.Element {
+export function TrackList({
+  onDelete,
+  onEdit,
+  onVisibilityChange,
+  tracks,
+}: TrackListProps): JSX.Element {
   const { t } = useTranslation();
   const player = useSamplePlayer();
 
@@ -30,6 +39,37 @@ export function TrackList({ tracks }: TrackListProps): JSX.Element {
         const wavUrl = trackMediaUrl(track.url);
         const peaksUrl = trackMediaUrl(track.peaksUrl);
         const isActive = player.currentId === track.id;
+
+        const menuItems: MenuProps['items'] = [
+          {
+            key: 'edit',
+            label: t('tracks.edit'),
+            onClick: () => {
+              onEdit(track);
+            },
+          },
+          {
+            children: VISIBILITIES.map((visibility) => ({
+              disabled: track.visibility === visibility,
+              key: `visibility-${visibility}`,
+              label: t(VISIBILITY_LABEL[visibility]),
+              onClick: () => {
+                onVisibilityChange(track, visibility);
+              },
+            })),
+            key: 'visibility',
+            label: t('tracks.visibility'),
+          },
+          { type: 'divider' },
+          {
+            danger: true,
+            key: 'delete',
+            label: t('common.delete'),
+            onClick: () => {
+              onDelete(track);
+            },
+          },
+        ];
 
         return (
           <div key={track.id} className={styles.row}>
@@ -46,7 +86,12 @@ export function TrackList({ tracks }: TrackListProps): JSX.Element {
             </button>
 
             <div>
-              <div className={styles.title}>{track.title}</div>
+              <div
+                className={styles.title}
+                title={track.description?.trim() ? track.description : undefined}
+              >
+                {track.title}
+              </div>
               <div className={styles.meta}>
                 <Tag>{t(VISIBILITY_LABEL[track.visibility])}</Tag>
                 {track.bpm != null ? <span>{track.bpm} BPM</span> : null}
@@ -58,14 +103,25 @@ export function TrackList({ tracks }: TrackListProps): JSX.Element {
             <span className={styles.mono}>{formatTrackDuration(track.duration)}</span>
             <span className={styles.mono}>{formatDate(track.createdAt, 'L')}</span>
 
-            <a
-              className={styles.download}
-              href={wavUrl}
-              download={`${track.title}.wav`}
-              title={t('common.download')}
-            >
-              <MsnIcon name="download" size="14px" />
-            </a>
+            <div className={styles.actions}>
+              <a
+                className={styles.download}
+                href={wavUrl}
+                download={`${track.title}.wav`}
+                title={t('common.download')}
+              >
+                <MsnIcon name="download" size="14px" />
+              </a>
+              <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
+                <button
+                  type="button"
+                  className={styles.menuButton}
+                  aria-label={t('tracks.actions')}
+                >
+                  ⋯
+                </button>
+              </Dropdown>
+            </div>
           </div>
         );
       })}

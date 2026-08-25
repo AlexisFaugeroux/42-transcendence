@@ -6,7 +6,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px 40px;
+  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px 72px;
   gap: 14px;
   align-items: center;
   background: var(--bg-panel-2);
@@ -57,6 +57,13 @@
   color: var(--fg2);
 }
 
+.actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
 .download {
   display: inline-flex;
   align-items: center;
@@ -68,12 +75,32 @@
   }
 }
 
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--fg2);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1;
+
+  &:hover {
+    color: var(--color-orange);
+    background: var(--bg-panel);
+  }
+}
+
 @media (max-width: 900px) {
   .row {
-    grid-template-columns: 40px 1fr 40px;
+    grid-template-columns: 40px 1fr 72px;
     grid-template-areas:
-      'play title download'
-      'play wave download'
-      'play meta download';
+      'play title actions'
+      'play wave actions'
+      'play meta actions';
   }
 }
