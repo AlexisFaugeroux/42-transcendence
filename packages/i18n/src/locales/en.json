@@ -741,5 +741,13 @@
       "editor": "Editor",
       "timeline": "Timeline"
     }
+  },
+  "tracks": {
+    "count_one": "{{count}} track",
+    "count_other": "{{count}} tracks",
+    "empty": "No tracks yet. Export one from the studio.",
+    "eyebrow": "Tracks",
+    "loadError": "Could not load tracks",
+    "title": "My tracks"
   }
 }
