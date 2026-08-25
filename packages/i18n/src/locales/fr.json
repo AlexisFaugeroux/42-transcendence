@@ -761,7 +761,7 @@
     "count_one": "{{count}} morceau",
     "count_other": "{{count}} morceaux",
     "delete": {
-      "body": "Le morceau <code>{{title}}</code> et ses fichiers seront supprimés définitivement.",
+      "body": "Le morceau <code>{{title}}</code> sera supprimé définitivement.",
       "errorTitle": "Suppression échouée",
       "successDescription": "{{title}} a été supprimé",
       "successTitle": "Morceau supprimé",

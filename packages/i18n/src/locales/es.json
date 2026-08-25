@@ -761,7 +761,7 @@
     "count_one": "{{count}} pista",
     "count_other": "{{count}} pistas",
     "delete": {
-      "body": "La pista <code>{{title}}</code> y sus archivos se eliminarán definitivamente.",
+      "body": "La pista <code>{{title}}</code> se eliminará definitivamente.",
       "errorTitle": "Error al eliminar",
       "successDescription": "{{title}} se ha eliminado",
       "successTitle": "Pista eliminada",
