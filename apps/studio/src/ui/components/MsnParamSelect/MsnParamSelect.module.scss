@@ -13,6 +13,8 @@
 }
 
 .control {
+  flex: 0 0 auto;
+  width: 62px;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
