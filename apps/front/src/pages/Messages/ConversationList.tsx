@@ -1,6 +1,6 @@
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
-import type { Conversation } from '../../api/chat/types';
+import type { Conversation } from '../../types/chat';
 import styles from './ConversationList.module.scss';
 import { ConversationRow } from './ConversationRow';
 import { ListEmpty, ListError, ListSkeleton } from './ListStates';

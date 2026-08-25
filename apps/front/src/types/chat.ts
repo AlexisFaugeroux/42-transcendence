@@ -7,6 +7,8 @@ export interface Message {
   createdAt: string;
 }
 
+export type NewMessage = Omit<Message, 'id' | 'createdAt'>;
+
 export interface Conversation {
   id: string;
   lastMessageAt: string;

@@ -1,8 +1,8 @@
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
-import type { Conversation } from '../../api/chat/types';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
+import type { Conversation } from '../../types/chat';
 import styles from './ConversationRow.module.scss';
 import { formatConversationTime } from './helpers';
 

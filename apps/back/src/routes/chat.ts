@@ -1,16 +1,18 @@
 import type { FastifyInstance } from 'fastify';
 import { chatController } from '../controllers/chat';
 
-const messageSchema = {
+const sendMessageSchema = {
   additionalProperties: false,
-  properties: {
-    authorId: { type: 'string' },
-    content: { type: 'string' },
-    conversationId: { type: 'string' },
-    toId: { type: 'string' },
+  body: {
+    properties: {
+      authorId: { type: 'string' },
+      content: { type: 'string' },
+      conversationId: { type: 'string' },
+      toId: { type: 'string' },
+    },
+    required: ['authorId', 'content', 'toId', 'conversationId'],
+    type: 'object',
   },
-  required: ['id', 'content', 'toId', 'conversationId'],
-  type: 'object',
 };
 
 const firstMessageSchema = {
@@ -34,16 +36,6 @@ const createChatSchema = {
   },
 };
 
-const sendMessageSchema = {
-  body: {
-    properties: {
-      message: messageSchema,
-    },
-    required: ['message'],
-    type: 'object',
-  },
-};
-
 const markAsReadSchema = {
   body: {
     properties: {
@@ -56,6 +48,7 @@ const markAsReadSchema = {
 
 export function chatRoutes(app: FastifyInstance) {
   app.get('/listConversations', { preHandler: app.authenticate }, chatController.listConversations);
+  app.get('/listMessages', { preHandler: app.authenticate }, chatController.listMessages);
 
   app.post(
     '/createConversation',

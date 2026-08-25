@@ -1,13 +1,7 @@
 import { dayjs } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { AVATAR_MAX_BYTES } from '../constants';
-import {
-  BadRequestError,
-  ForbiddenError,
-  NotFoundError,
-  PayloadTooLargeError,
-  UnauthorizedError,
-} from '../domain/errors';
+import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
 import type {
   PublicProducerProfileResponse,
   PublicProducersResponse,
@@ -193,14 +187,17 @@ class UserController {
     reply.code(204).send();
   };
 
-  public listFollowingById = async (req: FastifyRequest<ListUser>, reply: FastifyReply<ListUser>) => {
+  public listFollowingById = async (
+    req: FastifyRequest<ListUser>,
+    reply: FastifyReply<ListUser>,
+  ) => {
     const userId = req.authUser.id;
-    const usersIds = await userRepository.listFollowingIdsByUserId( userId );
-    if ( usersIds.length === 0 ) {
+    const usersIds = await userRepository.listFollowingIdsByUserId(userId);
+    if (usersIds.length === 0) {
       reply.code(200).send([]);
       return;
     }
-    const users = await userRepository.get( { ids : usersIds });
+    const users = await userRepository.get({ ids: usersIds });
     reply.code(200).send(this._formatOnlineUser(users));
   };
 
@@ -209,11 +206,11 @@ class UserController {
 
     users.forEach((user) => {
       onlineUsers.push({
-        id : user.id,
-        handle : user.artistName,
+        id: user.id,
+        handle: user.handle,
         activity: 'producer',
         listeners: 0,
-        name: user.firstname,
+        name: user.artistName,
         status: 'online',
       });
     });

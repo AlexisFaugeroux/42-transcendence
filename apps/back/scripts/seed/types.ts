@@ -10,6 +10,16 @@ export interface AvatarFixture {
   file: string;
 }
 
+export interface MessageFixture {
+  author: string;
+  content: string;
+}
+
+export interface ConversationFixture {
+  messages: [MessageFixture, ...MessageFixture[]];
+  participants: [string, string];
+}
+
 export interface SampleSet {
   dir: string;
   owner: SampleOwner;
@@ -20,6 +30,7 @@ export interface SampleSet {
 export interface SeedConfig {
   users: UserFixture[];
   follows: Record<string, string[]>;
+  conversations: ConversationFixture[];
   sampleSets: SampleSet[];
   avatars?: AvatarFixture[];
   mediaDir: string;

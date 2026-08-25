@@ -78,6 +78,66 @@ export async function seed(config: SeedConfig): Promise<void> {
       });
     }
 
+    console.log('Create conversations...');
+    let messageTimestamp = Date.now();
+    for (const conversation of config.conversations) {
+      if (new Set(conversation.participants).size !== 2) {
+        throw new Error('A conversation must have two distinct participants');
+      }
+
+      const participants = conversation.participants.map((artistName) => {
+        const user = users.find((candidate) => candidate.artistName === artistName);
+        if (!user) throw new Error(`Cannot find user ${artistName} in conversations`);
+        return user;
+      });
+
+      const messages = conversation.messages.map((message) => {
+        const author = participants.find(
+          (participant) => participant.artistName === message.author,
+        );
+        if (!author) {
+          throw new Error(`User ${message.author} is not a participant of the conversation`);
+        }
+
+        const recipient = participants.find((participant) => participant.id !== author.id);
+        if (!recipient) throw new Error(`Cannot find recipient for user ${message.author}`);
+
+        return {
+          authorId: author.id,
+          content: message.content,
+          createdAt: new Date(messageTimestamp++),
+          toId: recipient.id,
+        };
+      });
+
+      const lastMessageAt = messages.at(-1)?.createdAt;
+      if (!lastMessageAt) throw new Error('A conversation must contain at least one message');
+
+      const createdConversation = await tx.conversation.create({
+        data: {
+          lastMessageAt,
+          pairKey: participants
+            .map((participant) => participant.id)
+            .sort()
+            .join(':'),
+        },
+      });
+
+      await tx.conversationParticipant.createMany({
+        data: participants.map((participant) => ({
+          conversationId: createdConversation.id,
+          userId: participant.id,
+        })),
+      });
+
+      await tx.message.createMany({
+        data: messages.map((message) => ({
+          ...message,
+          conversationId: createdConversation.id,
+        })),
+      });
+    }
+
     return { platformOwner, users };
   });
 

@@ -3,8 +3,8 @@ import { useAuthUser } from '@transcendence/auth';
 import {
   deleteProject,
   getSavedSessions,
-  type UpdateProjectFields,
   updateProject,
+  type UpdateProjectFields,
 } from '../api/session';
 import type { Session } from '../pages/Sessions/sessions.data';
 

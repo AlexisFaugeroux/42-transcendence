@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { RouteGenericInterface } from 'fastify';
 import type { Conversation, Message } from '../domain/chat';
+import type { CreateMessageInput } from '../domain/chat';
 import { UnauthorizedError } from '../domain/errors';
 import { chatRepository } from '../repositories/chat';
 import { websocketController } from './websocket';
@@ -16,11 +17,15 @@ interface CreateChatRequest extends RouteGenericInterface {
   Reply: Conversation;
 }
 
-interface SendMessageRequest extends RouteGenericInterface {
-  Body: {
-    message: Message;
+interface ListMessages extends RouteGenericInterface {
+  Querystring: {
+    conversationId: string;
   };
+  Reply: Message[];
+}
 
+interface SendMessageRequest extends RouteGenericInterface {
+  Body: CreateMessageInput;
   Reply: Message;
 }
 
@@ -61,17 +66,33 @@ class ChatController {
     return;
   };
 
+  public listMessages = async (
+    req: FastifyRequest<ListMessages>,
+    reply: FastifyReply<ListMessages>,
+  ) => {
+    const conversationId = req.query.conversationId;
+    const userId = req.authUser.id;
+    const conversation = await chatRepository.listOneConversation(conversationId);
+
+    if (!this.isAParticipant(userId, conversation.participants))
+      throw new UnauthorizedError('Unauthorized to get those messages');
+
+    const messages = await chatRepository.listMessageByConversationId(conversationId);
+    reply.code(200).send(messages);
+    return;
+  };
+
   public sendMessage = async (
     req: FastifyRequest<SendMessageRequest>,
     reply: FastifyReply<SendMessageRequest>,
   ) => {
-    const message = req.body.message;
     const userId = req.authUser.id;
+    const message = req.body;
     const { authorId, conversationId } = message;
 
     const conversation = await chatRepository.listOneConversation(conversationId);
 
-    if (authorId != userId || !this.isAParticipant(authorId, conversation.participants))
+    if (authorId !== userId || !this.isAParticipant(authorId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
 
     const toSend = await chatRepository.createMessage(message);
