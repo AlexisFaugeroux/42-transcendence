@@ -1,4 +1,5 @@
-export type Role = 'ADMIN' | 'ARTIST';
+import Role from "@transcendence/permissions"
+import { Role as PrismaRole } from "@prisma/client"
 export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface User {
@@ -13,7 +14,7 @@ export interface User {
   links?: { kind: string; url: string }[] | null;
   artistName: string;
   password: string;
-  role: Role;
+  role: Record<PrismaRole, Role>;
   ownerId: string;
 }
 

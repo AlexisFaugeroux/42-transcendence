@@ -10,6 +10,8 @@ datasource db {
 enum Role {
   ADMIN
   ARTIST
+  MODERATOR
+  GUEST
 }
 
 enum Key {
@@ -81,54 +83,54 @@ enum SampleKind {
 }
 
 model Owner {
-  id        String     @id @default(uuid()) 
-  type      OwnerType
-  user      User?
-  samples   Sample[]
-  projects  StudioProject[]
-  tracks    Track[]
+  id       String          @id @default(uuid())
+  type     OwnerType
+  user     User?
+  samples  Sample[]
+  projects StudioProject[]
+  tracks   Track[]
 }
 
-model User { 
-  id                          String     @id @default(uuid()) 
-  email                       String  @unique
-  password                    String
-  firstname                   String
-  lastname                    String
-  avatarUpdatedAt             DateTime?
-  location                    String?
-  bio                         String?
-  handle                      String @unique
-  artistName                  String  @unique
-  role                        Role
-  links                       Json?
-  owner                       Owner @relation(fields: [ownerId], references: [id])
-  ownerId                     String @unique
-  followedBy                  User[]  @relation("UserFollows")
-  following                   User[]  @relation("UserFollows")
-  sessions                    Session[]
-  conversationParticipations  ConversationParticipant[]
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt
-} 
+model User {
+  id                         String                    @id @default(uuid())
+  email                      String                    @unique
+  password                   String
+  firstname                  String
+  lastname                   String
+  avatarUpdatedAt            DateTime?
+  location                   String?
+  bio                        String?
+  handle                     String                    @unique
+  artistName                 String                    @unique
+  role                       Role
+  links                      Json?
+  owner                      Owner                     @relation(fields: [ownerId], references: [id])
+  ownerId                    String                    @unique
+  followedBy                 User[]                    @relation("UserFollows")
+  following                  User[]                    @relation("UserFollows")
+  sessions                   Session[]
+  conversationParticipations ConversationParticipant[]
+  createdAt                  DateTime                  @default(now())
+  updatedAt                  DateTime                  @updatedAt
+}
 
 model Sample {
-  id          String @id @default(uuid())
-  owner       Owner @relation(fields: [ownerId], references: [id])
-  name        String
-  ownerId     String
-  family      Family?
-  kind        SampleKind?
-  bpm         Int?
-  key         Key?
-  mode        Mode?
-  visibility  VisibilityType
-  url         String
-  duration    Float
-  bytes       Int
-  projects    StudioProject[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String          @id @default(uuid())
+  owner      Owner           @relation(fields: [ownerId], references: [id])
+  name       String
+  ownerId    String
+  family     Family?
+  kind       SampleKind?
+  bpm        Int?
+  key        Key?
+  mode       Mode?
+  visibility VisibilityType
+  url        String
+  duration   Float
+  bytes      Int
+  projects   StudioProject[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 }
 
 model Track {
@@ -151,63 +153,64 @@ model Track {
 }
 
 model Session {
-  id          String   @id @default(uuid())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  expiresAt   DateTime
-  revokedAt   DateTime?
-  userAgent   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model StudioProject {
-  id          String @id @unique
-  state       Bytes
-  samples     Sample[]
-  owner       Owner @relation(fields: [ownerId], references: [id])
-  ownerId     String
-  name        String
-  duration    Int
-  bpm         Int
-  visibility  VisibilityType
-  key         Key?
-  mode        Mode?
-  type        ProjectType @default(PRODUCE)
-  tracks      Track[]
-  archived    Boolean @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String         @id @unique
+  state      Bytes
+  samples    Sample[]
+  owner      Owner          @relation(fields: [ownerId], references: [id])
+  ownerId    String
+  name       String
+  duration   Int
+  bpm        Int
+  visibility VisibilityType
+  key        Key?
+  mode       Mode?
+  type       ProjectType    @default(PRODUCE)
+  tracks     Track[]
+  archived   Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 }
 
 model Conversation {
-  id            String @id @default(uuid())
-  pairKey       String @unique
+  id            String                    @id @default(uuid())
+  pairKey       String                    @unique
   participants  ConversationParticipant[]
   lastMessageAt DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
 }
 
 model ConversationParticipant {
-  conversation      Conversation @relation(fields: [conversationId], references: [id], onDelete : Cascade)
-  conversationId    String
-  messagesReceived  Message[] @relation("MessageReceiver")
-  messagesSent      Message[] @relation("MessageSender")
-  user              User @relation(fields: [userId], references: [id], onDelete : Cascade)
-  userId            String
-  unreadCount       Int @default(0)
-  lastReadAt        DateTime?
+  conversation     Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId   String
+  messagesReceived Message[]    @relation("MessageReceiver")
+  messagesSent     Message[]    @relation("MessageSender")
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  unreadCount      Int          @default(0)
+  lastReadAt       DateTime?
+
   @@id([conversationId, userId])
 }
 
 model Message {
-  id              String @id @default(uuid())
-  content         String
-  author          ConversationParticipant @relation("MessageSender", fields: [conversationId, authorId], references: [conversationId, userId], onDelete : Cascade )
-  authorId        String
-  to              ConversationParticipant @relation("MessageReceiver", fields: [conversationId, toId], references: [conversationId, userId], onDelete : Cascade )
-  toId            String
-  conversationId  String
-  createdAt       DateTime @default(now())
+  id             String                  @id @default(uuid())
+  content        String
+  author         ConversationParticipant @relation("MessageSender", fields: [conversationId, authorId], references: [conversationId, userId], onDelete: Cascade)
+  authorId       String
+  to             ConversationParticipant @relation("MessageReceiver", fields: [conversationId, toId], references: [conversationId, userId], onDelete: Cascade)
+  toId           String
+  conversationId String
+  createdAt      DateTime                @default(now())
 }

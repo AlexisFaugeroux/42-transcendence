@@ -41,6 +41,7 @@
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
     "@transcendence/prettier-config": "workspace:*",
+    "@transcendence/permissions": "workspace:*",
     "@types/node": "24.12.3",
     "@types/pg": "8.20.0",
     "@types/ws": "8.18.1",

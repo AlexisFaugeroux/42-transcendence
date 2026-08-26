@@ -11,12 +11,14 @@ COPY apps/back/package.json apps/back/
 COPY packages/date/package.json packages/date/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/prettier-config/package.json packages/prettier-config/
+COPY packages/permissions/package.json packages/permissions/
 # Install deps (include @transcendence/date's own devDeps so it can be built)
-RUN pnpm install --frozen-lockfile --filter @transcendence/back... --filter @transcendence/date
+RUN pnpm install --frozen-lockfile --filter @transcendence/back... --filter @transcendence/date --filter @transcendence/permissions
 # Copy source code and build
 COPY apps/back apps/back
 COPY packages packages
 RUN pnpm --filter @transcendence/date build \
+  && pnpm --filter @transcendence/permissions build \
   && pnpm --filter @transcendence/back db:generate \
   && pnpm --filter @transcendence/back build \
   && pnpm --filter @transcendence/back build:seed

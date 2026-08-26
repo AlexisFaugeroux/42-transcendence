@@ -1,0 +1,30 @@
+{
+  "name": "@transcendence/permissions",
+  "version": "1.0.0",
+  "description": "Shared permissions helpers",
+  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "node": "./dist/index.js",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "esbuild": "0.28.0"
+  }
+}

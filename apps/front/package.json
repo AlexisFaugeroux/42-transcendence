@@ -21,6 +21,7 @@
     "@transcendence/date": "workspace:*",
     "@transcendence/i18n": "workspace:*",
     "@transcendence/ui": "workspace:*",
+    "@transcendence/permissions": "workspace:*",
     "antd": "6.4.4",
     "react": "19.2.6",
     "react-dom": "19.2.6",
