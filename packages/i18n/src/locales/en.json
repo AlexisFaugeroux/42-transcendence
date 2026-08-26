@@ -743,6 +743,10 @@
       "timeline": "Timeline"
     }
   },
+  "notFound": {
+    "body": "It seems like you're lost...",
+    "goHome": "Go home"
+  },
   "tracks": {
     "count_one": "{{count}} track",
     "count_other": "{{count}} tracks",

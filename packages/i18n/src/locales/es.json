@@ -743,6 +743,10 @@
       "timeline": "Línea de tiempo"
     }
   },
+  "notFound": {
+    "body": "Aparentemente estás perdido...",
+    "goHome": "Ir a la página de inicio"
+  },
   "tracks": {
     "count_one": "{{count}} pista",
     "count_other": "{{count}} pistas",
