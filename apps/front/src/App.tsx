@@ -10,6 +10,7 @@ import { Landing } from './pages/Landing/Landing';
 import { Legal } from './pages/Legal/Legal';
 import Login from './pages/Login/Login';
 import { Messages } from './pages/Messages/Messages';
+import { NotFound } from './pages/NotFound/NotFound';
 import { Privacy } from './pages/Privacy/Privacy';
 import { ProducerProfile } from './pages/Producers/ProducerProfile';
 import { Producers } from './pages/Producers/Producers';
@@ -32,7 +33,6 @@ export function App(): JSX.Element {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/legal" element={<Legal />} />
-
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />
             <Route path="/library" element={<Samples />} />
@@ -56,6 +56,7 @@ export function App(): JSX.Element {
             <Route path="/playlists" element={<Playlists />} />
           </Route>
         */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </QueryClientProvider>

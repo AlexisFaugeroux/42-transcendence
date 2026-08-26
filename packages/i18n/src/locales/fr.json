@@ -756,6 +756,10 @@
       "timeline": "Timeline"
     }
   },
+  "notFound": {
+    "body": "On dirait que tu t'es perdu.e...",
+    "goHome": "Aller à l'accueil"
+  },
   "tracks": {
     "actions": "Actions du morceau",
     "count_one": "{{count}} morceau",

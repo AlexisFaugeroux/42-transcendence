@@ -1,0 +1,18 @@
+.container {
+  height: 60vh;
+  font-family: var(--font-family);
+  font-size: 1.5rem;
+  h1 {
+    font-weight: 600;
+    color: var(--color-orange);
+    font-size: 12rem;
+    max-height: 12rem;
+  }
+}
+
+.subText {
+  max-width: 520px;
+  margin-bottom: 4rem;
+  color: var(--fg2);
+  font-size: 1.6rem;
+}
