@@ -16,6 +16,11 @@
   "author": "",
   "license": "ISC",
   "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.x",
+      "onFail": "error"
+    },
     "packageManager": {
       "name": "pnpm",
       "version": "11.1.3",

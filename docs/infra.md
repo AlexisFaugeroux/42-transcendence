@@ -111,12 +111,8 @@ everything else talks over the internal network.
 `apps/back/docker-entrypoint.sh`: `prisma migrate deploy` → unzip
 `samples/*.zip` and `avatars/avatars.zip` → `node build/seedDb.prod.js` → start
 Fastify. The image is
-multi-stage (`node:26-alpine`, pnpm 11.1.3): install → generate Prisma client →
+multi-stage (`node:24-alpine`, pnpm 11.1.3): install → generate Prisma client →
 esbuild → `pnpm deploy --prod`.
-
-> **Known divergence:** the three Dockerfiles build on `node:26-alpine` while
-> `.nvmrc` pins **24** for local development. Dev and prod therefore run
-> different majors. Worth aligning — pick one and change the other.
 
 ## Quick reference
 
