@@ -42,6 +42,7 @@ export function Samples(): JSX.Element {
   const dataSource = (data ?? []).filter(
     (sample) => sample.name.startsWith(search) || sample.name.includes(search),
   );
+
   return (
     <>
       <SamplesSearch activeLib={activeLib} setActiveLib={setActiveLib} setSearch={setSearch} />
