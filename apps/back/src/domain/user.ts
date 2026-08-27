@@ -1,5 +1,5 @@
-import Role from "@transcendence/permissions"
-import { Role as PrismaRole } from "@prisma/client"
+import type { Role } from '@transcendence/permissions';
+import type { Role as PrismaRole } from '@prisma/client';
 export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
 
 export interface User {
@@ -63,7 +63,7 @@ export interface UpdateUserInput {
   email?: string;
   handle?: string;
   firstname?: string;
-  lastnane?: string;
+  lastname?: string;
   avatarUpdatedAt?: string | null;
   links?: { kind: string; url: string }[];
   location?: string;
