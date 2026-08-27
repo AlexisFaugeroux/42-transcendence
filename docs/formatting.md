@@ -48,13 +48,29 @@ The configuration lives in `packages/prettier-config/prettierrc.js`:
 export default {
   arrowParens: "always",
   jsonRecursiveSort: true,
-  printWidth: 120,
+  overrides: [
+    { files: "*.md", options: { proseWrap: "always" } },
+    {
+      files: ["*.yaml", "*.yml"],
+      options: { parser: "yaml", quoteProps: "as-needed", singleQuote: false },
+    },
+  ],
+  plugins: [
+    import.meta.resolve("prettier-plugin-sort-json"),
+    import.meta.resolve("prettier-plugin-packagejson"),
+  ],
+  printWidth: 100,
   semi: true,
   singleQuote: true,
   tabWidth: 2,
   trailingComma: "all",
 };
 ```
+
+Two `overrides` narrow the defaults per filetype: Markdown is hard-wrapped
+(`proseWrap: "always"`, so prose reflows to `printWidth` instead of living on one
+long line), and YAML keeps double quotes — the opposite of the TypeScript rule —
+because `singleQuote` in YAML changes the escaping semantics, it is not cosmetic.
 
 Here is what each rule means in practice:
 
@@ -63,7 +79,7 @@ Here is what each rule means in practice:
 | `singleQuote`       | `true`     | `"hello"`           | `'hello'`                                  |
 | `semi`              | `true`     | `const x = 1`       | `const x = 1;`                             |
 | `tabWidth`          | `2`        | any indentation     | 2-space indentation                        |
-| `printWidth`        | `120`      | a very long line    | line is split if it exceeds 120 characters |
+| `printWidth`        | `100`      | a very long line    | line is split if it exceeds 100 characters |
 | `trailingComma`     | `'all'`    | `[1, 2, 3]`         | `[1, 2, 3,]` (comma after `3`)             |
 | `arrowParens`       | `'always'` | `x => x + 1`        | `(x) => x + 1`                             |
 | `jsonRecursiveSort` | `true`     | unordered JSON keys | keys sorted alphabetically                 |

@@ -117,6 +117,7 @@ erDiagram
     string password
     string firstname
     string lastname
+    datetime avatarUpdatedAt "nullable"
     string location "nullable"
     string bio "nullable"
     json links "nullable"
@@ -141,6 +142,22 @@ erDiagram
     datetime createdAt
     datetime updatedAt
   }
+  Track {
+    string id PK
+    string ownerId FK
+    string projectId FK "nullable"
+    string title
+    string description "nullable"
+    VisibilityType visibility
+    string url
+    float duration
+    int bytes
+    int bpm "nullable"
+    Key key "nullable"
+    Mode mode "nullable"
+    datetime createdAt
+    datetime updatedAt
+  }
   StudioProject {
     string id PK
     string ownerId FK
@@ -149,6 +166,8 @@ erDiagram
     int duration
     int bpm
     VisibilityType visibility
+    ProjectType type
+    boolean archived
     Key key "nullable"
     Mode mode "nullable"
     datetime createdAt
@@ -163,13 +182,40 @@ erDiagram
     datetime createdAt
     datetime updatedAt
   }
+  Conversation {
+    string id PK
+    string pairKey UK
+    datetime lastMessageAt
+    datetime createdAt
+    datetime updatedAt
+  }
+  ConversationParticipant {
+    string conversationId PK_FK
+    string userId PK_FK
+    int unreadCount
+    datetime lastReadAt "nullable"
+  }
+  Message {
+    string id PK
+    string conversationId FK
+    string authorId FK
+    string toId FK
+    string content
+    datetime createdAt
+  }
 
   Owner ||--o| User : "owned by"
   Owner ||--o{ Sample : owns
+  Owner ||--o{ Track : owns
   Owner ||--o{ StudioProject : owns
   User  ||--o{ Session : has
   User  }o--o{ User : follows
   Sample }o--o{ StudioProject : "used in"
+  StudioProject ||--o{ Track : "exported as"
+  Conversation ||--o{ ConversationParticipant : has
+  User ||--o{ ConversationParticipant : "takes part as"
+  ConversationParticipant ||--o{ Message : sends
+  ConversationParticipant ||--o{ Message : receives
 ```
 
 **Tables and relationships:**
@@ -184,14 +230,26 @@ erDiagram
   `bpm` / `key` / `mode`, `visibility` (`PRIVATE` / `SHARED` / `PUBLIC`), `url`,
   `duration` (ms) and `bytes` (both derived server-side from the file). The
   binary itself lives on disk. Many-to-many with `StudioProject`.
+- **Track** — a rendered export of a project: `title`, optional `description`,
+  `visibility`, `url`, `duration`, `bytes`, optional `bpm` / `key` / `mode`. Owned
+  by an `Owner`; `projectId` is nullable with `onDelete: SetNull`, so deleting the
+  session it came from does not delete the published audio.
 - **StudioProject** — a studio session: serialized `state` (`Bytes`), `name`,
-  `duration`, `bpm`, `visibility`, optional `key` / `mode`. Owned by an `Owner`,
-  references many `Sample`s (the samples it uses).
+  `duration`, `bpm`, `visibility`, `type` (which creative tool), `archived`,
+  optional `key` / `mode`. Owned by an `Owner`, references many `Sample`s (the
+  samples it uses) and has many `Track`s.
 - **Session** — authentication session for a user (`expiresAt`, optional `revokedAt`,
   `userAgent`); cascades on user deletion.
+- **Conversation / ConversationParticipant / Message** — direct messaging.
+  `Conversation.pairKey` is a unique canonical key for the pair of users, which
+  makes a duplicate thread impossible even under a race.
+  `ConversationParticipant` is the join row `(conversationId, userId)` and carries
+  the per-user `unreadCount` / `lastReadAt`. `Message` references
+  `ConversationParticipant` on both ends through composite foreign keys, so
+  "the author belongs to this conversation" is enforced by the database.
 
 **Enums:** `Role`, `Key`, `Mode`, `Family`, `OwnerType`, `VisibilityType`,
-`SampleKind`.
+`SampleKind`, `ProjectType`.
 
 ---
 
@@ -200,7 +258,9 @@ erDiagram
 ### Prerequisites
 
 - **Docker** and **Docker Compose**
-- **Node.js 26** and **pnpm 11.1.3** (via `corepack` or `npm install -g pnpm@11.1.3`) — for local development
+- **Node.js 24** (pinned in `.nvmrc` — `nvm use` picks it up) and **pnpm 11.1.3**
+  (declared in `devEngines.packageManager`, so `corepack` downloads it on first use)
+  — for local development
 - **OpenSSL** — used by `pnpm prod` to generate the self-signed TLS certificate
 - **Git**
 
@@ -216,12 +276,12 @@ cp apps/back/.env.prod.example apps/back/.env.prod   # production
 
 Then set the values:
 
-| Variable                                            | Notes                                                                                                                                                |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                                           |
-| `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod`                       |
-| `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                                              |
-| `MEDIA_ROOT`                                        | Root holding uploaded media, one subdirectory per kind (`samples/`, `avatars/`). **Dev:** `infra/media_data`. **Prod:** `/var/www/media` (the `media_data` volume) |
+| Variable                                            | Notes                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | Postgres credentials (used to initialize the DB container)                                                                                                                                                                                                                                                               |
+| `POSTGRES_URL`                                      | Connection string. **Dev:** host `localhost`, database `transcendence_dev`. **Prod:** host `db`, database `transcendence_prod`                                                                                                                                                                                           |
+| `JWT_SECRET`                                        | A strong random secret for signing JWTs                                                                                                                                                                                                                                                                                  |
+| `MEDIA_ROOT`                                        | Root holding uploaded media, one subdirectory per kind (`samples/`, `tracks/`, `avatars/`). **Dev:** `../../infra/media_data` — resolved relative to `apps/back`, so it must climb out of the app to reach the repo's `infra/media_data` that `nginx-media` mounts. **Prod:** `/var/www/media` (the `media_data` volume) |
 
 `POSTGRES_URL` and `JWT_SECRET` are validated at boot — the backend refuses to
 start without them rather than falling back to a default.
@@ -237,6 +297,7 @@ cp apps/studio/.env.example apps/studio/.env
 | ----------------- | ------------- | ------------------------------------------------------------------------------------------- |
 | `VITE_API_URL`    | front, studio | Base URL prepended to every API call. **Leave empty in dev** — the Vite proxy routes `/api` |
 | `VITE_STUDIO_URL` | front         | Where the "open the studio" links point (`http://localhost:5174/studio/` in dev)            |
+| `VITE_FRONT_URL`  | studio        | Where the studio sends the user back on leaving (`http://localhost:5173` in dev)            |
 
 > Two databases live in a single Postgres instance: `transcendence_dev` and
 > `transcendence_prod` (created by `infra/postgres/init_databases.sql`). Each environment
@@ -322,9 +383,15 @@ pnpm --filter @transcendence/studio dev           # studio
 - [`monorepo.md`](docs/monorepo.md) — workspace layout, packages, pnpm commands
 - [`infra.md`](docs/infra.md) — dev and prod Docker/nginx topology
 - [`architecture/database.md`](docs/architecture/database.md) — Postgres, the two DBs, schema, env vars
-- [`architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md) — sample storage & access control
+- [`architecture/api.md`](docs/architecture/api.md) — every route prefix, and why two path styles coexist
+- [`architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md) — sample & track storage, nginx access control
+- [`architecture/realtime.md`](docs/architecture/realtime.md) — the WebSocket, presence, heartbeat
+- [`architecture/chat.md`](docs/architecture/chat.md) — direct-message data model
+- [`architecture/studio-devices.md`](docs/architecture/studio-devices.md) — the effects rack and the SDK bridge
 - [`authentication.md`](docs/authentication.md) — JWT + session auth
-- [`prisma.md`](docs/prisma.md) · [`formatting.md`](docs/formatting.md) · [`linting.md`](docs/linting.md) · [`rebase-before-pr.md`](docs/rebase-before-pr.md)
+- [`i18n.md`](docs/i18n.md) — the three locales and how they are type-checked
+- [`wav.md`](docs/wav.md) · [`peaks.md`](docs/peaks.md) — the audio formats parsed server-side
+- [`formatting.md`](docs/formatting.md) · [`linting.md`](docs/linting.md) · [`rebase-before-pr.md`](docs/rebase-before-pr.md)
 
 **External documentation & references:**
 

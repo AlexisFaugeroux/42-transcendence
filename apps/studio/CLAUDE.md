@@ -5,17 +5,24 @@ A minimal web-based DAW built on the
 slimmed-down version of [openDAW](https://opendaw.studio/), focusing on core DAW interactions rather
 than a full-featured production tool.
 
-## Target features (MVP)
+## Implemented
 
-1. **Load samples into a timeline/grid** — drag or click to place a clip onto a track.
+1. **Load samples into a timeline/grid** — drag or click to place a clip onto a track; move and
+   resize clips.
 2. **Browse audio samples** — panel listing the samples the backend returns (`api/sample.ts` →
    `hooks/useSamples`); the audio itself is fetched from `/samples/<ownerId>/<uuid>.wav`, which
    nginx guards with `auth_request`.
-3. **Transport controls** — play / stop / (later: loop, record-arm visual only).
+3. **Transport controls** — play / stop, loop region, master VU meter, metrics.
 4. **Playback** — plays arranged clips through the openDAW audio engine with a moving playhead.
+5. **Effects rack** — per-audio-unit effect chain with 11 devices, an add-effect picker and a device
+   editor. See `ui/Devices/` and `docs/architecture/studio-devices.md`.
+6. **Project persistence** — save / load / list / rename / archive / delete through `/api/project/*`
+   (`api/project.ts`); `LeaveStudioModal` prompts to save on exit.
+7. **Export** — offline (faster-than-real-time) render via `hooks/useOfflineRender`, then upload as
+   a `Track` from `ExportModal` (`api/track.ts`).
 
-**Non-goals (for now):** MIDI editing, mixing/effects routing, automation, plugin hosting,
-recording, multi-project management, persistence.
+**Non-goals (for now):** MIDI editing, automation, plugin hosting, live recording, real-time
+collaborative editing.
 
 ## Audio engine
 
@@ -37,18 +44,28 @@ studio/
 ├── CLAUDE.md          <- this file
 ├── src/
 │   ├── App.tsx
-│   ├── api/           <- sample.ts (samples list, same conventions as apps/front)
+│   ├── api/           <- project.ts, sample.ts, track.ts (same conventions as apps/front)
 │   ├── contexts/      <- ProjectContext, TracksContext
-│   ├── hooks/         <- useCurrentPosition, useMasterPeaks, usePanels, useSamples, useTableScrollY
+│   ├── hooks/         <- useCurrentPosition, useEditedAudioUnit, useEffectChain, useMasterPeaks,
+│   │                     useOfflineRender, usePanels, useParam, useSamples, useTableScrollY
 │   ├── lib/           <- arrangementFactory, audioUtils, projectSetup, resolveCssColor, types
+│   ├── utils/         <- base64 (project state <-> transport encoding)
 │   └── ui/
-│       ├── Timeline/  (Timeline, Grid, LoopRegion, Rack)
-│       ├── Header/    (Transport, Meter, Metrics)
+│       ├── Timeline/  (Timeline, Grid, LoopRegion, Rack, constants)
+│       ├── Header/    (Transport, Meter, Metrics, ExportModal, LeaveStudioModal)
 │       ├── Browser/   (Samples)
-│       ├── Devices/ · Editor/ · Footer/ · PanelFrame/
-│       └── components/ (MsnPeakMeter, StudioIcon)
+│       ├── Devices/   (Devices, DeviceEditor, AddEffectButton, deviceRegistry,
+│       │               effectFactories, one <Name>Device.tsx per effect, UnknownDevice)
+│       ├── Editor/ · Footer/ · PanelFrame/
+│       └── components/ (MsnPeakMeter, MsnParamGroup, MsnParamKnob, MsnParamSelect,
+│                        MsnParamToggle, StudioIcon)
 └── vite.config.ts
 ```
+
+`Msn Param*` are the generic parameter widgets every device is built from; `useParam` is the bridge
+between an SDK parameter and React state. A new effect is a `<Name>Device.tsx` plus an entry in
+`deviceRegistry` and `effectFactories` — `UnknownDevice` is the fallback so an unregistered box
+renders something instead of crashing.
 
 Sample audio is served by nginx, not by Vite — `public/` is empty.
 

@@ -5,25 +5,53 @@ App: `apps/back` + nginx (`infra/nginx/`)
 Audio binaries live on disk; only metadata lives in Postgres. nginx serves the
 files and asks the backend for an access decision before handing any file over.
 
+Two kinds of audio live here: **samples** (uploaded building blocks) and
+**tracks** (rendered project exports). They share the storage code, the WAV
+parsing, the `.peaks` sidecar and the access-control path; they differ in the
+quota and in who may create them. Avatars share the volume but not the machinery.
+
 ## Where files live
 
 ```
 <MEDIA_ROOT>/samples/<ownerId>/<sampleId>.wav
 <MEDIA_ROOT>/samples/<ownerId>/<sampleId>.peaks
+<MEDIA_ROOT>/tracks/<ownerId>/<trackId>.wav
+<MEDIA_ROOT>/tracks/<ownerId>/<trackId>.peaks
+<MEDIA_ROOT>/avatars/…
 ```
 
 `MEDIA_ROOT` defaults to `/var/www/media` and is the root shared by every kind of
-uploaded file, one subdirectory each (`samples/` here, `avatars/` alongside). In
-dev it maps to `infra/media_data/` on the host; in prod to the `media_data`
-Docker volume (see [infra.md](../infra.md)). The path key is `ownerId` (the
-`Owner` model), not `userId`.
+uploaded file, one subdirectory each. In dev it is `../../infra/media_data`
+**relative to `apps/back`** — the app runs on the host, so the path has to climb
+out of the app to reach the repo folder `nginx-media` mounts; in prod it is the
+`media_data` Docker volume (see [infra.md](../infra.md)). The path key is
+`ownerId` (the `Owner` model), not `userId`.
 
-The subdirectory is named `samples/`, not `audio/`: tracks (rendered project
-exports) are coming and will get their own kind, so "audio" was too broad to
-identify what lives here.
+The subdirectory is named `samples/`, not `audio/`, because tracks now sit beside
+it under their own kind — "audio" would not say which of the two you are looking
+at.
 
 The disk layout is invisible to clients: nginx roots at `/var/www/media`, so the
-public URL stays `/samples/<ownerId>/<sampleId>.wav`.
+public URLs stay `/samples/<ownerId>/<sampleId>.wav` and
+`/tracks/<ownerId>/<trackId>.wav`.
+
+### One storage class, two instances
+
+`services/audio/audioStorage.ts` holds all the logic — `write`, `writeStream`,
+`remove`, `deleteDirectory(ownerId)`, and a private `_path` — as a class taking
+its root in the constructor. `sampleStorage.ts` and `trackStorage.ts` are two
+one-line subclasses instantiated on `<MEDIA_ROOT>/samples` and
+`<MEDIA_ROOT>/tracks`. Adding a third kind of audio is a two-line file, and there
+is no way for the two to drift apart in how they name or clean up files.
+
+`remove(uuid, ownerId)` always unlinks **both** the `.wav` and the `.peaks`, and
+swallows per-file errors — it is called on rollback paths where a missing file is
+the normal case, not a failure.
+
+`writeStream` is also where the size limit is enforced: `@fastify/multipart` sets
+`stream.truncated` when the file exceeded `MAX_UPLOAD_BYTES` (100 MiB), and the
+method deletes what it wrote and throws `PayloadTooLargeError`. Checking a
+`Content-Length` header instead would trust the client.
 
 Every `.wav` has a `.peaks` sidecar next to it — same UUID, different extension —
 holding a precomputed amplitude envelope so the browser can draw a waveform
@@ -45,14 +73,23 @@ The API also returns `peaksUrl`, which is **not** a column: the repository's
 
 ## Access control (nginx `auth_request`)
 
-For every `/samples/` request, nginx fires an internal sub-request to the backend,
-which answers 200 / 401 / 403:
+For every `/samples/` **and** `/tracks/` request, nginx fires an internal
+sub-request to the backend, which answers 200 / 401 / 403. `/avatars/` is served
+without `auth_request` — an avatar is public by nature, and gating it would put a
+DB read in front of every rendered profile picture:
 
 ```nginx
 # infra/nginx/media.conf  (prod; dev uses media.dev.conf → host.docker.internal:8080)
 location /samples/ {
   auth_request /auth/check-access;
   root /var/www/media;
+}
+location /tracks/ {
+  auth_request /auth/check-access;
+  root /var/www/media;
+}
+location /avatars/ {
+  root /var/www/media;   # no auth_request
 }
 location = /auth/check-access {
   internal;
@@ -70,9 +107,16 @@ a mistyped path 404s, which `auth_request` turns into a 500, so _every_ sample
 becomes unreachable while the app otherwise looks healthy.
 
 The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
-`authenticate` hook, parses `<ownerId>/<sampleId>.<ext>` out of the
+`authenticate` hook, parses `<kind>/<ownerId>/<fileId>.<ext>` out of the
 `X-Original-URI` path, then allows the file if it is `PUBLIC` / `SHARED` or the
 requester owns it.
+
+**The first path segment selects the repository.** `checkAccess` accepts exactly
+`samples` and `tracks`, and dispatches to `sampleRepository` or `trackRepository`
+accordingly. Anything else is a 403 — the allow-list is what stops a new nginx
+`location` from accidentally inheriting an access check that reads the wrong
+table. The visibility rule itself is identical for both, which is why one handler
+covers both kinds instead of two near-copies.
 
 Two rules that are easy to break:
 
@@ -120,9 +164,34 @@ All authenticated. Registered with prefix `/api/samples` in `app.ts`.
 Seeds still populate the platform/user samples directly (`scripts/seed/`);
 `seed/meta.ts` derives `family`/`kind`/`bpm` from the filename.
 
-`services/sampleStorage.ts` provides `write`, `writeStream`, `remove`, and
-`deleteDirectory(ownerId)`. The caller generates the UUID and passes it in, so
-the `.wav` and its `.peaks` share one.
+The caller generates the UUID and passes it in, so the `.wav`, its `.peaks` and
+the database row all share one id.
+
+## API (`/api/tracks`, `routes/track.ts`)
+
+All authenticated, same RPC shape as samples: `GET /get`, `POST /upload`,
+`PUT /update?id=`, `DELETE /delete?id=`. Plus, on the social side,
+`GET /api/users/:handle/tracks` for another producer's public tracks.
+
+`POST /upload` mirrors the sample pipeline — stream to disk, decode the WAV
+server-side, write the `.peaks` sidecar, create the row, roll the file back on
+any failure — with three differences:
+
+- **No quota.** Samples are checked against `SAMPLE_USER_QUOTA_BYTES`; tracks are
+  not checked against anything beyond `MAX_UPLOAD_BYTES` per file. That is a gap,
+  not a decision: a user can currently fill the volume with exports.
+- **Different metadata.** `title` and `description` instead of `name`, plus an
+  optional `projectId` linking the export back to the session that produced it.
+- **A missing envelope is not fatal.** If `decodeWav` returns no channel data the
+  handler logs a warning and creates the row without a `.peaks` file, rather than
+  failing the upload. The waveform is a nicety; the audio is the deliverable.
+
+`peaksUrl` is derived in `trackRepository._format` by swapping the extension, the
+same way as for samples — it is not a column.
+
+The producer of these files is the studio: `useOfflineRender` renders the project
+faster than real time, `ExportModal` collects the metadata and posts the result.
+See [studio-devices.md](./studio-devices.md) for where that sits in the studio.
 
 Clients reach `/samples/` with a **relative** path (`/samples/<url>`), routed by
 the reverse proxy in prod and by each app's Vite dev proxy in dev — see
@@ -132,9 +201,10 @@ consumer, so the same value works behind any mount point. Requests go through
 `apiFetch` so the cookie travels (the `auth_request` above needs it) and a 401
 triggers the same global logout as any other call.
 
-The studio still appends `?sampleId=…&userId=…` (`apps/studio/src/lib/audioUtils.ts`).
-Those parameters are vestigial — `checkAccess` ignores the query string — and can
-be dropped whenever that file is next touched.
+The studio still appends `?sampleId=…&userId=…` (`apps/studio/src/lib/audioUtils.ts`,
+still true as of the devices epic). Those parameters are vestigial — `checkAccess`
+splits the URI on `?` and ignores the query string — and can be dropped whenever
+that file is next touched.
 
 The on-disk filename is always a server-generated `{uuid}.{ext}` — the client
 filename is stored only as `Sample.name`, never used to build the path (no

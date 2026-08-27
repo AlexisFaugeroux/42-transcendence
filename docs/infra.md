@@ -12,10 +12,10 @@ profile (start in dev); `back`, `front`, `studio`, `reverse-proxy` are under the
 `media_data`.
 
 `media_data` is the **media root**, mounted at `/var/www/media`. Uploaded content
-sits in one subdirectory per kind — `samples/` and `avatars/` today, `tracks/`
-next — so adding a kind needs neither a new volume nor a new nginx service.
-Public URLs are unaffected by the layout: nginx roots at `/var/www/media`, so
-`/samples/…` still resolves to `/var/www/media/samples/…`.
+sits in one subdirectory per kind — `samples/`, `tracks/` and `avatars/` today —
+so adding a kind needs neither a new volume nor a new nginx service. Public URLs
+are unaffected by the layout: nginx roots at `/var/www/media`, so `/samples/…`
+still resolves to `/var/www/media/samples/…`.
 
 ## Development
 
@@ -39,10 +39,13 @@ The override publishes `db` on `localhost:5432` and `nginx-media` on
 Each Vite dev server proxies the paths the reverse proxy owns in prod, so app
 code can use relative URLs in both environments and never has to know a host:
 
-| Path       | front (`:5173`)                | studio (`:5174`)               |
-| ---------- | ------------------------------ | ------------------------------ |
-| `/api`     | → `localhost:8080` back        | → `localhost:8080` back        |
-| `/samples` | → `localhost:8081` nginx-media | → `localhost:8081` nginx-media |
+| Path       | front (`:5173`)                                | studio (`:5174`)               |
+| ---------- | ---------------------------------------------- | ------------------------------ |
+| `/api`     | → `localhost:8080` back                        | → `localhost:8080` back        |
+| `/api/ws`  | → `ws://localhost:8080` (`ws: true`)           | —                              |
+| `/samples` | → `localhost:8081` nginx-media                 | → `localhost:8081` nginx-media |
+| `/tracks`  | → `localhost:8081` nginx-media (with `bypass`) | —                              |
+| `/avatars` | → `localhost:8081` nginx-media                 | —                              |
 
 Both apps fetch from `/samples/`: the studio loads samples into the DAW, the front
 previews them and fetches their `.peaks` in the samples library. Going through
@@ -50,6 +53,19 @@ the proxy rather than hitting `localhost:8081` directly keeps the requests
 same-origin, so the session cookie travels and nginx's `auth_request` is
 satisfied — a direct call would be cross-origin and blocked by the CORS headers
 in `media.dev.conf`.
+
+Two entries in that table are not plain string targets:
+
+- **`/api/ws`** needs `ws: true`, otherwise Vite proxies the HTTP request but not
+  the protocol upgrade, and the socket never opens. It is declared _after_ `/api`
+  and wins because it is more specific.
+- **`/tracks`** collides with a real SPA route. `GET /tracks` from the address bar
+  must render the app; `GET /tracks/<ownerId>/<uuid>.wav` must reach nginx. The
+  proxy disambiguates on the `Accept` header — a `bypass()` that returns
+  `/index.html` when the request accepts `text/html`
+  (`apps/front/vite.config.ts`). In prod the same collision does not exist,
+  because the reverse proxy matches `/tracks/` **with** a trailing slash before
+  falling through to the SPA at `/`.
 
 Teardown: `pnpm services:down` (keep data) or `pnpm services:kill` (remove
 volumes/orphans — wipes data).
@@ -70,7 +86,10 @@ browser ──► reverse-proxy (nginx, TLS)
               / ───────► front       (nginx:80)
               /studio/ ─► studio      (nginx:80)
               /api/ ────► back        (:8080)
+              /api/ws ──► back        (:8080)   websocket upgrade
               /samples/ ► nginx-media (nginx:80) ─auth_request─► back
+              /tracks/ ─► nginx-media (nginx:80) ─auth_request─► back
+              /avatars/ ► nginx-media (nginx:80)   no auth_request
             back ──► db (postgres:5432)
 ```
 
@@ -80,7 +99,7 @@ browser ──► reverse-proxy (nginx, TLS)
 | `front`         | `apps/front/Dockerfile`  | Static Vite build served by nginx (`nginx-spa.conf`, SPA fallback).                                                   |
 | `studio`        | `apps/studio/Dockerfile` | Static Vite build served by nginx.                                                                                    |
 | `back`          | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `media_data` (rw).                                                  |
-| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/samples/` from `media_data` (ro) with `auth_request` (`media.conf`).                                        |
+| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/samples/` and `/tracks/` from `media_data` (ro) with `auth_request`, and `/avatars/` without (`media.conf`). |
 | `db`            | `postgres:18-alpine`     | PostgreSQL, reached at host `db` on the network (not published).                                                      |
 
 Reach the app at **https://localhost:8443** (self-signed — accept the warning);
@@ -92,8 +111,12 @@ everything else talks over the internal network.
 `apps/back/docker-entrypoint.sh`: `prisma migrate deploy` → unzip
 `samples/*.zip` and `avatars/avatars.zip` → `node build/seedDb.prod.js` → start
 Fastify. The image is
-multi-stage (Node 26 Alpine, pnpm 11.1.3): install → generate Prisma client →
+multi-stage (`node:26-alpine`, pnpm 11.1.3): install → generate Prisma client →
 esbuild → `pnpm deploy --prod`.
+
+> **Known divergence:** the three Dockerfiles build on `node:26-alpine` while
+> `.nvmrc` pins **24** for local development. Dev and prod therefore run
+> different majors. Worth aligning — pick one and change the other.
 
 ## Quick reference
 

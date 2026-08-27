@@ -2,10 +2,11 @@
 
 A collaborative music production platform — built as a 42 school project (ft_transcendence).
 
-Users can produce music in a browser-based DAW, manage sessions and samples,
-follow other producers, watch them work in real time, and chat. The platform
-has three creative tools: a **studio** (DAW), a **recorder** (live sessions,
-podcasts), and a **mixer** (mixing/mastering).
+Users can produce music in a browser-based DAW, export their projects as
+tracks, manage sessions and samples, follow other producers, see who is online,
+and chat by direct message. The platform is planned around three creative tools:
+a **studio** (DAW — implemented), a **recorder** (live sessions, podcasts) and a
+**mixer** (mixing/mastering); only the studio exists today.
 
 ## Monorepo layout
 
@@ -15,7 +16,7 @@ pnpm workspace. All commands run from the root.
 transcendence/
   apps/
     studio/       Web DAW — built on the openDAW SDK (React 19, Vite, SASS)
-    front/        Main frontend — landing, auth, dashboard, social, sessions, samples
+    front/        Main frontend — landing, auth, settings, sessions, samples, tracks, producers, messages
     back/         Backend server (Fastify + Prisma + PostgreSQL)
   packages/
     auth/            Shared React auth (context + API client)
@@ -33,15 +34,15 @@ Packages reference each other with `workspace:*` and are scoped `@transcendence/
 
 ## Stack
 
-| Layer          | Tech                                                                                              |
-| -------------- | ------------------------------------------------------------------------------------------------- |
-| Frontend       | React 19 + TypeScript, Vite, SASS modules                                                         |
-| Audio engine   | `@opendaw/*` SDK packages ([openDAW-headless](https://github.com/andremichelle/openDAW-headless)) |
-| Backend        | Node.js (Fastify) + Prisma                                                                        |
-| Database       | PostgreSQL 18 (Alpine) in Docker                                                                  |
-| Real-time sync | WebSockets + Yjs (collaborative editing in the studio)                                            |
-| Hosting        | Docker Compose (nginx reverse proxy + Node.js, audio files on disk)                               |
-| Audio storage  | On-disk volume, served by nginx with `auth_request` access control                                |
+| Layer         | Tech                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| Frontend      | React 19 + TypeScript, Vite, SASS modules                                                         |
+| Audio engine  | `@opendaw/*` SDK packages ([openDAW-headless](https://github.com/andremichelle/openDAW-headless)) |
+| Backend       | Node.js (Fastify) + Prisma                                                                        |
+| Database      | PostgreSQL 18 (Alpine) in Docker                                                                  |
+| Real-time     | WebSockets (`@fastify/websocket`) — presence and chat delivery                                    |
+| Hosting       | Docker Compose (nginx reverse proxy + Node.js, audio files on disk)                               |
+| Audio storage | On-disk volume, served by nginx with `auth_request` access control                                |
 
 ## Key commands
 
@@ -56,7 +57,7 @@ Packages reference each other with `workspace:*` and are scoped `@transcendence/
 
 ## Code conventions
 
-- **Formatting:** Prettier — single quotes, semicolons, 2-space indent, 120 char width, trailing commas.
+- **Formatting:** Prettier — single quotes, semicolons, 2-space indent, 100 char width, trailing commas.
   Config lives in `packages/prettier-config/prettierrc.js`. Apps reference it via `"prettier": "@transcendence/prettier-config"` in package.json.
 - **Linting:** ESLint flat config. `createBaseConfig()` for all apps, `createReactConfig()` added for React apps.
   Config lives in `packages/eslint-config/eslint.config.js`.
@@ -86,13 +87,20 @@ samples library, studio workspace.
 - **Database:** PostgreSQL 18 (Alpine image) in a Docker container. Relational data only —
   audio files stay on disk. See `docs/architecture/database.md`.
 - **Media storage:** on-disk volume mounted at `/var/www/media/`, one subdirectory
-  per kind of uploaded file (`samples/`, `avatars/`). Served by the `nginx-media`
-  container — `/samples/` with `auth_request` to the backend for access control. Each `.wav`
-  has a `.peaks` sidecar (precomputed waveform envelope) written next to it. See
+  per kind of uploaded file (`samples/`, `tracks/`, `avatars/`). Served by the
+  `nginx-media` container — `/samples/` and `/tracks/` with `auth_request` to the
+  backend for access control, `/avatars/` without. Each `.wav` has a `.peaks`
+  sidecar (precomputed waveform envelope) written next to it. See
   `docs/architecture/audio-file-storage.md` and `docs/peaks.md`.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
-- **Real-time collaboration:** Yjs documents synced over WebSockets. Used for the
-  studio (collaborative DAW editing) and potentially chat.
+- **API shape:** RPC-style paths (`/get`, `/upload`, `/update?id=`) everywhere except
+  `/api/users/:handle/*`. Eight prefixes, mapped in `docs/architecture/api.md`.
+- **Real-time:** a single WebSocket endpoint (`/api/ws`, `@fastify/websocket`),
+  authenticated by the same session cookie as the REST API. Carries presence
+  (which followed producers are online) and chat delivery, with a `{ event, data }`
+  envelope. Connection state is held in memory in one process; collaborative DAW
+  editing is not implemented.
+  See `docs/architecture/realtime.md`.
 
 ## Working with me on this project
 
@@ -101,5 +109,7 @@ samples library, studio workspace.
 - Push back when I'm overcomplicating something.
 - Do not edit, instead show the changes so they can be manually implemented
 - Check `docs/` for architecture decisions before proposing infrastructure changes.
-- Each app may have its own `CLAUDE.md` with app-specific context — read it when
-  working in that app.
+- Each app has its own `CLAUDE.md` with app-specific context — read it when
+  working in that app. `apps/{back,front,studio}` also have a matching skill with
+  the detailed conventions; the `CLAUDE.md` is the orientation, the skill is the
+  reference.

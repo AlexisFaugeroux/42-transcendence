@@ -31,6 +31,12 @@ handles everything else. They are configured to not conflict with each other.
 
 ### ESLint
 
+**ESLint 10.4.0**, pinned once for the whole workspace through the pnpm
+**catalog**: `pnpm-workspace.yaml` declares `catalog: { eslint: 10.4.0 }` and
+every `package.json` asks for `"eslint": "catalog:"`. One line to bump, and no
+way for two packages to end up on two different majors — which matters here
+because the shared config and the apps that consume it must agree.
+
 Our ESLint configuration lives in
 `packages/eslint-config/eslint.config.js`. It exports two functions:
 
@@ -71,6 +77,36 @@ export default [
 This way, all apps share the same base rules, but only the frontend apps get
 the React-specific ones.
 
+### Sorting rules: what is enforced, and what is not
+
+The base config pulls in `eslint-plugin-sort`, but most of it is deliberately
+neutered — worth knowing before you spend time alphabetizing anything by hand:
+
+| Rule                                         | Severity                            |
+| -------------------------------------------- | ----------------------------------- |
+| `sort/object-properties`                     | `off`                               |
+| `sort/destructuring-properties`              | `off`                               |
+| `sort/imports`, `sort/exports`               | `warn` **only** if `ESLINT_SORT=on` |
+| `sort/import-members`, `sort/export-members` | `warn` **only** if `ESLINT_SORT=on` |
+
+**Object keys no longer have to be alphabetical.** The rule was dropped in
+`bba8331`: sorting object properties fights the code more often than it helps —
+a props object or a config literal usually has a meaningful order, and forcing
+alphabetical order makes diffs noisier, not cleaner. You will still see a lot of
+alphabetized literals; that is history, not a requirement.
+
+**Import sorting is fix-only.** The severity is read from an environment
+variable:
+
+```js
+const sortImports = process.env.ESLINT_SORT === "on" ? "warn" : "off";
+```
+
+Only the `fix` scripts set it (`ESLINT_SORT=on eslint --fix .`). So your editor
+never nags you about import order, but `pnpm run fix` still reorders imports.
+The point is to keep a mechanical, auto-fixable concern out of the feedback loop
+while still converging on one order in the committed code.
+
 ### Prettier
 
 Our Prettier configuration lives in
@@ -81,7 +117,7 @@ Our Prettier configuration lives in
 | `singleQuote`   | `true`  | Use `'hello'` instead of `"hello"`             |
 | `semi`          | `true`  | Always add semicolons at the end of statements |
 | `tabWidth`      | `2`     | Indent with 2 spaces                           |
-| `printWidth`    | `120`   | Lines can be up to 120 characters long         |
+| `printWidth`    | `100`   | Lines can be up to 100 characters long         |
 | `trailingComma` | `'all'` | Add trailing commas everywhere possible        |
 
 Each app references this config in its `package.json`:

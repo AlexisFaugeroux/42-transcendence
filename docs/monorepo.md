@@ -16,6 +16,7 @@ transcendence/
     auth/            shared React auth (context + API client)
     date/            shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   shared ESLint configuration
+    i18n/            shared i18n provider & translations (en / fr / es)
     prettier-config/ shared Prettier configuration
     ui/              shared UI components
   design/            UI mockups & design reference (READ-ONLY, not shipped)
@@ -41,6 +42,7 @@ transcendence/
 | `auth`            | `@transcendence/auth`            | `front`, `studio`         | React auth context + API client                  |
 | `date`            | `@transcendence/date`            | `back`, `front`, `studio` | dayjs helpers on a fixed `Europe/Paris` timezone |
 | `eslint-config`   | `@transcendence/eslint-config`   | all apps                  | Shared ESLint rules                              |
+| `i18n`            | `@transcendence/i18n`            | `front`, `studio`         | i18next provider, `LanguageSelect`, en/fr/es     |
 | `prettier-config` | `@transcendence/prettier-config` | all apps                  | Shared Prettier config                           |
 | `ui`              | `@transcendence/ui`              | `front`, `studio`         | Shared UI components (antd + `Msn*` + `theme`)   |
 
@@ -52,6 +54,12 @@ the Vite apps compile the TypeScript themselves, the bundled Node backend cannot
 It exports `toAppTime`, `formatDate`, `formatISO` and `APP_TIMEZONE`. Pinning one
 timezone in one place is what keeps a timestamp rendered identically by the API
 and by both frontends — `repositories/*` call `formatISO` when mapping rows out.
+
+`i18n` wraps i18next + react-i18next and owns the three locale files
+(`src/locales/{en,fr,es}.json`). It ships an `I18nProvider` and a
+`LanguageSelect`, and it depends on `ui` and `date` — so it sits _above_ them in
+the dependency order. Both frontends mount the provider high in their tree; see
+[i18n.md](./i18n.md).
 
 ## Referencing packages
 

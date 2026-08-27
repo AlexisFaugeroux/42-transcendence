@@ -24,9 +24,16 @@ valid.
 | auth controller / routes | `src/controllers/auth.ts`, `src/routes/auth.ts` | handlers under the `/api/auth` prefix                       |
 
 `authenticate` runs as a `preHandler` on protected routes and attaches
-`req.authUser = { id, sid }` (typed in `src/types/fastify.d.ts`), else 401. The
-controller currently queries Prisma directly for users; sessions go through
-`SessionRepository`.
+`req.authUser = { id, sid }` (typed in `src/types/fastify.d.ts`), else 401. It is
+also what guards the WebSocket route (`GET /api/ws`), so a socket cannot open
+without a valid session — the same cookie, the same check, no second auth
+mechanism.
+
+`register`, `login` and `me` still query Prisma directly from the controller,
+which is the one place in the backend that breaks the "Prisma stops at the
+repository" rule; `checkAccess` already goes through `userRepository`, and
+sessions always go through `SessionRepository`. Worth folding the remaining three
+into the repository when that file is next touched.
 
 ## Token & cookie
 
@@ -51,11 +58,15 @@ POST /login      (5/min)  verify password (generic 401 on failure) →
                           create Session → sign JWT → Set-Cookie → 200 { user }
 GET  /me         [auth]   return current user (never the hash)
 POST /logout     [auth]   revoke session → clear cookie → 204
-GET  /check-access [auth]  sample ownership/visibility check → 200/401/403 only
-                          (called by nginx's auth_request, not by the browser;
-                          any other status becomes a 500 for the client —
-                          see audio-file-storage.md)
+GET  /check-access [auth]  sample **or track** ownership/visibility check →
+                          200/401/403 only (called by nginx's auth_request, not
+                          by the browser; any other status becomes a 500 for the
+                          client — see audio-file-storage.md)
 ```
+
+Account management lives under a different prefix — `PUT /api/user/update/password`,
+`DELETE /api/user/delete`, avatar upload/delete — see
+[architecture/api.md](./architecture/api.md).
 
 Rate limiting is opt-in per route (`@fastify/rate-limit`, `global: false`).
 
@@ -66,5 +77,8 @@ API client used by `front` and `studio`.
 
 ## Out of scope (for now)
 
-42 OAuth, 2FA, refresh-token rotation (the `Session` table already supports it),
-WebSocket/Yjs auth.
+42 OAuth, 2FA, refresh-token rotation (the `Session` table already supports it).
+
+WebSocket auth is **not** out of scope any more: `/api/ws` reuses the
+`authenticate` preHandler, so the socket is authenticated by the session cookie
+like any REST call. See [architecture/realtime.md](./architecture/realtime.md).
