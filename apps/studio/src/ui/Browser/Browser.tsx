@@ -3,13 +3,14 @@ import { ConfigProvider, Tabs, type TabsProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './Browser.module.scss';
 import { Samples } from './Samples/Samples';
+import { Devices } from './Devices/Devices';
 
 export function Browser(): JSX.Element {
   const { t } = useTranslation();
 
   const tabs: TabsProps['items'] = [
     { children: <Samples />, key: 'samples', label: t('studio.browser.samples') },
-    { children: t('studio.panels.devices'), key: 'devices', label: t('studio.browser.devices') },
+    { children: <Devices />, key: 'devices', label: t('studio.browser.devices') },
   ];
 
   return (

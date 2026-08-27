@@ -7,14 +7,14 @@
   :global(.ant-tabs-tab-btn) {
     text-transform: uppercase;
   }
-  :global(.ant-tabs-content-holder) {
+  :global(.ant-tabs-body-holder) {
     flex: 1;
     min-height: 0;
   }
-  :global(.ant-tabs-content) {
+  :global(.ant-tabs-body) {
     height: 100%;
   }
-  :global(.ant-tabs-tabpane-active) {
+  :global(.ant-tabs-content-active) {
     height: 100%;
     display: flex;
     flex-direction: column;
