@@ -2,8 +2,8 @@ import { useTranslation } from '@transcendence/i18n';
 import { ConfigProvider, Tabs, type TabsProps, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './Browser.module.scss';
-import { Samples } from './Samples/Samples';
 import { Devices } from './Devices/Devices';
+import { Samples } from './Samples/Samples';
 
 export function Browser(): JSX.Element {
   const { t } = useTranslation();

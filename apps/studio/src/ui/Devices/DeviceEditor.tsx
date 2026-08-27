@@ -17,9 +17,10 @@ interface DeviceEditorProps {
   audioUnit: AudioUnitBoxAdapter;
   effect: AudioEffectDeviceAdapter;
   entry: EffectEntry;
+  index: number;
 }
 
-export function DeviceEditor({ audioUnit, effect, entry }: DeviceEditorProps): JSX.Element {
+export function DeviceEditor({ audioUnit, effect, entry, index }: DeviceEditorProps): JSX.Element {
   const { t } = useTranslation();
   const { project } = useProject();
   const [isEnabled, setIsEnabled] = useState(() => effect.enabledField.getValue());
@@ -75,6 +76,7 @@ export function DeviceEditor({ audioUnit, effect, entry }: DeviceEditorProps): J
   return (
     <section
       className={clsx(styles.dev, isMinimized && styles.minimized, !isEnabled && styles.bypassed)}
+      data-effect-index={index}
       data-family={entry.family}
       style={{ '--accent': entry.accent } as CSSProperties}
     >
