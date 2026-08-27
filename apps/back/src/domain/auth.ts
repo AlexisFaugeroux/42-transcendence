@@ -1,4 +1,4 @@
-import type { Role } from './user';
+import type { Role } from '@transcendence/permissions';
 
 export interface RegisterBody {
   email: string;

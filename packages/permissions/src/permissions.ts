@@ -1,3 +1,3 @@
-export enum Permissions {
+export const enum Permissions {
     MANAGE_ACCOUNTS,
 }
