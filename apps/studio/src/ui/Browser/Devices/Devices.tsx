@@ -1,7 +1,7 @@
-import type { JSX } from 'react';
 import { ConfigProvider, Divider, Flex, Listy, theme } from '@transcendence/ui';
-import { EFFECT_ENTRIES, type EffectEntry } from '../../Devices/effectFactories';
+import type { JSX } from 'react';
 import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
+import { EFFECT_ENTRIES, type EffectEntry } from '../../Devices/effectFactories';
 
 export function Devices(): JSX.Element {
   return (
@@ -37,7 +37,16 @@ export function Devices(): JSX.Element {
           ),
         }}
         itemRender={(effect) => (
-          <Flex align="center" gap="small">
+          <Flex
+            align="center"
+            gap="small"
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.setData('application/x-effect', effect.boxName);
+              e.dataTransfer.effectAllowed = 'copy';
+            }}
+            style={{ cursor: 'grab' }}
+          >
             <StudioIcon name={effect.icon} size={14} color={effect.accent} />
             {effect.label}
           </Flex>

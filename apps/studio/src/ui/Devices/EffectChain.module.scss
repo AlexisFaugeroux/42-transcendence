@@ -1,0 +1,25 @@
+.effectChain {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: stretch;
+  min-width: max-content;
+  gap: 0.125rem;
+  border-top: 1px solid var(--line-hover);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent 24px);
+}
+
+.empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 0 24px;
+  font-size: 11px;
+  color: var(--fg3);
+  text-align: center;
+}
+
+.dropMarker {
+  position: relative;
+  width: 20px;
+  border-radius: 2px;
+}

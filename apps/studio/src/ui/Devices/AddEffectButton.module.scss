@@ -1,0 +1,30 @@
+.add {
+  flex: 0 0 auto;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--fg2);
+  background: var(--bg-card);
+  border: 1px dashed var(--fg3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.add:hover {
+  color: var(--fg1);
+  background: color-mix(in srgb, var(--color-blue) 18%, var(--bg-card));
+  border-color: var(--color-blue);
+  border-style: solid;
+}
+
+.add:focus-visible {
+  outline: 1px solid var(--color-blue);
+  outline-offset: 1px;
+}

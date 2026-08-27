@@ -3,7 +3,7 @@ import { Dropdown, type MenuProps } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
-import styles from './Devices.module.scss';
+import styles from './AddEffectButton.module.scss';
 import { EFFECT_ENTRIES } from './effectFactories';
 
 interface AddEffectButtonProps {
