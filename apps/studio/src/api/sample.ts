@@ -1,26 +1,41 @@
 import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
 import type { Sample } from '../lib/types';
 
+interface PaginatedSamples {
+  items: Sample[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export async function getlistSample(): Promise<Sample[]> {
   const query = new URLSearchParams({
     visibilities: 'PUBLIC',
+    page: '1',
+    limit: '1000',
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
   if (!res.ok) throw new ApiErrorReponse(`[/api/samples/get] : ${res.statusText}`, res.status);
 
-  const data = (await res.json()) as Sample[];
-  return data;
+  const data = (await res.json()) as PaginatedSamples;
+  return data.items;
 }
 
 export async function getSampleById(id: string): Promise<Sample> {
   const query = new URLSearchParams({
     ids: id,
+    page: '1',
+    limit: '1',
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
   if (!res.ok) throw new ApiErrorReponse(`[/api/samples/get] : ${res.statusText}`, res.status);
 
-  const [sample] = (await res.json()) as Sample[];
+  const data = (await res.json()) as PaginatedSamples;
+  const sample = data.items[0];
+  if (!sample) {
+    throw new ApiErrorReponse(`[/api/samples/get] Sample not found: ${id}`, 404);
+  }
   return sample;
 }
