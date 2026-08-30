@@ -1,12 +1,20 @@
 import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
-import type { PublicProducer, PublicProducerProfile } from '../types/producer';
 import type { Paginated } from '../types/pagination';
+import type { PublicProducer, PublicProducerProfile } from '../types/producer';
 
-export async function listProducers(page = 1, limit = 20): Promise<Paginated<PublicProducer>> {
+export async function listProducers(
+  page = 1,
+  limit = 20,
+  q = '',
+): Promise<Paginated<PublicProducer>> {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
   });
+
+  const search = q?.trim();
+  if (search) params.set('q', search);
+
   const res = await apiFetch(`/api/users?${params.toString()}`);
   if (!res.ok)
     throw new ApiErrorReponse(`[api/users] List producers failed: ${res.status}`, res.status);
@@ -30,11 +38,16 @@ export async function getFollowers(
   handle: string,
   page = 1,
   limit = 20,
+  q = '',
 ): Promise<Paginated<PublicProducer>> {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
   });
+
+  const search = q?.trim();
+  if (search) params.set('q', search);
+
   const res = await apiFetch(
     `/api/users/${encodeURIComponent(handle)}/followers?${params.toString()}`,
   );
@@ -51,11 +64,16 @@ export async function getFollowing(
   handle: string,
   page = 1,
   limit = 20,
+  q = '',
 ): Promise<Paginated<PublicProducer>> {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
   });
+
+  const search = q?.trim();
+  if (search) params.set('q', search);
+
   const res = await apiFetch(
     `/api/users/${encodeURIComponent(handle)}/following?${params.toString()}`,
   );

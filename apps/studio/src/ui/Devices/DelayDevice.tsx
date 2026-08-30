@@ -2,8 +2,8 @@ import type { AutomatableParameterFieldAdapter } from '@opendaw/studio-adapters'
 import { DelayDeviceBoxAdapter } from '@opendaw/studio-adapters';
 import { MsnKnob, TinyDesign } from '@transcendence/ui';
 import type { JSX } from 'react';
-import { useParam } from '../../hooks/useParam';
 import { useProject } from '../../contexts/ProjectContext';
+import { useParam } from '../../hooks/useParam';
 import { MsnParamGroup } from '../components/MsnParamGroup/MsnParamGroup';
 import { MsnParamKnob } from '../components/MsnParamKnob/MsnParamKnob';
 import { MsnParamSelect } from '../components/MsnParamSelect/MsnParamSelect';

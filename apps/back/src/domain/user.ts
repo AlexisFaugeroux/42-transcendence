@@ -1,5 +1,5 @@
-import type { Role } from '@transcendence/permissions';
 import type { Role as PrismaRole } from '@prisma/client';
+import type { Role } from '@transcendence/permissions';
 import type { PaginatedResponse } from './pagination';
 
 export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';

@@ -1,6 +1,6 @@
 import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
-import { type JSX, useMemo, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useProducers } from '../../hooks/useProducers';
 import { ProducerCard } from './ProducerCard';
@@ -12,18 +12,26 @@ export function Producers(): JSX.Element {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { data, error, isLoading } = useProducers(page, PAGE_SIZE);
+  const [debouncedQ, setDebouncedQ] = useState('');
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setDebouncedQ(query.trim());
+    }, 300);
+
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQ]);
+
+  const { data, error, isLoading } = useProducers(page, PAGE_SIZE, debouncedQ);
 
   const list = data?.items ?? [];
   const total = data?.total ?? 0;
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
-      (p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q),
-    );
-  }, [list, query]);
 
   return (
     <div className={styles.page}>
@@ -58,17 +66,17 @@ export function Producers(): JSX.Element {
           </div>
         ) : error ? (
           <div className={styles.state}>{t('producers.loadError')}</div>
+        ) : total === 0 && !debouncedQ ? (
+          <div className={styles.state}>{t('producers.empty')}</div>
+        ) : list.length === 0 ? (
+          <div className={styles.state}>{t('producers.emptySearch')}</div>
         ) : (
           <>
-            {filtered.length === 0 ? (
-              <div className={styles.state}>{t('producers.empty')}</div>
-            ) : (
-              <div className={styles.grid}>
-                {filtered.map((producer) => (
-                  <ProducerCard key={producer.id} producer={producer} />
-                ))}
-              </div>
-            )}
+            <div className={styles.grid}>
+              {list.map((producer) => (
+                <ProducerCard key={producer.id} producer={producer} />
+              ))}
+            </div>
 
             {total > 0 ? (
               <div className={styles.pager}>

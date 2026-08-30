@@ -102,20 +102,35 @@ class UserRepository {
     return formattedUsers;
   }
 
+  private _publicSearchWhere(q?: string) {
+    const search = q?.trim();
+    if (!search) return undefined;
+    return {
+      OR: [
+        { handle: { contains: search, mode: 'insensitive' as const } },
+        { artistName: { contains: search, mode: 'insensitive' as const } },
+      ],
+    };
+  }
+
   public async listPublic(
     skip: number,
     take: number,
+    q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
+      const where = this._publicSearchWhere(q);
+
       const [users, total] = await Promise.all([
         this.prisma.user.findMany({
+          where,
           orderBy: {
             artistName: 'asc',
           },
           skip,
           take,
         }),
-        this.prisma.user.count(),
+        this.prisma.user.count({ where }),
       ]);
 
       return {
@@ -166,18 +181,24 @@ class UserRepository {
     handle: string,
     skip: number,
     take: number,
+    q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
+      const where = this._publicSearchWhere(q);
+
       const user = await this.prisma.user.findUniqueOrThrow({
         where: { handle },
         include: {
           followedBy: {
+            where: where,
             orderBy: { artistName: 'asc' },
             skip,
             take,
           },
           _count: {
-            select: { followedBy: true },
+            select: {
+              followedBy: where ?? true,
+            },
           },
         },
       });
@@ -195,12 +216,16 @@ class UserRepository {
     handle: string,
     skip: number,
     take: number,
+    q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
+      const where = this._publicSearchWhere(q);
+
       const user = await this.prisma.user.findUniqueOrThrow({
         where: { handle },
         include: {
           following: {
+            where: where,
             orderBy: {
               artistName: 'asc',
             },
@@ -209,7 +234,7 @@ class UserRepository {
           },
           _count: {
             select: {
-              following: true,
+              following: where ? { where: where } : true,
             },
           },
         },

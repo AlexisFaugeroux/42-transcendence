@@ -76,6 +76,7 @@ const getSampleQuerySchema = {
 
     page: { type: 'string' },
     limit: { type: 'string' },
+    q: { type: 'string' },
   },
   type: 'object',
 };

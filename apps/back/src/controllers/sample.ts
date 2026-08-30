@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastif
 import { randomUUID } from 'node:crypto';
 import { MAX_UPLOAD_BYTES, SAMPLE_USER_QUOTA_BYTES } from '../constants';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
+import type { PaginatedResponse } from '../domain/pagination';
 import type {
   GetSampleInput,
   Sample,
@@ -14,12 +15,11 @@ import { userRepository } from '../repositories/user';
 import { sampleStorageService } from '../services/audio/sampleStorage';
 import { msnpManager } from '../services/msnp';
 import { type WavInfo, wavManager } from '../services/wav';
-import { parseUploadSampleFields } from '../utils/validation';
-import type { PaginatedResponse } from '../domain/pagination';
 import { parsePagination } from '../utils/pagination';
+import { parseUploadSampleFields } from '../utils/validation';
 
 interface GetSamplesRoute extends RouteGenericInterface {
-  Querystring: GetSampleInput & { page?: string; limit?: string };
+  Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
   Reply: PaginatedResponse<Sample>;
 }
 
@@ -58,10 +58,10 @@ class SampleFileController {
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
-    const { page: pageRaw, limit: limitRaw, ...filters } = req.query;
+    const { page: pageRaw, limit: limitRaw, q, ...filters } = req.query;
     const { page, limit, skip, take } = parsePagination(pageRaw, limitRaw);
 
-    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take);
+    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take, q);
 
     reply.code(200).send({ items, total, page, limit });
   };

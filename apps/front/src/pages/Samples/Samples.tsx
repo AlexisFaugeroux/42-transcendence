@@ -12,7 +12,7 @@ import {
   Spin,
   theme,
 } from '@transcendence/ui';
-import { type JSX, type Key, useMemo, useState } from 'react';
+import { type JSX, type Key, useEffect, useMemo, useState } from 'react';
 import { deleteSample, getSamples, getStorageUsage } from '../../api/samples/samples';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
@@ -42,6 +42,7 @@ export function Samples(): JSX.Element {
   const [page, setPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const [query, setQuery] = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
   const [families, setFamilies] = useState<Family[]>([]);
   const [kinds, setKinds] = useState<Kind[]>([]);
   const [favOnly, setFavOnly] = useState(false);
@@ -77,9 +78,25 @@ export function Samples(): JSX.Element {
     }
   };
 
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setDebouncedQ(query.trim());
+    }, 300);
+
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    setPage(1);
+    setSelectedKeys([]);
+  }, [debouncedQ]);
+
   const samplesQuery = useQuery({
-    queryFn: () => getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }, page, PAGE_SIZE),
-    queryKey: ['samples', user.id, page, PAGE_SIZE],
+    queryFn: () =>
+      getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }, page, PAGE_SIZE, debouncedQ),
+    queryKey: ['samples', user.id, page, PAGE_SIZE, debouncedQ],
   });
 
   const storageQuery = useQuery({
@@ -92,17 +109,14 @@ export function Samples(): JSX.Element {
   const storage = storageQuery.data;
 
   const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-
     return samples
       .filter(
         (sample) =>
           !families.length || (sample.family !== null && families.includes(sample.family)),
       )
       .filter((sample) => !kinds.length || (sample.kind !== null && kinds.includes(sample.kind)))
-      .filter((sample) => !needle || sample.name.toLowerCase().includes(needle))
       .sort(SAMPLE_COMPARATORS[sort]);
-  }, [samples, families, kinds, query, sort]);
+  }, [samples, families, kinds, sort]);
 
   const invalidateLibrary = async (): Promise<void> => {
     await Promise.all([
