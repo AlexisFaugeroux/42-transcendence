@@ -4,6 +4,7 @@ import type { PresenceStatus } from '../../types/user';
 import styles from './StatusAvatar.module.scss';
 
 const STATUS_COLOR: Record<PresenceStatus, string> = {
+  live: theme.purple,
   offline: theme.fg3,
   online: theme.green,
 };

@@ -33,7 +33,7 @@ export function SessionCard({
     for (const sampleId of session.samples) {
       query.append('sampleId', sampleId);
     }
-    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/?${query.toString()}`;
   };
 
   const menuItems: MenuProps['items'] = [
