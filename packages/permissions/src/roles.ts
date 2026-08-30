@@ -1,6 +1,6 @@
 export const enum Role {
-    ADMIN,
-    ARTIST,
-    MODERATOR,
-    GUEST
+  ADMIN,
+  ARTIST,
+  MODERATOR,
+  GUEST,
 }

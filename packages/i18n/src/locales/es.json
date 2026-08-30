@@ -574,7 +574,8 @@
   "producers": {
     "count_one": "{{count}} productor en MakeSomeNoise",
     "count_other": "{{count}} productores en MakeSomeNoise",
-    "empty": "No se encontraron productores.",
+    "empty": "Todavía no hay productores.",
+    "emptySearch": "No se encontraron productores.",
     "emptyFollowers": "Aún no hay seguidores.",
     "emptyFollowing": "Aún no sigue a nadie.",
     "emptyLiked": "Ninguna pista marcada.",

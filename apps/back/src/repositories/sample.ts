@@ -54,20 +54,27 @@ class SampleRepository {
     input: GetSampleInput,
     skip: number,
     take: number,
+    q?: string,
   ): Promise<{ items: Sample[]; total: number }> {
     const filters = this._buildFilters(input);
+    const search = q?.trim();
 
-    const where = Object.keys(filters).length ? filters : undefined;
+    const where = {
+      ...filters,
+      ...(search ? { name: { contains: search, mode: 'insensitive' as const } } : {}),
+    };
+
+    const whereInput = Object.keys(where).length ? where : undefined;
 
     const [samples, total] = await Promise.all([
       this.prisma.sample.findMany({
-        where,
+        where: whereInput,
         skip,
         take,
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.sample.count({
-        where,
+        where: whereInput,
       }),
     ]);
 

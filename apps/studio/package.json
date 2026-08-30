@@ -44,8 +44,8 @@
   },
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
-    "@transcendence/prettier-config": "workspace:*",
     "@transcendence/permissions": "workspace:*",
+    "@transcendence/prettier-config": "workspace:*",
     "@types/node": "24.12.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
