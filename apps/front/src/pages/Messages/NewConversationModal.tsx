@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 import { Button, Form, Input, Modal, Spin } from '@transcendence/ui';
-import { JSX, useState } from 'react';
+import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { openConversation } from '../../api/chat/chat';
 import { useUserRelations } from '../../hooks/useUserRelations';

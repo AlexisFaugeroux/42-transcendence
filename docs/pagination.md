@@ -56,5 +56,3 @@ Case-insensitive `contains` filter. `total` counts matches, not the full list.
 antd `Pagination` via `@transcendence/ui`. Page size fixed at 20 (`showSizeChanger={false}`).
 React Query `queryKey` includes `page`, `limit`, and `q` (debounced ~300 ms on search inputs).
 Reset to page 1 when `q` changes.
-
-Non-paginated clients (ex: studio sample browser) omit `page`/`limit` and read `items`.

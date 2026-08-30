@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { Form, Input } from '@transcendence/ui';
-import { JSX, useEffect } from 'react';
+import { type JSX, useEffect } from 'react';
 import { markAsRead, sendMessage } from '../../api/chat/chat';
 import type { Conversation, NewMessage } from '../../types/chat';
 import style from './Conversation.module.scss';

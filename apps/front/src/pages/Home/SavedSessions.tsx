@@ -1,17 +1,15 @@
 import { useTranslation } from '@transcendence/i18n';
-import { Carousel, MsnIcon } from '@transcendence/ui';
+import { Carousel, CloseOutlined, Flex, MsnIcon, Spin, theme } from '@transcendence/ui';
 import { type ComponentRef, type JSX, useRef } from 'react';
 import { useSavedSessions } from '../../hooks/useSavedSessions';
 import type { Session } from '../Sessions/sessions.data';
 import styles from './SavedSessions.module.scss';
 import { SavedSessionTile } from './SavedSessionTile';
 
-export function SavedSessions(): JSX.Element {
+export function SavedSessions(): JSX.Element | null {
   const carousel = useRef<ComponentRef<typeof Carousel>>(null);
   const { t } = useTranslation();
-  const { data, error, isError, isLoading } = useSavedSessions();
-
-  if (isError) throw error;
+  const { data, isError, isLoading } = useSavedSessions();
 
   const loadProject = (session: Session) => {
     const query = new URLSearchParams({
@@ -23,10 +21,9 @@ export function SavedSessions(): JSX.Element {
     for (const sampleId of session.samples) {
       query.append('sampleId', sampleId);
     }
-    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?${query.toString()}`;
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/?${query.toString()}`;
   };
 
-  if (data?.length === 0) return <div></div>;
   return (
     <section>
       <div className={styles.head}>
@@ -57,23 +54,34 @@ export function SavedSessions(): JSX.Element {
         </div>
       </div>
 
-      <Carousel
-        ref={carousel}
-        className={styles.carousel}
-        dots={false}
-        infinite={false}
-        slidesToShow={4}
-        slidesToScroll={1}
-        responsive={[
-          { breakpoint: 1400, settings: { slidesToShow: 3 } },
-          { breakpoint: 1024, settings: { slidesToShow: 2 } },
-          { breakpoint: 640, settings: { slidesToShow: 1 } },
-        ]}
-      >
-        {data?.map((session) => (
-          <SavedSessionTile key={session.id} session={session} onOpen={loadProject} />
-        ))}
-      </Carousel>
+      {isError ? (
+        <Flex align="center" justify="center">
+          <CloseOutlined color={theme.red} />
+          <span>Error while loading saved sessions</span>
+        </Flex>
+      ) : isLoading ? (
+        <Flex align="center" justify="center">
+          <Spin />
+        </Flex>
+      ) : (
+        <Carousel
+          ref={carousel}
+          className={styles.carousel}
+          dots={false}
+          infinite={false}
+          slidesToShow={4}
+          slidesToScroll={1}
+          responsive={[
+            { breakpoint: 1400, settings: { slidesToShow: 3 } },
+            { breakpoint: 1024, settings: { slidesToShow: 2 } },
+            { breakpoint: 640, settings: { slidesToShow: 1 } },
+          ]}
+        >
+          {data?.map((session) => (
+            <SavedSessionTile key={session.id} session={session} onOpen={loadProject} />
+          ))}
+        </Carousel>
+      )}
     </section>
   );
 }

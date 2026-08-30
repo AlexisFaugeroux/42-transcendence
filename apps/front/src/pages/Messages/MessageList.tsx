@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
-import { JSX } from 'react';
+import { type JSX } from 'react';
 import { listMessages } from '../../api/chat/chat';
 import type { Conversation } from '../../types/chat';
 import type { Message } from '../../types/chat';

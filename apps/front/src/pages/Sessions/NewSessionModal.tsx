@@ -24,7 +24,7 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
 
   const openNewSession = () => {
     onClose();
-    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/studio/studio?name=${name}&bpm=${bpm}`;
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/?name=${name}&bpm=${bpm}`;
   };
 
   return (
