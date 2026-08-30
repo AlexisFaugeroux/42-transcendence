@@ -790,9 +790,25 @@
       "title": "Título"
     },
     "loadError": "No se pudieron cargar las pistas",
+    "noResults": {
+      "clearFilters": "Borrar filtros",
+      "text": "Prueba a borrar los filtros o a buscar otro término.",
+      "title": "Ninguna pista coincide con estos filtros"
+    },
     "pause": "Pausa",
     "play": "Reproducir",
+    "sort": {
+      "bpm": "BPM",
+      "duration": "Duración",
+      "recent": "Añadidas recientemente",
+      "size": "Tamaño",
+      "title": "Título (A→Z)"
+    },
     "title": "Mis pistas",
+    "toolbar": {
+      "allVisibilities": "Todas las visibilidades",
+      "searchPlaceholder": "Buscar por título o descripción…"
+    },
     "updateError": "No se pudo actualizar la pista",
     "visibility": "Visibilidad"
   }

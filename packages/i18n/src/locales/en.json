@@ -790,9 +790,25 @@
       "title": "Title"
     },
     "loadError": "Could not load tracks",
+    "noResults": {
+      "clearFilters": "Clear filters",
+      "text": "Try clearing the filters or searching for a different term.",
+      "title": "No tracks match these filters"
+    },
     "pause": "Pause",
     "play": "Play",
+    "sort": {
+      "bpm": "BPM",
+      "duration": "Duration",
+      "recent": "Recently added",
+      "size": "Size",
+      "title": "Title (A→Z)"
+    },
     "title": "My tracks",
+    "toolbar": {
+      "allVisibilities": "All visibilities",
+      "searchPlaceholder": "Search by title or description…"
+    },
     "updateError": "Could not update the track",
     "visibility": "Visibility"
   }

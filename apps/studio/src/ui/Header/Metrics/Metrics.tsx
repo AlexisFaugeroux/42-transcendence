@@ -1,9 +1,9 @@
+import { PPQN } from '@opendaw/lib-dsp';
 import { useTranslation } from '@transcendence/i18n';
 import { type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
-import styles from './Metrics.module.scss';
-import { PPQN } from '@opendaw/lib-dsp';
 import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
+import styles from './Metrics.module.scss';
 
 export function Metrics(): JSX.Element {
   const { t } = useTranslation();

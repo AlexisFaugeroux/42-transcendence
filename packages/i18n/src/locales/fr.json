@@ -790,9 +790,25 @@
       "title": "Titre"
     },
     "loadError": "Impossible de charger les morceaux",
+    "noResults": {
+      "clearFilters": "Réinitialiser les filtres",
+      "text": "Essayez de réinitialiser les filtres ou de chercher un autre terme.",
+      "title": "Aucun morceau ne correspond à ces filtres"
+    },
     "pause": "Pause",
     "play": "Lecture",
+    "sort": {
+      "bpm": "BPM",
+      "duration": "Durée",
+      "recent": "Ajout récent",
+      "size": "Taille",
+      "title": "Titre (A→Z)"
+    },
     "title": "Mes morceaux",
+    "toolbar": {
+      "allVisibilities": "Toutes les visibilités",
+      "searchPlaceholder": "Rechercher par titre ou description…"
+    },
     "updateError": "Impossible de mettre à jour le morceau",
     "visibility": "Visibilité"
   }
