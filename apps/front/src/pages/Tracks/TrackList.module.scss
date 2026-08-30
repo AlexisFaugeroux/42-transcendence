@@ -15,6 +15,10 @@
   padding: 10px 14px;
 }
 
+.list[data-readonly='true'] .row {
+  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px;
+}
+
 .play {
   width: 32px;
   height: 32px;
