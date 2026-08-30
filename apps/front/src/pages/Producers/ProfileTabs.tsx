@@ -1,8 +1,13 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
+import type { GetTracksFilters } from '../../api/track/types';
+import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import { useFollowers, useFollowing } from '../../hooks/useProducers';
+import { useProducerTracks } from '../../hooks/useTracks';
 import type { PublicProducer } from '../../types/producer';
+import type { Track } from '../../types/track';
+import { TrackList } from '../Tracks/TrackList';
 import { ProducerCard } from './ProducerCard';
 import styles from './ProducerProfile.module.scss';
 
@@ -16,8 +21,10 @@ interface ProfileTabsProps {
 
 const PAGE_SIZE = 20;
 
-// TODO: mock (tracks / likes)
-const MOCK_TRACKS: { id: string; title: string }[] = [];
+/** Profile only shows public tracks (issue #243). */
+const PUBLIC_TRACKS_FILTERS: GetTracksFilters = { visibilities: ['PUBLIC'] };
+
+// TODO: likes still mocked
 const MOCK_LIKED: { id: string; title: string }[] = [];
 
 function PeoplePanel({
@@ -71,6 +78,36 @@ function PeoplePanel({
   );
 }
 
+function TracksPanel({
+  error,
+  isLoading,
+  tracks,
+}: {
+  isLoading: boolean;
+  error: Error | null;
+  tracks: Track[] | undefined;
+}): JSX.Element {
+  const { t } = useTranslation();
+
+  if (isLoading) {
+    return (
+      <div className={styles.state}>
+        <Spin />
+      </div>
+    );
+  }
+  if (error) return <p className={styles.empty}>{t('producers.listLoadError')}</p>;
+  if (!tracks || tracks.length === 0) {
+    return <p className={styles.empty}>{t('producers.emptyTracks')}</p>;
+  }
+
+  return (
+    <SamplePlayerProvider>
+      <TrackList tracks={tracks} readOnly />
+    </SamplePlayerProvider>
+  );
+}
+
 export function ProfileTabs({
   followersCount,
   followingCount,
@@ -81,11 +118,14 @@ export function ProfileTabs({
   const [followersPage, setFollowersPage] = useState(1);
   const [followingPage, setFollowingPage] = useState(1);
 
+  const tracksQuery = useProducerTracks(handle, PUBLIC_TRACKS_FILTERS, tab === 'tracks');
   const followers = useFollowers(handle, tab === 'followers', followersPage, PAGE_SIZE);
   const following = useFollowing(handle, tab === 'following', followingPage, PAGE_SIZE);
 
+  const tracksCount = tracksQuery.data?.length ?? 0;
+
   const tabs: { id: Tab; label: string; count: number | string }[] = [
-    { count: MOCK_TRACKS.length, id: 'tracks', label: t('producers.tabs.tracks') },
+    { count: tracksCount, id: 'tracks', label: t('producers.tabs.tracks') },
     { count: MOCK_LIKED.length, id: 'liked', label: t('producers.tabs.liked') },
     { count: followersCount, id: 'followers', label: t('producers.tabs.followers') },
     { count: followingCount, id: 'following', label: t('producers.tabs.following') },
@@ -112,16 +152,13 @@ export function ProfileTabs({
       </div>
 
       <div className={styles.tabPanel}>
-        {tab === 'tracks' &&
-          (MOCK_TRACKS.length === 0 ? (
-            <p className={styles.empty}>{t('producers.emptyTracks')}</p>
-          ) : (
-            <ul className={styles.mockList}>
-              {MOCK_TRACKS.map((track) => (
-                <li key={track.id}>{track.title}</li>
-              ))}
-            </ul>
-          ))}
+        {tab === 'tracks' ? (
+          <TracksPanel
+            isLoading={tracksQuery.isLoading}
+            error={tracksQuery.error}
+            tracks={tracksQuery.data}
+          />
+        ) : null}
 
         {tab === 'liked' &&
           (MOCK_LIKED.length === 0 ? (

@@ -12,9 +12,11 @@ import styles from './TrackList.module.scss';
 
 interface TrackListProps {
   tracks: Track[];
-  onEdit: (track: Track) => void;
-  onDelete: (track: Track) => void;
-  onVisibilityChange: (track: Track, visibility: Visibility) => void;
+  /** Profile / public view: play + waveform only, no edit/delete/download. */
+  readOnly?: boolean;
+  onEdit?: (track: Track) => void;
+  onDelete?: (track: Track) => void;
+  onVisibilityChange?: (track: Track, visibility: Visibility) => void;
 }
 
 function formatTrackDuration(durationMs: number): string {
@@ -28,48 +30,51 @@ export function TrackList({
   onDelete,
   onEdit,
   onVisibilityChange,
+  readOnly = false,
   tracks,
 }: TrackListProps): JSX.Element {
   const { t } = useTranslation();
   const player = useSamplePlayer();
 
   return (
-    <div className={styles.list}>
+    <div className={styles.list} data-readonly={readOnly || undefined}>
       {tracks.map((track) => {
         const wavUrl = trackMediaUrl(track.url);
         const peaksUrl = trackMediaUrl(track.peaksUrl);
         const isActive = player.currentId === track.id;
 
-        const menuItems: MenuProps['items'] = [
-          {
-            key: 'edit',
-            label: t('tracks.edit'),
-            onClick: () => {
-              onEdit(track);
-            },
-          },
-          {
-            children: VISIBILITIES.map((visibility) => ({
-              disabled: track.visibility === visibility,
-              key: `visibility-${visibility}`,
-              label: t(VISIBILITY_LABEL[visibility]),
-              onClick: () => {
-                onVisibilityChange(track, visibility);
+        const menuItems: MenuProps['items'] = readOnly
+          ? []
+          : [
+              {
+                key: 'edit',
+                label: t('tracks.edit'),
+                onClick: () => {
+                  onEdit?.(track);
+                },
               },
-            })),
-            key: 'visibility',
-            label: t('tracks.visibility'),
-          },
-          { type: 'divider' },
-          {
-            danger: true,
-            key: 'delete',
-            label: t('common.delete'),
-            onClick: () => {
-              onDelete(track);
-            },
-          },
-        ];
+              {
+                children: VISIBILITIES.map((visibility) => ({
+                  disabled: track.visibility === visibility,
+                  key: `visibility-${visibility}`,
+                  label: t(VISIBILITY_LABEL[visibility]),
+                  onClick: () => {
+                    onVisibilityChange?.(track, visibility);
+                  },
+                })),
+                key: 'visibility',
+                label: t('tracks.visibility'),
+              },
+              { type: 'divider' },
+              {
+                danger: true,
+                key: 'delete',
+                label: t('common.delete'),
+                onClick: () => {
+                  onDelete?.(track);
+                },
+              },
+            ];
 
         return (
           <div key={track.id} className={styles.row}>
@@ -93,7 +98,7 @@ export function TrackList({
                 {track.title}
               </div>
               <div className={styles.meta}>
-                <Tag>{t(VISIBILITY_LABEL[track.visibility])}</Tag>
+                {readOnly ? null : <Tag>{t(VISIBILITY_LABEL[track.visibility])}</Tag>}
                 {track.bpm != null ? <span>{track.bpm} BPM</span> : null}
               </div>
             </div>
@@ -103,25 +108,27 @@ export function TrackList({
             <span className={styles.mono}>{formatTrackDuration(track.duration)}</span>
             <span className={styles.mono}>{formatDate(track.createdAt, 'L')}</span>
 
-            <div className={styles.actions}>
-              <a
-                className={styles.download}
-                href={wavUrl}
-                download={`${track.title}.wav`}
-                title={t('common.download')}
-              >
-                <MsnIcon name="download" size="14px" />
-              </a>
-              <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
-                <button
-                  type="button"
-                  className={styles.menuButton}
-                  aria-label={t('tracks.actions')}
+            {readOnly ? null : (
+              <div className={styles.actions}>
+                <a
+                  className={styles.download}
+                  href={wavUrl}
+                  download={`${track.title}.wav`}
+                  title={t('common.download')}
                 >
-                  ⋯
-                </button>
-              </Dropdown>
-            </div>
+                  <MsnIcon name="download" size="14px" />
+                </a>
+                <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
+                  <button
+                    type="button"
+                    className={styles.menuButton}
+                    aria-label={t('tracks.actions')}
+                  >
+                    ⋯
+                  </button>
+                </Dropdown>
+              </div>
+            )}
           </div>
         );
       })}
