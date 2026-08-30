@@ -12,7 +12,6 @@ import styles from './TrackList.module.scss';
 
 interface TrackListProps {
   tracks: Track[];
-  /** Profile / public view: play + waveform only, no edit/delete/download. */
   readOnly?: boolean;
   onEdit?: (track: Track) => void;
   onDelete?: (track: Track) => void;
@@ -65,7 +64,6 @@ export function TrackList({
                 key: 'visibility',
                 label: t('tracks.visibility'),
               },
-              { type: 'divider' },
               {
                 danger: true,
                 key: 'delete',
