@@ -1,7 +1,7 @@
 import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
-import { type JSX, useMemo, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useFollowing } from '../../hooks/useProducers';
@@ -15,18 +15,26 @@ export function Following(): JSX.Element {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { data, error, isLoading } = useFollowing(me.handle, true, page, PAGE_SIZE);
+  const [debouncedQ, setDebouncedQ] = useState('');
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setDebouncedQ(query.trim());
+    }, 300);
+
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQ]);
+
+  const { data, error, isLoading } = useFollowing(me.handle, true, page, PAGE_SIZE, debouncedQ);
 
   const list = data?.items ?? [];
   const total = data?.total ?? 0;
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
-      (p) => p.artistName.toLowerCase().includes(q) || p.handle.toLowerCase().includes(q),
-    );
-  }, [list, query]);
 
   return (
     <div className={styles.page}>
@@ -61,34 +69,34 @@ export function Following(): JSX.Element {
           </div>
         ) : error ? (
           <div className={styles.state}>{t('following.loadError')}</div>
-        ) : total === 0 ? (
+        ) : total === 0 && !debouncedQ ? (
           <div className={styles.state}>
             <p>{t('following.empty')}</p>
             <Link to="/producers">{t('following.browseProducers')}</Link>
           </div>
+        ) : list.length === 0 ? (
+          <div className={styles.state}>{t('following.emptySearch')}</div>
         ) : (
           <>
-            {filtered.length === 0 ? (
-              <div className={styles.state}>{t('following.emptySearch')}</div>
-            ) : (
-              <div className={styles.grid}>
-                {filtered.map((producer) => (
-                  <ProducerCard key={producer.id} producer={producer} showUnfollow />
-                ))}
-              </div>
-            )}
-
-            <div className={styles.pager}>
-              <Pagination
-                current={page}
-                pageSize={PAGE_SIZE}
-                total={total}
-                showSizeChanger={false}
-                onChange={(next) => {
-                  setPage(next);
-                }}
-              />
+            <div className={styles.grid}>
+              {list.map((producer) => (
+                <ProducerCard key={producer.id} producer={producer} showUnfollow />
+              ))}
             </div>
+
+            {total > 0 ? (
+              <div className={styles.pager}>
+                <Pagination
+                  current={page}
+                  pageSize={PAGE_SIZE}
+                  total={total}
+                  showSizeChanger={false}
+                  onChange={(next) => {
+                    setPage(next);
+                  }}
+                />
+              </div>
+            ) : null}
           </>
         )}
       </div>

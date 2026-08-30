@@ -34,6 +34,7 @@ interface ListProducersRoute extends RouteGenericInterface {
   Querystring: {
     page?: string;
     limit?: string;
+    q?: string;
   };
   Reply: PaginatedProducersResponse;
 }
@@ -49,7 +50,7 @@ interface GetProfileRoute extends RouteGenericInterface {
 
 interface ListFollowRoute extends RouteGenericInterface {
   Params: HandleParam;
-  Querystring: { page?: string; limit?: string };
+  Querystring: { page?: string; limit?: string; q?: string };
   Reply: PaginatedProducersResponse;
 }
 
@@ -108,7 +109,7 @@ class UserController {
     reply: FastifyReply<ListProducersRoute>,
   ): Promise<void> => {
     const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
-    const { items, total } = await userRepository.listPublic(skip, take);
+    const { items, total } = await userRepository.listPublic(skip, take, req.query.q);
 
     reply.code(200).send({ items, total, page, limit });
   };
@@ -126,7 +127,12 @@ class UserController {
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
     const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
-    const { items, total } = await userRepository.listFollowers(req.params.handle, skip, take);
+    const { items, total } = await userRepository.listFollowers(
+      req.params.handle,
+      skip,
+      take,
+      req.query.q,
+    );
     reply.code(200).send({ items, total, page, limit });
   };
 
@@ -135,7 +141,12 @@ class UserController {
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
     const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
-    const { items, total } = await userRepository.listFollowing(req.params.handle, skip, take);
+    const { items, total } = await userRepository.listFollowing(
+      req.params.handle,
+      skip,
+      take,
+      req.query.q,
+    );
     reply.code(200).send({ items, total, page, limit });
   };
 

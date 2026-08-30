@@ -13,6 +13,7 @@ export async function getSamples(
   filters: GetSamplesFilters,
   page = 1,
   limit = 20,
+  q = '',
 ): Promise<Paginated<Sample>> {
   const searchParams = new URLSearchParams({
     page: page.toString(),
@@ -22,6 +23,9 @@ export async function getSamples(
   for (const kind of filters.kinds ?? []) searchParams.append('kinds', kind);
   for (const visibility of filters.visibilities ?? [])
     searchParams.append('visibilities', visibility);
+
+  const search = q?.trim();
+  if (search) searchParams.set('q', search);
 
   const res = await apiFetch(`/api/samples/get?${searchParams.toString()}`);
   if (!res.ok) throw await apiError(res, '/api/samples/get');

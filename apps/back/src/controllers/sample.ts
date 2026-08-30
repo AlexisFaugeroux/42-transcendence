@@ -19,7 +19,7 @@ import type { PaginatedResponse } from '../domain/pagination';
 import { parsePagination } from '../utils/pagination';
 
 interface GetSamplesRoute extends RouteGenericInterface {
-  Querystring: GetSampleInput & { page?: string; limit?: string };
+  Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
   Reply: PaginatedResponse<Sample>;
 }
 
@@ -58,10 +58,10 @@ class SampleFileController {
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
-    const { page: pageRaw, limit: limitRaw, ...filters } = req.query;
+    const { page: pageRaw, limit: limitRaw, q, ...filters } = req.query;
     const { page, limit, skip, take } = parsePagination(pageRaw, limitRaw);
 
-    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take);
+    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take, q);
 
     reply.code(200).send({ items, total, page, limit });
   };

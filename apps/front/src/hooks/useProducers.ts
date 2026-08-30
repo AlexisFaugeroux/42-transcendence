@@ -13,10 +13,12 @@ import type { PublicProducer, PublicProducerProfile } from '../types/producer';
 
 // Reads hooks
 
-export function useProducers(page: number, limit = 20) {
+export function useProducers(page: number, limit = 20, q = '') {
+  const search = q?.trim();
+
   return useQuery({
-    queryKey: ['producers', page, limit],
-    queryFn: () => listProducers(page, limit),
+    queryKey: ['producers', page, limit, search],
+    queryFn: () => listProducers(page, limit, search),
   });
 }
 
@@ -28,19 +30,21 @@ export function useProducer(handle: string) {
   });
 }
 
-export function useFollowers(handle: string, enabled = true, page = 1, limit = 20) {
+export function useFollowers(handle: string, enabled = true, page = 1, limit = 20, q = '') {
+  const search = q.trim();
   return useQuery({
     enabled: Boolean(handle) && enabled,
-    queryKey: ['producer', handle, 'followers', page, limit],
-    queryFn: () => getFollowers(handle, page, limit),
+    queryKey: ['producer', handle, 'followers', page, limit, search],
+    queryFn: () => getFollowers(handle, page, limit, search),
   });
 }
 
-export function useFollowing(handle: string, enabled = true, page = 1, limit = 20) {
+export function useFollowing(handle: string, enabled = true, page = 1, limit = 20, q = '') {
+  const search = q.trim();
   return useQuery({
     enabled: Boolean(handle) && enabled,
-    queryKey: ['producer', handle, 'following', page, limit],
-    queryFn: () => getFollowing(handle, page, limit),
+    queryKey: ['producer', handle, 'following', page, limit, search],
+    queryFn: () => getFollowing(handle, page, limit, search),
   });
 }
 
