@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import { createContext } from 'react';
 import { useState } from 'react';
 import { useFollowing } from '../hooks/useFollowing';
-import type { OnlineUser } from '../pages/Home/home.data';
 import type { SocketEvent } from '../types/event';
 import { useSocket } from '../websocket/WebSocketProvider';
+import type { User } from '../types/user';
 
 interface PresenceData {
   count: number;
-  onlineUsers: OnlineUser[] | null;
+  onlineUsers: User[] | null;
 }
 
 const presenceContext = createContext<PresenceData | null>(null);

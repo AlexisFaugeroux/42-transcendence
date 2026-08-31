@@ -15,23 +15,14 @@ const sendMessageSchema = {
   },
 };
 
-const firstMessageSchema = {
-  additionalProperties: false,
-  properties: {
-    authorId: { type: 'string' },
-    content: { type: 'string' },
-    toId: { type: 'string' },
-  },
-  required: ['authorId', 'id', 'content'],
-  type: 'object',
-};
-
 const createChatSchema = {
   body: {
     properties: {
-      message: firstMessageSchema,
+      authorId: { type: 'string' },
+      content: { type: 'string' },
+      toId: { type: 'string' },
     },
-    required: ['message'],
+    required: ['authorId', 'toId', 'content'],
     type: 'object',
   },
 };

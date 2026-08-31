@@ -1,4 +1,11 @@
 import { ApiErrorReponse, apiFetch, type AuthResponse, type AuthUser } from '@transcendence/auth';
+import type { User } from '../types/user';
+
+export async function listAllFollowers(): Promise<User[]> {
+  const res = await apiFetch('/api/user/listFollowers', { method : 'GET'});
+  if (!res.ok) throw new ApiErrorReponse('[api/user.listFollowers] Failed to fetch followers list');
+  return (await res.json()) as User[];
+}
 
 export async function updateUserProfile(values: AuthUser): Promise<AuthUser> {
   const body = {

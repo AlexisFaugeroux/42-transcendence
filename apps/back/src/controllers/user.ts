@@ -228,6 +228,20 @@ class UserController {
     reply.code(200).send(this._formatOnlineUser(users));
   };
 
+  public listFollowersById = async (
+    req: FastifyRequest<ListUser>,
+    reply: FastifyReply<ListUser>,
+  ) => {
+    const userId = req.authUser.id;
+    const usersIds = await userRepository.listFollowerIdsByUserId(userId);
+    if (usersIds.length === 0) {
+      reply.code(200).send([]);
+      return;
+    }
+    const users = await userRepository.get({ ids: usersIds });
+    reply.code(200).send(this._formatOnlineUser(users));
+  };
+
   private _formatOnlineUser = (users: User[]): OnlineUser[] => {
     const onlineUsers: OnlineUser[] = [];
 
