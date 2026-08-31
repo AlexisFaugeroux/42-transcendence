@@ -31,7 +31,7 @@ export function ConversationRow({ conversation, meId }: ConversationRowProps): J
     online: true,
   };
 
-  const unread = me.unreadCount === 0;
+  const unread = me.unreadCount;
   return (
     <NavLink
       to={`/messages/${id}`}
@@ -56,7 +56,7 @@ export function ConversationRow({ conversation, meId }: ConversationRowProps): J
               {lastMessage?.content}
             </>
           </span>
-          {unread ? <span className={styles.badge}>{me.unreadCount}</span> : null}
+          {unread > 0 ? <span className={styles.badge}>{unread}</span> : null}
         </span>
       </span>
     </NavLink>

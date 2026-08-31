@@ -151,8 +151,9 @@ class ChatRepository {
             unreadCount: { increment: 1 },
           },
           where: {
-            NOT: {
-              userId: input.authorId,
+            conversationId: input.conversationId,
+            userId: {
+              not: input.authorId,
             },
           },
         });

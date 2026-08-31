@@ -7,7 +7,6 @@ import { Conversation } from './Conversation';
 import { ConversationList } from './ConversationList';
 import styles from './Messages.module.scss';
 import { ThreadEmpty } from './ThreadEmpty';
-import { Button } from '@transcendence/ui';
 
 export function Messages(): JSX.Element {
   const me = useAuthUser();

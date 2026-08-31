@@ -15,18 +15,55 @@ export function MessageListener(): null {
       if (event.event !== 'message') return;
       const newMessage = event.data;
       const conversations : Conversation[] | undefined = queryClient.getQueryData(['conversations', user.id]);
-      const conversationIsAlreadyListed = conversations?.find((conversation) => conversation.id === newMessage.conversationId) ?? null;
-      if (!conversationIsAlreadyListed){
+      const conversationIsAlreadyListed = conversations?.find((conversation) => conversation.id === newMessage.conversationId);
+      queryClient.setQueryData<Message[]>(
+        ['messages', newMessage.conversationId, user.id],
+        (current) => [...(current ?? []), newMessage],
+      );
+      if (conversationIsAlreadyListed === undefined ){
         void queryClient.refetchQueries({
           queryKey: ['conversations', user.id],
           exact: true,
           type: 'active',
         });
       }
-      queryClient.setQueryData<Message[]>(
-        ['messages', newMessage.conversationId, user.id],
-        (current) => [...(current ?? []), newMessage],
-      );
+      else {
+        const isReceiver = newMessage.toId === user.id;
+        queryClient.setQueryData<Conversation[]>(
+          ['conversations', user.id],
+          (currentConversations) => {
+            if (!currentConversations) return currentConversations;
+          
+            return currentConversations.map((conversation) => {
+              if (conversation.id !== newMessage.conversationId) {
+                return conversation;
+              }
+              return {
+                ...conversation,
+                lastMessage: {
+                  authorId: newMessage.authorId,
+                  content: newMessage.content,
+                  createdAt: newMessage.createdAt,
+                  toId: newMessage.toId,
+                },
+                lastMessageAt: newMessage.createdAt,
+                participants: conversation.participants.map(
+                  (participant) => {
+                    const isCurrentUser = participant.id === user.id;
+                    if (!isCurrentUser || !isReceiver) {
+                      return participant;
+                    }
+                    return {
+                      ...participant,
+                      unreadCount: participant.unreadCount + 1,
+                    };
+                  },
+                ),
+              };
+            });
+          },
+        );
+      }
     };
     return subscribe(handler);
   }, [subscribe, queryClient, user.id]);
