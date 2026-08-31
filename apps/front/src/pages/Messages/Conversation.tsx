@@ -7,6 +7,7 @@ import { markAsRead, sendMessage } from '../../api/chat/chat';
 import type { Conversation, NewMessage } from '../../types/chat';
 import style from './Conversation.module.scss';
 import { MessageList } from './MessageList';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ConversationProp {
   conversation: Conversation;
@@ -18,7 +19,7 @@ interface MessageContent {
 
 export function Conversation({ conversation }: ConversationProp): JSX.Element {
   const { t } = useTranslation();
-
+  const queryClient = useQueryClient();
   const [form] = Form.useForm<MessageContent>();
   const user = useAuthUser();
   const toParticipant =
@@ -41,6 +42,25 @@ export function Conversation({ conversation }: ConversationProp): JSX.Element {
     mutationFn: async (conversation: string) => {
       await markAsRead(conversation);
     },
+    onSuccess: (_, conversationId) => {
+    queryClient.setQueryData<Conversation[]>(
+      ['conversations', user.id],
+      (current) =>
+        current?.map((conversation) =>
+          conversation.id !== conversationId
+            ? conversation
+            : {
+                ...conversation,
+                participants: conversation.participants.map(
+                  (participant) =>
+                    participant.id === user.id
+                      ? { ...participant, unreadCount: 0 }
+                      : participant,
+                ),
+              },
+        ),
+    );
+  },
   });
 
   useEffect(() => {
