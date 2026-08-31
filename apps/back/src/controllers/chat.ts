@@ -8,11 +8,9 @@ import { websocketController } from './websocket';
 
 interface CreateChatRequest extends RouteGenericInterface {
   Body: {
-    messageInput: {
-      authorId: string;
-      toId: string;
-      content: string;
-    };
+    authorId: string;
+    toId: string;
+    content: string;
   };
   Reply: Conversation;
 }
@@ -41,14 +39,15 @@ class ChatController {
     reply: FastifyReply<CreateChatRequest>,
   ) => {
     const userId = req.authUser.id;
-    const { messageInput } = req.body;
+    const { authorId, toId, content } = req.body;
 
-    if (messageInput.authorId !== userId)
-      throw new UnauthorizedError('Unauthorized to send this message');
+    if (authorId !== userId) throw new UnauthorizedError('Unauthorized to send this message');
 
-    const create = await chatRepository.createConversation(userId, messageInput.toId);
+    const create = await chatRepository.createConversation(userId, toId);
     const messageSent = await chatRepository.createMessage({
-      ...messageInput,
+      authorId,
+      toId,
+      content,
       conversationId: create.id,
     });
     await websocketController.sendMessage(messageSent);

@@ -86,5 +86,12 @@ export function userRoutes(app: FastifyInstance) {
     userController.listFollowingById,
   );
 
+  app.get(
+    '/listFollowers',
+    {
+      preHandler: app.authenticate,
+    },
+    userController.listFollowersById,
+  );
   app.delete('/delete/avatar', { preHandler: app.authenticate }, userController.deleteAvatar);
 }

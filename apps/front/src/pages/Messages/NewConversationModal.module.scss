@@ -1,0 +1,87 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 12px;
+
+  border-bottom: 1px solid var(--line-faint);
+  border-left: 2px solid transparent;
+
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+
+  &:hover {
+    background: color-mix(
+      in srgb,
+      var(--color-orange) 7%,
+      transparent
+    );
+    border-left-color: var(--color-orange);
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  p {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+
+    color: var(--fg1);
+    font-family: var(--font-display);
+    font-size: var(--fs-13);
+    font-weight: 300;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.ant-btn) {
+    flex-shrink: 0;
+    height: 28px;
+    padding: 0 10px;
+
+    background: transparent;
+    border: 1px solid
+      color-mix(in srgb, var(--color-orange) 60%, transparent);
+    border-radius: var(--radius-2);
+    box-shadow: none;
+
+    color: var(--color-orange);
+    font-size: var(--fs-11);
+  }
+
+  :global(.ant-btn:hover) {
+    background: color-mix(
+      in srgb,
+      var(--color-orange) 12%,
+      transparent
+    );
+    border-color: var(--color-orange);
+    color: var(--color-orange);
+  }
+}
+
+.openConvTitle {
+  margin-bottom: 16px;
+  padding: 9px 12px;
+
+  background: color-mix(
+    in srgb,
+    var(--color-orange) 7%,
+    var(--bg-panel-2)
+  );
+  border-left: 2px solid var(--color-orange);
+  border-radius: var(--radius-1);
+
+  color: var(--fg1);
+  font-family: var(--font-display);
+  font-size: var(--fs-14);
+  font-weight: 400;
+  line-height: 1.4;
+}

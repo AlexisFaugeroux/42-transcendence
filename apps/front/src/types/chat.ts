@@ -9,6 +9,8 @@ export interface Message {
 
 export type NewMessage = Omit<Message, 'id' | 'createdAt'>;
 
+export type FirstMessage = Omit<NewMessage, 'conversationId'>;
+
 export interface Conversation {
   id: string;
   lastMessageAt: string;

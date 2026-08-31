@@ -1,9 +1,9 @@
 import type { JSX } from 'react';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
-import type { OnlineUser } from './home.data';
+import type { User } from '../../types/user'; 
 import styles from './UserRows.module.scss';
 
-export function LiveUserRow({ user }: { user: OnlineUser }): JSX.Element {
+export function LiveUserRow({ user }: { user: User }): JSX.Element {
   return (
     <div className={styles.row}>
       <StatusAvatar name={user.name} size={24} status="live" />
@@ -16,7 +16,7 @@ export function LiveUserRow({ user }: { user: OnlineUser }): JSX.Element {
   );
 }
 
-export function OnlineUserRow({ user }: { user: OnlineUser }): JSX.Element {
+export function OnlineUserRow({ user }: { user: User }): JSX.Element {
   return (
     <div className={styles.row}>
       <StatusAvatar name={user.name} size={24} status={user.status} />

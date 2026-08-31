@@ -277,7 +277,6 @@ class UserRepository {
         },
         where: { id: userId },
       });
-
       return user.followedBy.map((follower) => follower.id);
     } catch (error: unknown) {
       throw mapError(error, 'User');
