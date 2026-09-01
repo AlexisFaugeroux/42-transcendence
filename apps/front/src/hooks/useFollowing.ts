@@ -4,9 +4,8 @@ import { getFollowing } from '../api/onlineFollowing';
 
 export function useFollowing() {
   const user = useAuthUser();
-  const { data, isLoading } = useQuery({
+  return useQuery({
     queryFn: () => getFollowing(),
     queryKey: ['following', user.id],
   });
-  return { following: data ?? null, isLoading };
 }

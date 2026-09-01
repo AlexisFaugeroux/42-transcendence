@@ -1,4 +1,4 @@
-export type PresenceStatus = 'online' | 'offline';
+export type PresenceStatus = 'online' | 'offline' | 'live';
 
 export interface User {
   id: string;

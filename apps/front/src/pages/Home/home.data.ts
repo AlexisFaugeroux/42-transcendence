@@ -1,5 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
+import type { User } from '../../types/user';
 
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
@@ -61,12 +62,10 @@ export interface SavedSession {
   duration: string;
 }
 
-// Placeholder rows until the sessions endpoint lands: titles, keys and relative
-// times are sample content, not UI copy, so they are not translated.
-
 // Same as SAVED_SESSIONS: sample presence rows, replaced by the social endpoint.
-export const ONLINE: OnlineUser[] = [
+export const ONLINE: User[] = [
   {
+    id: 'xx',
     activity: 'Recording vocals',
     handle: '@maya.o',
     listeners: 12,
@@ -74,6 +73,7 @@ export const ONLINE: OnlineUser[] = [
     status: 'live',
   },
   {
+    id: 'xx',
     activity: 'Mixing — Side B',
     handle: '@theo',
     listeners: 0,
@@ -81,6 +81,7 @@ export const ONLINE: OnlineUser[] = [
     status: 'online',
   },
   {
+    id: 'xx',
     activity: 'Producing — 92 BPM',
     handle: '@anouk',
     listeners: 0,
@@ -89,6 +90,7 @@ export const ONLINE: OnlineUser[] = [
   },
   {
     activity: 'Streaming a beat set',
+    id: 'xx',
     handle: '@idris',
     listeners: 47,
     name: 'Idris Khan',
@@ -98,11 +100,13 @@ export const ONLINE: OnlineUser[] = [
     activity: 'Browsing samples',
     handle: '@rosa',
     listeners: 0,
+    id: 'xx',
     name: 'Rosa Petrov',
-    status: 'idle',
+    status: 'online',
   },
   {
     activity: 'Mastering single',
+    id: 'xx',
     handle: '@junpark',
     listeners: 0,
     name: 'Jun Park',
@@ -113,10 +117,12 @@ export const ONLINE: OnlineUser[] = [
     handle: '@cleo.b',
     listeners: 8,
     name: 'Cleo Banner',
+    id: 'xx',
     status: 'live',
   },
   {
     activity: 'Playlist: late night',
+    id: 'xx',
     handle: '@samwest',
     listeners: 0,
     name: 'Sam West',
