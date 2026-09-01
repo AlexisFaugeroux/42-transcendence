@@ -1,12 +1,11 @@
-import { listAllFollowers } from "../api/user";
-import { useAuthUser } from "@transcendence/auth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
+import { useAuthUser } from '@transcendence/auth';
+import { listAllFollowers } from '../api/user';
 
 export function useFollowers() {
   const user = useAuthUser();
-  const { data, isLoading } = useQuery({
+  return useQuery({
     queryFn: () => listAllFollowers(),
     queryKey: ['followers', user.id],
   });
-  return { followers: data ?? null, isLoading };
 }

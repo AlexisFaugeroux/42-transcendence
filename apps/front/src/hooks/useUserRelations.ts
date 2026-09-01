@@ -1,16 +1,13 @@
-import { useFollowers } from "./useFollowers";
-import { useFollowing } from "./useFollowing";
+import { useFollowers } from './useFollowers';
+import { useFollowing } from './useFollowing';
 
-export function useUserRelation() {
-  const { following } = useFollowing();
-  const { followers } = useFollowers();
+export function useUserRelations() {
+  const { data: following, isLoading: isLoadingFollowings } = useFollowing();
+  const { data: followers, isLoading: isLoadingFollowers } = useFollowers();
 
-  const relations = [
-    ...(followers ?? []),
-    ...(following ?? []),
-  ];
+  const relations = [...(followers ?? []), ...(following ?? [])];
 
-  return [...new Map(
-    relations.map((user) => [user.id, user]),
-  ).values()];
+  const users = [...new Map(relations.map((user) => [user.id, user])).values()];
+
+  return { users, isLoading: isLoadingFollowers || isLoadingFollowings };
 }

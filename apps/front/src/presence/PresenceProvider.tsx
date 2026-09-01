@@ -5,8 +5,8 @@ import { createContext } from 'react';
 import { useState } from 'react';
 import { useFollowing } from '../hooks/useFollowing';
 import type { SocketEvent } from '../types/event';
-import { useSocket } from '../websocket/WebSocketProvider';
 import type { User } from '../types/user';
+import { useSocket } from '../websocket/WebSocketProvider';
 
 interface PresenceData {
   count: number;
@@ -17,7 +17,7 @@ const presenceContext = createContext<PresenceData | null>(null);
 
 export function PresenceProvider({ children }: { children: ReactNode }): JSX.Element {
   const { subscribe } = useSocket();
-  const { following, isLoading } = useFollowing();
+  const { data: following, isLoading } = useFollowing();
   const [followingConnected, setFollowingConnected] = useState<Set<string>>(new Set<string>());
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function PresenceProvider({ children }: { children: ReactNode }): JSX.Ele
     return subscribe(handler);
   }, [subscribe, isLoading]);
 
-  if (!following || isLoading) {
+  if (!following) {
     return (
       <presenceContext.Provider value={{ count: 0, onlineUsers: [] }}>
         {children}

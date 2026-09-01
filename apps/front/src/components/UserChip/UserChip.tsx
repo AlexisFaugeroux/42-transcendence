@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import type { PresenceStatus } from '../../types/presence';
+import type { PresenceStatus } from '../../types/user';
 import { StatusAvatar } from '../StatusAvatar/StatusAvatar';
 import styles from './UserChip.module.scss';
 

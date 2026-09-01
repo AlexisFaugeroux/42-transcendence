@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { Form, Input } from '@transcendence/ui';
@@ -7,7 +8,6 @@ import { markAsRead, sendMessage } from '../../api/chat/chat';
 import type { Conversation, NewMessage } from '../../types/chat';
 import style from './Conversation.module.scss';
 import { MessageList } from './MessageList';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface ConversationProp {
   conversation: Conversation;
@@ -43,24 +43,19 @@ export function Conversation({ conversation }: ConversationProp): JSX.Element {
       await markAsRead(conversation);
     },
     onSuccess: (_, conversationId) => {
-    queryClient.setQueryData<Conversation[]>(
-      ['conversations', user.id],
-      (current) =>
+      queryClient.setQueryData<Conversation[]>(['conversations', user.id], (current) =>
         current?.map((conversation) =>
           conversation.id !== conversationId
             ? conversation
             : {
                 ...conversation,
-                participants: conversation.participants.map(
-                  (participant) =>
-                    participant.id === user.id
-                      ? { ...participant, unreadCount: 0 }
-                      : participant,
+                participants: conversation.participants.map((participant) =>
+                  participant.id === user.id ? { ...participant, unreadCount: 0 } : participant,
                 ),
               },
         ),
-    );
-  },
+      );
+    },
   });
 
   useEffect(() => {

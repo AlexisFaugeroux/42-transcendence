@@ -14,11 +14,7 @@
     border-color 120ms ease;
 
   &:hover {
-    background: color-mix(
-      in srgb,
-      var(--color-orange) 7%,
-      transparent
-    );
+    background: color-mix(in srgb, var(--color-orange) 7%, transparent);
     border-left-color: var(--color-orange);
   }
 
@@ -47,8 +43,7 @@
     padding: 0 10px;
 
     background: transparent;
-    border: 1px solid
-      color-mix(in srgb, var(--color-orange) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-orange) 60%, transparent);
     border-radius: var(--radius-2);
     box-shadow: none;
 
@@ -57,11 +52,7 @@
   }
 
   :global(.ant-btn:hover) {
-    background: color-mix(
-      in srgb,
-      var(--color-orange) 12%,
-      transparent
-    );
+    background: color-mix(in srgb, var(--color-orange) 12%, transparent);
     border-color: var(--color-orange);
     color: var(--color-orange);
   }
@@ -71,11 +62,7 @@
   margin-bottom: 16px;
   padding: 9px 12px;
 
-  background: color-mix(
-    in srgb,
-    var(--color-orange) 7%,
-    var(--bg-panel-2)
-  );
+  background: color-mix(in srgb, var(--color-orange) 7%, var(--bg-panel-2));
   border-left: 2px solid var(--color-orange);
   border-radius: var(--radius-1);
 

@@ -22,7 +22,7 @@
     "@transcendence/i18n": "workspace:*",
     "@transcendence/permissions": "workspace:*",
     "@transcendence/ui": "workspace:*",
-    "antd": "6.4.4",
+    "antd": "6.6.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-router-dom": "7.17.0"

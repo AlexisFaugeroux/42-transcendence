@@ -1,6 +1,6 @@
 import { Avatar, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
-import type { PresenceStatus } from '../../types/presence';
+import type { PresenceStatus } from '../../types/user';
 import styles from './StatusAvatar.module.scss';
 
 const STATUS_COLOR: Record<PresenceStatus, string> = {

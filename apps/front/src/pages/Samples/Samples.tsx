@@ -104,11 +104,11 @@ export function Samples(): JSX.Element {
     queryKey: ['audio-storage', user.id],
   });
 
-  const samples = samplesQuery.data?.items ?? [];
   const total = samplesQuery.data?.total ?? 0;
   const storage = storageQuery.data;
 
   const filtered = useMemo(() => {
+    const samples = samplesQuery.data?.items ?? [];
     return samples
       .filter(
         (sample) =>
@@ -116,7 +116,7 @@ export function Samples(): JSX.Element {
       )
       .filter((sample) => !kinds.length || (sample.kind !== null && kinds.includes(sample.kind)))
       .sort(SAMPLE_COMPARATORS[sort]);
-  }, [samples, families, kinds, sort]);
+  }, [samplesQuery.data?.items, families, kinds, sort]);
 
   const invalidateLibrary = async (): Promise<void> => {
     await Promise.all([
