@@ -6,15 +6,16 @@ Shared contract for list endpoints that return pages of results.
 
 | Param   | Type   | Default | Notes                                       |
 | ------- | ------ | ------- | ------------------------------------------- |
-| `page`  | string | `1`     | 1-based. Invalid → 400                      |
-| `limit` | string | `20`    | Max `100`. Invalid / over max → 400         |
-| `q`     | string | None    | Optional search. Trimmed; empty = no filter |
+| `page`  | string | -       | 1-based. Invalid → 400                      |
+| `limit` | string | -       | Max `100`. Invalid / over max → 400         |
+| `q`     | string | -       | Optional search. Trimmed; empty = no filter |
 
 Parsed by `parsePagination` in `apps/back/src/utils/pagination.ts`.
 Constants: `PAGINATION_DEFAULT_LIMIT`, `PAGINATION_MAX_LIMIT` in `apps/back/src/constants.ts`.
 
-Internally the helper returns `{ page, limit, skip, take }` with
-`skip = (page - 1) * limit` and `take = limit` for Prisma.
+**No `page` and no `limit`** → full list (no `skip`/`take` in Prisma). Response still uses `{ items, total, page: 1, limit: total }`.
+
+**Either param present** → paginated. Missing one uses default (`page` → 1, `limit` → 20).
 
 ## Response shape
 
@@ -55,3 +56,5 @@ Case-insensitive `contains` filter. `total` counts matches, not the full list.
 antd `Pagination` via `@transcendence/ui`. Page size fixed at 20 (`showSizeChanger={false}`).
 React Query `queryKey` includes `page`, `limit`, and `q` (debounced ~300 ms on search inputs).
 Reset to page 1 when `q` changes.
+
+Non-paginated clients (ex: studio sample browser) omit `page`/`limit` and read `items`.

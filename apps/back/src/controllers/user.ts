@@ -15,8 +15,8 @@ import { sampleStorageService } from '../services/audio/sampleStorage';
 import { trackStorageService } from '../services/audio/trackStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
-import { parsePagination } from '../utils/pagination';
 import { hashPassword, verifyPassword } from '../utils/password';
+import { parsePagination, toPaginatedResponse } from '../utils/pagination';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -108,10 +108,12 @@ class UserController {
     req: FastifyRequest<ListProducersRoute>,
     reply: FastifyReply<ListProducersRoute>,
   ): Promise<void> => {
-    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const pagination = parsePagination(req.query.page, req.query.limit);
+    const skip = pagination.unpaginated ? undefined : pagination.skip;
+    const take = pagination.unpaginated ? undefined : pagination.take;
     const { items, total } = await userRepository.listPublic(skip, take, req.query.q);
 
-    reply.code(200).send({ items, total, page, limit });
+    reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
   public getProfile = async (
@@ -126,28 +128,32 @@ class UserController {
     req: FastifyRequest<ListFollowRoute>,
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
-    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const pagination = parsePagination(req.query.page, req.query.limit);
+    const skip = pagination.unpaginated ? undefined : pagination.skip;
+    const take = pagination.unpaginated ? undefined : pagination.take;
     const { items, total } = await userRepository.listFollowers(
       req.params.handle,
       skip,
       take,
       req.query.q,
     );
-    reply.code(200).send({ items, total, page, limit });
+    reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
   public listFollowing = async (
     req: FastifyRequest<ListFollowRoute>,
     reply: FastifyReply<ListFollowRoute>,
   ): Promise<void> => {
-    const { page, limit, skip, take } = parsePagination(req.query.page, req.query.limit);
+    const pagination = parsePagination(req.query.page, req.query.limit);
+    const skip = pagination.unpaginated ? undefined : pagination.skip;
+    const take = pagination.unpaginated ? undefined : pagination.take;
     const { items, total } = await userRepository.listFollowing(
       req.params.handle,
       skip,
       take,
       req.query.q,
     );
-    reply.code(200).send({ items, total, page, limit });
+    reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
   public follow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
