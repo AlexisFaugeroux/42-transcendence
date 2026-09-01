@@ -15,8 +15,8 @@ import { userRepository } from '../repositories/user';
 import { sampleStorageService } from '../services/audio/sampleStorage';
 import { msnpManager } from '../services/msnp';
 import { type WavInfo, wavManager } from '../services/wav';
-import { parsePagination } from '../utils/pagination';
 import { parseUploadSampleFields } from '../utils/validation';
+import { parsePagination, toPaginatedResponse } from '../utils/pagination';
 
 interface GetSamplesRoute extends RouteGenericInterface {
   Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
@@ -59,11 +59,13 @@ class SampleFileController {
     const ownerIds = [platformOwnerID, userOwnerID];
 
     const { page: pageRaw, limit: limitRaw, q, ...filters } = req.query;
-    const { page, limit, skip, take } = parsePagination(pageRaw, limitRaw);
+    const pagination = parsePagination(pageRaw, limitRaw);
+    const skip = pagination.unpaginated ? undefined : pagination.skip;
+    const take = pagination.unpaginated ? undefined : pagination.take;
 
     const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take, q);
 
-    reply.code(200).send({ items, total, page, limit });
+    reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
   public storage = async (

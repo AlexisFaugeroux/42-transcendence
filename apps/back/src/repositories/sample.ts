@@ -52,8 +52,8 @@ class SampleRepository {
 
   public async get(
     input: GetSampleInput,
-    skip: number,
-    take: number,
+    skip?: number,
+    take?: number,
     q?: string,
   ): Promise<{ items: Sample[]; total: number }> {
     const filters = this._buildFilters(input);
@@ -69,8 +69,7 @@ class SampleRepository {
     const [samples, total] = await Promise.all([
       this.prisma.sample.findMany({
         where: whereInput,
-        skip,
-        take,
+        ...(take !== undefined ? { skip, take } : {}),
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.sample.count({

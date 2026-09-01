@@ -114,8 +114,8 @@ class UserRepository {
   }
 
   public async listPublic(
-    skip: number,
-    take: number,
+    skip?: number,
+    take?: number,
     q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
@@ -127,8 +127,7 @@ class UserRepository {
           orderBy: {
             artistName: 'asc',
           },
-          skip,
-          take,
+          ...(take !== undefined ? { skip, take } : {}),
         }),
         this.prisma.user.count({ where }),
       ]);
@@ -179,8 +178,8 @@ class UserRepository {
 
   public async listFollowers(
     handle: string,
-    skip: number,
-    take: number,
+    skip?: number,
+    take?: number,
     q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
@@ -190,14 +189,13 @@ class UserRepository {
         where: { handle },
         include: {
           followedBy: {
-            where: where,
+            where,
             orderBy: { artistName: 'asc' },
-            skip,
-            take,
+            ...(take !== undefined ? { skip, take } : {}),
           },
           _count: {
             select: {
-              followedBy: where ?? true,
+              followedBy: where ? { where } : true,
             },
           },
         },
@@ -214,8 +212,8 @@ class UserRepository {
 
   public async listFollowing(
     handle: string,
-    skip: number,
-    take: number,
+    skip?: number,
+    take?: number,
     q?: string,
   ): Promise<{ items: PublicProducer[]; total: number }> {
     try {
@@ -225,16 +223,15 @@ class UserRepository {
         where: { handle },
         include: {
           following: {
-            where: where,
+            where,
             orderBy: {
               artistName: 'asc',
             },
-            skip,
-            take,
+            ...(take !== undefined ? { skip, take } : {}),
           },
           _count: {
             select: {
-              following: where ? { where: where } : true,
+              following: where ? { where } : true,
             },
           },
         },

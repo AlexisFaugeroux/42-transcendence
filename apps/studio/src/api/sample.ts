@@ -11,8 +11,6 @@ interface PaginatedSamples {
 export async function getlistSample(): Promise<Sample[]> {
   const query = new URLSearchParams({
     visibilities: 'PUBLIC',
-    page: '1',
-    limit: '1000',
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
@@ -25,8 +23,6 @@ export async function getlistSample(): Promise<Sample[]> {
 export async function getSampleById(id: string): Promise<Sample> {
   const query = new URLSearchParams({
     ids: id,
-    page: '1',
-    limit: '1',
   });
 
   const res = await apiFetch(`/api/samples/get?${query.toString()}`);
