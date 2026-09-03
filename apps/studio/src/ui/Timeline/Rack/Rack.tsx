@@ -122,7 +122,6 @@ export function Rack({ track }: RackProps): JSX.Element {
 
         <MsnPill label="M" active={isMute} onClick={handleMuteClick} color={theme.yellow} />
         <MsnPill label="S" active={isSolo} onClick={handleSoloClick} color={theme.red} />
-        {/* <MsnPill dot active={false} color={theme.orange} /> */}
         <Dropdown
           menu={{
             items: [
