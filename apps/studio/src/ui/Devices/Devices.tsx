@@ -41,7 +41,7 @@ export function Devices(): JSX.Element {
 
   return (
     <div className={styles.devicesRail}>
-      {editingAudioUnit && editingTrack && effects.length ? (
+      {editingAudioUnit && editingTrack ? (
         <>
           <InstrumentTile editingTrack={editingTrack} />
           <EffectChain audioUnit={editingAudioUnit} effects={effects} />

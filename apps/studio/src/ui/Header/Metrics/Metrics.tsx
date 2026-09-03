@@ -2,11 +2,20 @@ import { useTranslation } from '@transcendence/i18n';
 import { type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
 import styles from './Metrics.module.scss';
+import { PPQN } from '@opendaw/lib-dsp';
+import { useCurrentPosition } from '../../../hooks/useCurrentPosition';
 
 export function Metrics(): JSX.Element {
-  const { project } = useProject();
   const { t } = useTranslation();
-  const [bpm, setBpm] = useState(120);
+  const { project } = useProject();
+  const [bpm, setBpm] = useState(() => project.timelineBox.bpm.getValue());
+  const [nominator, setNominator] = useState(4);
+  const [denominator, setDenominator] = useState(4);
+  const position = useCurrentPosition(bpm);
+
+  const { bars, beats } = PPQN.toParts(position, nominator, denominator);
+  const bar = bars + 1; // 0 indexed by the SDK
+  const beat = beats + 1; // 0 indexed by the SDK
 
   useEffect(() => {
     const sub = project.timelineBox.bpm.catchupAndSubscribe((field) => {
@@ -18,6 +27,26 @@ export function Metrics(): JSX.Element {
     };
   }, [project.timelineBox.bpm]);
 
+  useEffect(() => {
+    const sub = project.timelineBox.signature.nominator.catchupAndSubscribe((obs) => {
+      setNominator(obs.getValue());
+    });
+
+    return () => {
+      sub.terminate();
+    };
+  }, [project.timelineBox.signature.nominator]);
+
+  useEffect(() => {
+    const sub = project.timelineBox.signature.denominator.catchupAndSubscribe((obs) => {
+      setDenominator(obs.getValue());
+    });
+
+    return () => {
+      sub.terminate();
+    };
+  }, [project.timelineBox.signature.denominator]);
+
   function handleBpmChange(newBpm: number) {
     project.editing.modify(() => {
       project.timelineBox.bpm.setValue(newBpm);
@@ -27,11 +56,11 @@ export function Metrics(): JSX.Element {
   return (
     <div className={styles.metricsContainer}>
       <div className={styles.metric}>
-        <span className={`${styles.metricValue} ${styles.primary}`}>12</span>
+        <span className={`${styles.metricValue} ${styles.primary}`}>{bar}</span>
         <span className={styles.metricLabel}>{t('studio.metrics.bar')}</span>
       </div>
       <div className={styles.metric}>
-        <span className={styles.metricValue}>12</span>
+        <span className={styles.metricValue}>{beat}</span>
         <span className={styles.metricLabel}>{t('studio.metrics.beat')}</span>
       </div>
       <div className={styles.metric}>
@@ -49,7 +78,7 @@ export function Metrics(): JSX.Element {
       </div>
       <div className={styles.metric}>
         <span className={styles.metricValue} style={{ fontSize: 13 }}>
-          4/4
+          {nominator}/{denominator}
         </span>
         <span className={styles.metricLabel}>{t('studio.metrics.meter')}</span>
       </div>
