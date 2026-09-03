@@ -15,8 +15,8 @@ import { sampleStorageService } from '../services/audio/sampleStorage';
 import { trackStorageService } from '../services/audio/trackStorage';
 import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
-import { hashPassword, verifyPassword } from '../utils/password';
 import { parsePagination, toPaginatedResponse } from '../utils/pagination';
+import { hashPassword, verifyPassword } from '../utils/password';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;

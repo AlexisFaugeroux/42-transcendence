@@ -17,8 +17,9 @@
     "db:seed": "tsx scripts/seedDb.dev.ts",
     "db:studio": "prisma studio --url $(cat .env | grep POSTGRES_URL= | cut -d= -f2- )",
     "dev": "tsx watch src/index.ts",
-    "fix": "prettier --write . && ESLINT_SORT=on eslint --fix .",
-    "start": "node build/index.js"
+    "fix": "prettier --write . && ESLINT_SORT=on eslint --fix . && pnpm run typecheck",
+    "start": "node build/index.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "prettier": "@transcendence/prettier-config",
   "dependencies": {
