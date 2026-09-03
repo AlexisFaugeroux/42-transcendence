@@ -1,3 +1,3 @@
-export * from "./roles.ts";
-export * from "./permissions.ts";
+export * from "./roles";
+export * from "./permissions";
 export * from "./can";

@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "check": "prettier --check . && pnpm -r run check",
-    "fix": "prettier --write . && pnpm -r run fix",
+    "check": "prettier --check . && pnpm -r --no-bail run check && pnpm run typecheck",
+    "fix": "prettier --write . && pnpm -r --no-bail run fix && pnpm run typecheck",
     "services:up": "docker compose up -d",
     "services:down": "docker compose --profile prod down",
     "services:logs": "docker compose logs -f",
     "services:kill": "docker compose --profile prod down -v --remove-orphans",
-    "prod": "sh scripts/gen-certs.sh && docker compose -f docker-compose.yaml --profile prod up -d --build"
+    "prod": "sh scripts/gen-certs.sh && docker compose -f docker-compose.yaml --profile prod up -d --build",
+    "typecheck": "pnpm -r --no-bail run typecheck"
   },
   "keywords": [],
   "author": "",

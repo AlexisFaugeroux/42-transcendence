@@ -1,4 +1,3 @@
-import type { Role as PrismaRole } from '@prisma/client';
 import type { Role } from '@transcendence/permissions';
 import type { PaginatedResponse } from './pagination';
 
@@ -16,7 +15,7 @@ export interface User {
   links?: { kind: string; url: string }[] | null;
   artistName: string;
   password: string;
-  role: Record<PrismaRole, Role>;
+  role: Role;
   ownerId: string;
 }
 

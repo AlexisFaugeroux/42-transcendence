@@ -15,8 +15,8 @@ import { userRepository } from '../repositories/user';
 import { sampleStorageService } from '../services/audio/sampleStorage';
 import { msnpManager } from '../services/msnp';
 import { type WavInfo, wavManager } from '../services/wav';
-import { parseUploadSampleFields } from '../utils/validation';
 import { parsePagination, toPaginatedResponse } from '../utils/pagination';
+import { parseUploadSampleFields } from '../utils/validation';
 
 interface GetSamplesRoute extends RouteGenericInterface {
   Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
