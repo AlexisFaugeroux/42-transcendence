@@ -17,6 +17,7 @@ transcendence/
     date/            shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   shared ESLint configuration
     i18n/            shared i18n provider & translations (en / fr / es)
+    permissions/     shared roles & permissions (Role, Permissions, can())
     prettier-config/ shared Prettier configuration
     ui/              shared UI components
   design/            UI mockups & design reference (READ-ONLY, not shipped)
@@ -43,6 +44,7 @@ transcendence/
 | `date`            | `@transcendence/date`            | `back`, `front`, `studio` | dayjs helpers on a fixed `Europe/Paris` timezone |
 | `eslint-config`   | `@transcendence/eslint-config`   | all apps                  | Shared ESLint rules                              |
 | `i18n`            | `@transcendence/i18n`            | `front`, `studio`         | i18next provider, `LanguageSelect`, en/fr/es     |
+| `permissions`     | `@transcendence/permissions`     | all apps                  | `Role`, `Permissions`, `can(role, perm)`         |
 | `prettier-config` | `@transcendence/prettier-config` | all apps                  | Shared Prettier config                           |
 | `ui`              | `@transcendence/ui`              | `front`, `studio`         | Shared UI components (antd + `Msn*` + `theme`)   |
 
@@ -54,6 +56,14 @@ the Vite apps compile the TypeScript themselves, the bundled Node backend cannot
 It exports `toAppTime`, `formatDate`, `formatISO` and `APP_TIMEZONE`. Pinning one
 timezone in one place is what keeps a timestamp rendered identically by the API
 and by both frontends — `repositories/*` call `formatISO` when mapping rows out.
+
+`permissions` holds the authorization vocabulary: `Role`
+(`ADMIN | ARTIST | MODERATOR | GUEST`), `Permissions` (`MANAGE_ACCOUNTS` so far) and
+`can(role, perm)` over a `ROLES_PERMISSIONS` record. Both are plain `as const`
+objects with a matching type alias, deliberately **not** TS enums — a `const enum`
+cannot be erased by the esbuild bundle the backend ships, and a runtime object is
+what lets the backend map its Prisma `Role` onto the same values. The Prisma enum
+and this package are kept in sync by hand; nothing calls `can()` yet.
 
 `i18n` wraps i18next + react-i18next and owns the three locale files
 (`src/locales/{en,fr,es}.json`). It ships an `I18nProvider` and a
@@ -87,11 +97,12 @@ build scripts (pnpm blocks them by default).
 
 Run from the repo root; `--filter` targets one package by its `name`.
 
-| Command                                        | What it does                     |
-| ---------------------------------------------- | -------------------------------- |
-| `pnpm install`                                 | Install all deps                 |
-| `pnpm --filter @transcendence/studio dev`      | Run `dev` in one app             |
-| `pnpm --filter @transcendence/back db:migrate` | Run any script in one app        |
-| `pnpm run check` / `pnpm run fix`              | Prettier + ESLint (report / fix) |
-| `pnpm services:up` / `services:down`           | Start / stop infra containers    |
-| `pnpm prod`                                    | Build and start the full stack   |
+| Command                                        | What it does                    |
+| ---------------------------------------------- | ------------------------------- |
+| `pnpm install`                                 | Install all deps                |
+| `pnpm --filter @transcendence/studio dev`      | Run `dev` in one app            |
+| `pnpm --filter @transcendence/back db:migrate` | Run any script in one app       |
+| `pnpm run check` / `pnpm run fix`              | Prettier + ESLint + typecheck   |
+| `pnpm run typecheck`                           | `tsc --noEmit` in every package |
+| `pnpm services:up` / `services:down`           | Start / stop infra containers   |
+| `pnpm prod`                                    | Build and start the full stack  |

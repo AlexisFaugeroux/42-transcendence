@@ -103,19 +103,35 @@ Each app references the shared config in its `package.json`:
 That single line is all it takes. Prettier will pick up the rules from the
 shared package automatically.
 
+**Only the three apps do this.** There is no Prettier config at the repo root and
+none in the shared packages, so Prettier resolves nothing for them and falls back
+to its **defaults** — double quotes, `printWidth: 80`, `proseWrap: "preserve"`.
+That is why `packages/ui/index.ts` and `packages/permissions/src/*.ts` are
+double-quoted while app code is single-quoted, and why `pnpm run fix` never
+reflows the prose in `docs/`: the `proseWrap: "always"` override only applies
+inside `apps/*`. Wrapping in `docs/` is a human habit (~80 columns), not something
+the formatter enforces — but tables and lists there _are_ reformatted. Adding
+`"prettier": "@transcendence/prettier-config"` to a shared package would pull it
+into the same style, at the cost of one large reformatting diff.
+
 ## Running Prettier from the terminal
 
 From the **root** of the monorepo:
 
-| Command          | What it does                                                             |
-| ---------------- | ------------------------------------------------------------------------ |
-| `pnpm run check` | Checks formatting (and linting) -- reports issues without changing files |
-| `pnpm run fix`   | Fixes formatting (and linting) -- rewrites files in place                |
+| Command          | What it does                                                                  |
+| ---------------- | ----------------------------------------------------------------------------- |
+| `pnpm run check` | Checks formatting, linting and types -- reports issues without changing files |
+| `pnpm run fix`   | Fixes formatting and linting -- rewrites files in place, then typechecks      |
 
 Under the hood, these commands run:
 
 - `prettier --check .` (or `prettier --write .` for fix)
-- `eslint .` (or `eslint --fix .` for fix)
+- `eslint .` (or `eslint --fix .` for fix), in every package via `pnpm -r --no-bail`
+- `pnpm run typecheck` (`tsc --noEmit`) at the end
+
+Two things these commands do **not** touch: dot-directories (Prettier does not
+traverse them, so `.claude/` is never formatted) and anything in
+`.prettierignore` (`pnpm-lock.yaml`, `design/`, generated Prisma output).
 
 You can also run Prettier alone if you only want to check formatting:
 

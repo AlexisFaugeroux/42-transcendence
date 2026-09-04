@@ -23,6 +23,7 @@ transcendence/
     date/            Shared date helpers (dayjs, fixed Europe/Paris timezone)
     eslint-config/   Shared ESLint rules (base + React configs)
     i18n/            Shared i18n provider & translations (fr / en / es)
+    permissions/     Shared roles & permissions (Role, Permissions, can())
     prettier-config/ Shared Prettier rules
     ui/              Shared UI components (@transcendence/ui)
   design/         UI mockups & design system reference (READ-ONLY, not shipped)
@@ -52,8 +53,9 @@ Packages reference each other with `workspace:*` and are scoped `@transcendence/
 | `pnpm --filter @transcendence/studio dev` | Dev server for the studio app   |
 | `pnpm --filter @transcendence/front dev`  | Dev server for the frontend     |
 | `pnpm --filter @transcendence/back dev`   | Dev server for the backend      |
-| `pnpm run check`                          | Prettier + ESLint (report only) |
-| `pnpm run fix`                            | Prettier + ESLint (auto-fix)    |
+| `pnpm run check`                          | Prettier + ESLint + typecheck   |
+| `pnpm run fix`                            | Prettier + ESLint fix, then tsc |
+| `pnpm run typecheck`                      | `tsc --noEmit` everywhere       |
 
 ## Code conventions
 
@@ -95,6 +97,9 @@ samples library, studio workspace.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **API shape:** RPC-style paths (`/get`, `/upload`, `/update?id=`) everywhere except
   `/api/users/:handle/*`. Eight prefixes, mapped in `docs/architecture/api.md`.
+- **Pagination:** list endpoints share one `page` / `limit` / `q` contract returning
+  `{ items, total, page, limit }`; omitting both paging params returns the full list.
+  See `docs/pagination.md`.
 - **Real-time:** a single WebSocket endpoint (`/api/ws`, `@fastify/websocket`),
   authenticated by the same session cookie as the REST API. Carries presence
   (which followed producers are online) and chat delivery, with a `{ event, data }`

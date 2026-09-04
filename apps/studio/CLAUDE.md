@@ -14,8 +14,9 @@ than a full-featured production tool.
    nginx guards with `auth_request`.
 3. **Transport controls** — play / stop, loop region, master VU meter, metrics.
 4. **Playback** — plays arranged clips through the openDAW audio engine with a moving playhead.
-5. **Effects rack** — per-audio-unit effect chain with 11 devices, an add-effect picker and a device
-   editor. See `ui/Devices/` and `docs/architecture/studio-devices.md`.
+5. **Effects rack** — per-audio-unit effect chain with 11 devices, an add-effect picker, a device
+   editor, and drag & drop from the browser's Devices tab to insert an effect at a position. See
+   `ui/Devices/` and `docs/architecture/studio-devices.md`.
 6. **Project persistence** — save / load / list / rename / archive / delete through `/api/project/*`
    (`api/project.ts`); `LeaveStudioModal` prompts to save on exit.
 7. **Export** — offline (faster-than-real-time) render via `hooks/useOfflineRender`, then upload as
@@ -53,9 +54,10 @@ studio/
 │   └── ui/
 │       ├── Timeline/  (Timeline, Grid, LoopRegion, Rack, constants)
 │       ├── Header/    (Transport, Meter, Metrics, ExportModal, LeaveStudioModal)
-│       ├── Browser/   (Samples)
-│       ├── Devices/   (Devices, DeviceEditor, AddEffectButton, deviceRegistry,
-│       │               effectFactories, one <Name>Device.tsx per effect, UnknownDevice)
+│       ├── Browser/   (Samples, Devices — the draggable effect list)
+│       ├── Devices/   (Devices, EffectChain, DeviceEditor, AddEffectButton,
+│       │               deviceRegistry, effectFactories, one <Name>Device.tsx per
+│       │               effect, UnknownDevice)
 │       ├── Editor/ · Footer/ · PanelFrame/
 │       └── components/ (MsnPeakMeter, MsnParamGroup, MsnParamKnob, MsnParamSelect,
 │                        MsnParamToggle, StudioIcon)

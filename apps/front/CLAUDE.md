@@ -59,6 +59,8 @@ relative URLs in both dev and prod — see `docs/infra.md`, including why `/trac
 ## Also relevant
 
 - `docs/architecture/api.md` — what every endpoint accepts and returns
+- `docs/pagination.md` — the `page` / `limit` / `q` contract and the query-key rules that follow
+  from it
 - `docs/i18n.md` — all user-facing copy goes through `@transcendence/i18n`
 - `docs/peaks.md` — the `.peaks` binary format `lib/peaks.ts` decodes
 - `design/README.md` (repo root) — the visual reference; a mockup, not code to import
