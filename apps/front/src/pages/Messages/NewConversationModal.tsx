@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
+import { useTranslation } from '@transcendence/i18n';
 import { Button, Form, Input, Modal, Spin } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +23,7 @@ interface MessageContent {
 export function NewConversationModal({ onClose, open }: NewSessionConvProps): JSX.Element {
   const me = useAuthUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [form] = Form.useForm<MessageContent>();
   const { users, isLoading } = useUserRelations();
   const [newChat, setNewChat] = useState(false);
@@ -91,12 +93,19 @@ export function NewConversationModal({ onClose, open }: NewSessionConvProps): JS
     >
       {newChat ? (
         <div>
-          <div className={style.openConvTitle}>Send the first message to {to?.handle}</div>
+          <div className={style.openConvTitle}>
+            {t('chat.newModal.firstMessage', { handle: to?.handle ?? '' })}
+          </div>
           <Form form={form} onFinish={sending}>
             <Form.Item name="content">
-              <Input size="large" placeholder="Your message..." autoFocus autoComplete="off" />
+              <Input
+                size="large"
+                placeholder={t('chat.composerPlaceholder')}
+                autoFocus
+                autoComplete="off"
+              />
             </Form.Item>
-            <Button htmlType="submit">Send</Button>
+            <Button htmlType="submit">{t('chat.newModal.send')}</Button>
           </Form>
         </div>
       ) : isLoading ? (
@@ -108,7 +117,7 @@ export function NewConversationModal({ onClose, open }: NewSessionConvProps): JS
             onChange={(event) => {
               setSearch(event.target.value);
             }}
-            placeholder="Search for a producer..."
+            placeholder={t('chat.newModal.searchPlaceholder')}
           />
           {filteredUser.map((user) => {
             return (
@@ -120,7 +129,7 @@ export function NewConversationModal({ onClose, open }: NewSessionConvProps): JS
                     setTo(user);
                   }}
                 >
-                  Open new chat
+                  {t('chat.newModal.open')}
                 </Button>
               </div>
             );

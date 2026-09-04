@@ -30,15 +30,14 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
   return (
     <Modal
       open={open}
-      title="Start a new session"
+      title={t('sessions.new.title')}
       width={560}
-      okText="Create & open"
+      okText={t('sessions.new.submit')}
+      cancelText={t('common.cancel')}
       onOk={openNewSession}
       onCancel={onClose}
     >
-      <p className={styles.lead}>
-        Pick the kind of session, then we&apos;ll set up the right workspace.
-      </p>
+      <p className={styles.lead}>{t('sessions.new.lead')}</p>
 
       <div className={styles.types}>
         {SESS_TYPES.map((type) => (
@@ -55,23 +54,23 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
             <span className={styles.typeHead}>
               <MsnIcon name={TYPE_ICON[type]} size="18px" /> {t(TYPE_LABEL[type])}
             </span>
-            <span className={styles.typeDesc}>{TYPE_DESCRIPTION[type]}</span>
+            <span className={styles.typeDesc}>{t(TYPE_DESCRIPTION[type])}</span>
           </button>
         ))}
       </div>
 
       <div className={styles.fields}>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>Title</span>
+          <span className={styles.fieldLabel}>{t('sessions.new.titleField')}</span>
           <Input
-            placeholder="Untitled session"
+            placeholder={t('sessions.new.titlePlaceholder')}
             onChange={(e) => {
               setName(e.target.value);
             }}
           />
         </label>
         <label className={styles.field}>
-          <span className={styles.fieldLabel}>BPM</span>
+          <span className={styles.fieldLabel}>{t('sessions.new.bpmField')}</span>
           <Input
             type="number"
             placeholder="120"

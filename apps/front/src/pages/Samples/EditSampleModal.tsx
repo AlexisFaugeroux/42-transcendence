@@ -4,11 +4,11 @@ import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { updateSample } from '../../api/samples/samples';
 import type { UpdateSampleFields } from '../../api/samples/types';
-import { MODES, VISIBILITIES } from '../../types/sample';
+import { VISIBILITIES } from '../../types/sample';
 import type { Family, Key, Kind, Mode, Sample } from '../../types/sample';
-import { MODE_LABEL, VISIBILITY_LABEL } from './constants';
+import { VISIBILITY_LABEL } from './constants';
 import styles from './EditSampleModal.module.scss';
-import { FAMILY_OPTIONS, KEY_OPTIONS, KIND_OPTIONS } from './helpers';
+import { FAMILY_OPTIONS, keyOptions, KIND_OPTIONS, modeOptions } from './helpers';
 
 interface EditSampleModalProps {
   target: Sample | null;
@@ -129,7 +129,7 @@ export function EditSampleModal({
               <Select
                 allowClear
                 placeholder="—"
-                options={KEY_OPTIONS}
+                options={keyOptions(t)}
                 value={draft.key}
                 onChange={(value: Key | undefined) => {
                   patch({ key: value ?? null });
@@ -141,7 +141,7 @@ export function EditSampleModal({
               <Select
                 allowClear
                 placeholder="—"
-                options={MODES.map((mode) => ({ label: t(MODE_LABEL[mode]), value: mode }))}
+                options={modeOptions(t)}
                 value={draft.mode}
                 onChange={(value: Mode | undefined) => {
                   patch({ mode: value ?? null });

@@ -1,14 +1,18 @@
 import { apiFetch } from '@transcendence/auth';
+import type { TFunction } from '@transcendence/i18n';
 import {
   FAMILIES,
   type Family,
   type Key,
   KEYS,
   type Kind,
+  type Mode,
+  MODES,
+  type NoteLetter,
   type Sample,
   USER_KINDS,
 } from '../../types/sample';
-import { FAMILY_COLOR, GROUP_BY_FAMILY } from './constants';
+import { FAMILY_COLOR, GROUP_BY_FAMILY, MODE_LABEL, NOTE_LABEL } from './constants';
 import type { FamilyGroup, Option } from './types';
 
 export function familyGroup(family: Family | null): FamilyGroup {
@@ -42,8 +46,14 @@ export function formatBytes(bytes: number, locale: string): string {
   return `${formatDecimal(mb, locale, 1)} MB`;
 }
 
-export function formatKey(key: Key): string {
-  return key.replace(/_key$/, '').replace('_sharp', '♯').replace('_flat', '♭');
+const ACCIDENTAL = { flat: '♭', sharp: '♯' };
+
+// 'C_sharp_key' → 'C♯' in English, 'Do♯' in French. The note name is translated
+// (fr/es name notes in solfège), the accidental symbol is universal.
+export function formatKey(key: Key, t: TFunction): string {
+  const [letter, accidental] = key.replace(/_key$/, '').split('_');
+
+  return `${t(NOTE_LABEL[letter as NoteLetter])}${accidental ? ACCIDENTAL[accidental as keyof typeof ACCIDENTAL] : ''}`;
 }
 
 export function formatKind(kind: Kind): string {
@@ -58,10 +68,11 @@ export const KIND_OPTIONS: Option<Kind>[] = USER_KINDS.map((kind) => ({
   label: formatKind(kind),
   value: kind,
 }));
-export const KEY_OPTIONS: Option<Key>[] = KEYS.map((key) => ({
-  label: formatKey(key),
-  value: key,
-}));
+// Translated, so these are built per render rather than frozen at module load.
+export const keyOptions = (t: TFunction): Option<Key>[] =>
+  KEYS.map((key) => ({ label: formatKey(key, t), value: key }));
+export const modeOptions = (t: TFunction): Option<Mode>[] =>
+  MODES.map((mode) => ({ label: t(MODE_LABEL[mode]), value: mode }));
 
 export async function downloadSample(sample: Sample): Promise<void> {
   const response = await apiFetch(`/samples/${encodeURI(sample.url)}`);

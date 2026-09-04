@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
-import { Trans, useTranslation } from '@transcendence/i18n';
+import { LanguageSelect, Trans, useTranslation } from '@transcendence/i18n';
 import {
   Button,
   CheckOutlined,
@@ -68,6 +68,9 @@ export default function Register(): JSX.Element {
       <header className={styles.header}>
         <MsnIcon name="msn" size="22px" color={theme.orange} />
         <MsnWordmark size={20} accent={theme.orange} />
+        <div className={styles.headerRight}>
+          <LanguageSelect />
+        </div>
       </header>
 
       <main className={styles.main}>

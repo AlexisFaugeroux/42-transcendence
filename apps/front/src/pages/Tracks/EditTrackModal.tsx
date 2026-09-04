@@ -2,11 +2,9 @@ import { useTranslation } from '@transcendence/i18n';
 import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { useUpdateTrack } from '../../hooks/useTracks';
-import { MODES } from '../../types/sample';
 import type { Key, Mode } from '../../types/sample';
 import type { Track, UpdateTrackInput } from '../../types/track';
-import { MODE_LABEL } from '../Samples/constants';
-import { KEY_OPTIONS } from '../Samples/helpers';
+import { keyOptions, modeOptions } from '../Samples/helpers';
 import styles from './EditTrackModal.module.scss';
 
 interface EditTrackModalProps {
@@ -145,7 +143,7 @@ export function EditTrackModal({
               <Select
                 allowClear
                 placeholder="—"
-                options={KEY_OPTIONS}
+                options={keyOptions(t)}
                 value={draft.key}
                 onChange={(value: Key | undefined) => {
                   patch({ key: value ?? null });
@@ -157,7 +155,7 @@ export function EditTrackModal({
               <Select
                 allowClear
                 placeholder="—"
-                options={MODES.map((mode) => ({ label: t(MODE_LABEL[mode]), value: mode }))}
+                options={modeOptions(t)}
                 value={draft.mode}
                 onChange={(value: Mode | undefined) => {
                   patch({ mode: value ?? null });
