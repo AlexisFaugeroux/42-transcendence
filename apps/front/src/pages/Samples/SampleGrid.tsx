@@ -1,9 +1,9 @@
-import { useTranslation } from '@transcendence/i18n';
+import { formatKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
 import type { Sample } from '../../types/sample';
-import { familyColor, formatBytes, formatDuration, formatKey } from './helpers';
+import { familyColor, formatBytes, formatDuration } from './helpers';
 import styles from './SampleGrid.module.scss';
 import { SampleWaveform } from './SampleWaveform';
 

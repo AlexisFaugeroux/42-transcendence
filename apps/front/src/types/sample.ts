@@ -1,26 +1,10 @@
-export type Key =
-  | 'A_key'
-  | 'A_sharp_key'
-  | 'B_flat_key'
-  | 'B_key'
-  | 'C_key'
-  | 'C_sharp_key'
-  | 'D_flat_key'
-  | 'D_key'
-  | 'D_sharp_key'
-  | 'E_flat_key'
-  | 'E_key'
-  | 'F_key'
-  | 'F_sharp_key'
-  | 'G_flat_key'
-  | 'G_key'
-  | 'G_sharp_key'
-  | 'A_flat_key';
+// Key and Mode live in @transcendence/i18n: they are the one part of the audio
+// domain we localise, and the studio needs them too. Re-exported here so this
+// file stays the single door to the sample domain types.
+import type { Key, Mode } from '@transcendence/i18n';
 
-/** The letter part of a `Key` ('C_sharp_key' → 'C'); localised, unlike Family/Kind. */
-export type NoteLetter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
-
-export type Mode = 'MAJOR' | 'MINOR';
+export type { Key, Mode };
+export { KEYS, MODES } from '@transcendence/i18n';
 
 export type Family =
   | 'KICK'
@@ -63,29 +47,7 @@ export interface Sample {
   createdAt: string;
 }
 
-export const KEYS: Key[] = [
-  'A_key',
-  'A_sharp_key',
-  'B_flat_key',
-  'B_key',
-  'C_key',
-  'C_sharp_key',
-  'D_flat_key',
-  'D_key',
-  'D_sharp_key',
-  'E_flat_key',
-  'E_key',
-  'F_key',
-  'F_sharp_key',
-  'G_flat_key',
-  'G_key',
-  'G_sharp_key',
-  'A_flat_key',
-];
-
 export const VISIBILITIES: Visibility[] = ['PRIVATE', 'SHARED', 'PUBLIC'];
-
-export const MODES: Mode[] = ['MAJOR', 'MINOR'];
 
 export const FAMILIES: Family[] = [
   'KICK',

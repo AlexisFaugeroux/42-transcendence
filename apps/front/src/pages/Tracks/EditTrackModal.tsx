@@ -1,10 +1,9 @@
-import { useTranslation } from '@transcendence/i18n';
+import { keyOptions, modeOptions, useTranslation } from '@transcendence/i18n';
 import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { useUpdateTrack } from '../../hooks/useTracks';
 import type { Key, Mode } from '../../types/sample';
 import type { Track, UpdateTrackInput } from '../../types/track';
-import { keyOptions, modeOptions } from '../Samples/helpers';
 import styles from './EditTrackModal.module.scss';
 
 interface EditTrackModalProps {

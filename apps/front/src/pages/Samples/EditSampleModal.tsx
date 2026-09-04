@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useTranslation } from '@transcendence/i18n';
+import { keyOptions, modeOptions, useTranslation } from '@transcendence/i18n';
 import { Input, InputNumber, Modal, Select } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { updateSample } from '../../api/samples/samples';
@@ -8,7 +8,7 @@ import { VISIBILITIES } from '../../types/sample';
 import type { Family, Key, Kind, Mode, Sample } from '../../types/sample';
 import { VISIBILITY_LABEL } from './constants';
 import styles from './EditSampleModal.module.scss';
-import { FAMILY_OPTIONS, keyOptions, KIND_OPTIONS, modeOptions } from './helpers';
+import { FAMILY_OPTIONS, KIND_OPTIONS } from './helpers';
 
 interface EditSampleModalProps {
   target: Sample | null;

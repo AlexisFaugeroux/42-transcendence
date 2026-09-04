@@ -6,6 +6,7 @@ import type {
   TrackBox,
   ValueEventCollectionBox,
 } from '@opendaw/studio-boxes';
+import type { Key } from '@transcendence/i18n';
 
 export interface BarInfo {
   startPpqn: ppqn;
@@ -41,7 +42,8 @@ export interface Clip {
 export interface Sample {
   name: string;
   bpm?: number;
-  samplekey?: string;
+  // Named `key` because that is what /api/samples/get returns.
+  key?: Key | null;
   url: string;
   id: string;
 }

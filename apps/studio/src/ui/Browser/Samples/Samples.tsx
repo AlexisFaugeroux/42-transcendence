@@ -1,4 +1,4 @@
-import { useTranslation } from '@transcendence/i18n';
+import { formatKey, useTranslation } from '@transcendence/i18n';
 import { ConfigProvider, Table, type TableColumnsType, theme } from '@transcendence/ui';
 import { type DragEvent, type JSX, useState } from 'react';
 import { useSamples } from '../../../hooks/useSamples';
@@ -30,8 +30,10 @@ export function Samples(): JSX.Element {
     },
     {
       align: 'right',
-      dataIndex: 'sampleKey',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      dataIndex: 'key',
+      render: (_, sample) => (sample.key ? formatKey(sample.key, t) : '—'),
+      // Sorted on the raw enum, so the order groups by note in every language.
+      sorter: (a, b) => (a.key ?? '').localeCompare(b.key ?? ''),
       title: t('studio.browser.table.key'),
     },
   ];

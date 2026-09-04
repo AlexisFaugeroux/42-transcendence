@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useTranslation } from '@transcendence/i18n';
+import { keyOptions, useTranslation } from '@transcendence/i18n';
 import {
   Button,
   CheckCircleOutlined,
@@ -18,7 +18,7 @@ import { uploadSample } from '../../api/samples/samples';
 import type { UploadSampleFields } from '../../api/samples/types';
 import { VISIBILITIES } from '../../types/sample';
 import { UPLOAD_STATUS_LABEL, VISIBILITY_LABEL } from './constants';
-import { FAMILY_OPTIONS, formatBytes, keyOptions, KIND_OPTIONS } from './helpers';
+import { FAMILY_OPTIONS, formatBytes, KIND_OPTIONS } from './helpers';
 import styles from './UploadModal.module.scss';
 
 type ItemStatus = 'queued' | 'uploading' | 'error';

@@ -720,7 +720,7 @@
     "devices": {
       "addEffect": "Add an effect",
       "bypass": "Bypass",
-      "enabled": "Enabled",
+      "enable": "Enable",
       "expand": "Expand",
       "instrument": "Instrument",
       "minimize": "Minimize",
@@ -728,7 +728,8 @@
       "moveRight": "Move right",
       "noEffect": "No effect in this track",
       "noTrackSelected": "No track selected",
-      "remove": "Remove"
+      "remove": "Remove",
+      "unknown": "Unsupported effect"
     },
     "footer": {
       "latency": "Latency",
@@ -766,6 +767,7 @@
       },
       "project": "Project",
       "redo": "Redo",
+      "save": "Save",
       "saved": "saved",
       "undo": "Undo",
       "unsaved": "unsaved"

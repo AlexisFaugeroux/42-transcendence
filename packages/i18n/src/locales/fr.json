@@ -720,7 +720,7 @@
     "devices": {
       "addEffect": "Ajouter un effet",
       "bypass": "Contourner",
-      "enabled": "Activé",
+      "enable": "Activer",
       "expand": "Déplier",
       "instrument": "Instrument",
       "minimize": "Replier",
@@ -728,7 +728,8 @@
       "moveRight": "Déplacer vers la droite",
       "noEffect": "Aucun effet dans cette piste",
       "noTrackSelected": "Aucune piste sélectionnée",
-      "remove": "Retirer"
+      "remove": "Retirer",
+      "unknown": "Effet non pris en charge"
     },
     "footer": {
       "latency": "Latence",
@@ -766,6 +767,7 @@
       },
       "project": "Projet",
       "redo": "Rétablir",
+      "save": "Enregistrer",
       "saved": "enregistré",
       "undo": "Annuler",
       "unsaved": "non enregistré"

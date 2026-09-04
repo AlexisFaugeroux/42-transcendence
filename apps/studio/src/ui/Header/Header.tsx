@@ -88,11 +88,10 @@ export function Header(): JSX.Element {
       <Separator />
 
       <div className={styles.titleBloc}>
-        {/* TODO: Make project name and project state dynamic */}
-        <span className={styles.projectPill}>Project</span>
+        <span className={styles.projectPill}>{t('studio.header.project')}</span>
         <span className={styles.projectTitle}>{meta.name}</span>
         <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
-          {saved ? '● saved' : '● unsaved'}
+          ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
         </span>
       </div>
       <Separator />
@@ -130,8 +129,7 @@ export function Header(): JSX.Element {
       <LanguageSelect compact />
 
       <Button onClick={onSave} loading={isPending}>
-        {' '}
-        Save{' '}
+        {t('studio.header.save')}
       </Button>
       <Button
         onClick={() => {

@@ -11,6 +11,16 @@ export { i18next, LOCALE_STORAGE_KEY } from './i18n';
 export { FALLBACK_LANGUAGE, LANGUAGE_OPTIONS, SUPPORTED_LANGUAGES, toLanguage } from './languages';
 export type { Language } from './languages';
 export { Trans, useTranslation } from 'react-i18next';
+export {
+  formatKey,
+  formatMode,
+  formatModeAbbr,
+  KEYS,
+  keyOptions,
+  MODES,
+  modeOptions,
+} from './music';
+export type { Key, Mode } from './music';
 // Helpers that translate outside a component take `t` as an argument (see
 // formatKey in apps/front), so they need its type without importing i18next.
 export type { TFunction } from 'i18next';

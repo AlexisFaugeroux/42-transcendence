@@ -95,7 +95,7 @@ export function DeviceEditor({ audioUnit, effect, entry, index }: DeviceEditorPr
               className={styles.dev__btn}
               style={{ color: isEnabled ? entry.accent : undefined }}
               type="button"
-              title="Bypass"
+              title={t(isEnabled ? 'studio.devices.bypass' : 'studio.devices.enable')}
               onClick={() => {
                 project.editing.modify(() => {
                   effect.enabledField.toggle();

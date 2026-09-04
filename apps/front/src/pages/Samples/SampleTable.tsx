@@ -1,4 +1,4 @@
-import { useTranslation } from '@transcendence/i18n';
+import { formatKey, formatModeAbbr, useTranslation } from '@transcendence/i18n';
 import {
   Button,
   DeleteOutlined,
@@ -12,8 +12,7 @@ import {
 import type { JSX, Key } from 'react';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
 import type { Sample } from '../../types/sample';
-import { MODE_ABBR } from './constants';
-import { familyColor, formatBytes, formatDuration, formatKey, formatKind } from './helpers';
+import { familyColor, formatBytes, formatDuration, formatKind } from './helpers';
 import styles from './SampleTable.module.scss';
 import { SampleWaveform } from './SampleWaveform';
 
@@ -97,7 +96,7 @@ export function SampleTable({
         <span className={styles.mono}>
           {row.key ? formatKey(row.key, t) : '—'}
           {row.key && row.mode ? (
-            <span className={styles.muted}> {t(MODE_ABBR[row.mode])}</span>
+            <span className={styles.muted}> {formatModeAbbr(row.mode, t)}</span>
           ) : null}
         </span>
       ),
