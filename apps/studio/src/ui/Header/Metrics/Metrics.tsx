@@ -55,15 +55,7 @@ export function Metrics(): JSX.Element {
 
   return (
     <div className={styles.metricsContainer}>
-      <div className={styles.metric}>
-        <span className={`${styles.metricValue} ${styles.primary}`}>{bar}</span>
-        <span className={styles.metricLabel}>{t('studio.metrics.bar')}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricValue}>{beat}</span>
-        <span className={styles.metricLabel}>{t('studio.metrics.beat')}</span>
-      </div>
-      <div className={styles.metric}>
+      <div className={`${styles.metric} ${styles.bpmMetric}`}>
         <input
           type="number"
           className={styles.bpmInput}
@@ -77,10 +69,13 @@ export function Metrics(): JSX.Element {
         <span className={styles.metricLabel}>{t('studio.metrics.bpm')}</span>
       </div>
       <div className={styles.metric}>
-        <span className={styles.metricValue} style={{ fontSize: 13 }}>
+        <span className={styles.metricValue}>{String(bar).padStart(3, '0')}</span>:
+        <span className={styles.metricValue}>{String(beat).padStart(2, '0')}</span>
+      </div>
+      <div className={styles.metric}>
+        <span className={styles.metricValue}>
           {nominator}/{denominator}
         </span>
-        <span className={styles.metricLabel}>{t('studio.metrics.meter')}</span>
       </div>
     </div>
   );

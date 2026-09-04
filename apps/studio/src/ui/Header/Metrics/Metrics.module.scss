@@ -4,8 +4,7 @@
 
   .metric {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     padding: 0 10px;
     line-height: 1;
 
@@ -36,6 +35,7 @@
       color: var(--color-orange);
       width: 3ch;
       text-align: right;
+      padding: 5px;
 
       -moz-appearance: textfield;
 
@@ -49,7 +49,6 @@
     .metricLabel {
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-top: 2px;
       font-family: var(--font-mono);
     }
   }
