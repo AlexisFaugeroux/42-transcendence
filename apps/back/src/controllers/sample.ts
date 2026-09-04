@@ -17,10 +17,11 @@ import { msnpManager } from '../services/msnp';
 import { type WavInfo, wavManager } from '../services/wav';
 import { parsePagination, toPaginatedResponse } from '../utils/pagination';
 import { parseUploadSampleFields } from '../utils/validation';
+import type { OwnerType } from '../generated/prisma/client';
 
 interface GetSamplesRoute extends RouteGenericInterface {
   Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
-  Reply: PaginatedResponse<Sample>;
+  Reply: PaginatedResponse<Sample & { ownerType: OwnerType }>;
 }
 
 interface UploadSampleRoute extends RouteGenericInterface {
