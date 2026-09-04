@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 interface MsnWordmarkProps {
   size: number;
@@ -6,22 +6,18 @@ interface MsnWordmarkProps {
   accent?: string;
 }
 
-export function MsnWordmark({
-  size,
-  color,
-  accent,
-}: MsnWordmarkProps): JSX.Element {
+export function MsnWordmark({ size, color, accent }: MsnWordmarkProps): JSX.Element {
   return (
     <span
       style={{
-        fontFamily: "var(--font-display)",
+        fontFamily: 'var(--font-display)',
         fontWeight: 400,
         fontSize: size,
         color,
         letterSpacing: -0.01,
         lineHeight: 1,
-        display: "inline-flex",
-        alignItems: "baseline",
+        display: 'inline-flex',
+        alignItems: 'baseline',
         gap: 0,
       }}
     >

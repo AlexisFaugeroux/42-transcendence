@@ -1,19 +1,20 @@
 {
   "name": "@transcendence/i18n",
   "version": "1.0.0",
+  "private": true,
   "description": "Shared i18n (i18next + react-i18next, en/fr/es)",
-  "main": "src/index.ts",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
+  "main": "src/index.ts",
   "files": [
     "src"
   ],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "private": true,
+  "prettier": "@transcendence/prettier-config",
   "dependencies": {
     "@transcendence/date": "workspace:*",
     "@transcendence/ui": "workspace:*",
@@ -22,12 +23,13 @@
     "i18next-browser-languagedetector": "8.2.1",
     "react-i18next": "17.0.11"
   },
+  "devDependencies": {
+    "@transcendence/prettier-config": "workspace:*",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
+  },
   "peerDependencies": {
     "react": "19.2.6",
     "react-dom": "19.2.6"
-  },
-  "devDependencies": {
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3"
   }
 }

@@ -1,5 +1,5 @@
-import { useCallback, useId, useRef } from "react";
-import styles from "./MsnKnob.module.scss";
+import { useCallback, useId, useRef } from 'react';
+import styles from './MsnKnob.module.scss';
 
 const PI_HALF = Math.PI / 2.0;
 const TAU = Math.PI * 2.0;
@@ -28,13 +28,7 @@ export const TinyDesign: Readonly<KnobDesign> = {
   indicatorWidth: 2.5,
 };
 
-function circleSegment(
-  cx: number,
-  cy: number,
-  radius: number,
-  a0: number,
-  a1: number,
-): string {
+function circleSegment(cx: number, cy: number, radius: number, a0: number, a1: number): string {
   const x0 = cx + Math.cos(a0) * radius;
   const y0 = cy + Math.sin(a0) * radius;
   const x1 = cx + Math.cos(a1) * radius;
@@ -113,10 +107,7 @@ export function MsnKnob({
     (e: React.PointerEvent) => {
       if (!dragRef.current || !onChange) return;
       const delta = (dragRef.current.startY - e.clientY) / 150;
-      const newValue = Math.max(
-        0,
-        Math.min(1, dragRef.current.startValue + delta),
-      );
+      const newValue = Math.max(0, Math.min(1, dragRef.current.startValue + delta));
       onChange(newValue);
     },
     [onChange],
@@ -166,12 +157,7 @@ export function MsnKnob({
         {/* Filled circle */}
         <circle r={radius * max} stroke="none" fill="currentColor" />
         {/* Rim */}
-        <circle
-          r={radius * max}
-          stroke={`url(#${rimId})`}
-          strokeOpacity={0.5}
-          fill="none"
-        />
+        <circle r={radius * max} stroke={`url(#${rimId})`} strokeOpacity={0.5} fill="none" />
         {/* Background track */}
         <path stroke="currentColor" strokeOpacity={1 / 3} d={trackPath} />
         {/* Value arc */}

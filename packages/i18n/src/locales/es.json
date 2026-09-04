@@ -108,16 +108,16 @@
     "title": "Siguiendo"
   },
   "header": {
+    "following": "Siguiendo",
     "home": "Inicio",
     "library": "Biblioteca",
     "logout": "Cerrar sesión",
     "logoutError": "Se produjo un error al cerrar la sesión",
     "notifications": "Notificaciones",
     "privacyTerms": "Privacidad",
+    "producers": "Productores",
     "sessions": "Sesiones",
     "settings": "Ajustes",
-    "producers": "Productores",
-    "following": "Siguiendo",
     "tracks": "Pistas"
   },
   "home": {
@@ -374,6 +374,39 @@
     "tracks": "Temas",
     "workspace": "Espacio de trabajo"
   },
+  "notFound": {
+    "body": "Aparentemente estás perdido...",
+    "goHome": "Ir a la página de inicio"
+  },
+  "producers": {
+    "count_one": "{{count}} productor en MakeSomeNoise",
+    "count_other": "{{count}} productores en MakeSomeNoise",
+    "empty": "Todavía no hay productores.",
+    "emptyFollowers": "Aún no hay seguidores.",
+    "emptyFollowing": "Aún no sigue a nadie.",
+    "emptyLiked": "Ninguna pista marcada.",
+    "emptySearch": "No se encontraron productores.",
+    "emptyTracks": "Todavía no hay pistas.",
+    "eyebrow": "Comunidad",
+    "follow": "Seguir",
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "joined": "Se unió en {{date}}",
+    "likes": "Me gusta",
+    "listLoadError": "No se pudo cargar esta lista.",
+    "loadError": "No se pudieron cargar los productores.",
+    "notFound": "Productor no encontrado.",
+    "searchPlaceholder": "Buscar alias o @handle…",
+    "tabs": {
+      "followers": "Seguidores",
+      "following": "Siguiendo",
+      "liked": "Me gusta",
+      "tracks": "Pistas"
+    },
+    "title": "Productores",
+    "unfollow": "Siguiendo",
+    "viewProfile": "Ver perfil"
+  },
   "samples": {
     "addSample": "Añadir sample",
     "bpm": "{{bpm}} BPM",
@@ -486,6 +519,13 @@
     }
   },
   "sessions": {
+    "archive": {
+      "errorTitle": "Error al archivar",
+      "successDescription": "{{name}} ha sido archivada",
+      "successTitle": "Sesión archivada",
+      "unarchiveSuccessDescription": "{{name}} ha sido desarchivada",
+      "unarchiveSuccessTitle": "Sesión restaurada"
+    },
     "card": {
       "actions": "Acciones de la sesión",
       "archive": "Archivar",
@@ -503,11 +543,11 @@
     "counts": "{{active}} activas · {{archived}} archivadas",
     "delete": {
       "body": "<code>{{title}}</code> y todas sus pistas, automatizaciones y ediciones se eliminarán definitivamente. Los samples referenciados desde tu biblioteca se conservan.",
-      "submit": "Eliminar sesión",
-      "title": "¿Eliminar esta sesión?",
       "errorTitle": "Error al eliminar",
+      "submit": "Eliminar sesión",
+      "successDescription": "{{name}} ha sido eliminada",
       "successTitle": "Sesión eliminada",
-      "successDescription": "{{name}} ha sido eliminada"
+      "title": "¿Eliminar esta sesión?"
     },
     "emptyArchived": {
       "text": "Las sesiones archivadas aparecerán aquí cuando termines con ellas.",
@@ -533,10 +573,10 @@
       "title": "Ninguna sesión coincide con estos filtros"
     },
     "rename": {
-      "title": "Renombrar sesión",
       "errorTitle": "Error al renombrar",
+      "successDescription": "Nuevo nombre: {{name}}",
       "successTitle": "Sesión renombrada",
-      "successDescription": "Nuevo nombre: {{name}}"
+      "title": "Renombrar sesión"
     },
     "sort": {
       "bpm": "BPM",
@@ -562,43 +602,7 @@
       "mixing": "Stems a la entrada, mezcla a la salida. Faders, buses, cadenas de FX.",
       "production": "DAW completo: pistas, MIDI, efectos, automatización.",
       "recording": "Captura una toma. Multimicro, punch-in, montaje."
-    },
-    "archive": {
-      "errorTitle": "Error al archivar",
-      "successTitle": "Sesión archivada",
-      "successDescription": "{{name}} ha sido archivada",
-      "unarchiveSuccessTitle": "Sesión restaurada",
-      "unarchiveSuccessDescription": "{{name}} ha sido desarchivada"
     }
-  },
-  "producers": {
-    "count_one": "{{count}} productor en MakeSomeNoise",
-    "count_other": "{{count}} productores en MakeSomeNoise",
-    "empty": "Todavía no hay productores.",
-    "emptySearch": "No se encontraron productores.",
-    "emptyFollowers": "Aún no hay seguidores.",
-    "emptyFollowing": "Aún no sigue a nadie.",
-    "emptyLiked": "Ninguna pista marcada.",
-    "emptyTracks": "Todavía no hay pistas.",
-    "eyebrow": "Comunidad",
-    "follow": "Seguir",
-    "followers": "Seguidores",
-    "following": "Siguiendo",
-    "joined": "Se unió en {{date}}",
-    "likes": "Me gusta",
-    "listLoadError": "No se pudo cargar esta lista.",
-    "loadError": "No se pudieron cargar los productores.",
-    "notFound": "Productor no encontrado.",
-    "searchPlaceholder": "Buscar alias o @handle…",
-    "tabs": {
-      "followers": "Seguidores",
-      "following": "Siguiendo",
-      "liked": "Me gusta",
-      "tracks": "Pistas"
-    },
-    "title": "Productores",
-    "unfollow": "Siguiendo",
-    "viewProfile": "Ver perfil"
   },
   "settings": {
     "account": {
@@ -757,10 +761,6 @@
       "editor": "Editor",
       "timeline": "Línea de tiempo"
     }
-  },
-  "notFound": {
-    "body": "Aparentemente estás perdido...",
-    "goHome": "Ir a la página de inicio"
   },
   "tracks": {
     "actions": "Acciones de la pista",

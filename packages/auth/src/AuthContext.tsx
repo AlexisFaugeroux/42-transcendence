@@ -1,13 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type JSX,
-  type ReactNode,
-} from "react";
-import type { AuthUser, LoginBody } from "./types";
-import { loginRequest, logoutRequest, meRequest } from "./api";
+import { createContext, useContext, useEffect, useState, type JSX, type ReactNode } from 'react';
+import type { AuthUser, LoginBody } from './types';
+import { loginRequest, logoutRequest, meRequest } from './api';
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -19,11 +12,7 @@ interface AuthContextValue {
 
 const authContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
+export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -44,10 +33,10 @@ export function AuthProvider({
     const onUnauthorized = () => {
       setUser(null);
     };
-    window.addEventListener("auth:unauthorized", onUnauthorized);
+    window.addEventListener('auth:unauthorized', onUnauthorized);
 
     return () => {
-      window.removeEventListener("auth:unauthorized", onUnauthorized);
+      window.removeEventListener('auth:unauthorized', onUnauthorized);
     };
   }, []);
 
@@ -74,7 +63,7 @@ export function AuthProvider({
 
 export function useUser() {
   const ctx = useContext(authContext);
-  if (!ctx) throw new Error("useUser used outside a AuthProvider");
+  if (!ctx) throw new Error('useUser used outside a AuthProvider');
   return ctx;
 }
 

@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 export function Separator(): JSX.Element {
   return (
@@ -6,8 +6,8 @@ export function Separator(): JSX.Element {
       style={{
         width: 1,
         height: 26,
-        background: "var(--line-soft)",
-        margin: "0 4px",
+        background: 'var(--line-soft)',
+        margin: '0 4px',
       }}
     />
   );

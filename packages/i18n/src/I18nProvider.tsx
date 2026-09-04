@@ -1,12 +1,12 @@
-import { ConfigProvider } from "@transcendence/ui";
-import enUS from "antd/locale/en_US";
-import esES from "antd/locale/es_ES";
-import frFR from "antd/locale/fr_FR";
-import type { JSX, ReactNode } from "react";
-import { I18nextProvider, useTranslation } from "react-i18next";
-import { i18next } from "./i18n";
-import { toLanguage } from "./languages";
-import type { Language } from "./languages";
+import { ConfigProvider } from '@transcendence/ui';
+import enUS from 'antd/locale/en_US';
+import esES from 'antd/locale/es_ES';
+import frFR from 'antd/locale/fr_FR';
+import type { JSX, ReactNode } from 'react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import { i18next } from './i18n';
+import { toLanguage } from './languages';
+import type { Language } from './languages';
 
 // antd owns strings our JSON never sees: Table "No data", Pagination, DatePicker.
 const ANTD_LOCALES: Record<Language, typeof enUS> = {

@@ -1,23 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2024",
-    "lib": ["ES2024", "DOM"],
-    "module": "esnext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
+    "erasableSyntaxOnly": true,
     "jsx": "react-jsx",
 
+    "lib": ["ES2024", "DOM"],
+    "module": "esnext",
+    "moduleDetection": "force",
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "skipLibCheck": true,
+
+    "target": "es2024",
+    "verbatimModuleSyntax": true
   },
   "include": ["src/"]
 }
