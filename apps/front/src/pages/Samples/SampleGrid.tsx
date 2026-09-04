@@ -64,7 +64,7 @@ export function SampleGrid({
             <span>{formatDuration(row.duration)}</span>
             <span>· {formatBytes(row.bytes, locale)}</span>
             {row.bpm ? <span>· {t('samples.bpm', { bpm: row.bpm })}</span> : null}
-            {row.key ? <span className={styles.muted}>{formatKey(row.key)}</span> : null}
+            {row.key ? <span className={styles.muted}>{formatKey(row.key, t)}</span> : null}
           </div>
 
           <div className={styles.actions}>

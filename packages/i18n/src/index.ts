@@ -11,6 +11,9 @@ export { i18next, LOCALE_STORAGE_KEY } from './i18n';
 export { FALLBACK_LANGUAGE, LANGUAGE_OPTIONS, SUPPORTED_LANGUAGES, toLanguage } from './languages';
 export type { Language } from './languages';
 export { Trans, useTranslation } from 'react-i18next';
+// Helpers that translate outside a component take `t` as an argument (see
+// formatKey in apps/front), so they need its type without importing i18next.
+export type { TFunction } from 'i18next';
 
 // Declared here rather than in a standalone i18next.d.ts: a .d.ts that nothing
 // imports is never pulled into an app's program, so the types would do nothing.

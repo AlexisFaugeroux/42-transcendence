@@ -95,7 +95,7 @@ export function SampleTable({
       key: 'key',
       render: (_, row) => (
         <span className={styles.mono}>
-          {row.key ? formatKey(row.key) : '—'}
+          {row.key ? formatKey(row.key, t) : '—'}
           {row.key && row.mode ? (
             <span className={styles.muted}> {t(MODE_ABBR[row.mode])}</span>
           ) : null}

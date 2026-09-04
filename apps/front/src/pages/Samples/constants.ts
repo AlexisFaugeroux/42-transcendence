@@ -1,6 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
-import type { Family, Mode, Sample, Visibility } from '../../types/sample';
+import type { Family, Mode, NoteLetter, Sample, Visibility } from '../../types/sample';
 import type { FamilyGroup, SortKey } from './types';
 
 export const FAMILY_GROUPS: Record<FamilyGroup, Family[]> = {
@@ -32,6 +32,9 @@ export const GROUP_BY_FAMILY = Object.entries(FAMILY_GROUPS).reduce<
   return acc;
 }, {});
 
+// Family and Kind are shown as their raw values: producers read them as English
+// jargon (KICK, LOOP) in every DAW. Musical vocabulary is different — note names
+// and modes are localised (fr/es use Do/Ré/Mi), hence NOTE_LABEL and MODE_LABEL.
 export const SORT_LABEL: Record<SortKey, TranslationKey> = {
   bpm: 'samples.sort.bpm',
   duration: 'samples.sort.duration',
@@ -48,6 +51,18 @@ export const MODE_LABEL: Record<Mode, TranslationKey> = {
 export const MODE_ABBR: Record<Mode, TranslationKey> = {
   MAJOR: 'samples.modeAbbr.major',
   MINOR: 'samples.modeAbbr.minor',
+};
+
+// Keyed by the letter in a `Key` value ('C_sharp_key' → 'C'); the accidental is
+// a symbol and needs no translation.
+export const NOTE_LABEL: Record<NoteLetter, TranslationKey> = {
+  A: 'music.note.a',
+  B: 'music.note.b',
+  C: 'music.note.c',
+  D: 'music.note.d',
+  E: 'music.note.e',
+  F: 'music.note.f',
+  G: 'music.note.g',
 };
 
 export const VISIBILITY_LABEL: Record<Visibility, TranslationKey> = {

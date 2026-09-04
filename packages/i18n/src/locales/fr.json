@@ -61,6 +61,7 @@
     }
   },
   "chat": {
+    "composerPlaceholder": "Votre message…",
     "empty": {
       "cta": "Trouver un producteur",
       "text": "Cherchez un producteur ci-dessus pour envoyer votre premier message.",
@@ -71,6 +72,13 @@
       "you": "Vous :"
     },
     "loadError": "Impossible de charger les conversations",
+    "newConversation": "Nouvelle conversation",
+    "newModal": {
+      "firstMessage": "Envoyez le premier message à @{{handle}}",
+      "open": "Ouvrir la discussion",
+      "searchPlaceholder": "Rechercher un producteur…",
+      "send": "Envoyer"
+    },
     "sendError": "Impossible d’envoyer votre message",
     "threadEmpty": {
       "cta": "Écrire à un producteur",
@@ -146,7 +154,9 @@
       "bpm": "{{bpm}} BPM",
       "count_one": "{{count}} session",
       "count_other": "{{count}} sessions",
+      "loadError": "Impossible de charger vos sessions enregistrées",
       "noKey": "sans tonalité",
+      "open": "Ouvrir dans le studio",
       "scrollLeft": "Défiler vers la gauche",
       "scrollRight": "Défiler vers la droite",
       "title": "Reprendre une session enregistrée",
@@ -356,6 +366,17 @@
     },
     "terms": {
       "navLabel": "CGU"
+    }
+  },
+  "music": {
+    "note": {
+      "a": "La",
+      "b": "Si",
+      "c": "Do",
+      "d": "Ré",
+      "e": "Mi",
+      "f": "Fa",
+      "g": "Sol"
     }
   },
   "nav": {

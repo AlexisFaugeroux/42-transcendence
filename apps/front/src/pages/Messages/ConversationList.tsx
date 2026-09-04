@@ -54,8 +54,7 @@ export function ConversationList({
           setOpenModal(true);
         }}
       >
-        {' '}
-        New Conversation{' '}
+        {t('chat.newConversation')}
       </Button>
 
       {isLoading ? (

@@ -38,8 +38,7 @@ export function SavedSessionTile({ onOpen, session }: SavedSessionParams): JSX.E
           onOpen(session);
         }}
       >
-        {' '}
-        Open in studio{' '}
+        {t('home.saved.open')}
       </Button>
     </div>
   );

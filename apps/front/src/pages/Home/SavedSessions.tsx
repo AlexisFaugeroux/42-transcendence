@@ -30,7 +30,7 @@ export function SavedSessions(): JSX.Element | null {
         <div className={styles.headLeft}>
           <h3 className={styles.title}>{t('home.saved.title')}</h3>
           <span className={styles.count}>
-            {t('home.saved.count', { count: isLoading ? 'loading...' : data?.length })}
+            {isLoading ? t('common.loading') : t('home.saved.count', { count: data?.length ?? 0 })}
           </span>
         </div>
         <div className={styles.controls}>
@@ -57,7 +57,7 @@ export function SavedSessions(): JSX.Element | null {
       {isError ? (
         <Flex align="center" justify="center">
           <CloseOutlined color={theme.red} />
-          <span>Error while loading saved sessions</span>
+          <span>{t('home.saved.loadError')}</span>
         </Flex>
       ) : isLoading ? (
         <Flex align="center" justify="center">

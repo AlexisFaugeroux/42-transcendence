@@ -17,6 +17,9 @@ export type Key =
   | 'G_sharp_key'
   | 'A_flat_key';
 
+/** The letter part of a `Key` ('C_sharp_key' → 'C'); localised, unlike Family/Kind. */
+export type NoteLetter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
+
 export type Mode = 'MAJOR' | 'MINOR';
 
 export type Family =

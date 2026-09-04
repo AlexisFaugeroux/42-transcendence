@@ -76,7 +76,12 @@ export function Conversation({ conversation }: ConversationProp): JSX.Element {
       <MessageList conversation={conversation} />
       <Form form={form} onFinish={sending}>
         <Form.Item name="content">
-          <Input size="large" placeholder="Your message..." autoFocus autoComplete="off" />
+          <Input
+            size="large"
+            placeholder={t('chat.composerPlaceholder')}
+            autoFocus
+            autoComplete="off"
+          />
         </Form.Item>
       </Form>
     </div>

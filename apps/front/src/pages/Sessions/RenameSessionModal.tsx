@@ -32,6 +32,7 @@ function RenameForm({
       open
       title={t('sessions.rename.title')}
       okText={t('common.save')}
+      cancelText={t('common.cancel')}
       okButtonProps={{ disabled: empty || unchanged }}
       confirmLoading={confirmLoading}
       onOk={() => {

@@ -48,6 +48,9 @@ export async function meRequest(): Promise<AuthUser | null> {
   return data.user;
 }
 
+// The message carried here is the backend's own, and it is deliberately NOT
+// translated: pages pair it with a translated title and show it as the detail.
+// See "What deliberately stays in English" in docs/i18n.md.
 export async function apiError(res: Response, route: string): Promise<ApiErrorReponse> {
   const body = (await res.json().catch(() => null)) as {
     error?: string;

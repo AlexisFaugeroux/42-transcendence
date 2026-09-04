@@ -61,6 +61,7 @@
     }
   },
   "chat": {
+    "composerPlaceholder": "Your message…",
     "empty": {
       "cta": "Find a producer",
       "text": "Search a producer above to send your first message.",
@@ -71,6 +72,13 @@
       "you": "You:"
     },
     "loadError": "Couldn’t load conversations",
+    "newConversation": "New conversation",
+    "newModal": {
+      "firstMessage": "Send the first message to @{{handle}}",
+      "open": "Open new chat",
+      "searchPlaceholder": "Search for a producer…",
+      "send": "Send"
+    },
     "sendError": "Couldn’t send your message",
     "threadEmpty": {
       "cta": "Message a producer",
@@ -146,7 +154,9 @@
       "bpm": "{{bpm}} BPM",
       "count_one": "{{count}} session",
       "count_other": "{{count}} sessions",
+      "loadError": "Failed to load your saved sessions",
       "noKey": "no key",
+      "open": "Open in studio",
       "scrollLeft": "Scroll left",
       "scrollRight": "Scroll right",
       "title": "Continue a saved session",
@@ -356,6 +366,17 @@
     },
     "terms": {
       "navLabel": "Terms"
+    }
+  },
+  "music": {
+    "note": {
+      "a": "A",
+      "b": "B",
+      "c": "C",
+      "d": "D",
+      "e": "E",
+      "f": "F",
+      "g": "G"
     }
   },
   "nav": {

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useUser } from '@transcendence/auth';
 import type { LoginBody } from '@transcendence/auth';
-import { useTranslation } from '@transcendence/i18n';
+import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import { Button, Form, Input, MsnIcon, MsnWordmark, theme } from '@transcendence/ui';
 import { type JSX } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -42,6 +42,9 @@ export default function Login(): JSX.Element {
       <header className={styles.header}>
         <MsnIcon name="msn" size="22px" color={theme.orange} />
         <MsnWordmark size={20} accent={theme.orange} />
+        <div className={styles.headerRight}>
+          <LanguageSelect />
+        </div>
       </header>
 
       <main className={styles.main}>
