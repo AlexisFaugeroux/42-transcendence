@@ -1,7 +1,7 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
 import { useTranslation } from '@transcendence/i18n';
-import { Dropdown, IconBtn, MsnKnob, MsnPill, theme } from '@transcendence/ui';
-import { type JSX, useState } from 'react';
+import { Dropdown, IconBtn, Input, MsnKnob, MsnPill, theme } from '@transcendence/ui';
+import { type JSX, useRef, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
 import type { Track } from '../../../lib/types';
@@ -14,7 +14,10 @@ interface RackProps {
 
 export function Rack({ track }: RackProps): JSX.Element {
   const { project } = useProject();
-  const { setTracks, tracks } = useTracks();
+  const { setTracks, tracks, setClips } = useTracks();
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [draftName, setDraftName] = useState(() => track.name);
+  const escapedRef = useRef(false);
   const { t } = useTranslation();
 
   const adapter = project.boxAdapters.adapterFor(track.audioUnitBox, AudioUnitBoxAdapter);
@@ -68,6 +71,26 @@ export function Rack({ track }: RackProps): JSX.Element {
     setIsSolo(!isSolo);
   }
 
+  function handleRenameTrack() {
+    setIsRenaming(false);
+
+    const name = draftName.trim();
+    const cancelled = escapedRef.current;
+    escapedRef.current = false;
+    if (cancelled || !name || name === track.name) return;
+
+    project.editing.modify(() => {
+      adapter.input.label = name;
+    });
+
+    setTracks((prev) =>
+      prev.map((t) => (t.audioUnitBox === track.audioUnitBox ? { ...t, name } : t)),
+    );
+    setClips((prev) =>
+      prev.map((c) => (c.trackBox === track.trackBox ? { ...c, trackName: name } : c)),
+    );
+  }
+
   function handleDeleteTrack() {
     const remainingTracks = tracks.filter((curr) => curr.uuid !== track.uuid);
     setTracks(remainingTracks);
@@ -99,7 +122,30 @@ export function Rack({ track }: RackProps): JSX.Element {
           <StudioIcon name="piano" size={14} color={track.color} />
         </IconBtn>
         <div className={styles.labels}>
-          <div className={styles.name}>{track.name}</div>
+          {isRenaming ? (
+            <Input
+              className={styles.nameInput}
+              value={draftName}
+              onChange={(e) => {
+                setDraftName(e.target.value);
+              }}
+              onBlur={handleRenameTrack}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') escapedRef.current = true;
+                if (e.key === 'Enter' || e.key === 'Escape') e.currentTarget.blur();
+              }}
+            />
+          ) : (
+            <div
+              className={styles.name}
+              onDoubleClick={() => {
+                setDraftName(track.name);
+                setIsRenaming(true);
+              }}
+            >
+              {track.name}
+            </div>
+          )}
           <div className={styles.instrument}>{track.instrumentName}</div>
         </div>
       </div>
@@ -128,6 +174,23 @@ export function Rack({ track }: RackProps): JSX.Element {
               {
                 icon: (
                   <StudioIcon
+                    name="pencil"
+                    color={theme.fg1}
+                    size={10}
+                    style={{
+                      marginRight: '4px',
+                    }}
+                  />
+                ),
+                key: 'rename',
+                label: t('common.rename'),
+                style: {
+                  fontSize: '10px',
+                },
+              },
+              {
+                icon: (
+                  <StudioIcon
                     name="delete"
                     color={theme.red}
                     size={10}
@@ -143,7 +206,13 @@ export function Rack({ track }: RackProps): JSX.Element {
                 },
               },
             ],
-            onClick: handleDeleteTrack,
+            onClick: ({ key }) => {
+              if (key === 'delete') handleDeleteTrack();
+              else if (key === 'rename') {
+                setDraftName(track.name);
+                setIsRenaming(true);
+              }
+            },
           }}
           trigger={['click']}
         >

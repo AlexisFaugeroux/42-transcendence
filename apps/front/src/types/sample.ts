@@ -3,8 +3,8 @@
 // file stays the single door to the sample domain types.
 import type { Key, Mode } from '@transcendence/i18n';
 
-export type { Key, Mode };
 export { KEYS, MODES } from '@transcendence/i18n';
+export type { Key, Mode };
 
 export type Family =
   | 'KICK'

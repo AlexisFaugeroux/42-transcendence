@@ -71,7 +71,7 @@ export function Timeline(): JSX.Element {
 
   function handleAddTrack(instrument: InstrumentType) {
     project.editing.modify(() => {
-      const newTrack = createTrack(project.api, instrument, `${instrument}-${tracks.length + 1}`);
+      const newTrack = createTrack(project.api, instrument);
 
       setTracks((prev) => [...prev, newTrack]);
     });
