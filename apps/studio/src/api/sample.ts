@@ -9,11 +9,7 @@ interface PaginatedSamples {
 }
 
 export async function getlistSample(): Promise<Sample[]> {
-  const query = new URLSearchParams({
-    visibilities: 'PUBLIC',
-  });
-
-  const res = await apiFetch(`/api/samples/get?${query.toString()}`);
+  const res = await apiFetch(`/api/samples/get`);
   if (!res.ok) throw new ApiErrorReponse(`[/api/samples/get] : ${res.statusText}`, res.status);
 
   const data = (await res.json()) as PaginatedSamples;

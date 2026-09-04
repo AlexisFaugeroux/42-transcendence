@@ -86,6 +86,7 @@ export interface GetSampleInput {
   families?: Family[];
   kinds?: Kind[];
   ownerIds?: string[];
+  withPlatformSamples?: boolean;
 }
 
 export interface UpdateSampleInput {

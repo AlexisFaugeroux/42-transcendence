@@ -6,7 +6,7 @@ import type {
   TrackBox,
   ValueEventCollectionBox,
 } from '@opendaw/studio-boxes';
-import type { Key } from '@transcendence/i18n';
+import type { Key, Mode } from '@transcendence/i18n';
 
 export interface BarInfo {
   startPpqn: ppqn;
@@ -39,13 +39,43 @@ export interface Clip {
   regionBox: AudioRegionBox;
 }
 
+export type Family =
+  | 'KICK'
+  | 'SNARE'
+  | 'CLAP'
+  | 'HAT'
+  | 'TOM'
+  | 'PERC'
+  | 'CYMBAL'
+  | 'BASS'
+  | 'SYNTH'
+  | 'LEAD'
+  | 'PAD'
+  | 'KEYS'
+  | 'PLUCK'
+  | 'STRINGS'
+  | 'BRASS'
+  | 'VOCAL'
+  | 'FX'
+  | 'AMBIENCE';
+
+export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
+
 export interface Sample {
+  bytes: number;
+  createdAt: string;
+  duration: number;
+  family: Family;
   name: string;
   bpm?: number;
-  // Named `key` because that is what /api/samples/get returns.
   key?: Key | null;
   url: string;
   id: string;
+  mode?: Mode | null;
+  ownerId: string;
+  ownerType: 'USER' | 'PLATEFORM';
+  peaksUrl: string;
+  visibility: Visibility;
 }
 
 export interface ProjectProperties {
