@@ -28,16 +28,15 @@ export function createTrack(api: ProjectApi, instrument: InstrumentType, name?: 
       deviceBox = InstrumentFactories.Vaporisateur;
       break;
   }
-  const { audioUnitBox, instrumentBox, trackBox } = api.createInstrument(deviceBox);
+  const { audioUnitBox, instrumentBox, trackBox } = api.createInstrument(deviceBox, { name });
 
   audioUnitBox.volume.setValue(0);
-  instrumentBox.label.setValue(instrument);
 
   return {
     audioUnitBox,
     color: theme.fg2,
     instrumentName: instrument,
-    name: name ?? instrument,
+    name: instrumentBox.label.getValue(),
     trackBox,
     uuid: trackBox.address.uuid,
   };

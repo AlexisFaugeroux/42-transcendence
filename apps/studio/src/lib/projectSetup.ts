@@ -4,7 +4,9 @@ import { PPQN } from '@opendaw/lib-dsp';
 import { Promises } from '@opendaw/lib-runtime';
 import type { Progress } from '@opendaw/lib-std';
 import { assert, requireProperty, UUID } from '@opendaw/lib-std';
+import type { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
 import { type SampleMetaData, type SoundfontMetaData } from '@opendaw/studio-adapters';
+import { NanoDeviceBox, TapeDeviceBox, VaporisateurDeviceBox } from '@opendaw/studio-boxes';
 import type { SoundfontService } from '@opendaw/studio-core';
 import {
   AudioWorklets,
@@ -298,8 +300,20 @@ export async function _doInitializeOpenDaw(
   return { audioContext, id, project };
 }
 
-function isInstrumentName(value: string): value is Track['instrumentName'] {
-  return value === 'Tape' || value === 'Nano' || value === 'Vaporisateur';
+function instrumentNameOf(audioUnitBox: AudioUnitBoxAdapter): Track['instrumentName'] | null {
+  const input = audioUnitBox.inputAdapter;
+  if (input.isEmpty()) return null;
+
+  switch (input.unwrap().box.name) {
+    case NanoDeviceBox.ClassName:
+      return 'Nano';
+    case TapeDeviceBox.ClassName:
+      return 'Tape';
+    case VaporisateurDeviceBox.ClassName:
+      return 'Vaporisateur';
+    default:
+      return null;
+  }
 }
 
 export function reloadClipsAndTracks(project: Project): {
@@ -314,16 +328,15 @@ export function reloadClipsAndTracks(project: Project): {
     .filter((audioUnit) => audioUnit.isInstrument);
 
   for (const audioUnit of audioUnits) {
-    const instrumentName = audioUnit.label;
-
-    if (!isInstrumentName(instrumentName)) continue;
+    const instrumentName = instrumentNameOf(audioUnit);
+    if (instrumentName === null) continue;
 
     for (const trackAdapter of audioUnit.tracks.values()) {
       const track: Track = {
         audioUnitBox: audioUnit.box,
         color: theme.fg2,
         instrumentName,
-        name: `${instrumentName}-${tracks.length + 1}`,
+        name: audioUnit.label,
         trackBox: trackAdapter.box,
         uuid: trackAdapter.uuid,
       };
