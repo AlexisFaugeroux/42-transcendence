@@ -132,11 +132,17 @@ Each app references this config in its `package.json`:
 
 From the **root** of the monorepo:
 
-| Command                                         | What it does                                                                       |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `pnpm run check`                                | Runs Prettier and ESLint across the project (reports errors but does not fix them) |
-| `pnpm run fix`                                  | Runs Prettier and ESLint and **auto-fixes** what it can                            |
-| `pnpm --filter @transcendence/studio run check` | Runs checks only in the `studio` app                                               |
+| Command                                         | What it does                                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------------- |
+| `pnpm run check`                                | Prettier + ESLint + `typecheck` across the project (reports, never fixes) |
+| `pnpm run fix`                                  | Prettier + ESLint **auto-fix**, then `typecheck`                          |
+| `pnpm run typecheck`                            | `tsc --noEmit` in every package, nothing else                             |
+| `pnpm --filter @transcendence/studio run check` | Runs checks only in the `studio` app                                      |
+
+Both scripts fan out with `pnpm -r --no-bail`, so a failure in one app does not
+hide the others — you get every package's errors in one run. They also end with
+`pnpm run typecheck`: ESLint's type-aware rules are not a full `tsc` pass, so a
+broken type could otherwise reach CI green-lit.
 
 Always run `check` or `fix` **before pushing** your code. This avoids breaking
 the build for everyone else.

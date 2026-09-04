@@ -55,6 +55,7 @@ Requires `POSTGRES_URL`, `JWT_SECRET` and `MEDIA_ROOT` in `.env` (dev `MEDIA_ROO
 ## Also relevant
 
 - `docs/architecture/database.md` — schema, the two databases, migrations
+- `docs/pagination.md` — `parsePagination` / `toPaginatedResponse` and the covered endpoints
 - `docs/architecture/audio-file-storage.md` — media on disk, nginx `auth_request`
 - `docs/architecture/realtime.md` — the WebSocket registry and heartbeat
 - `docs/architecture/chat.md` — the DM data model and its known issues

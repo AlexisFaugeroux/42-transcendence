@@ -80,11 +80,19 @@ routes.
 | `POST   /upload/avatar`   | multipart; `AVATAR_MAX_BYTES` = 5 MiB |
 | `DELETE /delete/avatar`   |                                       |
 | `GET    /listFollowing`   | who you follow                        |
+| `GET    /listFollowers`   | who follows you                       |
 | `DELETE /delete`          | deletes the account                   |
 
 ### `/api/users` (other producers)
 
-All authenticated. `follow` / `unfollow` / `:handle/tracks` are rate-limited to
+All authenticated. `GET /`, `/:handle/followers` and `/:handle/following` accept
+`page` / `limit` / `q` and answer the paginated envelope
+`{ items, total, page, limit }` — the old `{ producers: [...] }` wrapper is gone
+(`PublicProducersResponse` was replaced by `PaginatedProducersResponse`). `q`
+matches `handle` and `artistName`, case-insensitively. See
+[../pagination.md](../pagination.md).
+
+`follow` / `unfollow` / `:handle/tracks` are rate-limited to
 5/min. `handle` is validated by a shared `handleParamsSchema`
 (`^[\w.]+$`, 3–32 chars) — one object reused by all seven routes, so the pattern
 cannot drift between them.
@@ -95,6 +103,11 @@ Same four verbs each — `GET /get`, `POST /upload`, `PUT /update?id=`,
 `DELETE /delete?id=` — plus `GET /api/samples/storage` for quota usage. Details,
 including the differences between the two upload pipelines, in
 [audio-file-storage.md](./audio-file-storage.md).
+
+`GET /api/samples/get` also takes `page` / `limit` / `q` (matching `name`) and
+returns the paginated envelope; the studio omits both paging params and reads
+`items` (see [../pagination.md](../pagination.md)). `/api/tracks/get` is not
+paginated — the tracks page filters and sorts client-side.
 
 ### `/api/project`
 
@@ -137,3 +150,7 @@ See [chat.md](./chat.md).
   compare `resource.ownerId`.
 - **Rate limiting is opt-in** (`global: false`): only routes with
   `config: { rateLimit: … }` are throttled.
+- **List endpoints share one pagination contract** — `page` / `limit` / `q` parsed
+  by `utils/pagination.ts`, response `{ items, total, page, limit }`, and omitting
+  both paging params returns the full list. Which endpoints are covered, and what
+  `q` matches on each: [../pagination.md](../pagination.md).

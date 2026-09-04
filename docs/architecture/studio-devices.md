@@ -58,7 +58,7 @@ Two parallel tables, both keyed on the SDK box class name:
 | File                 | Maps                               | Used by                      |
 | -------------------- | ---------------------------------- | ---------------------------- |
 | `deviceRegistry.ts`  | `box.ClassName` → React component  | rendering an existing effect |
-| `effectFactories.ts` | ordered list of insertable effects | the add-effect menu          |
+| `effectFactories.ts` | ordered list of insertable effects | add-effect menu, Devices tab |
 
 `DEVICES[effect.box.ClassName]` resolves the component, falling back to
 `UnknownDevice` — so an effect the SDK knows about and we have not skinned yet
@@ -71,8 +71,38 @@ inserts a divider wherever the previous entry's family differs, so entries of on
 family must stay contiguous. Reordering the array reorders the menu; scattering a
 family silently produces duplicate dividers.
 
+`EFFECT_ENTRIES` feeds two surfaces: the add-effect menu and the browser panel's
+**Devices tab** (`ui/Browser/Devices/Devices.tsx`, an antd `Listy` grouped by
+`family`). One table, so an effect cannot appear in one place and not the other.
+
 Adding an effect is therefore three edits: a `<Name>Device.tsx`, an entry in
 `DEVICES`, an entry in `EFFECT_ENTRIES`.
+
+## Two ways to add an effect
+
+`AddEffectButton` (styles in its own `AddEffectButton.module.scss` since the rack
+was split) **appends** at the end of the chain. **Drag & drop inserts at a
+position:**
+
+1. the browser's Devices tab sets the entry's `boxName` on the
+   `application/x-effect` dataTransfer type in `onDragStart`;
+2. `EffectChain` reads it on `drop`, resolves it back to an `EffectEntry`, and
+   computes the insert index by walking `[data-effect-index]` tiles and finding the
+   first whose horizontal midpoint is right of the pointer — the index maths reads
+   the **DOM**, not React state, so `DeviceEditor` must keep rendering
+   `data-effect-index` on its root;
+3. it then calls
+   `project.api.insertEffect(audioUnit.audioEffectsField, entry.factory, index)`
+   inside `project.editing.modify` — like any other graph mutation.
+
+The `BorderBeam` marker rendered at `dropIndex` (state, updated on `dragOver`) is
+the only feedback that the drop will land between two devices; `dragLeave` clears
+it only when the pointer actually left the chain
+(`e.currentTarget.contains(e.relatedTarget)`), otherwise moving over a child tile
+would flicker it off.
+
+`EffectChain` also owns the empty case — `Devices.tsx` no longer branches between a
+filled and an empty chain, it always renders `<EffectChain>`.
 
 ## Naming: our labels are not the SDK's
 
@@ -110,7 +140,8 @@ Keep the mapping in the two tables. Do not rename around it.
   SDK fields — one `useEffect` reading both would only re-render for whichever it
   subscribed to.
 - **Reordering is an edit.** `audioUnit.audioEffects.move(effect, delta)` must be
-  wrapped in `project.editing.modify`, like any other graph mutation.
+  wrapped in `project.editing.modify`, like any other graph mutation — as must
+  `project.api.insertEffect(field, factory, index)`.
 
 ## Where the specs live
 

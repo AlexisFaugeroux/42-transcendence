@@ -99,7 +99,7 @@ Enums:
 
 | Enum             | Values                                                                                                                                                             |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `Role`           | `ADMIN`, `ARTIST`                                                                                                                                                  |
+| `Role`           | `ADMIN`, `ARTIST`, `MODERATOR`, `GUEST` — mirrored by hand in `packages/permissions` (`Role`, `Permissions`, `can()`)                                              |
 | `OwnerType`      | `PLATEFORM`, `USER`                                                                                                                                                |
 | `VisibilityType` | `PRIVATE`, `SHARED`, `PUBLIC`                                                                                                                                      |
 | `ProjectType`    | `MIX`, `PRODUCE` (default), `RECORD` — which of the three creative tools a project belongs to                                                                      |

@@ -118,11 +118,11 @@ about you.
 
 Three providers, split by responsibility:
 
-| Module                        | Responsibility                                           |
-| ----------------------------- | -------------------------------------------------------- |
-| `websocket/WebSocketProvider` | owns the single socket, fans frames out to subscribers   |
-| `presence/PresenceProvider`   | keeps the online-user set from the three presence events |
-| `message/MessageListener`     | turns `message` frames into query-cache updates          |
+| Module                        | Responsibility                                                                                      |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| `websocket/WebSocketProvider` | owns the single socket, fans frames out to subscribers                                              |
+| `presence/PresenceProvider`   | keeps the online-user set from the three presence events                                            |
+| `message/MessageListener`     | turns `message` frames into message **and conversation-list** cache updates (unread badge included) |
 
 `WebSocketProvider` exposes only `subscribe(handler)` returning an unsubscribe
 function, and holds handlers in a `useRef<Set<…>>`. The ref matters: putting the
@@ -131,7 +131,17 @@ tear the socket down. The effect depends on `[loading, userId]` only, so the
 socket is created once the user is known and re-created only when the account
 changes.
 
-`PresenceStatus` is `'online' | 'offline'` (`types/presence.ts`).
+`PresenceStatus` is `'online' | 'offline' | 'live'` (`types/user.ts`, next to the
+shared `User` type — `types/presence.ts` is gone). `'live'` is rendered purple by
+`StatusAvatar` but nothing sets it yet: the socket only ever produces online and
+offline. The backend declares a wider union of its own (`'live' | 'online' | 'idle'
+| 'offline'` in `domain/user.ts`); the two are duplicated by hand and do not have
+to match member for member, but a status the front cannot render would show up as a
+missing colour in `STATUS_COLOR`.
+
+`MessageListener` keeps the conversation list coherent as frames arrive — the
+unread badge is a cache patch, not a refetch. See
+[chat.md](./chat.md#front-end-delivery-path).
 
 ### Known limits
 

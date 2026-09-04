@@ -56,7 +56,7 @@ render; counting rows for it each time would be a query per conversation.
 
 | Route                                | Purpose                                                                 |
 | ------------------------------------ | ----------------------------------------------------------------------- |
-| `POST /createChat`                   | create the conversation **and** send its first message                  |
+| `POST /createConversation`           | create the conversation **and** send its first message                  |
 | `POST /sendMessage`                  | send into an existing conversation                                      |
 | `GET  /listConversations`            | the caller's conversations, hydrated with participants and last message |
 | `GET  /listMessages?conversationId=` | the messages of one conversation                                        |
@@ -80,18 +80,36 @@ which looks the conversation's participants up in the socket registry and pushes
 are offline get nothing — they will read it from `listMessages` on their next
 visit. There is no offline queue because the database _is_ the queue.
 
+## Front-end delivery path
+
+App: `apps/front` — `api/chat/chat.ts`, `pages/Messages/`, `message/MessageListener`.
+
+`openConversation()` posts the **flat** body `{ authorId, toId, content }` (the
+`messageInput` / `message` envelope was removed in `143e2f1`), seeds the returned
+conversation into `['conversations', user.id]` and navigates to `/messages/:id`.
+`NewConversationModal` picks the recipient from `useUserRelations()` — the union of
+`GET /api/user/listFollowers` and `/listFollowing` — minus the users the caller
+already has a thread with, which is how the UI avoids the duplicate-conversation
+error below.
+
+`MessageListener` does more than append to `['messages', conversationId, user.id]`:
+
+- if the frame's `conversationId` is **not** already in `['conversations', user.id]`,
+  it refetches that list — a first message from someone new has no row to patch;
+- otherwise it patches the row in place (`lastMessage`, `lastMessageAt`, and the
+  recipient's `unreadCount + 1`) and **skips the increment while that thread is
+  open** (`useMatch('/messages/:id')`). Without the guard the badge would count
+  messages the user is currently reading.
+
 ## Known issues
 
-- **`unreadCount` is incremented across all conversations.** In
-  `chatRepository.createMessage`, the `updateMany` that bumps `unreadCount`
-  filters on `NOT: { userId: input.authorId }` only — it never scopes to
-  `conversationId`. Sending one message therefore increments the unread badge of
-  every participant row in the database that does not belong to the author. The
-  `where` needs `conversationId: input.conversationId` added.
-- **`createChat` throws if the conversation already exists.** `createConversation`
-  inserts unconditionally, so the `pairKey` unique constraint surfaces as a
-  `ConflictError`. The caller has to know to use `sendMessage` instead. An upsert,
-  or a find-then-create, would make the endpoint idempotent.
+- **`createConversation` throws if the conversation already exists.**
+  `createConversation` inserts unconditionally, so the `pairKey` unique constraint
+  surfaces as a `ConflictError`. The caller has to know to use `sendMessage`
+  instead. The front works around it rather than the server —
+  `NewConversationModal` only offers relations with no existing thread — so an
+  upsert, or a find-then-create, would make the endpoint idempotent and let the
+  modal drop that filter.
 - **`Message.updateMessage` / `deleteMessage` / `deleteConversation` exist in the
   repository but are not exposed by any route.** Edit and delete are not
   implemented in the API or the UI.
