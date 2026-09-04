@@ -1,8 +1,12 @@
 {
   "name": "@transcendence/ui",
   "version": "1.0.0",
+  "private": true,
   "description": "",
-  "main": "index.ts",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "exports": {
     ".": "./index.ts",
     "./icons": "./icons.ts",
@@ -10,14 +14,11 @@
     "./styles/*": "./styles/*",
     "./components/*": "./components/*"
   },
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "private": true,
+  "prettier": "@transcendence/prettier-config",
   "dependencies": {
     "@ant-design/icons": "6.3.2",
     "@types/react": "19.2.14",
@@ -26,5 +27,8 @@
     "clsx": "2.1.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@transcendence/prettier-config": "workspace:*"
   }
 }

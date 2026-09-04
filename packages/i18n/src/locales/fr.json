@@ -108,16 +108,16 @@
     "title": "Abonnements"
   },
   "header": {
+    "following": "Abonnements",
     "home": "Accueil",
     "library": "Bibliothèque",
     "logout": "Déconnexion",
     "logoutError": "Une erreur est survenue lors de la déconnexion",
     "notifications": "Notifications",
     "privacyTerms": "Confidentialité",
+    "producers": "Producteurs",
     "sessions": "Sessions",
     "settings": "Paramètres",
-    "producers": "Producteurs",
-    "following": "Abonnements",
     "tracks": "Morceaux"
   },
   "home": {
@@ -374,6 +374,39 @@
     "tracks": "Morceaux",
     "workspace": "Espace de travail"
   },
+  "notFound": {
+    "body": "On dirait que tu t'es perdu.e...",
+    "goHome": "Aller à l'accueil"
+  },
+  "producers": {
+    "count_one": "{{count}} producteur sur MakeSomeNoise",
+    "count_other": "{{count}} producteurs sur MakeSomeNoise",
+    "empty": "Aucun producteur pour l’instant.",
+    "emptyFollowers": "Pas encore d’abonnés.",
+    "emptyFollowing": "Ne suit personne pour l’instant.",
+    "emptyLiked": "Aucune track aimée.",
+    "emptySearch": "Aucun producteur trouvé.",
+    "emptyTracks": "Pas encore de tracks.",
+    "eyebrow": "Communauté",
+    "follow": "Suivre",
+    "followers": "Abonnés",
+    "following": "Abonnements",
+    "joined": "Inscrit en {{date}}",
+    "likes": "Likes",
+    "listLoadError": "Impossible de charger cette liste.",
+    "loadError": "Impossible de charger les producteurs.",
+    "notFound": "Producteur introuvable.",
+    "searchPlaceholder": "Rechercher un alias ou @handle…",
+    "tabs": {
+      "followers": "Abonnés",
+      "following": "Abonnements",
+      "liked": "Aimés",
+      "tracks": "Tracks"
+    },
+    "title": "Producteurs",
+    "unfollow": "Abonné",
+    "viewProfile": "Voir le profil"
+  },
   "samples": {
     "addSample": "Ajouter un sample",
     "bpm": "{{bpm}} BPM",
@@ -486,6 +519,13 @@
     }
   },
   "sessions": {
+    "archive": {
+      "errorTitle": "Archivage échoué",
+      "successDescription": "{{name}} a été archivée",
+      "successTitle": "Session archivée",
+      "unarchiveSuccessDescription": "{{name}} a été désarchivée",
+      "unarchiveSuccessTitle": "Session restaurée"
+    },
     "card": {
       "actions": "Actions de la session",
       "archive": "Archiver",
@@ -503,11 +543,11 @@
     "counts": "{{active}} active(s) · {{archived}} archivée(s)",
     "delete": {
       "body": "<code>{{title}}</code> et toutes ses pistes, automations et modifications seront supprimées définitivement. Les samples référencés depuis votre bibliothèque sont conservés.",
-      "submit": "Supprimer la session",
-      "title": "Supprimer cette session ?",
       "errorTitle": "Suppression échouée",
+      "submit": "Supprimer la session",
+      "successDescription": "{{name}} a été supprimée",
       "successTitle": "Session supprimée",
-      "successDescription": "{{name}} a été supprimée"
+      "title": "Supprimer cette session ?"
     },
     "emptyArchived": {
       "text": "Les sessions archivées apparaîtront ici quand vous en aurez terminé avec elles.",
@@ -533,10 +573,10 @@
       "title": "Aucune session ne correspond à ces filtres"
     },
     "rename": {
-      "title": "Renommer la session",
       "errorTitle": "Renommage échoué",
+      "successDescription": "Nouveau nom : {{name}}",
       "successTitle": "Session renommée",
-      "successDescription": "Nouveau nom : {{name}}"
+      "title": "Renommer la session"
     },
     "sort": {
       "bpm": "BPM",
@@ -562,43 +602,7 @@
       "mixing": "Stems en entrée, mix en sortie. Faders, bus, chaînes d'effets.",
       "production": "DAW complet : pistes, MIDI, effets, automation.",
       "recording": "Capturez une prise. Multi-micro, punch-in, montage."
-    },
-    "archive": {
-      "errorTitle": "Archivage échoué",
-      "successTitle": "Session archivée",
-      "successDescription": "{{name}} a été archivée",
-      "unarchiveSuccessTitle": "Session restaurée",
-      "unarchiveSuccessDescription": "{{name}} a été désarchivée"
     }
-  },
-  "producers": {
-    "count_one": "{{count}} producteur sur MakeSomeNoise",
-    "count_other": "{{count}} producteurs sur MakeSomeNoise",
-    "empty": "Aucun producteur pour l’instant.",
-    "emptySearch": "Aucun producteur trouvé.",
-    "emptyFollowers": "Pas encore d’abonnés.",
-    "emptyFollowing": "Ne suit personne pour l’instant.",
-    "emptyLiked": "Aucune track aimée.",
-    "emptyTracks": "Pas encore de tracks.",
-    "eyebrow": "Communauté",
-    "follow": "Suivre",
-    "followers": "Abonnés",
-    "following": "Abonnements",
-    "joined": "Inscrit en {{date}}",
-    "likes": "Likes",
-    "listLoadError": "Impossible de charger cette liste.",
-    "loadError": "Impossible de charger les producteurs.",
-    "notFound": "Producteur introuvable.",
-    "searchPlaceholder": "Rechercher un alias ou @handle…",
-    "tabs": {
-      "followers": "Abonnés",
-      "following": "Abonnements",
-      "liked": "Aimés",
-      "tracks": "Tracks"
-    },
-    "title": "Producteurs",
-    "unfollow": "Abonné",
-    "viewProfile": "Voir le profil"
   },
   "settings": {
     "account": {
@@ -757,10 +761,6 @@
       "editor": "Éditeur",
       "timeline": "Timeline"
     }
-  },
-  "notFound": {
-    "body": "On dirait que tu t'es perdu.e...",
-    "goHome": "Aller à l'accueil"
   },
   "tracks": {
     "actions": "Actions du morceau",

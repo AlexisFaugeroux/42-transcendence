@@ -2,14 +2,15 @@
   "name": "@transcendence/eslint-config",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "main": "eslint.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
+  "prettier": "@transcendence/prettier-config",
   "dependencies": {
     "@eslint/js": "10.0.1",
     "eslint": "catalog:",
@@ -23,6 +24,9 @@
     "eslint-plugin-sort": "4.0.0",
     "globals": "17.6.0",
     "typescript-eslint": "8.59.4"
+  },
+  "devDependencies": {
+    "@transcendence/prettier-config": "workspace:*"
   },
   "peerDependencies": {
     "eslint": "10.4.0"

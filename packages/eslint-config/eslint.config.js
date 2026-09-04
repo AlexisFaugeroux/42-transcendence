@@ -1,18 +1,18 @@
-import eslint from "@eslint/js";
-import { defineConfig } from "eslint/config";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
-import pluginPromise from "eslint-plugin-promise";
-import estlintPluginReact from "eslint-plugin-react";
-import eslintPluginReactHooks from "eslint-plugin-react-hooks";
-import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
-import eslintPluginRegexp from "eslint-plugin-regexp";
-import sort from "eslint-plugin-sort";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import pluginPromise from 'eslint-plugin-promise';
+import estlintPluginReact from 'eslint-plugin-react';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
+import eslintPluginReactRefresh from 'eslint-plugin-react-refresh';
+import eslintPluginRegexp from 'eslint-plugin-regexp';
+import sort from 'eslint-plugin-sort';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 // Éteint partout sauf dans les scripts `fix`, qui posent ESLINT_SORT=on : pas de
 // warning de tri dans l'éditeur, mais `pnpm -r fix` réordonne quand même.
-const sortImports = process.env.ESLINT_SORT === "on" ? "warn" : "off";
+const sortImports = process.env.ESLINT_SORT === 'on' ? 'warn' : 'off';
 
 // Base config — used by ALL apps (back, front, studio)
 export function createBaseConfig({ ignores, tsconfigRootDir }) {
@@ -22,65 +22,65 @@ export function createBaseConfig({ ignores, tsconfigRootDir }) {
     eslint.configs.recommended,
     tseslint.configs.strictTypeChecked,
     tseslint.configs.stylisticTypeChecked,
-    eslintPluginRegexp.configs["flat/recommended"],
-    pluginPromise.configs["flat/recommended"],
-    sort.configs["flat/recommended"],
+    eslintPluginRegexp.configs['flat/recommended'],
+    pluginPromise.configs['flat/recommended'],
+    sort.configs['flat/recommended'],
 
     {
       languageOptions: {
         globals: { ...globals.node },
         parserOptions: {
           ecmaVersion: 2024,
-          project: ["./tsconfig.eslint.json"],
+          project: ['./tsconfig.eslint.json'],
           tsconfigRootDir,
         },
       },
     },
 
     {
-      files: ["**/*.ts"],
+      files: ['**/*.ts'],
       rules: {
-        "@typescript-eslint/array-type": ["error", { default: "array" }],
-        "@typescript-eslint/consistent-type-exports": "error",
-        "@typescript-eslint/consistent-type-imports": "error",
-        "@typescript-eslint/no-redundant-type-constituents": "off",
-        "@typescript-eslint/no-unnecessary-condition": "off",
-        "@typescript-eslint/no-unsafe-enum-comparison": "off",
-        "@typescript-eslint/no-unused-expressions": "off",
-        "@typescript-eslint/no-unused-vars": [
-          "error",
+        '@typescript-eslint/array-type': ['error', { default: 'array' }],
+        '@typescript-eslint/consistent-type-exports': 'error',
+        '@typescript-eslint/consistent-type-imports': 'error',
+        '@typescript-eslint/no-redundant-type-constituents': 'off',
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+        '@typescript-eslint/no-unused-expressions': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
           {
-            args: "all",
-            argsIgnorePattern: "^_",
-            caughtErrors: "all",
-            caughtErrorsIgnorePattern: "^_",
-            destructuredArrayIgnorePattern: "^_",
+            args: 'all',
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
+            destructuredArrayIgnorePattern: '^_',
             ignoreRestSiblings: true,
-            varsIgnorePattern: "^_",
+            varsIgnorePattern: '^_',
           },
         ],
-        "@typescript-eslint/prefer-for-of": "off",
-        "@typescript-eslint/restrict-template-expressions": "off",
+        '@typescript-eslint/prefer-for-of': 'off',
+        '@typescript-eslint/restrict-template-expressions': 'off',
       },
     },
 
     {
       rules: {
-        "no-constant-binary-expression": "off",
-        "promise/always-return": "off",
+        'no-constant-binary-expression': 'off',
+        'promise/always-return': 'off',
         // Sévérité seule : les options `groups` du preset sont conservées.
-        "sort/destructuring-properties": "off",
-        "sort/export-members": sortImports,
-        "sort/exports": sortImports,
-        "sort/import-members": sortImports,
-        "sort/imports": sortImports,
-        "sort/object-properties": "off",
+        'sort/destructuring-properties': 'off',
+        'sort/export-members': sortImports,
+        'sort/exports': sortImports,
+        'sort/import-members': sortImports,
+        'sort/imports': sortImports,
+        'sort/object-properties': 'off',
       },
     },
 
     {
       extends: [tseslint.configs.disableTypeChecked],
-      files: ["**/*.cjs", "**/*.js", "**/*.mjs"],
+      files: ['**/*.cjs', '**/*.js', '**/*.mjs'],
     },
 
     prettierRecommended,
@@ -91,7 +91,7 @@ export function createBaseConfig({ ignores, tsconfigRootDir }) {
 export function createReactConfig() {
   return [
     {
-      files: ["**/*.{tsx,jsx}"],
+      files: ['**/*.{tsx,jsx}'],
       languageOptions: {
         globals: { ...globals.browser },
         parser: tseslint.parser,
@@ -100,25 +100,25 @@ export function createReactConfig() {
         },
       },
       plugins: {
-        ...estlintPluginReact.configs.flat["jsx-runtime"]?.plugins,
+        ...estlintPluginReact.configs.flat['jsx-runtime']?.plugins,
         react: estlintPluginReact,
-        "react-hooks": eslintPluginReactHooks,
-        "react-refresh": eslintPluginReactRefresh,
+        'react-hooks': eslintPluginReactHooks,
+        'react-refresh': eslintPluginReactRefresh,
       },
       rules: {
-        "@typescript-eslint/no-floating-promises": "error",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/switch-exhaustiveness-check": [
-          "error",
+        '@typescript-eslint/no-floating-promises': 'error',
+        '@typescript-eslint/restrict-template-expressions': 'off',
+        '@typescript-eslint/switch-exhaustiveness-check': [
+          'error',
           { considerDefaultExhaustiveForUnions: true },
         ],
-        "react/jsx-key": "error",
-        "react/jsx-no-leaked-render": "error",
-        "react-hooks/exhaustive-deps": "error",
-        "react-hooks/rules-of-hooks": "error",
+        'react/jsx-key': 'error',
+        'react/jsx-no-leaked-render': 'error',
+        'react-hooks/exhaustive-deps': 'error',
+        'react-hooks/rules-of-hooks': 'error',
       },
       settings: {
-        react: { version: "19.2" },
+        react: { version: '19.2' },
       },
     },
   ];

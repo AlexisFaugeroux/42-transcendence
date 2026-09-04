@@ -1,5 +1,5 @@
-import type { JSX } from "react";
-import { theme } from "../../theme/theme";
+import type { JSX } from 'react';
+import { theme } from '../../theme/theme';
 
 interface MsnPillProps {
   active: boolean;
@@ -10,14 +10,7 @@ interface MsnPillProps {
   onClick?: () => void;
 }
 
-export function MsnPill({
-  label,
-  dot,
-  active,
-  color,
-  title,
-  onClick,
-}: MsnPillProps): JSX.Element {
+export function MsnPill({ label, dot, active, color, title, onClick }: MsnPillProps): JSX.Element {
   return (
     <span
       title={title}
@@ -26,18 +19,16 @@ export function MsnPill({
         height: 14,
         borderRadius: 2,
         border: `0.5px solid ${active ? color : theme.lineHover}`,
-        background: active
-          ? `color-mix(in srgb, ${color} 16%, transparent)`
-          : "transparent",
+        background: active ? `color-mix(in srgb, ${color} 16%, transparent)` : 'transparent',
         color: active ? color : theme.fg3,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         fontSize: 9,
-        fontFamily: "var(--font-display)",
+        fontFamily: 'var(--font-display)',
         fontWeight: 400,
-        boxShadow: active ? `0 0 4px -1px ${color}` : "none",
-        cursor: "pointer",
+        boxShadow: active ? `0 0 4px -1px ${color}` : 'none',
+        cursor: 'pointer',
       }}
       onClick={onClick}
     >
@@ -46,8 +37,8 @@ export function MsnPill({
           style={{
             width: 6,
             height: 6,
-            borderRadius: "50%",
-            background: "currentColor",
+            borderRadius: '50%',
+            background: 'currentColor',
           }}
         ></span>
       ) : (

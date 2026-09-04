@@ -108,16 +108,16 @@
     "title": "Following"
   },
   "header": {
+    "following": "Following",
     "home": "Home",
     "library": "Library",
     "logout": "Logout",
     "logoutError": "An error occurred while logging out",
     "notifications": "Notifications",
     "privacyTerms": "Privacy terms",
+    "producers": "Producers",
     "sessions": "Sessions",
     "settings": "Settings",
-    "producers": "Producers",
-    "following": "Following",
     "tracks": "Tracks"
   },
   "home": {
@@ -374,6 +374,39 @@
     "tracks": "Tracks",
     "workspace": "Workspace"
   },
+  "notFound": {
+    "body": "It seems like you're lost...",
+    "goHome": "Go home"
+  },
+  "producers": {
+    "count_one": "{{count}} producer on MakeSomeNoise",
+    "count_other": "{{count}} producers on MakeSomeNoise",
+    "empty": "No producers yet.",
+    "emptyFollowers": "No followers yet.",
+    "emptyFollowing": "Not following anyone yet.",
+    "emptyLiked": "No liked tracks.",
+    "emptySearch": "No producers found.",
+    "emptyTracks": "No tracks yet.",
+    "eyebrow": "Community",
+    "follow": "Follow",
+    "followers": "Followers",
+    "following": "Following",
+    "joined": "Joined {{date}}",
+    "likes": "Likes",
+    "listLoadError": "Couldn’t load this list.",
+    "loadError": "Couldn’t load producers.",
+    "notFound": "Producer not found.",
+    "searchPlaceholder": "Search alias or @handle…",
+    "tabs": {
+      "followers": "Followers",
+      "following": "Following",
+      "liked": "Liked",
+      "tracks": "Tracks"
+    },
+    "title": "Producers",
+    "unfollow": "Following",
+    "viewProfile": "View profile"
+  },
   "samples": {
     "addSample": "Add sample",
     "bpm": "{{bpm}} BPM",
@@ -486,6 +519,13 @@
     }
   },
   "sessions": {
+    "archive": {
+      "errorTitle": "Archive failed",
+      "successDescription": "{{name}} has been archived",
+      "successTitle": "Session archived",
+      "unarchiveSuccessDescription": "{{name}} has been unarchived",
+      "unarchiveSuccessTitle": "Session restored"
+    },
     "card": {
       "actions": "Session actions",
       "archive": "Archive",
@@ -503,11 +543,11 @@
     "counts": "{{active}} active · {{archived}} archived",
     "delete": {
       "body": "<code>{{title}}</code> and all its tracks, automation and edits will be permanently removed. Sample files referenced from your library are kept.",
-      "submit": "Delete session",
-      "title": "Delete this session?",
       "errorTitle": "Delete failed",
+      "submit": "Delete session",
+      "successDescription": "{{name}} has been deleted",
       "successTitle": "Session deleted",
-      "successDescription": "{{name}} has been deleted"
+      "title": "Delete this session?"
     },
     "emptyArchived": {
       "text": "Archived sessions will live here when you're done with them.",
@@ -533,10 +573,10 @@
       "title": "No sessions match these filters"
     },
     "rename": {
-      "title": "Rename session",
       "errorTitle": "Rename failed",
+      "successDescription": "New name: {{name}}",
       "successTitle": "Session renamed",
-      "successDescription": "New name: {{name}}"
+      "title": "Rename session"
     },
     "sort": {
       "bpm": "BPM",
@@ -562,43 +602,7 @@
       "mixing": "Stems in, mix out. Faders, busses, FX chains.",
       "production": "Full DAW: tracks, MIDI, effects, automation.",
       "recording": "Get a take down. Multi-mic, punch-in, comp."
-    },
-    "archive": {
-      "errorTitle": "Archive failed",
-      "successTitle": "Session archived",
-      "successDescription": "{{name}} has been archived",
-      "unarchiveSuccessTitle": "Session restored",
-      "unarchiveSuccessDescription": "{{name}} has been unarchived"
     }
-  },
-  "producers": {
-    "count_one": "{{count}} producer on MakeSomeNoise",
-    "count_other": "{{count}} producers on MakeSomeNoise",
-    "empty": "No producers yet.",
-    "emptySearch": "No producers found.",
-    "emptyFollowers": "No followers yet.",
-    "emptyFollowing": "Not following anyone yet.",
-    "emptyLiked": "No liked tracks.",
-    "emptyTracks": "No tracks yet.",
-    "eyebrow": "Community",
-    "follow": "Follow",
-    "followers": "Followers",
-    "following": "Following",
-    "joined": "Joined {{date}}",
-    "likes": "Likes",
-    "listLoadError": "Couldn’t load this list.",
-    "loadError": "Couldn’t load producers.",
-    "notFound": "Producer not found.",
-    "searchPlaceholder": "Search alias or @handle…",
-    "tabs": {
-      "followers": "Followers",
-      "following": "Following",
-      "liked": "Liked",
-      "tracks": "Tracks"
-    },
-    "title": "Producers",
-    "unfollow": "Following",
-    "viewProfile": "View profile"
   },
   "settings": {
     "account": {
@@ -757,10 +761,6 @@
       "editor": "Editor",
       "timeline": "Timeline"
     }
-  },
-  "notFound": {
-    "body": "It seems like you're lost...",
-    "goHome": "Go home"
   },
   "tracks": {
     "actions": "Track actions",

@@ -1,8 +1,12 @@
 {
   "name": "@transcendence/date",
   "version": "1.0.0",
+  "private": true,
   "description": "Shared date helpers (dayjs, fixed Europe/Paris timezone)",
-  "main": "src/index.ts",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -10,22 +14,20 @@
       "default": "./src/index.ts"
     }
   },
+  "main": "src/index.ts",
   "files": [
     "dist",
     "src"
   ],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "private": true,
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js"
   },
+  "prettier": "@transcendence/prettier-config",
   "dependencies": {
     "dayjs": "1.11.13"
   },
   "devDependencies": {
+    "@transcendence/prettier-config": "workspace:*",
     "esbuild": "0.28.0"
   }
 }

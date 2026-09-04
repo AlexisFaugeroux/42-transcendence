@@ -21,7 +21,7 @@ export interface AuthUser {
   handle: string;
   bio?: string;
   links?: { kind: string; url: string }[] | null;
-  role: "ADMIN" | "ARTIST";
+  role: 'ADMIN' | 'ARTIST';
   joined: Date;
 }
 

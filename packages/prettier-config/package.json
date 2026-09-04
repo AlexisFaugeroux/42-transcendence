@@ -1,16 +1,17 @@
 {
   "name": "@transcendence/prettier-config",
-  "private": "true",
   "version": "1.0.0",
+  "private": "true",
   "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "main": "prettierrc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
+  "prettier": "./prettierrc.js",
   "dependencies": {
     "prettier-plugin-packagejson": "2.5.6",
     "prettier-plugin-sort-json": "4.1.1"

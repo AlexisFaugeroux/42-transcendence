@@ -466,6 +466,9 @@ importers:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
     devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -482,6 +485,9 @@ importers:
         specifier: 1.11.13
         version: 1.11.13
     devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       esbuild:
         specifier: 0.28.0
         version: 0.28.0
@@ -524,6 +530,10 @@ importers:
       typescript-eslint:
         specifier: 8.59.4
         version: 8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.2)
+    devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
 
   packages/i18n:
     dependencies:
@@ -552,6 +562,9 @@ importers:
         specifier: 17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.2))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.2)
     devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -561,6 +574,9 @@ importers:
 
   packages/permissions:
     devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       esbuild:
         specifier: 0.28.0
         version: 0.28.0
@@ -597,6 +613,10 @@ importers:
       react-dom:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@transcendence/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
 
 packages:
 

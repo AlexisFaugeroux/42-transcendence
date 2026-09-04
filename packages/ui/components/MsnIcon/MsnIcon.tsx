@@ -1,5 +1,5 @@
-import type { JSX } from "react";
-import type { MsnIconLabel } from "./types";
+import type { JSX } from 'react';
+import type { MsnIconLabel } from './types';
 
 const MSN_ICONS: Record<MsnIconLabel, JSX.Element> = {
   // brand mark — three vertical bars + a dot
@@ -34,14 +34,7 @@ const MSN_ICONS: Record<MsnIconLabel, JSX.Element> = {
       <rect x="4" y="3" width="2" height="18" />
       <rect x="11" y="3" width="2" height="18" />
       <rect x="18" y="3" width="2" height="18" />
-      <circle
-        cx="5"
-        cy="9"
-        r="2.2"
-        fill="var(--bg-app)"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
+      <circle cx="5" cy="9" r="2.2" fill="var(--bg-app)" stroke="currentColor" strokeWidth="1.4" />
       <circle
         cx="12"
         cy="14"
@@ -50,25 +43,13 @@ const MSN_ICONS: Record<MsnIconLabel, JSX.Element> = {
         stroke="currentColor"
         strokeWidth="1.4"
       />
-      <circle
-        cx="19"
-        cy="7"
-        r="2.2"
-        fill="var(--bg-app)"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
+      <circle cx="19" cy="7" r="2.2" fill="var(--bg-app)" stroke="currentColor" strokeWidth="1.4" />
     </g>
   ),
 
   // ui
   search: (
-    <g
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    >
+    <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
       <circle cx="11" cy="11" r="6" />
       <path d="M16 16l4 4" />
     </g>
@@ -119,12 +100,7 @@ const MSN_ICONS: Record<MsnIconLabel, JSX.Element> = {
       fill="currentColor"
     />
   ),
-  home: (
-    <path
-      d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"
-      fill="currentColor"
-    />
-  ),
+  home: <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="currentColor" />,
   user: (
     <g fill="currentColor">
       <circle cx="12" cy="8" r="4" />
@@ -164,9 +140,7 @@ const MSN_ICONS: Record<MsnIconLabel, JSX.Element> = {
     </g>
   ),
   triangle: <path d="M5 9l4 4 4-4z" fill="currentColor" />,
-  download: (
-    <path d="M11 3h2v9h3l-4 4-4-4h3zM4 18h16v2H4z" fill="currentColor" />
-  ),
+  download: <path d="M11 3h2v9h3l-4 4-4-4h3zM4 18h16v2H4z" fill="currentColor" />,
   music: (
     <g fill="currentColor">
       <path d="M19 3l-9 2v10.2A3 3 0 1 0 12 18V8l7-1.5z" />
@@ -196,7 +170,7 @@ interface MsnIconsProps {
 export function MsnIcon({
   name,
   color,
-  size = "1rem",
+  size = '1rem',
   style,
   title,
 }: MsnIconsProps): JSX.Element | null {
@@ -211,8 +185,8 @@ export function MsnIcon({
       aria-label={title}
       style={{
         color,
-        display: "inline-block",
-        verticalAlign: "middle",
+        display: 'inline-block',
+        verticalAlign: 'middle',
         flexShrink: 0,
         ...style,
       }}
