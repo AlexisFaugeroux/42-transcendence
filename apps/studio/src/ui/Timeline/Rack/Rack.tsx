@@ -1,6 +1,6 @@
 import { AudioUnitBoxAdapter } from '@opendaw/studio-adapters';
 import { useTranslation } from '@transcendence/i18n';
-import { Dropdown, IconBtn, Input, MsnKnob, MsnPill, theme } from '@transcendence/ui';
+import { BorderBeam, Dropdown, IconBtn, Input, MsnKnob, MsnPill, theme } from '@transcendence/ui';
 import { type JSX, useRef, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
 import { useTracks } from '../../../contexts/TracksContext';
@@ -9,10 +9,11 @@ import { StudioIcon } from '../../components/StudioIcon/StudioIcon';
 import styles from './Rack.module.scss';
 
 interface RackProps {
+  isActive?: boolean;
   track: Track;
 }
 
-export function Rack({ track }: RackProps): JSX.Element {
+export function Rack({ isActive = false, track }: RackProps): JSX.Element {
   const { project } = useProject();
   const { setTracks, tracks, setClips } = useTracks();
   const [isRenaming, setIsRenaming] = useState(false);
@@ -100,9 +101,9 @@ export function Rack({ track }: RackProps): JSX.Element {
     });
   }
 
-  return (
+  const content = (
     <div
-      className={styles.container}
+      className={`${styles.container} ${isActive ? styles.activeContainer : ''}`}
       onClick={() => {
         project.userEditingManager.audioUnit.edit(track.audioUnitBox.editing);
       }}
@@ -222,5 +223,13 @@ export function Rack({ track }: RackProps): JSX.Element {
         </Dropdown>
       </div>
     </div>
+  );
+
+  return isActive ? (
+    <BorderBeam count={2} color={theme.orange} duration={2} size={100}>
+      {content}
+    </BorderBeam>
+  ) : (
+    content
   );
 }
