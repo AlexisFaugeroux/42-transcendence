@@ -7,7 +7,6 @@ import {
   notification,
 } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useDeleteSession, useSavedSessions, useUpdateSession } from '../../hooks/useSavedSessions';
 import { DeleteSessionModal } from './DeleteSessionModal';
 import { NewSessionModal } from './NewSessionModal';
@@ -152,8 +151,6 @@ export function Sessions(): JSX.Element {
   return (
     <div className={styles.page}>
       {notificationContext}
-      <AppHeader active="sessions" />
-
       <div className={styles.container}>
         <div className={styles.titleRow}>
           <div>

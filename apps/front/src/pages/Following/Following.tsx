@@ -3,7 +3,6 @@ import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useFollowing } from '../../hooks/useProducers';
 import { ProducerCard } from '../Producers/ProducerCard';
 import styles from '../Producers/Producers.module.scss';
@@ -38,8 +37,6 @@ export function Following(): JSX.Element {
 
   return (
     <div className={styles.page}>
-      <AppHeader active="following" />
-
       <div className={styles.container}>
         <div className={styles.titleRow}>
           <div>

@@ -14,7 +14,6 @@ import {
 } from '@transcendence/ui';
 import { type JSX, type Key, useEffect, useMemo, useState } from 'react';
 import { deleteSample, getSamples, getStorageUsage } from '../../api/samples/samples';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import type { Family, Kind, Sample } from '../../types/sample';
 import { SAMPLE_COMPARATORS } from './constants';
@@ -182,7 +181,6 @@ export function Samples(): JSX.Element {
     <SamplePlayerProvider>
       <div className={styles.page}>
         {notificationContext}
-        <AppHeader active="library" />
         <div className={styles.container}>
           <div className={styles.titleRow}>
             <div>

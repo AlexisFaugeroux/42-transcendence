@@ -4,7 +4,6 @@ import { useTranslation } from '@transcendence/i18n';
 import { CheckOutlined, CloseCircleOutlined, notification, theme } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
 import { updateUserProfile } from '../../api/user';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { AccountSection } from './AccountSection';
 import { DangerSection } from './DangerSection';
 import { type ProfileErrors } from './dashboard.data';
@@ -93,7 +92,6 @@ export function Dashboard(): JSX.Element {
   return (
     <div className={styles.page}>
       {notificationContext}
-      <AppHeader active="settings" />
       {isDirty ? <DirtyBanner hasErrors={hasErrors} onDiscard={cancel} onSave={save} /> : null}
 
       <div className={styles.layout}>

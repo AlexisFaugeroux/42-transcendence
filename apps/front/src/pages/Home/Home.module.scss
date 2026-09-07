@@ -1,21 +1,9 @@
-.shell {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 220px 1fr 320px;
-  grid-template-rows: 60px 1fr; // match AppHeader's height
-  background: var(--bg-app);
-  color: var(--fg1);
-  overflow: hidden;
-}
-
-.topbar {
-  grid-column: 1 / -1; // span all columns at every breakpoint
-}
-
-.leftnav {
-  display: flex;
-  flex-direction: column;
+// Fits inside AppLayout content: main + optional right rail (nav/header live in the shell).
+.page {
+  flex: 1;
   min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 320px;
   overflow: hidden;
 }
 
@@ -37,22 +25,15 @@
 
 // Tablet: drop the right rail.
 @media (max-width: 1100px) {
-  .shell {
-    grid-template-columns: 220px 1fr;
+  .page {
+    grid-template-columns: 1fr;
   }
   .rightrail {
     display: none;
   }
 }
 
-// Mobile: drop the left nav too (single-column main under the top bar).
 @media (max-width: 720px) {
-  .shell {
-    grid-template-columns: 1fr;
-  }
-  .leftnav {
-    display: none;
-  }
   .main {
     padding: 16px;
   }
