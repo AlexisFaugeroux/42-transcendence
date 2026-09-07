@@ -5,6 +5,8 @@ import { Button, IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transc
 import { type JSX, type MouseEvent, useEffect, useState } from 'react';
 import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
+import { useTracks } from '../../contexts/TracksContext';
+import { reloadClipsAndTracks } from '../../lib/projectSetup';
 import type { ProjectProperties } from '../../lib/types';
 import { arrayBufferToBase64 } from '../../utils/base64';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
@@ -19,22 +21,45 @@ const FRONT_URL = import.meta.env.VITE_FRONT_URL;
 
 export function Header(): JSX.Element {
   const [saved, setSaved] = useState(true);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [leaveError, setLeaveError] = useState<string | null>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const { meta, project } = useProject();
+  const { setClips, setTracks } = useTracks();
   const { t } = useTranslation();
 
   useEffect(() => {
-    const updateSavedState = (): void => {
+    const syncEditingUi = (): void => {
       setSaved(!project.editing.hasUnsavedChanges());
+      setCanUndo(project.editing.canUndo());
+      setCanRedo(project.editing.canRedo());
     };
-    updateSavedState();
-    const subscription = project.editing.subscribe(updateSavedState);
+    syncEditingUi();
+    const subscription = project.editing.subscribe(syncEditingUi);
     return () => {
       subscription.terminate();
     };
   }, [project]);
+
+  const syncArrangement = (): void => {
+    const next = reloadClipsAndTracks(project);
+    setTracks(next.tracks);
+    setClips(next.clips);
+  };
+
+  const onUndo = (): void => {
+    if (!project.editing.canUndo()) return;
+    project.editing.undo();
+    syncArrangement();
+  };
+
+  const onRedo = (): void => {
+    if (!project.editing.canRedo()) return;
+    project.editing.redo();
+    syncArrangement();
+  };
 
   const { isPending, mutate: save } = useMutation({
     mutationFn: saveProject,
@@ -96,21 +121,18 @@ export function Header(): JSX.Element {
       </div>
       <Separator />
 
-      {/* TODO: implement undo/redo mechanic */}
       <div>
         <IconBtn
           title={t('studio.header.undo')}
-          onClick={() => {
-            console.log('un-prout');
-          }}
+          color={canUndo ? undefined : 'var(--fg3)'}
+          onClick={onUndo}
         >
           <StudioIcon name="undo" size={14} />
         </IconBtn>
         <IconBtn
           title={t('studio.header.redo')}
-          onClick={() => {
-            console.log('re-prout');
-          }}
+          color={canRedo ? undefined : 'var(--fg3)'}
+          onClick={onRedo}
         >
           <StudioIcon name="redo" size={14} />
         </IconBtn>

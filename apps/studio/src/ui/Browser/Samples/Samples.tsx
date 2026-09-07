@@ -1,3 +1,4 @@
+import { useAuthUser } from '@transcendence/auth';
 import { formatKey, useTranslation } from '@transcendence/i18n';
 import {
   CloseOutlined,
@@ -13,7 +14,6 @@ import { useTableScrollY } from '../../../hooks/useTableScrollY';
 import type { Sample } from '../../../lib/types';
 import styles from './Samples.module.scss';
 import { SamplesSearch } from './SamplesSearch';
-import { useAuthUser } from '@transcendence/auth';
 
 export type SampleLibrary = 'user' | 'shared';
 

@@ -1,3 +1,4 @@
+import { AuthProvider } from '@transcendence/auth';
 import type { JSX } from 'react';
 import styles from './App.module.scss';
 import { ProjectProvider } from './contexts/ProjectContext';
@@ -6,7 +7,6 @@ import { usePanels } from './hooks/usePanels';
 import { Footer } from './ui/Footer/Footer';
 import { Header } from './ui/Header/Header';
 import { PanelFrame } from './ui/PanelFrame/PanelFrame';
-import { AuthProvider } from '@transcendence/auth';
 
 function App(): JSX.Element {
   const { isVisible, toggle } = usePanels({
