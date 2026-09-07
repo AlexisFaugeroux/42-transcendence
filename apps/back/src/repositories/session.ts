@@ -1,4 +1,5 @@
 import type { PrismaClient } from '../generated/prisma/client';
+import type { Role } from '../generated/prisma/enums';
 import { prisma } from '../utils/prisma';
 
 export class SessionRepository {
@@ -20,18 +21,30 @@ export class SessionRepository {
     return { expiresAt: session.expiresAt, id: session.id };
   }
 
-  public async findValid(sid: string): Promise<{ id: string; userId: string } | null> {
-    const session = await this.prisma.session.findUnique({ where: { id: sid } });
+  public async findValid(
+    sid: string,
+  ): Promise<{ id: string; role: Role; userId: string } | null> {
+    const session = await this.prisma.session.findUnique({
+      include: { user: { select: { role: true } } },
+      where: { id: sid },
+    });
     if (!session) return null;
     if (session.revokedAt !== null) return null;
     if (session.expiresAt.getTime() <= Date.now()) return null;
-    return { id: session.id, userId: session.userId };
+    return { id: session.id, role: session.user.role, userId: session.userId };
   }
 
   public async revoke(sid: string): Promise<void> {
     await this.prisma.session.updateMany({
       data: { revokedAt: new Date() },
       where: { id: sid, revokedAt: null },
+    });
+  }
+
+  public async revokeAllForUser(userId: string): Promise<void> {
+    await this.prisma.session.updateMany({
+      data: { revokedAt: new Date() },
+      where: { revokedAt: null, userId },
     });
   }
 }
