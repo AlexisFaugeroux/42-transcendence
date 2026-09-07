@@ -1,8 +1,10 @@
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
+import { can, type Permissions } from '@transcendence/permissions';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
+import { ForbiddenError } from '../domain/errors';
 import { SessionRepository, sessionRepository } from '../repositories/session';
 
 export function authCookieOptions() {
@@ -44,10 +46,16 @@ async function authPlugin(app: FastifyInstance) {
         reply.code(401).send({ message: 'unauthorized' });
         return;
       }
-      req.authUser = { id: payload.sub, sid: payload.sid };
+      req.authUser = { id: session.userId, role: session.role, sid: session.id };
     } catch {
       reply.code(401).send({ message: 'unauthorized' });
     }
+  });
+
+  app.decorate('authorize', (permission: Permissions) => {
+    return async function authorize(req: FastifyRequest): Promise<void> {
+      if (!can(req.authUser.role, permission)) throw new ForbiddenError();
+    };
   });
 }
 
