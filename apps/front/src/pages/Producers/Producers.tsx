@@ -1,7 +1,6 @@
 import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { useProducers } from '../../hooks/useProducers';
 import { ProducerCard } from './ProducerCard';
 import styles from './Producers.module.scss';
@@ -35,8 +34,6 @@ export function Producers(): JSX.Element {
 
   return (
     <div className={styles.page}>
-      <AppHeader active="producers" />
-
       <div className={styles.container}>
         <div className={styles.titleRow}>
           <div>

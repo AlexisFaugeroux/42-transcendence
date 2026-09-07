@@ -1,7 +1,6 @@
 import { useTranslation } from '@transcendence/i18n';
 import { CheckCircleOutlined, CloseCircleOutlined, notification, Spin } from '@transcendence/ui';
 import { type JSX, useMemo, useState } from 'react';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import { useDeleteTrack, useTracks, useUpdateTrack } from '../../hooks/useTracks';
 import type { Visibility } from '../../types/sample';
@@ -88,7 +87,6 @@ export function Tracks(): JSX.Element {
     <SamplePlayerProvider>
       {notificationContext}
       <div className={styles.page}>
-        <AppHeader active="tracks" />
         <div className={styles.container}>
           <div className={styles.titleRow}>
             <div>

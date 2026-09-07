@@ -3,7 +3,6 @@ import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Spin } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppHeader } from '../../components/AppHeader/AppHeader';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
 import { useProducer } from '../../hooks/useProducers';
 import { FollowButton } from './FollowButton';
@@ -17,7 +16,6 @@ export function ProducerProfile(): JSX.Element {
 
   return (
     <div className={styles.page}>
-      <AppHeader active="producers" />
       <div className={styles.container}>
         {isLoading ? (
           <div className={styles.state}>
