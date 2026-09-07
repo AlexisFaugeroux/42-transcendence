@@ -35,28 +35,25 @@ export function App(): JSX.Element {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/legal" element={<Legal />} />
           <Route element={<RequireAuth />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/library" element={<Samples />} />
-            <Route path="/tracks" element={<Tracks />} />
-            <Route path="/sessions" element={<Sessions />} />
-            <Route path="/settings" element={<Dashboard />} />
-            <Route path="/producers" element={<Producers />} />
-            <Route path="/producers/:handle" element={<ProducerProfile />} />
-            <Route path="/following" element={<Following />} />
-
             <Route element={<AppLayout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/library" element={<Samples />} />
+              <Route path="/tracks" element={<Tracks />} />
+              <Route path="/sessions" element={<Sessions />} />
+              <Route path="/settings" element={<Dashboard />} />
+              <Route path="/producers" element={<Producers />} />
+              <Route path="/producers/:handle" element={<ProducerProfile />} />
+              <Route path="/following" element={<Following />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/messages/:conversationId" element={<Messages />} />
+              {/*
+              <Route path="/exports" element={<Exports />} />
+              <Route path="/liked" element={<Liked />} />
+              <Route path="/playlists" element={<Playlists />} />
+              */}
             </Route>
           </Route>
 
-          {/*
-          <Route element={<AppLayout />}>
-            <Route path="/exports" element={<Exports />} />
-            <Route path="/liked" element={<Liked />} />
-            <Route path="/playlists" element={<Playlists />} />
-          </Route>
-        */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
