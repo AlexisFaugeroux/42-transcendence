@@ -162,17 +162,27 @@ export function sampleRoutes(app: FastifyInstance) {
     sampleController.storage,
   );
 
-  app.post('/upload', { preHandler: app.authenticate }, sampleController.upload);
+  app.post(
+    '/upload',
+    { preHandler: [app.authenticate, app.authorize('sample:write')] },
+    sampleController.upload,
+  );
 
   app.put(
     '/update',
-    { preHandler: app.authenticate, schema: updateSampleSchema },
+    {
+      preHandler: [app.authenticate, app.authorize('sample:write')],
+      schema: updateSampleSchema,
+    },
     sampleController.update,
   );
 
   app.delete(
     '/delete',
-    { preHandler: app.authenticate, schema: deleteSampleSchema },
+    {
+      preHandler: [app.authenticate, app.authorize('sample:write')],
+      schema: deleteSampleSchema,
+    },
     sampleController.delete,
   );
 }

@@ -7,6 +7,7 @@ export interface RegisterBody {
   handle: string;
   artistName: string;
   password: string;
+  role: Extract<Role, 'ARTIST' | 'GUEST'>;
 }
 
 export interface LoginBody {

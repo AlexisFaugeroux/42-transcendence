@@ -34,7 +34,8 @@ class AuthController {
     req: FastifyRequest<RegisterRoute>,
     reply: FastifyReply<RegisterRoute>,
   ) => {
-    const { artistName, email, firstname, handle, lastname, password } = req.body;
+    const { artistName, email, firstname, handle, lastname, password, role } = req.body;
+
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email }, { artistName }, { handle }] },
     });
@@ -51,7 +52,7 @@ class AuthController {
         lastname,
         owner: { create: { type: 'USER' } },
         password: await hashPassword(password),
-        role: 'ARTIST',
+        role,
       },
     });
 

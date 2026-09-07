@@ -2,9 +2,22 @@ import { Permissions, type Permissions as PermissionsType } from './permissions'
 import { Role, type Role as RoleType } from './roles';
 
 export const ROLES_PERMISSIONS: Record<RoleType, PermissionsType[]> = {
-  [Role.ADMIN]: [Permissions.MANAGE_ACCOUNTS],
-  [Role.MODERATOR]: [],
-  [Role.ARTIST]: [],
+  [Role.ADMIN]: [
+    Permissions.MANAGE_ACCOUNTS,
+    Permissions.SAMPLE_WRITE,
+    Permissions.TRACK_WRITE,
+    Permissions.STUDIO_ACCESS,
+  ],
+  [Role.MODERATOR]: [
+    Permissions.SAMPLE_WRITE,
+    Permissions.TRACK_WRITE,
+    Permissions.STUDIO_ACCESS,   
+  ],
+  [Role.ARTIST]: [
+    Permissions.SAMPLE_WRITE,
+    Permissions.TRACK_WRITE,
+    Permissions.STUDIO_ACCESS,
+  ],
   [Role.GUEST]: [],
 };
 

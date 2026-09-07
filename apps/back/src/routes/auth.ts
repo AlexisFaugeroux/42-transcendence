@@ -10,8 +10,9 @@ const registerSchema = {
       handle: { maxLength: 32, minLength: 3, pattern: '^[\\w.]+$', type: 'string' },
       lastname: { maxLength: 64, minLength: 1, type: 'string' },
       password: { maxLength: 128, minLength: 8, type: 'string' },
+      role: { enum: ['ARTIST', 'GUEST'], type: 'string' },
     },
-    required: ['email', 'firstname', 'lastname', 'handle', 'artistName', 'password'],
+    required: ['email', 'firstname', 'lastname', 'handle', 'artistName', 'password', 'role'],
     type: 'object',
   },
 };
