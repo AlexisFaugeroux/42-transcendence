@@ -86,27 +86,34 @@ const updateProjectSchema = {
 export function projectRoutes(app: FastifyInstance) {
   app.put(
     '/save',
-    { preHandler: app.authenticate, schema: saveProjectSchema },
+    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: saveProjectSchema },
     projectController.save,
   );
 
   app.get(
     '/load',
-    { preHandler: app.authenticate, schema: loadProjectSchema },
+    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: loadProjectSchema },
     projectController.load,
   );
 
-  app.get('/list', { preHandler: app.authenticate }, projectController.list);
+  app.get(
+    '/list',
+    { preHandler: [app.authenticate, app.authorize('studio:access')] },
+    projectController.list,
+  );
 
   app.put(
     '/update',
-    { preHandler: app.authenticate, schema: updateProjectSchema },
+    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: updateProjectSchema },
     projectController.update,
   );
 
   app.delete(
     '/delete',
-    { preHandler: app.authenticate, schema: deleteProjectSchema },
+    {
+      preHandler: [app.authenticate, app.authorize('studio:access')],
+      schema: deleteProjectSchema,
+    },
     projectController.detele,
   );
 }

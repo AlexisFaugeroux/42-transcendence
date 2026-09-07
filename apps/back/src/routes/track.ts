@@ -119,11 +119,15 @@ export function trackRoutes(app: FastifyInstance) {
     trackController.get,
   );
 
-  app.post('/upload', { preHandler: app.authenticate }, trackController.upload);
+  app.post(
+    '/upload',
+    { preHandler: [app.authenticate, app.authorize('track:write')] },
+    trackController.upload,
+  );
 
   app.put(
     '/update',
-    { preHandler: app.authenticate, schema: updateTrackSchema },
+    { preHandler: [app.authenticate, app.authorize('track:write')], schema: updateTrackSchema },
     trackController.update,
   );
 
