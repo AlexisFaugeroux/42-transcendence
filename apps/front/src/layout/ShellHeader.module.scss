@@ -1,34 +1,48 @@
+// Mirror Home TopBar layout: brand column ≈ left nav, then search, then actions.
 .header {
   height: 56px;
   flex-shrink: 0;
   box-sizing: border-box;
-  padding: 0 24px;
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--line-faint);
+  padding: 0 16px;
+  background: var(--color-void);
+  border-bottom: 1px solid var(--line-soft);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   color: var(--fg1);
+  width: 184px; // 16px padding + 184px ≈ 200px AppLayout nav column
+  flex-shrink: 0;
+}
+
+.search {
+  flex: 1;
+  max-width: 480px;
+}
+
+.spacer {
+  flex: 1;
 }
 
 .right {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-shrink: 0;
 }
 
-.me {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: var(--fg1);
-  font-size: var(--fs-12);
+@media (max-width: 720px) {
+  .brand {
+    width: auto;
+  }
+
+  .search {
+    display: none;
+  }
 }
