@@ -123,6 +123,12 @@
     "logout": "Cerrar sesión",
     "logoutError": "Se produjo un error al cerrar la sesión",
     "notifications": "Notificaciones",
+    "notificationsPanel": {
+      "empty": "No hay mensajes nuevos",
+      "newMessage": "Nuevo mensaje",
+      "title": "Mensajes",
+      "viewAll": "Ver todos los mensajes"
+    },
     "privacyTerms": "Privacidad",
     "producers": "Productores",
     "sessions": "Sesiones",
