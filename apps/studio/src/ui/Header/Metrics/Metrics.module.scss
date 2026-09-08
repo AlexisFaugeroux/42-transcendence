@@ -1,55 +1,61 @@
 .metricsContainer {
   display: flex;
   align-items: center;
+}
 
-  .metric {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    line-height: 1;
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 6px;
+  line-height: 1;
+  border-radius: 2px;
+}
 
-    .metricValue {
-      font-family: var(--font-mono);
-      font-weight: 400;
-      font-variant-numeric: tabular-nums;
-      font-size: 13px;
-      color: var(--fg1);
+.value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 19px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  color: var(--fg1);
+  text-align: center;
+}
 
-      &.primary {
-        font-size: 18px;
-      }
+.bpmInput {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 19px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  color: var(--color-orange);
+  width: 3ch;
+  text-align: center;
 
-      &.accent {
-        font-size: 18px;
-        color: var(--color-orange);
-      }
-    }
+  -moz-appearance: textfield;
 
-    .bpmInput {
-      all: unset;
-      cursor: pointer;
-      font-family: var(--font-mono);
-      font-weight: 400;
-      font-variant-numeric: tabular-nums;
-      font-size: 18px;
-      color: var(--color-orange);
-      width: 3ch;
-      text-align: right;
-      padding: 5px;
-
-      -moz-appearance: textfield;
-
-      &::-webkit-inner-spin-button,
-      &::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-    }
-
-    .metricLabel {
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-family: var(--font-mono);
-    }
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
+}
+
+.unitLabel {
+  font-size: 8px;
+  color: var(--fg3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-family: var(--font-mono);
+  margin-top: 2px;
+  text-align: center;
 }

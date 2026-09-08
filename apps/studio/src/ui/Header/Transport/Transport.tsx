@@ -32,45 +32,75 @@ export function Transport(): JSX.Element {
   return (
     <div className={styles.transportContainer}>
       <IconBtn
+        title="Play"
         color={theme.green}
         background={isPlaying ? `color-mix(in srgb, ${theme.green} 18%, ${theme.void}` : theme.void}
         borderColor={isPlaying ? theme.green : theme.lineSoft}
-        boxShadow={isPlaying ? `0 0 8px -3px ${theme.green}` : 'none'}
+        borderWidth={0.5}
+        borderStyle="solid"
+        borderRadius={3}
+        width={26}
+        height={26}
         onClick={() => {
           if (audioContext.state === 'suspended') {
             void audioContext.resume();
           }
-
           project.engine.play();
         }}
       >
-        <StudioIcon name="play" size={18} />
+        <StudioIcon name="play" size={14} />
       </IconBtn>
       <IconBtn
+        title="Stop"
         color={theme.fg1}
         background={isPlaying ? `color-mix(in srgb, ${theme.fg1} 18%, ${theme.void}` : theme.void}
         borderColor={isPlaying ? theme.fg1 : theme.lineSoft}
-        boxShadow={isPlaying ? `0 0 8px -3px ${theme.fg1}` : 'none'}
+        borderWidth={0.5}
+        borderStyle="solid"
+        borderRadius={3}
+        width={26}
+        height={26}
         onClick={() => {
           project.engine.stop(true);
         }}
       >
-        <StudioIcon name="stop" size={18} />
+        <StudioIcon name="stop" size={14} />
       </IconBtn>
       <IconBtn
+        title="Record"
+        color={theme.red}
+        background={theme.void}
+        borderColor={theme.lineSoft}
+        borderWidth={0.5}
+        borderStyle="solid"
+        borderRadius={3}
+        width={26}
+        height={26}
+        onClick={() => {
+          console.log('rec');
+        }}
+      >
+        <StudioIcon name="rec" size={14} />
+      </IconBtn>
+      <IconBtn
+        title="Loop"
         color={theme.orange}
         background={
           isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void
         }
         borderColor={isLooping ? theme.orange : theme.lineSoft}
-        boxShadow={isLooping ? `0 0 8px -3px ${theme.orange}` : 'none'}
+        borderWidth={0.5}
+        borderStyle="solid"
+        borderRadius={3}
+        width={26}
+        height={26}
         onClick={() => {
           project.editing.modify(() => {
             project.timelineBox.loopArea.enabled.setValue(!isLooping);
           });
         }}
       >
-        <StudioIcon name="loop" size={18} />
+        <StudioIcon name="loop" size={14} />
       </IconBtn>
     </div>
   );

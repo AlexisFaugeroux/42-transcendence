@@ -107,13 +107,12 @@ export function Header(): JSX.Element {
   return (
     <header className={styles.header}>
       <a className={styles.sessionsLink} href={`${FRONT_URL}/home`} onClick={onLogoClick}>
-        <MsnIcon name="msn" size="18px" color={theme.orange} />
-        <MsnWordmark size={13} accent="var(--color-orange)" />
+        <MsnIcon name="msn" size="16px" color={theme.orange} />
+        <MsnWordmark size={12} accent="var(--color-orange)" />
       </a>
       <Separator />
 
       <div className={styles.titleBloc}>
-        <span className={styles.projectPill}>{t('studio.header.project')}</span>
         <span className={styles.projectTitle}>{meta.name}</span>
         <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
           ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
@@ -125,16 +124,24 @@ export function Header(): JSX.Element {
         <IconBtn
           title={t('studio.header.undo')}
           color={canUndo ? undefined : 'var(--fg3)'}
+          background="transparent"
+          borderWidth={0}
+          width={24}
+          height={24}
           onClick={onUndo}
         >
-          <StudioIcon name="undo" size={14} />
+          <StudioIcon name="undo" size={13} />
         </IconBtn>
         <IconBtn
           title={t('studio.header.redo')}
           color={canRedo ? undefined : 'var(--fg3)'}
+          background="transparent"
+          borderWidth={0}
+          width={24}
+          height={24}
           onClick={onRedo}
         >
-          <StudioIcon name="redo" size={14} />
+          <StudioIcon name="redo" size={13} />
         </IconBtn>
       </div>
       <Separator />
@@ -143,23 +150,26 @@ export function Header(): JSX.Element {
       <Separator />
 
       <Metrics />
-      <Separator />
+
+      <div className={styles.spacer} />
 
       <Meter />
       <Separator />
 
-      <LanguageSelect compact />
-
-      <Button onClick={onSave} loading={isPending}>
-        {t('studio.header.save')}
-      </Button>
-      <Button
-        onClick={() => {
-          setExportOpen(true);
-        }}
-      >
-        {t('studio.header.export.button')}
-      </Button>
+      <div className={styles.actions}>
+        <LanguageSelect compact />
+        <Button onClick={onSave} loading={isPending} size="small">
+          {t('studio.header.save')}
+        </Button>
+        <Button
+          size="small"
+          onClick={() => {
+            setExportOpen(true);
+          }}
+        >
+          {t('studio.header.export.button')}
+        </Button>
+      </div>
 
       <ExportModal
         open={exportOpen}
