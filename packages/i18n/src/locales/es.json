@@ -819,8 +819,21 @@
         "saveFailed": "Error al guardar. Sigues en el estudio.",
         "title": "¿Salir del estudio?"
       },
+      "menu": {
+        "export": "Exportar",
+        "save": "Guardar"
+      },
       "project": "Proyecto",
+      "projectMenu": "Menú del proyecto",
       "redo": "Rehacer",
+      "rename": {
+        "body": "Elige un nuevo nombre para este proyecto.",
+        "failed": "Error al renombrar",
+        "required": "El nombre es obligatorio.",
+        "submit": "Renombrar",
+        "title": "Renombrar proyecto",
+        "tooLong": "El nombre debe tener 128 caracteres o menos."
+      },
       "save": "Guardar",
       "saved": "guardado",
       "undo": "Deshacer",

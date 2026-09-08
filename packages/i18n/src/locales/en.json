@@ -819,8 +819,21 @@
         "saveFailed": "Save failed. You are still in the studio.",
         "title": "Leave the studio?"
       },
+      "menu": {
+        "export": "Export",
+        "save": "Save"
+      },
       "project": "Project",
+      "projectMenu": "Project menu",
       "redo": "Redo",
+      "rename": {
+        "body": "Choose a new name for this project.",
+        "failed": "Rename failed",
+        "required": "Name is required.",
+        "submit": "Rename",
+        "title": "Rename project",
+        "tooLong": "Name must be 128 characters or fewer."
+      },
       "save": "Save",
       "saved": "saved",
       "undo": "Undo",

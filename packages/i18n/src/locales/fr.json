@@ -819,8 +819,21 @@
         "saveFailed": "La sauvegarde a échoué. Le studio n’a pas été quitté.",
         "title": "Quitter le studio ?"
       },
+      "menu": {
+        "export": "Exporter",
+        "save": "Enregistrer"
+      },
       "project": "Projet",
+      "projectMenu": "Menu du projet",
       "redo": "Rétablir",
+      "rename": {
+        "body": "Choisis un nouveau nom pour ce projet.",
+        "failed": "Échec du renommage",
+        "required": "Le nom est obligatoire.",
+        "submit": "Renommer",
+        "title": "Renommer le projet",
+        "tooLong": "Le nom doit faire 128 caractères ou moins."
+      },
       "save": "Enregistrer",
       "saved": "enregistré",
       "undo": "Annuler",

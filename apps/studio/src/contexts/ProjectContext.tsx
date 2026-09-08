@@ -4,6 +4,7 @@ import {
   createContext,
   type JSX,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -12,22 +13,27 @@ import {
 import { initializeOpenDaw } from '../lib/projectSetup';
 import type { ProjectProperties } from '../lib/types';
 
+export interface ProjectMeta {
+  id: string | null;
+  name: string | null;
+  visibility: string;
+  duration: number;
+}
+
 interface ProjectContextValue {
   audioContext: AudioContext;
   project: Project;
   localAudioBuffers: Map<string, AudioBuffer>;
-  meta: {
-    id: string | null;
-    name: string | null;
-    visibility: string;
-    duration: number;
-  };
+  meta: ProjectMeta;
+  renameProject: (name: string) => void;
 }
 
 const projectContext = createContext<ProjectContextValue | null>(null);
 
 export function ProjectProvider({ children }: { children: ReactNode }): JSX.Element {
-  const [value, setValue] = useState<ProjectContextValue | null>(null);
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
+  const [meta, setMeta] = useState<ProjectMeta | null>(null);
   const localAudioBuffersRef = useRef(new Map<string, AudioBuffer>());
   const { t } = useTranslation();
 
@@ -36,7 +42,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
 
     void (async () => {
       const query = new URLSearchParams(window.location.search);
-      const meta = {
+      const initialMeta: ProjectMeta = {
         duration: 0,
         id: query.get('projectId'),
         name: query.get('name'),
@@ -44,12 +50,12 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       };
 
       const properties: Omit<ProjectProperties, 'bpm'> = {
-        ...meta,
+        ...initialMeta,
         samples: query.getAll('sampleId'),
         state: '',
       };
 
-      const { audioContext, id, project } = await initializeOpenDaw(
+      const result = await initializeOpenDaw(
         {
           localAudioBuffers: localAudioBuffersRef.current,
         },
@@ -57,11 +63,15 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       );
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!mounted) return;
-      meta.id = id;
+
+      const nextMeta: ProjectMeta = { ...initialMeta, id: result.id };
       const url = new URL(window.location.href);
-      url.searchParams.set('projectId', id);
+      url.searchParams.set('projectId', result.id);
       window.history.replaceState(window.history.state, '', url);
-      setValue({ audioContext, localAudioBuffers: localAudioBuffersRef.current, meta, project });
+
+      setAudioContext(result.audioContext);
+      setProject(result.project);
+      setMeta(nextMeta);
     })();
 
     return () => {
@@ -69,9 +79,28 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
     };
   }, []);
 
-  if (!value) return <div>{t('common.loading')}</div>;
+  const renameProject = useCallback((name: string): void => {
+    setMeta((prev) => (prev ? { ...prev, name } : prev));
+    const url = new URL(window.location.href);
+    url.searchParams.set('name', name);
+    window.history.replaceState(window.history.state, '', url);
+  }, []);
 
-  return <projectContext.Provider value={value}>{children}</projectContext.Provider>;
+  if (!audioContext || !project || !meta) return <div>{t('common.loading')}</div>;
+
+  return (
+    <projectContext.Provider
+      value={{
+        audioContext,
+        localAudioBuffers: localAudioBuffersRef.current,
+        meta,
+        project,
+        renameProject,
+      }}
+    >
+      {children}
+    </projectContext.Provider>
+  );
 }
 
 export function useProject() {
