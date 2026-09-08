@@ -23,7 +23,7 @@ export function Meter(): JSX.Element {
   return (
     <div className={styles.peakMeter}>
       <div ref={labelRef} className={styles.peakMeterDisplayValue}></div>
-      <MsnPeakMeter peaksRef={peaksRef} width={120} />
+      <MsnPeakMeter peaksRef={peaksRef} width={64} />
     </div>
   );
 }

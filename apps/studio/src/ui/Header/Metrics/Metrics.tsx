@@ -55,27 +55,31 @@ export function Metrics(): JSX.Element {
 
   return (
     <div className={styles.metricsContainer}>
-      <div className={`${styles.metric} ${styles.bpmMetric}`}>
+      <div className={styles.unit}>
         <input
           type="number"
-          className={styles.bpmInput}
+          className={`${styles.value} ${styles.bpmInput}`}
           value={bpm}
+          aria-label={t('studio.metrics.bpm')}
           onChange={(e) => {
             const value = Number(e.target.value);
             if (value > 200) return;
-            handleBpmChange(Number(e.target.value));
+            handleBpmChange(value);
           }}
         />
-        <span className={styles.metricLabel}>{t('studio.metrics.bpm')}</span>
+        <span className={styles.unitLabel}>{t('studio.metrics.bpm')}</span>
       </div>
-      <div className={styles.metric}>
-        <span className={styles.metricValue}>{String(bar).padStart(3, '0')}</span>:
-        <span className={styles.metricValue}>{String(beat).padStart(2, '0')}</span>
-      </div>
-      <div className={styles.metric}>
-        <span className={styles.metricValue}>
+      <div className={styles.unit}>
+        <span className={styles.value}>
           {nominator}/{denominator}
         </span>
+        <span className={styles.unitLabel}>sig</span>
+      </div>
+      <div className={`${styles.unit} ${styles.position}`}>
+        <span className={styles.value}>
+          {String(bar).padStart(2, '0')}.{String(beat).padStart(2, '0')}.000
+        </span>
+        <span className={styles.unitLabel}>bars</span>
       </div>
     </div>
   );
