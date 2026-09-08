@@ -21,6 +21,7 @@ import type { JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HeaderIconButton } from '../components/HeaderIconButton/HeaderIconButton';
 import { UserChip } from '../components/UserChip/UserChip';
+import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
 import styles from './ShellHeader.module.scss';
 
 /** Shared top bar for AppLayout. Nav links live in LeftNav, not here. */
@@ -29,6 +30,7 @@ export function ShellHeader(): JSX.Element {
   const { logout } = useUser();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const unreadCount = useUnreadMessagesCount();
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const items: MenuProps['items'] = [
@@ -102,7 +104,7 @@ export function ShellHeader(): JSX.Element {
       <div className={styles.right}>
         <LanguageSelect />
 
-        <Badge count={3} size="small" color="var(--color-orange)">
+        <Badge count={unreadCount} size="small" color="var(--color-orange)">
           <HeaderIconButton label={t('header.notifications')}>
             <MsnIcon name="bell" size="16px" />
           </HeaderIconButton>
