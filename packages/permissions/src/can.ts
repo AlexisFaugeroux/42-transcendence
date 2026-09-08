@@ -4,16 +4,19 @@ import { Role, type Role as RoleType } from './roles';
 export const ROLES_PERMISSIONS: Record<RoleType, PermissionsType[]> = {
   [Role.ADMIN]: [
     Permissions.MANAGE_ACCOUNTS,
+    Permissions.CHAT_ACCESS,
     Permissions.SAMPLE_WRITE,
     Permissions.TRACK_WRITE,
     Permissions.STUDIO_ACCESS,
   ],
   [Role.MODERATOR]: [
+    Permissions.CHAT_ACCESS,
     Permissions.SAMPLE_WRITE,
     Permissions.TRACK_WRITE,
     Permissions.STUDIO_ACCESS,   
   ],
   [Role.ARTIST]: [
+    Permissions.CHAT_ACCESS,
     Permissions.SAMPLE_WRITE,
     Permissions.TRACK_WRITE,
     Permissions.STUDIO_ACCESS,

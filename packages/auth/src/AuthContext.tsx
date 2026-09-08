@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type JSX, type ReactNode } from 'react';
+import { can, type Permissions } from '@transcendence/permissions';
 import type { AuthUser, LoginBody } from './types';
 import { loginRequest, logoutRequest, meRequest } from './api';
 
@@ -71,4 +72,13 @@ export function useAuthUser(): AuthUser {
   const { user } = useUser();
   if (!user) throw new Error(`useAuthUser outside an authenticated route`);
   return user;
+}
+
+export function usePermission(permission: Permissions | Permissions[]): boolean {
+  const { user } = useUser();
+  if (!user) return false;
+
+  return (Array.isArray(permission) ? permission : [permission]).some((item) =>
+    can(user.role, item),
+  );
 }

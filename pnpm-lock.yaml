@@ -459,6 +459,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@transcendence/permissions':
+        specifier: workspace:*
+        version: link:../permissions
       react:
         specifier: 19.2.6
         version: 19.2.6

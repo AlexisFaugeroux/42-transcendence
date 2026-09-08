@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
+import { RequirePermission } from './auth/RequirePermission';
 import { AppLayout } from './layout/AppLayout';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Following } from './pages/Following/Following';
@@ -36,17 +37,23 @@ export function App(): JSX.Element {
           <Route path="/legal" element={<Legal />} />
           <Route element={<RequireAuth />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/library" element={<Samples />} />
-            <Route path="/tracks" element={<Tracks />} />
-            <Route path="/sessions" element={<Sessions />} />
+            <Route element={<RequirePermission permission="studio:access" />}>
+              <Route path="/library" element={<Samples />} />
+              <Route path="/sessions" element={<Sessions />} />
+            </Route>
+            <Route element={<RequirePermission permission="track:write" />}>
+              <Route path="/tracks" element={<Tracks />} />
+            </Route>
             <Route path="/settings" element={<Dashboard />} />
             <Route path="/producers" element={<Producers />} />
             <Route path="/producers/:handle" element={<ProducerProfile />} />
             <Route path="/following" element={<Following />} />
 
-            <Route element={<AppLayout />}>
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/messages/:conversationId" element={<Messages />} />
+            <Route element={<RequirePermission permission="chat:access" />}>
+              <Route element={<AppLayout />}>
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/messages/:conversationId" element={<Messages />} />
+              </Route>
             </Route>
           </Route>
 

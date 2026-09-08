@@ -381,6 +381,8 @@
     }
   },
   "nav": {
+    "admin": "Administración",
+    "administration": "Administración",
     "exports": "Exportaciones",
     "following": "Siguiendo",
     "home": "Inicio",

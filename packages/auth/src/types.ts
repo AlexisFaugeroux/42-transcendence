@@ -1,3 +1,5 @@
+import type { Role } from '@transcendence/permissions';
+
 export interface LoginBody {
   email: string;
   password: string;
@@ -21,7 +23,7 @@ export interface AuthUser {
   handle: string;
   bio?: string;
   links?: { kind: string; url: string }[] | null;
-  role: 'ADMIN' | 'ARTIST';
+  role: Role;
   joined: Date;
 }
 
