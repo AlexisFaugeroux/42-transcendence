@@ -1,3 +1,4 @@
+import { useUser } from '@transcendence/auth';
 import { LanguageSelect, type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { Button, MsnIcon, MsnWordmark } from '@transcendence/ui';
 import type { JSX } from 'react';
@@ -15,11 +16,12 @@ const NAV_LINKS: TranslationKey[] = [
 
 export function TopNav(): JSX.Element {
   const { t } = useTranslation();
+  const { user, loading } = useUser();
 
   return (
     <header className={styles.nav}>
       <div className={styles.bar}>
-        <Link to="/" className={styles.brand}>
+        <Link to={user ? '/home' : '/'} className={styles.brand}>
           <MsnIcon name="msn" size="22px" color="hsl(25, 90%, 55%)" />
           <MsnWordmark size={16} accent="hsl(25, 90%, 55%)" />
         </Link>
@@ -34,12 +36,20 @@ export function TopNav(): JSX.Element {
 
         <div className={styles.actions}>
           <LanguageSelect />
-          <Link to="/login">
-            <Button>{t('auth.login.action')}</Button>
-          </Link>
-          <Link to="/register">
-            <Button type="primary">{t('auth.register.action')}</Button>
-          </Link>
+          {loading ? null : user ? (
+            <Link to="/home">
+              <Button type="primary">{t('header.home')}</Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button>{t('auth.login.action')}</Button>
+              </Link>
+              <Link to="/register">
+                <Button type="primary">{t('auth.register.action')}</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
