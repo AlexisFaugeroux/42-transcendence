@@ -1,6 +1,7 @@
 import { useTranslation } from '@transcendence/i18n';
 import { Button } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
+import { sumUnreadCount } from '../../hooks/useUnreadMessagesCount';
 import type { Conversation } from '../../types/chat';
 import styles from './ConversationList.module.scss';
 import { ConversationRow } from './ConversationRow';
@@ -24,12 +25,7 @@ export function ConversationList({
 }: ConversationListProps): JSX.Element {
   const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
-  const unread = conversations.reduce((acc, curr) => {
-    curr.participants.forEach((participant) => {
-      if (participant.id === meId) acc += participant.unreadCount;
-    });
-    return acc;
-  }, 0);
+  const unread = sumUnreadCount(conversations, meId);
 
   return (
     <section className={styles.column}>
