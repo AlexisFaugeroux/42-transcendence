@@ -5,6 +5,8 @@ import { useProject } from '../../contexts/ProjectContext';
 import styles from './Footer.module.scss';
 import { FooterItem } from './FooterItem';
 
+const FRONT_URL = import.meta.env.VITE_FRONT_URL;
+
 export function Footer(): JSX.Element {
   const { audioContext } = useProject();
   const { t } = useTranslation();
@@ -35,8 +37,14 @@ export function Footer(): JSX.Element {
 
       <div className={styles.footerDivider} />
       <span className={styles.footerLegalMentions}>
-        {/* TODO: Link to privacy terms page */}
-        <a className={styles.footerPrivacy}>{t('legal.privacy.navLabel')}</a>
+        <a
+          className={styles.footerPrivacy}
+          href={`${FRONT_URL}/privacy`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('legal.privacy.navLabel')}
+        </a>
       </span>
     </footer>
   );
