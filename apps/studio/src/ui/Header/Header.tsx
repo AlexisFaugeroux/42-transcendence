@@ -1,7 +1,16 @@
 import { UUID } from '@opendaw/lib-std';
 import { useMutation } from '@tanstack/react-query';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
-import { Button, IconBtn, MsnIcon, MsnWordmark, Separator, theme } from '@transcendence/ui';
+import {
+  ConfigProvider,
+  Dropdown,
+  IconBtn,
+  type MenuProps,
+  MsnIcon,
+  MsnWordmark,
+  Separator,
+  theme,
+} from '@transcendence/ui';
 import { type JSX, type MouseEvent, useEffect, useState } from 'react';
 import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
@@ -15,6 +24,7 @@ import styles from './Header.module.scss';
 import { LeaveStudioModal } from './LeaveStudioModal';
 import { Meter } from './Meter/Meter';
 import { Metrics } from './Metrics/Metrics';
+import { RenameProjectModal } from './RenameProjectModal';
 import { Transport } from './Transport/Transport';
 
 const FRONT_URL = import.meta.env.VITE_FRONT_URL;
@@ -26,7 +36,9 @@ export function Header(): JSX.Element {
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [leaveError, setLeaveError] = useState<string | null>(null);
   const [exportOpen, setExportOpen] = useState(false);
-  const { meta, project } = useProject();
+  const [renameOpen, setRenameOpen] = useState(false);
+  const [renameError, setRenameError] = useState<string | null>(null);
+  const { meta, project, renameProject } = useProject();
   const { setClips, setTracks } = useTracks();
   const { t } = useTranslation();
 
@@ -69,9 +81,10 @@ export function Header(): JSX.Element {
     },
   });
 
-  const buildPayload = (): ProjectProperties => ({
+  const buildPayload = (name = meta.name): ProjectProperties => ({
     ...meta,
     bpm: project.timelineBox.bpm.getValue(),
+    name,
     samples: project.collectSampleUUIDs().map((uuid) => UUID.toString(uuid)),
     state: arrayBufferToBase64(project.toArrayBuffer()),
   });
@@ -104,6 +117,58 @@ export function Header(): JSX.Element {
     });
   };
 
+  const onRenameConfirm = (name: string): void => {
+    setRenameError(null);
+    save(buildPayload(name), {
+      onError: (error) => {
+        setRenameError(error instanceof Error ? error.message : String(error));
+      },
+      onSuccess: () => {
+        renameProject(name);
+        project.editing.markSaved();
+        setSaved(true);
+        setRenameOpen(false);
+      },
+    });
+  };
+
+  const menuItems: MenuProps['items'] = [
+    {
+      disabled: saved || isPending,
+      icon: <StudioIcon name="save" color={theme.fg1} size={10} style={{ marginRight: '4px' }} />,
+      key: 'save',
+      label: t('common.save'),
+      style: { fontSize: '10px' },
+    },
+    {
+      icon: <StudioIcon name="pencil" color={theme.fg1} size={10} style={{ marginRight: '4px' }} />,
+      key: 'rename',
+      label: t('common.rename'),
+      style: { fontSize: '10px' },
+    },
+    {
+      icon: <StudioIcon name="share" color={theme.fg1} size={10} style={{ marginRight: '4px' }} />,
+      key: 'export',
+      label: t('studio.header.export.button'),
+      style: { fontSize: '10px' },
+    },
+  ];
+
+  const onMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'save') {
+      onSave();
+      return;
+    }
+    if (key === 'rename') {
+      setRenameError(null);
+      setRenameOpen(true);
+      return;
+    }
+    if (key === 'export') {
+      setExportOpen(true);
+    }
+  };
+
   return (
     <header className={styles.header}>
       <a className={styles.sessionsLink} href={`${FRONT_URL}/home`} onClick={onLogoClick}>
@@ -112,12 +177,35 @@ export function Header(): JSX.Element {
       </a>
       <Separator />
 
-      <div className={styles.titleBloc}>
-        <span className={styles.projectTitle}>{meta.name}</span>
-        <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
-          ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
-        </span>
-      </div>
+      <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
+        <div className={styles.titleBloc}>
+          <Dropdown
+            trigger={['click']}
+            placement="bottomLeft"
+            menu={{
+              items: menuItems,
+              onClick: onMenuClick,
+              style: { border: `1px solid ${theme.lineSoft}` },
+            }}
+          >
+            <button
+              type="button"
+              className={styles.titleMenu}
+              title={t('studio.header.projectMenu')}
+              aria-label={t('studio.header.projectMenu')}
+            >
+              <span className={styles.projectEyebrow}>{t('studio.header.project')}</span>
+              <span className={styles.projectTitle}>{meta.name}</span>
+              <span className={styles.projectCaret} aria-hidden>
+                <StudioIcon name="triangle" size={10} />
+              </span>
+            </button>
+          </Dropdown>
+          <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
+            ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
+          </span>
+        </div>
+      </ConfigProvider>
       <Separator />
 
       <div>
@@ -158,17 +246,6 @@ export function Header(): JSX.Element {
 
       <div className={styles.actions}>
         <LanguageSelect compact />
-        <Button onClick={onSave} loading={isPending} size="small">
-          {t('studio.header.save')}
-        </Button>
-        <Button
-          size="small"
-          onClick={() => {
-            setExportOpen(true);
-          }}
-        >
-          {t('studio.header.export.button')}
-        </Button>
       </div>
 
       <ExportModal
@@ -179,6 +256,20 @@ export function Header(): JSX.Element {
         onClose={() => {
           setExportOpen(false);
         }}
+      />
+
+      <RenameProjectModal
+        open={renameOpen}
+        initialName={meta.name ?? ''}
+        saving={isPending}
+        error={renameError}
+        onCancel={() => {
+          if (!isPending) {
+            setRenameOpen(false);
+            setRenameError(null);
+          }
+        }}
+        onConfirm={onRenameConfirm}
       />
 
       <LeaveStudioModal

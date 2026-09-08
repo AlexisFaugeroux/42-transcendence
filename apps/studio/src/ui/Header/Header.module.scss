@@ -26,30 +26,83 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 0 8px;
   min-width: 0;
+  padding-right: 4px;
+}
 
-  .projectTitle {
-    color: var(--fg1);
-    font-size: 12px;
-    font-weight: 400;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 160px;
-  }
+.titleMenu {
+  background: transparent;
+  border: 0.5px solid transparent;
+  border-radius: 4px;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  min-width: 0;
+  max-height: 28px;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
 
-  .projectState {
-    flex-shrink: 0;
-    color: var(--color-green);
-    font-size: 8px;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
+  &:hover {
+    background: color-mix(in srgb, var(--fg1) 6%, transparent);
+    border-color: var(--line-soft);
 
-    &[data-saved='false'] {
-      color: var(--color-red);
+    .projectCaret {
+      color: var(--color-orange);
+      border-color: var(--color-orange);
     }
+
+    .projectTitle {
+      color: var(--color-orange);
+    }
+  }
+}
+
+.projectEyebrow {
+  flex-shrink: 0;
+  color: var(--fg3);
+  font-size: 9px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.projectTitle {
+  color: var(--fg1);
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+.projectCaret {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 0.5px solid var(--line-soft);
+  color: var(--fg2);
+}
+
+.projectState {
+  flex-shrink: 0;
+  color: var(--color-green);
+  font-size: 8px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  pointer-events: none;
+
+  &[data-saved='false'] {
+    color: var(--color-red);
   }
 }
 
