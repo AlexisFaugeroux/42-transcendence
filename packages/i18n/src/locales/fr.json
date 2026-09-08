@@ -123,6 +123,12 @@
     "logout": "Déconnexion",
     "logoutError": "Une erreur est survenue lors de la déconnexion",
     "notifications": "Notifications",
+    "notificationsPanel": {
+      "empty": "Aucun nouveau message",
+      "newMessage": "Nouveau message",
+      "title": "Messages",
+      "viewAll": "Voir tous les messages"
+    },
     "privacyTerms": "Confidentialité",
     "producers": "Producteurs",
     "sessions": "Sessions",

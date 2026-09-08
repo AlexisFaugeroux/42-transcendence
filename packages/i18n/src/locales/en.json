@@ -123,6 +123,12 @@
     "logout": "Logout",
     "logoutError": "An error occurred while logging out",
     "notifications": "Notifications",
+    "notificationsPanel": {
+      "empty": "No new messages",
+      "newMessage": "New message",
+      "title": "Messages",
+      "viewAll": "View all messages"
+    },
     "privacyTerms": "Privacy terms",
     "producers": "Producers",
     "sessions": "Sessions",
