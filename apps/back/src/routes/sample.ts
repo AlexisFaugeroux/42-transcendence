@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { sampleController } from '../controllers/sample';
+import { sampleController } from '../controllers/sample/sample';
 import { USER_KINDS } from '../domain/sample';
 import { Family, Key, Mode, SampleKind, VisibilityType } from '../generated/prisma/enums';
 

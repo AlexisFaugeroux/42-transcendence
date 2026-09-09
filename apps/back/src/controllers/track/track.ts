@@ -1,37 +1,14 @@
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { BadRequestError, ForbiddenError } from '../domain/errors';
-import type { GetTracksInput, Track, UpdateTrackInput } from '../domain/track';
-import { trackRepository } from '../repositories/track';
-import { userRepository } from '../repositories/user';
-import { trackStorageService } from '../services/audio/trackStorage';
-import { msnpManager } from '../services/msnp';
-import { type WavInfo, wavManager } from '../services/wav';
-import { parseUploadTrackFields } from '../utils/validation';
+import { BadRequestError, ForbiddenError } from '../../domain/errors';
 
-interface GetTracksRoute extends RouteGenericInterface {
-  Params: { handle?: string };
-  Querystring: GetTracksInput;
-  Reply: Track[];
-}
-
-interface UploadTrackRoute extends RouteGenericInterface {
-  Reply: Track;
-}
-
-interface UpdateTrackRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-  Body: UpdateTrackInput;
-  Reply: Track;
-}
-
-interface DeleteTrackRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-}
+import { trackRepository } from '../../repositories/track/track';
+import { userRepository } from '../../repositories/user/user';
+import { trackStorageService } from '../../services/audio/trackStorage';
+import { msnpManager } from '../../services/msnp';
+import { type WavInfo, wavManager } from '../../services/wav';
+import { parseUploadTrackFields } from '../../utils/validation';
+import type { DeleteTrackRoute, GetTracksRoute, UpdateTrackRoute, UploadTrackRoute } from './types';
 
 class TrackFileController {
   public get = async (req: FastifyRequest<GetTracksRoute>, reply: FastifyReply): Promise<void> => {
@@ -55,7 +32,7 @@ class TrackFileController {
     req: FastifyRequest<UploadTrackRoute>,
     reply: FastifyReply<UploadTrackRoute>,
   ): Promise<void> => {
-    const { ownerId } = await userRepository.findById(req.authUser.id);
+    const { ownerId } = await userRepository.find({ id: req.authUser.id });
 
     const data = await req.file();
     if (!data) throw new BadRequestError();
@@ -111,7 +88,7 @@ class TrackFileController {
   ): Promise<void> => {
     if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const track = await trackRepository.findById(req.query.id);
 
     if (track.ownerId !== user.ownerId) throw new ForbiddenError();
@@ -125,7 +102,7 @@ class TrackFileController {
     req: FastifyRequest<DeleteTrackRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const track = await trackRepository.findById(req.query.id);
 
     if (track.ownerId !== user.ownerId) throw new ForbiddenError();

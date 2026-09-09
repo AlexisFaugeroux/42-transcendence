@@ -1,14 +1,14 @@
-import { formatISO } from '@transcendence/date';
 import type {
   GetProjectInput,
   Project,
   UpdateProjectInput,
   UpsertProjectInput,
-} from '../domain/project';
-import type { PrismaClient, Sample, StudioProject } from '../generated/prisma/client';
-import { toArrayBuffer } from '../utils/bytes';
-import { prisma } from '../utils/prisma';
-import { mapError } from './helpers';
+} from '../../domain/project';
+import type { PrismaClient } from '../../generated/prisma/client';
+
+import { prisma } from '../../utils/prisma';
+import { mapError } from '../helpers';
+import { buildFilters, formatProject } from './helpers';
 
 class ProjectRepository {
   private readonly prisma: PrismaClient;
@@ -42,7 +42,7 @@ class ProjectRepository {
         where: { id: input.id },
       });
 
-      const formattedProject = this._format(upsertProject);
+      const formattedProject = formatProject(upsertProject);
 
       return formattedProject;
     } catch (error: unknown) {
@@ -57,7 +57,7 @@ class ProjectRepository {
         where: { id },
       });
 
-      const formattedProject = this._format(project);
+      const formattedProject = formatProject(project);
 
       return formattedProject;
     } catch (error: unknown) {
@@ -66,7 +66,7 @@ class ProjectRepository {
   }
 
   public async get(input: GetProjectInput): Promise<Project[]> {
-    const filters = this._buildFilters(input);
+    const filters = buildFilters(input);
 
     const where = Object.keys(filters).length ? filters : undefined;
 
@@ -75,7 +75,7 @@ class ProjectRepository {
       where,
     });
 
-    const formattedProjects = projects.map((project) => this._format(project));
+    const formattedProjects = projects.map((project) => formatProject(project));
 
     return formattedProjects;
   }
@@ -88,7 +88,7 @@ class ProjectRepository {
         where: { id },
       });
 
-      return this._format(updatedProject);
+      return formatProject(updatedProject);
     } catch (error: unknown) {
       throw mapError(error, 'Project');
     }
@@ -100,44 +100,6 @@ class ProjectRepository {
     } catch (error: unknown) {
       throw mapError(error, 'Project');
     }
-  }
-
-  private _format(project: StudioProject & { samples: Pick<Sample, 'id'>[] }): Project {
-    const { createdAt, key, mode, samples, state, updatedAt, visibility, ...rest } = project;
-
-    const buffer = toArrayBuffer(state);
-    const encodedState = Buffer.from(buffer).toString('base64');
-
-    const formattedSamples = samples.map(({ id }) => id);
-
-    const formattedCreatedAt = formatISO(createdAt);
-    const formattedUpdatedAt = formatISO(updatedAt);
-
-    return {
-      ...rest,
-      createdAt: formattedCreatedAt,
-      key: key ?? undefined,
-      mode: mode ?? undefined,
-      samples: formattedSamples,
-      state: encodedState,
-      updatedAt: formattedUpdatedAt,
-    };
-  }
-
-  private _buildFilters(input: GetProjectInput) {
-    const { ids, ownerIds, visibilities } = input;
-
-    const idFilter = ids?.length ? { id: { in: ids } } : undefined;
-    const ownerIdFilter = ownerIds?.length ? { ownerId: { in: ownerIds } } : undefined;
-    const visibilityFilter = visibilities?.length
-      ? { visibility: { in: visibilities } }
-      : undefined;
-
-    return {
-      ...idFilter,
-      ...ownerIdFilter,
-      ...visibilityFilter,
-    };
   }
 }
 

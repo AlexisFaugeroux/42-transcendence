@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { authController } from '../controllers/auth';
+import { authController } from '../controllers/auth/auth';
 
 const registerSchema = {
   body: {

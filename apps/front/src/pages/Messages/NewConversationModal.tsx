@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { openConversation } from '../../api/chat/chat';
 import { useUserRelations } from '../../hooks/useUserRelations';
 import type { Conversation } from '../../types/chat';
-import type { User } from '../../types/user';
+import type { UserOnlineStatus } from '../../types/user';
 import style from './NewConversationModal.module.scss';
 
 interface NewSessionConvProps {
@@ -28,7 +28,7 @@ export function NewConversationModal({ onClose, open }: NewSessionConvProps): JS
   const { users, isLoading } = useUserRelations();
   const [newChat, setNewChat] = useState(false);
   const [search, setSearch] = useState<string>('');
-  const [to, setTo] = useState<User | null>(null);
+  const [to, setTo] = useState<UserOnlineStatus | null>(null);
   const queryClient = useQueryClient();
 
   const { mutate: openConv } = useMutation({

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { trackController } from '../controllers/track';
+import { trackController } from '../controllers/track/track';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
 
 const trackFilterProperties = {

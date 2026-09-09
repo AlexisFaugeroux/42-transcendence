@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { userController } from '../controllers/user';
+import { userController } from '../controllers/user/user';
 
 const updateProfileSchema = {
   body: {

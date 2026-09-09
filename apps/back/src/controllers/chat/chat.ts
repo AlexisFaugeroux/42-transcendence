@@ -1,37 +1,15 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import type { RouteGenericInterface } from 'fastify';
-import type { Conversation, Message } from '../domain/chat';
-import type { CreateMessageInput } from '../domain/chat';
-import { UnauthorizedError } from '../domain/errors';
-import { chatRepository } from '../repositories/chat';
-import { websocketController } from './websocket';
 
-interface CreateChatRequest extends RouteGenericInterface {
-  Body: {
-    authorId: string;
-    toId: string;
-    content: string;
-  };
-  Reply: Conversation;
-}
-
-interface ListMessages extends RouteGenericInterface {
-  Querystring: {
-    conversationId: string;
-  };
-  Reply: Message[];
-}
-
-interface SendMessageRequest extends RouteGenericInterface {
-  Body: CreateMessageInput;
-  Reply: Message;
-}
-
-interface MarkAsReadRequest extends RouteGenericInterface {
-  Body: {
-    conversationId: string;
-  };
-}
+import { UnauthorizedError } from '../../domain/errors';
+import { chatRepository } from '../../repositories/chat/chat';
+import { websocketController } from '../websocket/websocket';
+import type {
+  CreateChatRequest,
+  ListMessages,
+  MarkAsReadRequest,
+  SendMessageRequest,
+} from './types';
+import { isAParticipant } from './helpers';
 
 class ChatController {
   public createChat = async (
@@ -73,7 +51,7 @@ class ChatController {
     const userId = req.authUser.id;
     const conversation = await chatRepository.listOneConversation(conversationId);
 
-    if (!this.isAParticipant(userId, conversation.participants))
+    if (!isAParticipant(userId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to get those messages');
 
     const messages = await chatRepository.listMessageByConversationId(conversationId);
@@ -91,7 +69,7 @@ class ChatController {
 
     const conversation = await chatRepository.listOneConversation(conversationId);
 
-    if (authorId !== userId || !this.isAParticipant(authorId, conversation.participants))
+    if (authorId !== userId || !isAParticipant(authorId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
 
     const toSend = await chatRepository.createMessage(message);
@@ -106,14 +84,10 @@ class ChatController {
     const conversationId = req.body.conversationId;
 
     const conversation = await chatRepository.listOneConversation(conversationId);
-    if (!this.isAParticipant(userId, conversation.participants))
+    if (!isAParticipant(userId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
     await chatRepository.markAsRead(conversationId, userId);
     reply.code(200).send();
-  };
-
-  private isAParticipant = (userId: string, participants: Conversation['participants']) => {
-    return participants.find((participant) => participant.id === userId) !== undefined;
   };
 }
 

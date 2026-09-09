@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { trackController } from '../controllers/track';
-import { userController } from '../controllers/user';
+import { trackController } from '../controllers/track/track';
+import { userController } from '../controllers/user/user';
 import { producerTracksQuerySchema } from './track';
 
 const handleParamsSchema = {
@@ -47,7 +47,7 @@ export function producerRoutes(app: FastifyInstance) {
       preHandler: app.authenticate,
       schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
     },
-    userController.listFollowers,
+    userController.listFollowerProducers,
   );
 
   app.get(

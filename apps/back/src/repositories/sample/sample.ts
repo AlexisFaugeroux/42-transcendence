@@ -1,20 +1,22 @@
-import { formatISO } from '@transcendence/date';
 import type {
   CreateSampleInput,
   FamilyUsage,
   GetSampleInput,
   Sample,
   UpdateSampleInput,
-  Visibility,
-} from '../domain/sample';
-import type { PrismaClient, Sample as PrismaSample, OwnerType } from '../generated/prisma/client';
-import type { SampleWhereInput } from '../generated/prisma/models';
-import { prisma } from '../utils/prisma';
-import { inFilter, mapError } from './helpers';
+} from '../../domain/sample';
+import type {
+  PrismaClient,
+  Sample as PrismaSample,
+  OwnerType,
+} from '../../generated/prisma/client';
+
+import { prisma } from '../../utils/prisma';
+import { mapError } from '../helpers';
+import { buildFilters, formatSample } from './helpers';
 
 class SampleRepository {
   private readonly prisma: PrismaClient;
-  private readonly OTHERS_VISIBILITIES: Visibility[] = ['PUBLIC', 'SHARED'];
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -26,7 +28,7 @@ class SampleRepository {
         data: input,
       });
 
-      const formattedSample = this._format(createdSample);
+      const formattedSample = formatSample(createdSample);
 
       return formattedSample;
     } catch (error: unknown) {
@@ -42,7 +44,7 @@ class SampleRepository {
         },
       });
 
-      const formattedSample = this._format(sample);
+      const formattedSample = formatSample(sample);
 
       return formattedSample;
     } catch (error: unknown) {
@@ -56,7 +58,7 @@ class SampleRepository {
     take?: number,
     q?: string,
   ): Promise<{ items: (Sample & { ownerType: OwnerType })[]; total: number }> {
-    const filters = this._buildFilters(input);
+    const filters = buildFilters(input);
     const search = q?.trim();
 
     const where = {
@@ -79,7 +81,7 @@ class SampleRepository {
     ]);
 
     const formattedSamples = samples.map((sample) => ({
-      ...this._format({ ...sample }),
+      ...formatSample({ ...sample }),
       ownerType: sample.owner.type,
     }));
     return { items: formattedSamples, total };
@@ -92,7 +94,7 @@ class SampleRepository {
         where: { id },
       });
 
-      const formattedSample = this._format(updatedSample);
+      const formattedSample = formatSample(updatedSample);
 
       return formattedSample;
     } catch (error: unknown) {
@@ -127,62 +129,6 @@ class SampleRepository {
     });
 
     return rows.map((row) => ({ bytes: row._sum.bytes ?? 0, family: row.family }));
-  }
-
-  private _format(sample: PrismaSample): Sample {
-    const { createdAt, updatedAt, ...rest } = sample;
-
-    const formattedCreatedAt = formatISO(createdAt);
-
-    return {
-      ...rest,
-      createdAt: formattedCreatedAt,
-      peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks'),
-    };
-  }
-
-  private _criteriaFilter(input: GetSampleInput): SampleWhereInput {
-    const { bpms, families, ids, keys, kinds, modes } = input;
-
-    return {
-      bpm: inFilter(bpms),
-      family: inFilter(families),
-      id: inFilter(ids),
-      key: inFilter(keys),
-      kind: inFilter(kinds),
-      mode: inFilter(modes),
-    };
-  }
-
-  private _scopeFilter(input: GetSampleInput): SampleWhereInput {
-    const { ownerIds, visibilities } = input;
-
-    const visibility = inFilter(visibilities);
-
-    if (!ownerIds?.length) {
-      return { visibility };
-    }
-
-    const mine: SampleWhereInput = { ownerId: { in: ownerIds }, visibility };
-
-    const othersVisibilities = visibilities?.length
-      ? visibilities.filter((v) => this.OTHERS_VISIBILITIES.includes(v))
-      : this.OTHERS_VISIBILITIES;
-
-    if (!othersVisibilities.length) {
-      return mine;
-    }
-
-    return {
-      OR: [mine, { ownerId: { notIn: ownerIds }, visibility: { in: othersVisibilities } }],
-    };
-  }
-
-  private _buildFilters(input: GetSampleInput): SampleWhereInput {
-    return {
-      ...this._criteriaFilter(input),
-      ...this._scopeFilter(input),
-    };
   }
 }
 

@@ -9,7 +9,7 @@ import {
   unfollowProducer,
 } from '../api/producers';
 import type { Paginated } from '../types/pagination';
-import type { PublicProducer, PublicProducerProfile } from '../types/producer';
+import type { Producer, ProducerProfile } from '../types/producer';
 
 // Reads hooks
 
@@ -61,7 +61,7 @@ export function useFollow() {
     onError: (_err, handle, context) => {
       if (context?.previous) {
         // rollback to snapshot ('previous')
-        queryClient.setQueryData<PublicProducerProfile>(['producer', handle], context.previous);
+        queryClient.setQueryData<ProducerProfile>(['producer', handle], context.previous);
       }
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] }); // invalidate query -> trigger a new fetch
       void queryClient.invalidateQueries({ queryKey: myFollowingKey });
@@ -70,11 +70,11 @@ export function useFollow() {
     onMutate: async (handle: string) => {
       await queryClient.cancelQueries({ queryKey: ['producer', handle] }); // cancel, avoid race condition
 
-      const previous = queryClient.getQueryData<PublicProducerProfile>(['producer', handle]);
+      const previous = queryClient.getQueryData<ProducerProfile>(['producer', handle]);
 
       if (previous) {
         // update the cache with the new data
-        queryClient.setQueryData<PublicProducerProfile>(['producer', handle], {
+        queryClient.setQueryData<ProducerProfile>(['producer', handle], {
           ...previous,
           followersCount: previous.followersCount + 1,
           isFollowing: true,
@@ -116,20 +116,20 @@ export function useUnfollow() {
       await queryClient.cancelQueries({ queryKey: ['producer', handle] });
       await queryClient.cancelQueries({ queryKey: myFollowingKey });
 
-      const previous = queryClient.getQueryData<PublicProducerProfile>(['producer', handle]);
-      const previousFollowing = queryClient.getQueriesData<Paginated<PublicProducer>>({
+      const previous = queryClient.getQueryData<ProducerProfile>(['producer', handle]);
+      const previousFollowing = queryClient.getQueriesData<Paginated<Producer>>({
         queryKey: myFollowingKey,
       });
 
       if (previous) {
-        queryClient.setQueryData<PublicProducerProfile>(['producer', handle], {
+        queryClient.setQueryData<ProducerProfile>(['producer', handle], {
           ...previous,
           followersCount: Math.max(0, previous.followersCount - 1),
           isFollowing: false,
         });
       }
 
-      queryClient.setQueriesData<Paginated<PublicProducer>>({ queryKey: myFollowingKey }, (old) => {
+      queryClient.setQueriesData<Paginated<Producer>>({ queryKey: myFollowingKey }, (old) => {
         if (!old) return old;
         // update the cache with the new data
         return {

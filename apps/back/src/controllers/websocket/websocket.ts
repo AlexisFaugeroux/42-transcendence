@@ -1,8 +1,8 @@
 import type { WebSocket } from '@fastify/websocket';
 import type { FastifyRequest } from 'fastify';
-import type { Message } from '../domain/chat';
-import { chatRepository } from '../repositories/chat';
-import { userRepository } from '../repositories/user';
+import type { Message } from '../../domain/chat';
+import { chatRepository } from '../../repositories/chat/chat';
+import { userRepository } from '../../repositories/user/user';
 
 class WebsocketController {
   private readonly _sockets: Map<string, Set<WebSocket>> = new Map<string, Set<WebSocket>>();
@@ -84,25 +84,25 @@ class WebsocketController {
   };
 
   private _broadcastToFollowers = async (userId: string, event: string) => {
-    const followers = await userRepository.listFollowerIdsByUserId(userId);
+    const { items: followers } = await userRepository.listFollowers({ id: userId });
+
     const payload = JSON.stringify({
       data: [userId],
       event,
     });
+
     for (const follower of followers) {
-      for (const socket of this._sockets.get(follower) ?? []) {
+      for (const socket of this._sockets.get(follower.id) ?? []) {
         socket.send(payload);
       }
     }
   };
 
   private _getFollowingAtConnection = async (userId: string) => {
-    const followingConnected: string[] = [];
+    const { items: following } = await userRepository.listFollowing({ id: userId });
 
-    const following = await userRepository.listFollowingIdsByUserId(userId);
-    for (const followId of following) {
-      if (this._sockets.has(followId)) followingConnected.push(followId);
-    }
+    const followingConnected = following.filter((f) => this._sockets.has(f.id));
+
     return followingConnected;
   };
 

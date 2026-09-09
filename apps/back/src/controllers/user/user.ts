@@ -1,71 +1,27 @@
 import { dayjs } from '@transcendence/date';
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { AVATAR_MAX_BYTES } from '../constants';
-import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { AVATAR_MAX_BYTES } from '../../constants';
+import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../../domain/errors';
+import type { UserOnlineStatus } from '../../domain/user';
+import { userRepository } from '../../repositories/user/user';
+import { sampleStorageService } from '../../services/audio/sampleStorage';
+import { trackStorageService } from '../../services/audio/trackStorage';
+import { avatarStorageService } from '../../services/avatarStorage';
+import { imageService } from '../../services/imageService';
+import { parsePagination, toPaginatedResponse } from '../../utils/pagination';
+import { hashPassword, verifyPassword } from '../../utils/password';
+import { websocketController } from '../websocket/websocket';
+import { formatUserWithOnlineStatus } from './helpers';
 import type {
-  PaginatedProducersResponse,
-  PublicProducerProfileResponse,
-  UpdateUserInput,
-  User,
-  UserResponse,
-} from '../domain/user';
-import type { OnlineUser } from '../domain/user';
-import { userRepository } from '../repositories/user';
-import { sampleStorageService } from '../services/audio/sampleStorage';
-import { trackStorageService } from '../services/audio/trackStorage';
-import { avatarStorageService } from '../services/avatarStorage';
-import { imageService } from '../services/imageService';
-import { parsePagination, toPaginatedResponse } from '../utils/pagination';
-import { hashPassword, verifyPassword } from '../utils/password';
-import { websocketController } from './websocket';
-
-interface UpdateProfileRoute extends RouteGenericInterface {
-  Body: UpdateUserInput;
-  Reply: UserResponse;
-}
-
-interface UpdatePasswordRoute extends RouteGenericInterface {
-  Body: {
-    oldPassword: string;
-    newPassword: string;
-  };
-}
-
-interface ListProducersRoute extends RouteGenericInterface {
-  Querystring: {
-    page?: string;
-    limit?: string;
-    q?: string;
-  };
-  Reply: PaginatedProducersResponse;
-}
-
-interface HandleParam {
-  handle: string;
-}
-
-interface GetProfileRoute extends RouteGenericInterface {
-  Params: HandleParam;
-  Reply: PublicProducerProfileResponse;
-}
-
-interface ListFollowRoute extends RouteGenericInterface {
-  Params: HandleParam;
-  Querystring: { page?: string; limit?: string; q?: string };
-  Reply: PaginatedProducersResponse;
-}
-
-interface FollowRoute extends RouteGenericInterface {
-  Params: HandleParam;
-}
-
-interface UploadAvatarRoute extends RouteGenericInterface {
-  Reply: UserResponse;
-}
-
-interface ListUser extends RouteGenericInterface {
-  Reply: OnlineUser[];
-}
+  FollowRoute,
+  GetProfileRoute,
+  ListFollowingUsers,
+  ListFollowProducersRoute,
+  ListProducersRoute,
+  UpdatePasswordRoute,
+  UpdateProfileRoute,
+  UploadAvatarRoute,
+} from './types';
 
 class UserController {
   public updateProfile = async (
@@ -83,7 +39,7 @@ class UserController {
   ): Promise<void> => {
     const { newPassword, oldPassword } = req.body;
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
 
     if (!(await verifyPassword(oldPassword, user.password))) throw new ForbiddenError();
 
@@ -94,7 +50,7 @@ class UserController {
   };
 
   public deleteUser = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
 
     await userRepository.delete(req.authUser.id);
 
@@ -112,6 +68,7 @@ class UserController {
     const pagination = parsePagination(req.query.page, req.query.limit);
     const skip = pagination.unpaginated ? undefined : pagination.skip;
     const take = pagination.unpaginated ? undefined : pagination.take;
+
     const { items, total } = await userRepository.listPublic(skip, take, req.query.q);
 
     reply.code(200).send(toPaginatedResponse(pagination, items, total));
@@ -121,44 +78,76 @@ class UserController {
     req: FastifyRequest<GetProfileRoute>,
     reply: FastifyReply<GetProfileRoute>,
   ): Promise<void> => {
-    const producer = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
+    const producer = await userRepository.findProfile(
+      { handle: req.params.handle },
+      req.authUser.id,
+    );
+
     reply.code(200).send({ producer });
   };
 
-  public listFollowers = async (
-    req: FastifyRequest<ListFollowRoute>,
-    reply: FastifyReply<ListFollowRoute>,
+  public listFollowerProducers = async (
+    req: FastifyRequest<ListFollowProducersRoute>,
+    reply: FastifyReply<ListFollowProducersRoute>,
   ): Promise<void> => {
     const pagination = parsePagination(req.query.page, req.query.limit);
     const skip = pagination.unpaginated ? undefined : pagination.skip;
     const take = pagination.unpaginated ? undefined : pagination.take;
+
     const { items, total } = await userRepository.listFollowers(
-      req.params.handle,
-      skip,
-      take,
-      req.query.q,
+      { handle: req.params.handle },
+      { skip, take, q: req.query.q },
     );
+
     reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
+  public listFollowersById = async (
+    req: FastifyRequest<ListFollowingUsers>,
+    reply: FastifyReply<ListFollowingUsers>,
+  ) => {
+    const userId = req.authUser.id;
+    const { items } = await userRepository.listFollowers({ id: userId });
+    if (items.length === 0) {
+      reply.code(200).send([]);
+      return;
+    }
+
+    const userIds = items.map((i) => i.id);
+    const users = await userRepository.get({ ids: userIds });
+
+    const sockets = websocketController.getSockets();
+
+    const response: UserOnlineStatus[] = users.map((user) => {
+      const isOnline = sockets.has(user.id);
+
+      return {
+        ...formatUserWithOnlineStatus(user),
+        status: isOnline ? 'online' : 'offline',
+      };
+    });
+
+    reply.code(200).send(response);
+  };
+
   public listFollowing = async (
-    req: FastifyRequest<ListFollowRoute>,
-    reply: FastifyReply<ListFollowRoute>,
+    req: FastifyRequest<ListFollowProducersRoute>,
+    reply: FastifyReply<ListFollowProducersRoute>,
   ): Promise<void> => {
     const pagination = parsePagination(req.query.page, req.query.limit);
     const skip = pagination.unpaginated ? undefined : pagination.skip;
     const take = pagination.unpaginated ? undefined : pagination.take;
+
     const { items, total } = await userRepository.listFollowing(
-      req.params.handle,
-      skip,
-      take,
-      req.query.q,
+      { handle: req.params.handle },
+      { skip, take, q: req.query.q },
     );
+
     reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };
 
   public follow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
-    const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
+    const target = await userRepository.findProfile({ handle: req.params.handle }, req.authUser.id);
 
     if (target.id === req.authUser.id) {
       throw new BadRequestError('Cannot self-follow');
@@ -172,7 +161,7 @@ class UserController {
     req: FastifyRequest<FollowRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
-    const target = await userRepository.findProfileByHandle(req.params.handle, req.authUser.id);
+    const target = await userRepository.findProfile({ handle: req.params.handle }, req.authUser.id);
 
     if (target.id === req.authUser.id) {
       throw new BadRequestError('Cannot self-unfollow');
@@ -216,64 +205,31 @@ class UserController {
   };
 
   public listFollowingById = async (
-    req: FastifyRequest<ListUser>,
-    reply: FastifyReply<ListUser>,
+    req: FastifyRequest<ListFollowingUsers>,
+    reply: FastifyReply<ListFollowingUsers>,
   ) => {
     const userId = req.authUser.id;
-    const usersIds = await userRepository.listFollowingIdsByUserId(userId);
-    if (usersIds.length === 0) {
+    const { items } = await userRepository.listFollowing({ id: userId });
+    if (items.length === 0) {
       reply.code(200).send([]);
       return;
     }
-    const users = await userRepository.get({ ids: usersIds });
+
+    const userIds = items.map((i) => i.id);
+    const users = await userRepository.get({ ids: userIds });
 
     const sockets = websocketController.getSockets();
 
-    const response: OnlineUser[] = users.map((user) => {
+    const response: UserOnlineStatus[] = users.map((user) => {
       const isOnline = sockets.has(user.id);
 
       return {
-        ...this._formatOnlineUser(user),
+        ...formatUserWithOnlineStatus(user),
         status: isOnline ? 'online' : 'offline',
       };
     });
 
     reply.code(200).send(response);
-  };
-
-  public listFollowersById = async (
-    req: FastifyRequest<ListUser>,
-    reply: FastifyReply<ListUser>,
-  ) => {
-    const userId = req.authUser.id;
-    const usersIds = await userRepository.listFollowerIdsByUserId(userId);
-    if (usersIds.length === 0) {
-      reply.code(200).send([]);
-      return;
-    }
-    const users = await userRepository.get({ ids: usersIds });
-    const sockets = websocketController.getSockets();
-
-    const response: OnlineUser[] = users.map((user) => {
-      const isOnline = sockets.has(user.id);
-
-      return {
-        ...this._formatOnlineUser(user),
-        status: isOnline ? 'online' : 'offline',
-      };
-    });
-
-    reply.code(200).send(response);
-  };
-
-  private _formatOnlineUser = (user: User): Omit<OnlineUser, 'status'> => {
-    return {
-      id: user.id,
-      handle: user.handle,
-      activity: 'producer',
-      listeners: 0,
-      name: user.artistName,
-    };
   };
 }
 

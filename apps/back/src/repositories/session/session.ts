@@ -1,6 +1,6 @@
-import type { PrismaClient } from '../generated/prisma/client';
-import type { Role } from '../generated/prisma/enums';
-import { prisma } from '../utils/prisma';
+import type { PrismaClient } from '../../generated/prisma/client';
+import type { Role } from '../../generated/prisma/enums';
+import { prisma } from '../../utils/prisma';
 
 export class SessionRepository {
   private readonly prisma: PrismaClient;
@@ -21,9 +21,7 @@ export class SessionRepository {
     return { expiresAt: session.expiresAt, id: session.id };
   }
 
-  public async findValid(
-    sid: string,
-  ): Promise<{ id: string; role: Role; userId: string } | null> {
+  public async findValid(sid: string): Promise<{ id: string; role: Role; userId: string } | null> {
     const session = await this.prisma.session.findUnique({
       include: { user: { select: { role: true } } },
       where: { id: sid },

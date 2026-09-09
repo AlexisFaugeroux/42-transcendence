@@ -1,8 +1,12 @@
-export interface User {
+// Miroir de UserOnlineStatus (apps/back/src/domain/user.ts) : ce que renvoient
+// /api/user/listFollowing et /api/user/listFollowers.
+export interface UserOnlineStatus {
   id: string;
-  name: string;
+  artistName: string;
   handle: string;
   status: 'online' | 'offline';
-  activity: string;
-  listeners: number;
 }
+
+// Ce que StatusAvatar sait peindre. 'live' attend le recorder : le socket ne
+// produit que online et offline.
+export type PresenceStatus = UserOnlineStatus['status'] | 'live';

@@ -1,6 +1,5 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
-import type { User } from '../../types/user';
 
 export type SessionKind = 'recording' | 'production' | 'mixing';
 
@@ -62,14 +61,25 @@ export interface SavedSession {
   duration: string;
 }
 
-// Same as SAVED_SESSIONS: sample presence rows, replaced by the social endpoint.
-export const ONLINE: User[] = [
+// Producteurs en direct : maquette. Le recorder n'existe pas encore, donc `activity`
+// et `listeners` ne viennent d'aucun endpoint — ce type ne peut pas être celui de la
+// présence réelle (types/user.ts UserOnlineStatus).
+export interface LiveProducer {
+  id: string;
+  artistName: string;
+  handle: string;
+  status: 'live' | 'online';
+  activity: string;
+  listeners: number;
+}
+
+export const ONLINE: LiveProducer[] = [
   {
     id: 'xx',
     activity: 'Recording vocals',
     handle: '@maya.o',
     listeners: 12,
-    name: 'Maya Okafor',
+    artistName: 'Maya Okafor',
     status: 'live',
   },
   {
@@ -77,7 +87,7 @@ export const ONLINE: User[] = [
     activity: 'Mixing — Side B',
     handle: '@theo',
     listeners: 0,
-    name: 'Theo Rivera',
+    artistName: 'Theo Rivera',
     status: 'online',
   },
   {
@@ -85,7 +95,7 @@ export const ONLINE: User[] = [
     activity: 'Producing — 92 BPM',
     handle: '@anouk',
     listeners: 0,
-    name: 'Anouk Lemaire',
+    artistName: 'Anouk Lemaire',
     status: 'online',
   },
   {
@@ -93,7 +103,7 @@ export const ONLINE: User[] = [
     id: 'xx',
     handle: '@idris',
     listeners: 47,
-    name: 'Idris Khan',
+    artistName: 'Idris Khan',
     status: 'live',
   },
   {
@@ -101,7 +111,7 @@ export const ONLINE: User[] = [
     handle: '@rosa',
     listeners: 0,
     id: 'xx',
-    name: 'Rosa Petrov',
+    artistName: 'Rosa Petrov',
     status: 'online',
   },
   {
@@ -109,14 +119,14 @@ export const ONLINE: User[] = [
     id: 'xx',
     handle: '@junpark',
     listeners: 0,
-    name: 'Jun Park',
+    artistName: 'Jun Park',
     status: 'online',
   },
   {
     activity: 'Live drum jam',
     handle: '@cleo.b',
     listeners: 8,
-    name: 'Cleo Banner',
+    artistName: 'Cleo Banner',
     id: 'xx',
     status: 'live',
   },
@@ -125,7 +135,7 @@ export const ONLINE: User[] = [
     id: 'xx',
     handle: '@samwest',
     listeners: 0,
-    name: 'Sam West',
+    artistName: 'Sam West',
     status: 'online',
   },
 ];

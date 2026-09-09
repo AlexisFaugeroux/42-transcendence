@@ -5,7 +5,7 @@ import type { GetTracksFilters } from '../../api/track/types';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import { useFollowers, useFollowing } from '../../hooks/useProducers';
 import { useProducerTracks } from '../../hooks/useTracks';
-import type { PublicProducer } from '../../types/producer';
+import type { Producer } from '../../types/producer';
 import type { Track } from '../../types/track';
 import { TrackList } from '../Tracks/TrackList';
 import { ProducerCard } from './ProducerCard';
@@ -38,7 +38,7 @@ function PeoplePanel({
 }: {
   isLoading: boolean;
   error: Error | null;
-  people: PublicProducer[] | undefined;
+  people: Producer[] | undefined;
   empty: string;
   total: number;
   page: number;
