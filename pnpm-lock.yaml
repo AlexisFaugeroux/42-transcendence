@@ -252,6 +252,9 @@ importers:
       '@transcendence/date':
         specifier: workspace:*
         version: link:../../packages/date
+      '@transcendence/permissions':
+        specifier: workspace:*
+        version: link:../../packages/permissions
       dotenv:
         specifier: 17.4.2
         version: 17.4.2
@@ -274,9 +277,6 @@ importers:
       '@transcendence/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@transcendence/permissions':
-        specifier: workspace:*
-        version: link:../../packages/permissions
       '@transcendence/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config

@@ -1,8 +1,6 @@
 import type { Role } from '@transcendence/permissions';
 import type { PaginatedResponse } from './pagination';
 
-export type PresenceStatus = 'live' | 'online' | 'idle' | 'offline';
-
 export interface User {
   id: string;
   email: string;
@@ -23,7 +21,7 @@ export interface OnlineUser {
   id: string;
   name: string;
   handle: string;
-  status: PresenceStatus;
+  status: 'online' | 'offline';
   activity: string;
   listeners: number;
 }

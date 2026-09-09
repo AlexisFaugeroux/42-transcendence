@@ -7,6 +7,8 @@ import { useFollowing } from '../hooks/useFollowing';
 import type { SocketEvent } from '../types/event';
 import type { User } from '../types/user';
 import { useSocket } from '../websocket/WebSocketProvider';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthUser } from '@transcendence/auth';
 
 interface PresenceData {
   count: number;
@@ -16,9 +18,12 @@ interface PresenceData {
 const presenceContext = createContext<PresenceData | null>(null);
 
 export function PresenceProvider({ children }: { children: ReactNode }): JSX.Element {
+  const authUser = useAuthUser();
   const { subscribe } = useSocket();
   const { data: following, isLoading } = useFollowing();
   const [followingConnected, setFollowingConnected] = useState<Set<string>>(new Set<string>());
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const handler = (message: SocketEvent) => {
@@ -47,7 +52,7 @@ export function PresenceProvider({ children }: { children: ReactNode }): JSX.Ele
     };
 
     return subscribe(handler);
-  }, [subscribe, isLoading]);
+  }, [subscribe, isLoading, queryClient, authUser.id]);
 
   if (!following) {
     return (

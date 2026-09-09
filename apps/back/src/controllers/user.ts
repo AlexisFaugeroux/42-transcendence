@@ -17,6 +17,7 @@ import { avatarStorageService } from '../services/avatarStorage';
 import { imageService } from '../services/imageService';
 import { parsePagination, toPaginatedResponse } from '../utils/pagination';
 import { hashPassword, verifyPassword } from '../utils/password';
+import { websocketController } from './websocket';
 
 interface UpdateProfileRoute extends RouteGenericInterface {
   Body: UpdateUserInput;
@@ -225,7 +226,19 @@ class UserController {
       return;
     }
     const users = await userRepository.get({ ids: usersIds });
-    reply.code(200).send(this._formatOnlineUser(users));
+
+    const sockets = websocketController.getSockets();
+
+    const response: OnlineUser[] = users.map((user) => {
+      const isOnline = sockets.has(user.id);
+
+      return {
+        ...this._formatOnlineUser(user),
+        status: isOnline ? 'online' : 'offline',
+      };
+    });
+
+    reply.code(200).send(response);
   };
 
   public listFollowersById = async (
@@ -239,23 +252,28 @@ class UserController {
       return;
     }
     const users = await userRepository.get({ ids: usersIds });
-    reply.code(200).send(this._formatOnlineUser(users));
+    const sockets = websocketController.getSockets();
+
+    const response: OnlineUser[] = users.map((user) => {
+      const isOnline = sockets.has(user.id);
+
+      return {
+        ...this._formatOnlineUser(user),
+        status: isOnline ? 'online' : 'offline',
+      };
+    });
+
+    reply.code(200).send(response);
   };
 
-  private _formatOnlineUser = (users: User[]): OnlineUser[] => {
-    const onlineUsers: OnlineUser[] = [];
-
-    users.forEach((user) => {
-      onlineUsers.push({
-        id: user.id,
-        handle: user.handle,
-        activity: 'producer',
-        listeners: 0,
-        name: user.artistName,
-        status: 'online',
-      });
-    });
-    return onlineUsers;
+  private _formatOnlineUser = (user: User): Omit<OnlineUser, 'status'> => {
+    return {
+      id: user.id,
+      handle: user.handle,
+      activity: 'producer',
+      listeners: 0,
+      name: user.artistName,
+    };
   };
 }
 

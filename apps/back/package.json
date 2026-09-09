@@ -16,6 +16,7 @@
     "db:reset": "prisma migrate reset",
     "db:seed": "tsx scripts/seedDb.dev.ts",
     "db:studio": "prisma studio --url $(cat .env | grep POSTGRES_URL= | cut -d= -f2- )",
+    "predev": "pnpm --filter @transcendence/date --filter @transcendence/permissions run build",
     "dev": "tsx watch src/index.ts",
     "fix": "prettier --write . && ESLINT_SORT=on eslint --fix . && pnpm run typecheck",
     "start": "node build/index.js",
@@ -32,6 +33,7 @@
     "@prisma/client": "7.8.0",
     "@transcendence/auth": "workspace:*",
     "@transcendence/date": "workspace:*",
+    "@transcendence/permissions": "workspace:*",
     "dotenv": "17.4.2",
     "fastify": "5.8.5",
     "fastify-plugin": "6.0.0",
@@ -41,7 +43,6 @@
   },
   "devDependencies": {
     "@transcendence/eslint-config": "workspace:*",
-    "@transcendence/permissions": "workspace:*",
     "@transcendence/prettier-config": "workspace:*",
     "@types/node": "24.12.3",
     "@types/pg": "8.20.0",

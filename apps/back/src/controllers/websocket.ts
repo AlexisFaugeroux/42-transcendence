@@ -23,6 +23,10 @@ class WebsocketController {
     }, 15000).unref();
   }
 
+  public getSockets(): Map<string, Set<WebSocket>> {
+    return this._sockets;
+  }
+
   public ws = async (socket: WebSocket, req: FastifyRequest) => {
     const userId = req.authUser.id;
 

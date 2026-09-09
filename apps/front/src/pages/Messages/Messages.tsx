@@ -35,8 +35,6 @@ export function Messages(): JSX.Element {
         meId={me.id}
         onRetry={retry}
       />
-      {/* The thread, its header and the composer belong to T8 (#182). Until it
-          lands, opening a conversation only highlights its row. */}
       {conversationId === undefined || !openConversation || conversationsQuery.isLoading ? (
         <ThreadEmpty />
       ) : (
