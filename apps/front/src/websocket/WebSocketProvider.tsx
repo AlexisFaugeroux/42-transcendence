@@ -38,7 +38,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
     const ws = new WebSocket(`${BASE_URL}/api/ws`);
 
     ws.onopen = (event) => {
-      console.log('socket open', event);
+      if (import.meta.env.DEV) console.log('socket open', event);
     };
 
     ws.onmessage = (event: MessageEvent<string>) => {
@@ -49,11 +49,18 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
     };
 
     ws.onclose = (event) => {
-      console.log('socket close:', event);
+      if (import.meta.env.DEV) console.log('socket close:', event);
     };
 
     return () => {
-      ws.close();
+      ws.onmessage = null;
+      if (ws.readyState === WebSocket.CONNECTING) {
+        ws.onopen = () => {
+          ws.close();
+        };
+      } else {
+        ws.close();
+      }
     };
   }, [loading, userId]);
 

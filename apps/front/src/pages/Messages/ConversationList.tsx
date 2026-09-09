@@ -46,8 +46,6 @@ export function ConversationList({
             }}
           />
         </div>
-        {/* T8 (#182) mounts the inline producer search here — a field with a
-            results overlay, not a modal. */}
       </div>
       <Button
         onClick={() => {

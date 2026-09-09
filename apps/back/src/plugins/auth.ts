@@ -2,7 +2,12 @@ import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
 import { can, type Permissions } from '@transcendence/permissions';
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  HookHandlerDoneFunction,
+} from 'fastify';
 import fp from 'fastify-plugin';
 import { ForbiddenError } from '../domain/errors';
 import { SessionRepository, sessionRepository } from '../repositories/session';
@@ -53,8 +58,16 @@ async function authPlugin(app: FastifyInstance) {
   });
 
   app.decorate('authorize', (permission: Permissions) => {
-    return async function authorize(req: FastifyRequest): Promise<void> {
-      if (!can(req.authUser.role, permission)) throw new ForbiddenError();
+    return function authorize(
+      req: FastifyRequest,
+      _reply: FastifyReply,
+      done: HookHandlerDoneFunction,
+    ) {
+      if (!can(req.authUser.role, permission)) {
+        done(new ForbiddenError());
+        return;
+      }
+      done();
     };
   });
 }

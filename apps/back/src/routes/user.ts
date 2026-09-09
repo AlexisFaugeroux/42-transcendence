@@ -93,5 +93,6 @@ export function userRoutes(app: FastifyInstance) {
     },
     userController.listFollowersById,
   );
+
   app.delete('/delete/avatar', { preHandler: app.authenticate }, userController.deleteAvatar);
 }
