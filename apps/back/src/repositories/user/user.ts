@@ -1,35 +1,16 @@
-import type { PrismaClient, User as PrismaUser } from '../../src/generated/prisma/client';
-import type { JsonValue } from '../../src/generated/prisma/internal/prismaNamespace';
+import type { PrismaClient, User as PrismaUser } from '../../generated/prisma/client';
 import type {
   CreateUserInput,
   GetUserInput,
-  PublicProducer,
-  PublicProducerProfile,
+  Producer,
+  ProducerProfile,
   UpdateUserInput,
   User,
-} from '../domain/user';
-import { prisma } from '../utils/prisma';
-import { mapError } from './helpers';
-
-// A `Json?` column comes back as untyped JsonValue. `links` is stored as an
-// array of { kind, url } entries; narrow it here (dropping anything that
-// doesn't fit) rather than asserting the shape blindly.
-export function toLinks(value: JsonValue | null): { kind: string; url: string }[] | null {
-  if (!Array.isArray(value)) return null;
-  const links: { kind: string; url: string }[] = [];
-  for (const entry of value) {
-    if (
-      entry !== null &&
-      typeof entry === 'object' &&
-      !Array.isArray(entry) &&
-      typeof entry.kind === 'string' &&
-      typeof entry.url === 'string'
-    ) {
-      links.push({ kind: entry.kind, url: entry.url });
-    }
-  }
-  return links;
-}
+} from '../../domain/user';
+import { prisma } from '../../utils/prisma';
+import { mapError } from '../helpers';
+import { toLinks } from './helpers';
+import type { FollowListOptions, UniqueRef } from './types';
 
 class UserRepository {
   private readonly prisma: PrismaClient;
@@ -60,24 +41,10 @@ class UserRepository {
     }
   }
 
-  public async findById(id: string): Promise<User> {
+  public async find(ref: UniqueRef): Promise<User> {
     try {
-      const user: PrismaUser = await prisma.user.findUniqueOrThrow({
-        where: { id },
-      });
-
-      const formattedUser = this._format(user);
-
-      return formattedUser;
-    } catch (error: unknown) {
-      throw mapError(error, 'User');
-    }
-  }
-
-  public async findByEmail(email: string): Promise<User> {
-    try {
-      const user: PrismaUser = await prisma.user.findUniqueOrThrow({
-        where: { email },
+      const user: PrismaUser = await this.prisma.user.findUniqueOrThrow({
+        where: ref,
       });
 
       const formattedUser = this._format(user);
@@ -102,22 +69,11 @@ class UserRepository {
     return formattedUsers;
   }
 
-  private _publicSearchWhere(q?: string) {
-    const search = q?.trim();
-    if (!search) return undefined;
-    return {
-      OR: [
-        { handle: { contains: search, mode: 'insensitive' as const } },
-        { artistName: { contains: search, mode: 'insensitive' as const } },
-      ],
-    };
-  }
-
   public async listPublic(
     skip?: number,
     take?: number,
     q?: string,
-  ): Promise<{ items: PublicProducer[]; total: number }> {
+  ): Promise<{ items: Producer[]; total: number }> {
     try {
       const where = this._publicSearchWhere(q);
 
@@ -133,7 +89,7 @@ class UserRepository {
       ]);
 
       return {
-        items: users.map((user: PrismaUser) => this._formatPublic(user)),
+        items: users.map((user: PrismaUser) => this._formatProducer(user)),
         total,
       };
     } catch (error: unknown) {
@@ -141,13 +97,76 @@ class UserRepository {
     }
   }
 
-  public async findProfileByHandle(
-    handle: string,
-    viewerId: string,
-  ): Promise<PublicProducerProfile> {
+  public async listFollowers(
+    ref: UniqueRef,
+    options: FollowListOptions = {},
+  ): Promise<{ items: Producer[]; total: number }> {
+    try {
+      const where = this._publicSearchWhere(options.q);
+
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: ref,
+        include: {
+          followedBy: {
+            where,
+            orderBy: { artistName: 'asc' },
+            ...(options.take !== undefined ? { skip: options.skip, take: options.take } : {}),
+          },
+          _count: {
+            select: {
+              followedBy: where ? { where } : true,
+            },
+          },
+        },
+      });
+
+      return {
+        items: user.followedBy.map((follower: PrismaUser) => this._formatProducer(follower)),
+        total: user._count.followedBy,
+      };
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async listFollowing(
+    ref: UniqueRef,
+    options: FollowListOptions = {},
+  ): Promise<{ items: Producer[]; total: number }> {
+    try {
+      const where = this._publicSearchWhere(options.q);
+
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: ref,
+        include: {
+          following: {
+            where,
+            orderBy: {
+              artistName: 'asc',
+            },
+            ...(options.take !== undefined ? { skip: options.skip, take: options.take } : {}),
+          },
+          _count: {
+            select: {
+              following: where ? { where } : true,
+            },
+          },
+        },
+      });
+
+      return {
+        items: user.following.map((followed: PrismaUser) => this._formatProducer(followed)),
+        total: user._count.following,
+      };
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async findProfile(ref: UniqueRef, viewerId: string): Promise<ProducerProfile> {
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
+        where: ref,
         include: {
           _count: {
             select: {
@@ -166,118 +185,11 @@ class UserRepository {
       });
 
       return {
-        ...this._formatPublic(user),
+        ...this._formatProducer(user),
         followersCount: user._count.followedBy,
         followingCount: user._count.following,
         isFollowing: user.followedBy.length > 0,
       };
-    } catch (error: unknown) {
-      throw mapError(error, 'User');
-    }
-  }
-
-  public async listFollowers(
-    handle: string,
-    skip?: number,
-    take?: number,
-    q?: string,
-  ): Promise<{ items: PublicProducer[]; total: number }> {
-    try {
-      const where = this._publicSearchWhere(q);
-
-      const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
-        include: {
-          followedBy: {
-            where,
-            orderBy: { artistName: 'asc' },
-            ...(take !== undefined ? { skip, take } : {}),
-          },
-          _count: {
-            select: {
-              followedBy: where ? { where } : true,
-            },
-          },
-        },
-      });
-
-      return {
-        items: user.followedBy.map((follower: PrismaUser) => this._formatPublic(follower)),
-        total: user._count.followedBy,
-      };
-    } catch (error: unknown) {
-      throw mapError(error, 'User');
-    }
-  }
-
-  public async listFollowing(
-    handle: string,
-    skip?: number,
-    take?: number,
-    q?: string,
-  ): Promise<{ items: PublicProducer[]; total: number }> {
-    try {
-      const where = this._publicSearchWhere(q);
-
-      const user = await this.prisma.user.findUniqueOrThrow({
-        where: { handle },
-        include: {
-          following: {
-            where,
-            orderBy: {
-              artistName: 'asc',
-            },
-            ...(take !== undefined ? { skip, take } : {}),
-          },
-          _count: {
-            select: {
-              following: where ? { where } : true,
-            },
-          },
-        },
-      });
-
-      return {
-        items: user.following.map((followed: PrismaUser) => this._formatPublic(followed)),
-        total: user._count.following,
-      };
-    } catch (error: unknown) {
-      throw mapError(error, 'User');
-    }
-  }
-
-  public async listFollowingIdsByUserId(userId: string): Promise<string[]> {
-    try {
-      const user = await this.prisma.user.findUniqueOrThrow({
-        select: {
-          following: {
-            select: {
-              id: true,
-            },
-          },
-        },
-        where: { id: userId },
-      });
-
-      return user.following.map((followed) => followed.id);
-    } catch (error: unknown) {
-      throw mapError(error, 'User');
-    }
-  }
-
-  public async listFollowerIdsByUserId(userId: string): Promise<string[]> {
-    try {
-      const user = await this.prisma.user.findUniqueOrThrow({
-        select: {
-          followedBy: {
-            select: {
-              id: true,
-            },
-          },
-        },
-        where: { id: userId },
-      });
-      return user.followedBy.map((follower) => follower.id);
     } catch (error: unknown) {
       throw mapError(error, 'User');
     }
@@ -354,7 +266,7 @@ class UserRepository {
     };
   }
 
-  private _formatPublic(user: PrismaUser): PublicProducer {
+  private _formatProducer(user: PrismaUser): Producer {
     return {
       artistName: user.artistName,
       bio: user.bio ?? undefined,
@@ -379,6 +291,17 @@ class UserRepository {
       ...idFilter,
       ...roleFilter,
     };
+  }
+
+  private _publicSearchWhere(q?: string) {
+    const search = q?.trim();
+    if (search)
+      return {
+        OR: [
+          { handle: { contains: search, mode: 'insensitive' as const } },
+          { artistName: { contains: search, mode: 'insensitive' as const } },
+        ],
+      };
   }
 }
 

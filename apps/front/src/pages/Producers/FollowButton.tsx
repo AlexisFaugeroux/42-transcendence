@@ -3,11 +3,11 @@ import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useFollow, useUnfollow } from '../../hooks/useProducers';
-import type { PublicProducerProfile } from '../../types/producer';
+import type { ProducerProfile } from '../../types/producer';
 import styles from './ProducerProfile.module.scss';
 
 interface FollowButtonProps {
-  producer: PublicProducerProfile;
+  producer: ProducerProfile;
 }
 
 export function FollowButton({ producer }: FollowButtonProps): JSX.Element | null {

@@ -1,51 +1,24 @@
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { MAX_UPLOAD_BYTES, SAMPLE_USER_QUOTA_BYTES } from '../constants';
-import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../domain/errors';
-import type { PaginatedResponse } from '../domain/pagination';
+import { MAX_UPLOAD_BYTES, SAMPLE_USER_QUOTA_BYTES } from '../../constants';
+import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../../domain/errors';
+
+import { ownerRepository } from '../../repositories/owner/owner';
+import { sampleRepository } from '../../repositories/sample/sample';
+import { userRepository } from '../../repositories/user/user';
+import { sampleStorageService } from '../../services/audio/sampleStorage';
+import { msnpManager } from '../../services/msnp';
+import { type WavInfo, wavManager } from '../../services/wav';
+import { parsePagination, toPaginatedResponse } from '../../utils/pagination';
+import { parseUploadSampleFields } from '../../utils/validation';
+
 import type {
-  GetSampleInput,
-  Sample,
-  SampleStorageUsage,
-  UpdateSampleInput,
-} from '../domain/sample';
-import { ownerRepository } from '../repositories/owner';
-import { sampleRepository } from '../repositories/sample';
-import { userRepository } from '../repositories/user';
-import { sampleStorageService } from '../services/audio/sampleStorage';
-import { msnpManager } from '../services/msnp';
-import { type WavInfo, wavManager } from '../services/wav';
-import { parsePagination, toPaginatedResponse } from '../utils/pagination';
-import { parseUploadSampleFields } from '../utils/validation';
-import type { OwnerType } from '../generated/prisma/client';
-
-interface GetSamplesRoute extends RouteGenericInterface {
-  Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
-  Reply: PaginatedResponse<Sample & { ownerType: OwnerType }>;
-}
-
-interface UploadSampleRoute extends RouteGenericInterface {
-  Reply: Sample;
-}
-
-interface StorageSampleRoute extends RouteGenericInterface {
-  Reply: SampleStorageUsage;
-}
-
-interface UpdateSampleRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-  Body: UpdateSampleInput;
-  Reply: Sample;
-}
-
-interface DeleteSampleRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-}
-
+  DeleteSampleRoute,
+  GetSamplesRoute,
+  StorageSampleRoute,
+  UpdateSampleRoute,
+  UploadSampleRoute,
+} from './types';
 class SampleFileController {
   public get = async (
     req: FastifyRequest<GetSamplesRoute>,
@@ -55,7 +28,7 @@ class SampleFileController {
 
     const platformOwnerID = (await ownerRepository.get('PLATEFORM')).id;
 
-    const userOwnerID = (await userRepository.findById(userId)).ownerId;
+    const userOwnerID = (await userRepository.find({ id: userId })).ownerId;
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
@@ -73,7 +46,7 @@ class SampleFileController {
     req: FastifyRequest<StorageSampleRoute>,
     reply: FastifyReply<StorageSampleRoute>,
   ): Promise<void> => {
-    const { ownerId } = await userRepository.findById(req.authUser.id);
+    const { ownerId } = await userRepository.find({ id: req.authUser.id });
 
     const [usedBytes, byFamily] = await Promise.all([
       sampleRepository.sumBytes(ownerId),
@@ -92,7 +65,7 @@ class SampleFileController {
     req: FastifyRequest<UploadSampleRoute>,
     reply: FastifyReply<UploadSampleRoute>,
   ): Promise<void> => {
-    const { ownerId } = await userRepository.findById(req.authUser.id);
+    const { ownerId } = await userRepository.find({ id: req.authUser.id });
 
     const data = await req.file();
     if (!data) throw new BadRequestError();
@@ -154,7 +127,7 @@ class SampleFileController {
   ): Promise<void> => {
     if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const sample = await sampleRepository.findById(req.query.id);
 
     if (sample.ownerId !== user.ownerId) throw new ForbiddenError();
@@ -168,7 +141,7 @@ class SampleFileController {
     req: FastifyRequest<DeleteSampleRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const sample = await sampleRepository.findById(req.query.id);
 
     if (sample.ownerId !== user.ownerId) throw new ForbiddenError();

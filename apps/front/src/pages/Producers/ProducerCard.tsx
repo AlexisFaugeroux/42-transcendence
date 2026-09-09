@@ -3,12 +3,12 @@ import { MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
-import type { PublicProducer } from '../../types/producer';
+import type { Producer } from '../../types/producer';
 import styles from './Producers.module.scss';
 import { UnfollowButton } from './UnfollowButton';
 
 interface ProducerCardProps {
-  producer: PublicProducer;
+  producer: Producer;
   showUnfollow?: boolean;
 }
 

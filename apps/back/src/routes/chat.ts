@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { chatController } from '../controllers/chat';
+import { chatController } from '../controllers/chat/chat';
 
 const sendMessageSchema = {
   additionalProperties: false,

@@ -5,14 +5,14 @@ import { createContext } from 'react';
 import { useState } from 'react';
 import { useFollowing } from '../hooks/useFollowing';
 import type { SocketEvent } from '../types/event';
-import type { User } from '../types/user';
+import type { UserOnlineStatus } from '../types/user';
 import { useSocket } from '../websocket/WebSocketProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 
 interface PresenceData {
   count: number;
-  onlineUsers: User[] | null;
+  onlineUsers: UserOnlineStatus[] | null;
 }
 
 const presenceContext = createContext<PresenceData | null>(null);

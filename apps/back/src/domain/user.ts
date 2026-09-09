@@ -17,16 +17,14 @@ export interface User {
   ownerId: string;
 }
 
-export interface OnlineUser {
+export interface UserOnlineStatus {
   id: string;
-  name: string;
+  artistName: string;
   handle: string;
   status: 'online' | 'offline';
-  activity: string;
-  listeners: number;
 }
 
-export interface PublicProducer {
+export interface Producer {
   id: string;
   artistName: string;
   handle: string;
@@ -37,7 +35,7 @@ export interface PublicProducer {
   joined: Date;
 }
 
-export interface PublicProducerProfile extends PublicProducer {
+export interface ProducerProfile extends Producer {
   followersCount: number;
   followingCount: number;
   isFollowing: boolean;
@@ -77,8 +75,8 @@ export interface UserResponse {
   user: User;
 }
 
-export interface PublicProducerProfileResponse {
-  producer: PublicProducerProfile;
+export interface ProducerProfileResponse {
+  producer: ProducerProfile;
 }
 
-export type PaginatedProducersResponse = PaginatedResponse<PublicProducer>;
+export type PaginatedProducersResponse = PaginatedResponse<Producer>;

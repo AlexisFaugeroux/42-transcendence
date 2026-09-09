@@ -1,43 +1,20 @@
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import { BadRequestError, ForbiddenError, NotFoundError } from '../domain/errors';
-import type { Project, SaveProjectBody, UpdateProjectInput } from '../domain/project';
-import { projectRepository } from '../repositories/project';
-import { userRepository } from '../repositories/user';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../domain/errors';
 
-interface SaveProjectRoute extends RouteGenericInterface {
-  Body: SaveProjectBody;
-}
-
-interface LoadProjectRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-  Reply: Project;
-}
-
-interface ListProjectRoute extends RouteGenericInterface {
-  Reply: Project[];
-}
-
-interface UpdateProjectRoute extends RouteGenericInterface {
-  Body: UpdateProjectInput;
-  Querystring: {
-    id: string;
-  };
-  Reply: Project;
-}
-
-interface RemoveProjectRoute extends RouteGenericInterface {
-  Querystring: {
-    id: string;
-  };
-}
-
+import { projectRepository } from '../../repositories/project/project';
+import { userRepository } from '../../repositories/user/user';
+import type {
+  ListProjectRoute,
+  LoadProjectRoute,
+  RemoveProjectRoute,
+  SaveProjectRoute,
+  UpdateProjectRoute,
+} from './types';
 class ProjectController {
   public save = async (req: FastifyRequest<SaveProjectRoute>, reply: FastifyReply) => {
     const { state, ...rest } = req.body;
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     if (!user.ownerId) throw new NotFoundError('No Owner found for this project');
 
     const project = await projectRepository.get({
@@ -65,7 +42,7 @@ class ProjectController {
     req: FastifyRequest<ListProjectRoute>,
     reply: FastifyReply<ListProjectRoute>,
   ) => {
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const project = await projectRepository.get({
       ids: [],
       ownerIds: [user.ownerId],
@@ -80,7 +57,7 @@ class ProjectController {
   ) => {
     const { id } = req.query;
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const project = await projectRepository.findById(id);
 
     if (user.ownerId !== project.ownerId) throw new ForbiddenError();
@@ -94,7 +71,7 @@ class ProjectController {
   ) => {
     if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const project = await projectRepository.findById(req.query.id);
 
     if (user.ownerId !== project.ownerId) throw new ForbiddenError();
@@ -107,7 +84,7 @@ class ProjectController {
   public detele = async (req: FastifyRequest<RemoveProjectRoute>, reply: FastifyReply) => {
     const { id } = req.query;
 
-    const user = await userRepository.findById(req.authUser.id);
+    const user = await userRepository.find({ id: req.authUser.id });
     const project = await projectRepository.findById(id);
 
     if (user.ownerId !== project.ownerId) throw new ForbiddenError();

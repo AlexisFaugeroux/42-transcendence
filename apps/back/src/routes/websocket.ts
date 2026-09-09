@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { websocketController } from '../controllers/websocket';
+import { websocketController } from '../controllers/websocket/websocket';
 
 export function websocketRoutes(app: FastifyInstance) {
   app.get('/ws', { preHandler: app.authenticate, websocket: true }, websocketController.ws);

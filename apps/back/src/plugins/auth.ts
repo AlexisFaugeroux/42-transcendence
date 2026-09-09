@@ -10,7 +10,7 @@ import type {
 } from 'fastify';
 import fp from 'fastify-plugin';
 import { ForbiddenError } from '../domain/errors';
-import { SessionRepository, sessionRepository } from '../repositories/session';
+import { SessionRepository, sessionRepository } from '../repositories/session/session';
 
 export function authCookieOptions() {
   return {

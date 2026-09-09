@@ -1,32 +1,14 @@
-import type { CreateMessageInput, Message } from '../domain/chat';
-import type { Conversation } from '../domain/chat';
-import type { Conversation as PrismaConversation, PrismaClient } from '../generated/prisma/client';
-import type { ConversationParticipant } from '../generated/prisma/client';
-import type { Message as PrismaMessage } from '../generated/prisma/client';
-import { prisma } from '../utils/prisma';
-import { mapError } from './helpers';
-
-interface HydratedConversation extends PrismaConversation {
-  participants: {
-    unreadCount: number;
-    user: {
-      id: string;
-      artistName: string;
-    };
-    messagesReceived: {
-      content: string;
-      createdAt: Date;
-      authorId: string;
-      toId: string;
-    }[];
-    messagesSent: {
-      content: string;
-      createdAt: Date;
-      authorId: string;
-      toId: string;
-    }[];
-  }[];
-}
+import type { CreateMessageInput, Message } from '../../domain/chat';
+import type { Conversation } from '../../domain/chat';
+import type {
+  Conversation as PrismaConversation,
+  PrismaClient,
+} from '../../generated/prisma/client';
+import type { ConversationParticipant } from '../../generated/prisma/client';
+import type { Message as PrismaMessage } from '../../generated/prisma/client';
+import { prisma } from '../../utils/prisma';
+import { mapError } from '../helpers';
+import { formatConversation } from './helpers';
 
 class ChatRepository {
   private readonly prisma: PrismaClient;
@@ -193,7 +175,7 @@ class ChatRepository {
         lastMessageAt: 'desc',
       },
     });
-    return conversations.map((conv) => this._formatConversation(conv));
+    return conversations.map((conv) => formatConversation(conv));
   }
 
   public async listConversationParticipants(idConv: string): Promise<ConversationParticipant[]> {
@@ -211,7 +193,7 @@ class ChatRepository {
       },
       ...this.include,
     });
-    return this._formatConversation(conversation);
+    return formatConversation(conversation);
   }
 
   public async markAsRead(conversationId: string, userId: string) {
@@ -259,30 +241,6 @@ class ChatRepository {
     } catch (e) {
       throw mapError(e, 'Failed to message');
     }
-  }
-
-  private _formatConversation(conv: HydratedConversation): Conversation {
-    // participants array contain received and sent messages : concataning the both in
-    // order to build the whole conversation
-    const messages = conv.participants[0].messagesReceived.concat(
-      conv.participants[0].messagesSent,
-    );
-    messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-
-    const participants = conv.participants.map(({ unreadCount, user }) => ({
-      artistName: user.artistName,
-      id: user.id,
-      unreadCount,
-    }));
-
-    return {
-      id: conv.id,
-      lastMessage: messages.at(-1) ?? null,
-      lastMessageAt: conv.lastMessageAt,
-      messageSorted: messages,
-      participants,
-      updatedAt: conv.updatedAt,
-    };
   }
 }
 

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { projectController } from '../controllers/project';
+import { projectController } from '../controllers/project/project';
 
 const saveProjectSchema = {
   body: {

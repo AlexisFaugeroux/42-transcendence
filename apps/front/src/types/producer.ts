@@ -1,6 +1,6 @@
-export type Role = 'ADMIN' | 'ARTIST';
+import type { Role } from '@transcendence/permissions';
 
-export interface PublicProducer {
+export interface Producer {
   id: string;
   artistName: string;
   handle: string;
@@ -11,7 +11,7 @@ export interface PublicProducer {
   joined: string; // JSON no Date
 }
 
-export interface PublicProducerProfile extends PublicProducer {
+export interface ProducerProfile extends Producer {
   followersCount: number;
   followingCount: number;
   isFollowing: boolean;

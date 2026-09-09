@@ -1,30 +1,17 @@
-import { formatDate } from '@transcendence/date';
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
-import type { AuthResponse, AuthUser, LoginBody, RegisterBody } from '../domain/auth';
-import { ConflictError, ForbiddenError, UnauthorizedError } from '../domain/errors';
-import type { User } from '../generated/prisma/client';
-import { authCookieOptions } from '../plugins/auth';
-import { sampleRepository } from '../repositories/sample';
-import { sessionRepository } from '../repositories/session';
-import { trackRepository } from '../repositories/track';
-import { toLinks } from '../repositories/user';
-import { userRepository } from '../repositories/user';
-import { hashPassword, verifyPassword } from '../utils/password';
-import { prisma } from '../utils/prisma';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 
-interface RegisterRoute extends RouteGenericInterface {
-  Body: RegisterBody;
-  Reply: AuthResponse;
-}
+import { ConflictError, ForbiddenError, UnauthorizedError } from '../../domain/errors';
 
-interface LoginRoute extends RouteGenericInterface {
-  Body: LoginBody;
-  Reply: AuthResponse;
-}
+import { authCookieOptions } from '../../plugins/auth';
+import { sampleRepository } from '../../repositories/sample/sample';
+import { sessionRepository } from '../../repositories/session/session';
+import { trackRepository } from '../../repositories/track/track';
 
-interface MeRoute extends RouteGenericInterface {
-  Reply: AuthResponse;
-}
+import { userRepository } from '../../repositories/user/user';
+import { hashPassword, verifyPassword } from '../../utils/password';
+import { prisma } from '../../utils/prisma';
+import type { LoginRoute, MeRoute, RegisterRoute } from './types';
+import { formatAuthUser } from './helpers';
 
 class AuthController {
   // Arrow-function property, NOT a method: Fastify binds a handler's `this` to the
@@ -56,7 +43,7 @@ class AuthController {
       },
     });
 
-    return reply.code(201).send({ user: this._format(user) });
+    return reply.code(201).send({ user: formatAuthUser(user) });
   };
 
   public login = async (req: FastifyRequest<LoginRoute>, reply: FastifyReply<LoginRoute>) => {
@@ -70,13 +57,13 @@ class AuthController {
     const token = req.server.signAuthToken({ sid: session.id, sub: user.id });
 
     reply.setCookie('token', token, authCookieOptions());
-    return reply.code(200).send({ user: this._format(user) });
+    return reply.code(200).send({ user: formatAuthUser(user) });
   };
 
   public me = async (req: FastifyRequest, reply: FastifyReply<MeRoute>) => {
     const user = await prisma.user.findUnique({ where: { id: req.authUser.id } });
     if (!user) throw new UnauthorizedError();
-    return reply.send({ user: this._format(user) });
+    return reply.send({ user: formatAuthUser(user) });
   };
 
   public logout = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -103,7 +90,7 @@ class AuthController {
     const sampleId = filename.slice(0, dot);
 
     try {
-      const { ownerId } = await userRepository.findById(req.authUser.id);
+      const { ownerId } = await userRepository.find({ id: req.authUser.id });
       const audioFile = await (
         audioFileType === 'samples' ? sampleRepository : trackRepository
       ).findById(sampleId);
@@ -120,24 +107,6 @@ class AuthController {
 
     reply.code(200).send();
   };
-
-  private _format(user: User): AuthUser {
-    return {
-      artistName: user.artistName,
-      avatarUpdatedAt: user.avatarUpdatedAt ? formatDate(user.avatarUpdatedAt) : null,
-      bio: user.bio ?? undefined,
-      email: user.email,
-      firstname: user.firstname,
-      handle: user.handle,
-      id: user.id,
-      joined: user.createdAt,
-      lastname: user.lastname,
-      links: toLinks(user.links),
-      location: user.location ?? undefined,
-      ownerId: user.ownerId,
-      role: user.role,
-    };
-  }
 }
 
 // Singleton shared by the route layer.
