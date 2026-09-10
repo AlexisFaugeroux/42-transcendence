@@ -61,7 +61,7 @@ export function RenameProjectModal({
       <Input
         value={draft}
         maxLength={NAME_MAX}
-        status={tooLong || (empty && draft.length > 0) ? 'error' : undefined}
+        status={tooLong || empty ? 'error' : undefined}
         onChange={(e) => {
           setDraft(e.target.value);
         }}
@@ -72,6 +72,11 @@ export function RenameProjectModal({
       {tooLong ? (
         <p style={{ color: theme.red, fontSize: 12, margin: '8px 0 0' }}>
           {t('studio.header.rename.tooLong')}
+        </p>
+      ) : null}
+      {!tooLong && empty ? (
+        <p style={{ color: theme.red, fontSize: 12, margin: '8px 0 0' }}>
+          {t('studio.header.rename.required')}
         </p>
       ) : null}
       {error ? (

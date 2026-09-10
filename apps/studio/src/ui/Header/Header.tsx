@@ -38,7 +38,7 @@ export function Header(): JSX.Element {
   const [exportOpen, setExportOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameError, setRenameError] = useState<string | null>(null);
-  const { meta, project, renameProject } = useProject();
+  const { meta, project } = useProject();
   const { setClips, setTracks } = useTracks();
   const { t } = useTranslation();
 
@@ -124,7 +124,7 @@ export function Header(): JSX.Element {
         setRenameError(error instanceof Error ? error.message : String(error));
       },
       onSuccess: () => {
-        renameProject(name);
+        meta.renameProject(name);
         project.editing.markSaved();
         setSaved(true);
         setRenameOpen(false);

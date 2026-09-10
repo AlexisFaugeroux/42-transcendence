@@ -34,7 +34,9 @@ export function Transport(): JSX.Element {
       <IconBtn
         title="Play"
         color={theme.green}
-        background={isPlaying ? `color-mix(in srgb, ${theme.green} 18%, ${theme.void}` : theme.void}
+        background={
+          isPlaying ? `color-mix(in srgb, ${theme.green} 18%, ${theme.void})` : theme.void
+        }
         borderColor={isPlaying ? theme.green : theme.lineSoft}
         borderWidth={0.5}
         borderStyle="solid"
@@ -53,7 +55,7 @@ export function Transport(): JSX.Element {
       <IconBtn
         title="Stop"
         color={theme.fg1}
-        background={isPlaying ? `color-mix(in srgb, ${theme.fg1} 18%, ${theme.void}` : theme.void}
+        background={isPlaying ? `color-mix(in srgb, ${theme.fg1} 18%, ${theme.void})` : theme.void}
         borderColor={isPlaying ? theme.fg1 : theme.lineSoft}
         borderWidth={0.5}
         borderStyle="solid"
@@ -77,7 +79,7 @@ export function Transport(): JSX.Element {
         width={26}
         height={26}
         onClick={() => {
-          console.log('rec');
+          /* TODO: link rec button to audio engine */
         }}
       >
         <StudioIcon name="rec" size={14} />
@@ -86,7 +88,7 @@ export function Transport(): JSX.Element {
         title="Loop"
         color={theme.orange}
         background={
-          isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void}` : theme.void
+          isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void})` : theme.void
         }
         borderColor={isLooping ? theme.orange : theme.lineSoft}
         borderWidth={0.5}
