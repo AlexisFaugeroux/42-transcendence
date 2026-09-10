@@ -1,17 +1,14 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-
 import { ConflictError, ForbiddenError, UnauthorizedError } from '../../domain/errors';
-
 import { authCookieOptions } from '../../plugins/auth';
 import { sampleRepository } from '../../repositories/sample/sample';
 import { sessionRepository } from '../../repositories/session/session';
 import { trackRepository } from '../../repositories/track/track';
-
 import { userRepository } from '../../repositories/user/user';
 import { hashPassword, verifyPassword } from '../../utils/password';
 import { prisma } from '../../utils/prisma';
-import type { LoginRoute, MeRoute, RegisterRoute } from './types';
 import { formatAuthUser } from './helpers';
+import type { LoginRoute, MeRoute, RegisterRoute } from './types';
 
 class AuthController {
   // Arrow-function property, NOT a method: Fastify binds a handler's `this` to the

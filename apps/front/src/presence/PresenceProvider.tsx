@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthUser } from '@transcendence/auth';
 import { type ReactNode, useContext } from 'react';
 import type { JSX } from 'react';
 import { useEffect } from 'react';
@@ -7,8 +9,6 @@ import { useFollowing } from '../hooks/useFollowing';
 import type { SocketEvent } from '../types/event';
 import type { UserOnlineStatus } from '../types/user';
 import { useSocket } from '../websocket/WebSocketProvider';
-import { useQueryClient } from '@tanstack/react-query';
-import { useAuthUser } from '@transcendence/auth';
 
 interface PresenceData {
   count: number;

@@ -587,7 +587,6 @@
       "title": "Aún no hay sesiones"
     },
     "new": {
-      "bpmField": "BPM",
       "lead": "Elige el tipo de sesión y prepararemos el espacio de trabajo adecuado.",
       "submit": "Crear y abrir",
       "title": "Empezar una nueva sesión",

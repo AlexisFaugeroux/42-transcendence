@@ -1,5 +1,4 @@
 import type { RouteGenericInterface } from 'fastify';
-
 import type { Project, SaveProjectBody, UpdateProjectInput } from '../../domain/project';
 
 export interface SaveProjectRoute extends RouteGenericInterface {

@@ -1,4 +1,3 @@
-import type { PrismaClient, User as PrismaUser } from '../../generated/prisma/client';
 import type {
   CreateUserInput,
   GetUserInput,
@@ -7,6 +6,7 @@ import type {
   UpdateUserInput,
   User,
 } from '../../domain/user';
+import type { PrismaClient, User as PrismaUser } from '../../generated/prisma/client';
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
 import { toLinks } from './helpers';

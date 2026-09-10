@@ -112,7 +112,7 @@ export async function _doInitializeOpenDaw(
   options: ProjectSetupOptions = {},
   projectProperties: ProjectProperties,
 ): Promise<ProjectSetupResult> {
-  const { bpm, localAudioBuffers, onStatusUpdate } = options;
+  const { localAudioBuffers, onStatusUpdate } = options;
 
   console.log('========================================');
   console.log('openDAW -> headless -> initializing');
@@ -185,7 +185,7 @@ export async function _doInitializeOpenDaw(
         );
         const audioData = audioBufferToAudioData(audioBuffer);
         const metaData: SampleMetaData = {
-          bpm: bpm ?? 0,
+          bpm: 0,
           duration: audioBuffer.duration,
           name: uuidString,
           origin: 'import',
@@ -272,12 +272,6 @@ export async function _doInitializeOpenDaw(
   }
   if (!projectProperties.id) throw new Error('ProjectId missing');
   const id: string = projectProperties.id;
-  // Set BPM if custom value provided
-  if (bpm && bpm !== 120) {
-    project.editing.modify(() => {
-      project.timelineBox.bpm.setValue(bpm);
-    });
-  }
 
   // Start audio worklet and wait for engine to be ready
   project.startAudioWorklet();

@@ -1,15 +1,14 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-
 import { UnauthorizedError } from '../../domain/errors';
 import { chatRepository } from '../../repositories/chat/chat';
 import { websocketController } from '../websocket/websocket';
+import { isAParticipant } from './helpers';
 import type {
   CreateChatRequest,
   ListMessages,
   MarkAsReadRequest,
   SendMessageRequest,
 } from './types';
-import { isAParticipant } from './helpers';
 
 class ChatController {
   public createChat = async (
