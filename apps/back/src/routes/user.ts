@@ -1,5 +1,77 @@
 import type { FastifyInstance } from 'fastify';
+import { Role } from '@transcendence/permissions';
 import { userController } from '../controllers/user/user';
+
+const authUserSchema = {
+  additionalProperties: false,
+  properties: {
+    artistName: { type: 'string' },
+    avatarUpdatedAt: { type: ['string', 'null'] },
+    bio: { type: 'string' },
+    email: { type: 'string' },
+    firstname: { type: 'string' },
+    handle: { type: 'string' },
+    id: { type: 'string' },
+    joined: { format: 'date-time', type: 'string' },
+    lastname: { type: 'string' },
+    links: {
+      items: {
+        additionalProperties: false,
+        properties: {
+          kind: { type: 'string' },
+          url: { type: 'string' },
+        },
+        required: ['kind', 'url'],
+        type: 'object',
+      },
+      type: ['array', 'null'],
+    },
+    location: { type: 'string' },
+    ownerId: { type: 'string' },
+    role: { enum: Object.values(Role), type: 'string' },
+  },
+  required: [
+    'id',
+    'ownerId',
+    'artistName',
+    'email',
+    'joined',
+    'firstname',
+    'lastname',
+    'avatarUpdatedAt',
+    'handle',
+    'role',
+  ],
+  type: 'object',
+};
+
+const authUserResponseSchema = {
+  additionalProperties: false,
+  properties: {
+    user: authUserSchema,
+  },
+  required: ['user'],
+  type: 'object',
+};
+
+const onlineUserSchema = {
+  additionalProperties: false,
+  properties: {
+    activity: { type: 'string' },
+    handle: { type: 'string' },
+    id: { type: 'string' },
+    listeners: { type: 'integer' },
+    name: { type: 'string' },
+    status: { enum: ['live', 'online', 'idle', 'offline'], type: 'string' },
+  },
+  required: ['id', 'name', 'handle', 'status', 'activity', 'listeners'],
+  type: 'object',
+};
+
+const onlineUsersResponseSchema = {
+  items: onlineUserSchema,
+  type: 'array',
+};
 
 const updateProfileSchema = {
   body: {
@@ -28,6 +100,9 @@ const updateProfileSchema = {
     },
     type: 'object',
   },
+  response: {
+    200: authUserResponseSchema,
+  },
 };
 
 const changePasswordSchema = {
@@ -38,6 +113,18 @@ const changePasswordSchema = {
     },
     required: ['oldPassword', 'newPassword'],
     type: 'object',
+  },
+};
+
+const uploadAvatarSchema = {
+  response: {
+    201: authUserResponseSchema,
+  },
+};
+
+const listOnlineUsersSchema = {
+  response: {
+    200: onlineUsersResponseSchema,
   },
 };
 
@@ -74,6 +161,7 @@ export function userRoutes(app: FastifyInstance) {
     '/upload/avatar',
     {
       preHandler: app.authenticate,
+      schema: uploadAvatarSchema,
     },
     userController.uploadAvatar,
   );
@@ -82,6 +170,7 @@ export function userRoutes(app: FastifyInstance) {
     '/listFollowing',
     {
       preHandler: app.authenticate,
+      schema: listOnlineUsersSchema,
     },
     userController.listFollowingById,
   );
@@ -90,6 +179,7 @@ export function userRoutes(app: FastifyInstance) {
     '/listFollowers',
     {
       preHandler: app.authenticate,
+      schema: listOnlineUsersSchema,
     },
     userController.listFollowersById,
   );

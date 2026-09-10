@@ -5,6 +5,7 @@ import type {
   ProducerProfile,
   UpdateUserInput,
   User,
+  UserWithPassword,
 } from '../../domain/user';
 import type { PrismaClient, User as PrismaUser } from '../../generated/prisma/client';
 import { prisma } from '../../utils/prisma';
@@ -48,6 +49,20 @@ class UserRepository {
       });
 
       const formattedUser = this._format(user);
+
+      return formattedUser;
+    } catch (error: unknown) {
+      throw mapError(error, 'User');
+    }
+  }
+
+  public async findWithPassword(ref: UniqueRef): Promise<UserWithPassword> {
+    try {
+      const user: PrismaUser = await prisma.user.findUniqueOrThrow({
+        where: ref,
+      });
+
+      const formattedUser = this._formatUserWithPassword(user);
 
       return formattedUser;
     } catch (error: unknown) {
@@ -255,7 +270,16 @@ class UserRepository {
   // Format prisma response (type User from PrismaClient) into domain type (type User from domain/)
   // because we do not keep every field from the User table in the database
   private _format(user: PrismaUser): User {
-    const { avatarUpdatedAt, bio, createdAt, links, location, updatedAt, ...rest } = user;
+    const {
+      avatarUpdatedAt,
+      bio,
+      createdAt,
+      links,
+      location,
+      password: _password,
+      updatedAt,
+      ...rest
+    } = user;
 
     return {
       ...rest,
@@ -263,6 +287,14 @@ class UserRepository {
       bio: bio ?? undefined,
       links: toLinks(links),
       location: location ?? undefined,
+      joined: createdAt,
+    };
+  }
+
+  private _formatUserWithPassword(user: PrismaUser): UserWithPassword {
+    return {
+      ...this._format(user),
+      password: user.password,
     };
   }
 

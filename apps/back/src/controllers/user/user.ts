@@ -39,7 +39,7 @@ class UserController {
   ): Promise<void> => {
     const { newPassword, oldPassword } = req.body;
 
-    const user = await userRepository.find({ id: req.authUser.id });
+    const user = await userRepository.findWithPassword({ id: req.authUser.id });
 
     if (!(await verifyPassword(oldPassword, user.password))) throw new ForbiddenError();
 
@@ -154,6 +154,7 @@ class UserController {
     }
 
     await userRepository.follow(req.authUser.id, target.id);
+
     reply.code(204).send();
   };
 
@@ -168,6 +169,7 @@ class UserController {
     }
 
     await userRepository.unfollow(req.authUser.id, target.id);
+
     reply.code(204).send();
   };
 
@@ -192,6 +194,7 @@ class UserController {
     const updatedUser = await userRepository.update(req.authUser.id, {
       avatarUpdatedAt: dayjs().toISOString(),
     });
+
     reply.code(201).send({ user: updatedUser });
   };
 
