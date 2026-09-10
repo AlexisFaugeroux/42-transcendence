@@ -1,5 +1,6 @@
 import type { Role } from '@transcendence/permissions';
 import type { PaginatedResponse } from './pagination';
+import type { AuthUser } from './auth';
 
 export interface User {
   id: string;
@@ -12,9 +13,13 @@ export interface User {
   handle: string;
   links?: { kind: string; url: string }[] | null;
   artistName: string;
-  password: string;
   role: Role;
   ownerId: string;
+  joined: Date;
+}
+
+export interface UserWithPassword extends User {
+  password: string;
 }
 
 export interface UserOnlineStatus {
@@ -72,7 +77,7 @@ export interface UpdateUserInput {
 }
 
 export interface UserResponse {
-  user: User;
+  user: AuthUser;
 }
 
 export interface ProducerProfileResponse {
