@@ -5,7 +5,6 @@ import type {
   UpsertProjectInput,
 } from '../../domain/project';
 import type { PrismaClient } from '../../generated/prisma/client';
-
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
 import { buildFilters, formatProject } from './helpers';

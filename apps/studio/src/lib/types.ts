@@ -81,7 +81,7 @@ export interface Sample {
 export interface ProjectProperties {
   id: string | null;
   name: string | null;
-  bpm: number | null;
+  bpm?: number;
   duration: number;
   visibility: string;
   samples: string[] | null;

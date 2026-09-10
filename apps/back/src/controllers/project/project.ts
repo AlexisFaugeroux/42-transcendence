@@ -1,6 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../domain/errors';
-
 import { projectRepository } from '../../repositories/project/project';
 import { userRepository } from '../../repositories/user/user';
 import type {

@@ -6,11 +6,10 @@ import type {
   UpdateSampleInput,
 } from '../../domain/sample';
 import type {
+  OwnerType,
   PrismaClient,
   Sample as PrismaSample,
-  OwnerType,
 } from '../../generated/prisma/client';
-
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
 import { buildFilters, formatSample } from './helpers';

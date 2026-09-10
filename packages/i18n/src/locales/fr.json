@@ -587,7 +587,6 @@
       "title": "Aucune session pour l'instant"
     },
     "new": {
-      "bpmField": "BPM",
       "lead": "Choisissez le type de session, puis nous préparerons l'espace de travail adapté.",
       "submit": "Créer & ouvrir",
       "title": "Démarrer une nouvelle session",

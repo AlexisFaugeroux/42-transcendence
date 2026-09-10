@@ -1,6 +1,5 @@
 import type { CreateTrackInput, GetTracksInput, Track, UpdateTrackInput } from '../../domain/track';
 import type { PrismaClient, Track as PrismaTrack } from '../../generated/prisma/client';
-
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
 import { buildFilters, formatTrack } from './helpers';

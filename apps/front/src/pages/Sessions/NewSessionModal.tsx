@@ -19,12 +19,11 @@ interface NewSessionModalProps {
 export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.Element {
   const [picked, setPicked] = useState<SessionType>('production');
   const [name, setName] = useState<string>('Untitled');
-  const [bpm, setBpm] = useState<number>(120);
   const { t } = useTranslation();
 
   const openNewSession = () => {
     onClose();
-    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/?name=${name}&bpm=${bpm}`;
+    window.location.href = `${import.meta.env.VITE_STUDIO_URL}/?name=${name}`;
   };
 
   return (
@@ -66,16 +65,6 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
             placeholder={t('sessions.new.titlePlaceholder')}
             onChange={(e) => {
               setName(e.target.value);
-            }}
-          />
-        </label>
-        <label className={styles.field}>
-          <span className={styles.fieldLabel}>{t('sessions.new.bpmField')}</span>
-          <Input
-            type="number"
-            placeholder="120"
-            onChange={(e) => {
-              setBpm(e.target.valueAsNumber);
             }}
           />
         </label>

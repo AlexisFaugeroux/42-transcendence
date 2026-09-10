@@ -43,9 +43,8 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
         visibility: 'PRIVATE',
       };
 
-      const properties: ProjectProperties = {
+      const properties: Omit<ProjectProperties, 'bpm'> = {
         ...meta,
-        bpm: Number(query.get('bpm')),
         samples: query.getAll('sampleId'),
         state: '',
       };

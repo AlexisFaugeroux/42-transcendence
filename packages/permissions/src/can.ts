@@ -8,16 +8,8 @@ export const ROLES_PERMISSIONS: Record<RoleType, PermissionsType[]> = {
     Permissions.TRACK_WRITE,
     Permissions.STUDIO_ACCESS,
   ],
-  [Role.MODERATOR]: [
-    Permissions.SAMPLE_WRITE,
-    Permissions.TRACK_WRITE,
-    Permissions.STUDIO_ACCESS,   
-  ],
-  [Role.ARTIST]: [
-    Permissions.SAMPLE_WRITE,
-    Permissions.TRACK_WRITE,
-    Permissions.STUDIO_ACCESS,
-  ],
+  [Role.MODERATOR]: [Permissions.SAMPLE_WRITE, Permissions.TRACK_WRITE, Permissions.STUDIO_ACCESS],
+  [Role.ARTIST]: [Permissions.SAMPLE_WRITE, Permissions.TRACK_WRITE, Permissions.STUDIO_ACCESS],
   [Role.GUEST]: [],
 };
 

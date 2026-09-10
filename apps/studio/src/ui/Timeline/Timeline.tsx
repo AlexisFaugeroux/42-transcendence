@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
+import { useEditedAudioUnit } from '../../hooks/useEditedAudioUnit';
 import { createTrack, type InstrumentType } from '../../lib/arrangementFactory';
 import { computeBarsFromSDK } from '../../lib/audioUtils';
 import { AddTrackButton } from '../../ui/AddTrackButton';
@@ -18,7 +19,6 @@ import { Grid } from './Grid/Grid';
 import { LoopRegionHandleStrip } from './LoopRegion/LoopRegionHandleStrip';
 import { Rack } from './Rack/Rack';
 import styles from './Timeline.module.scss';
-import { useEditedAudioUnit } from '../../hooks/useEditedAudioUnit';
 
 function renderLabels(project: Project, pixelsPerPulse: number): JSX.Element[] {
   const bars = computeBarsFromSDK(project);

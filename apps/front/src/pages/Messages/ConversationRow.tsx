@@ -2,10 +2,10 @@ import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
+import { usePresence } from '../../presence/PresenceProvider';
 import type { Conversation } from '../../types/chat';
 import styles from './ConversationRow.module.scss';
 import { formatConversationTime } from './helpers';
-import { usePresence } from '../../presence/PresenceProvider';
 
 interface ConversationRowProps {
   conversation: Conversation;
