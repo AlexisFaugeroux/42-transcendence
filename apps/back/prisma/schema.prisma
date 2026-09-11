@@ -112,6 +112,7 @@ model User {
   conversationParticipations ConversationParticipant[]
   createdAt                  DateTime                  @default(now())
   updatedAt                  DateTime                  @updatedAt
+  trackLikes                 TrackLike[]
 }
 
 model Sample {
@@ -150,6 +151,18 @@ model Track {
   mode        Mode?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  likes       TrackLike[]
+}
+
+model TrackLike {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  trackId   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, trackId])
 }
 
 model Session {
