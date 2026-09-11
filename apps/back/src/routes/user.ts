@@ -57,14 +57,11 @@ const authUserResponseSchema = {
 const onlineUserSchema = {
   additionalProperties: false,
   properties: {
-    activity: { type: 'string' },
     handle: { type: 'string' },
     id: { type: 'string' },
-    listeners: { type: 'integer' },
-    name: { type: 'string' },
-    status: { enum: ['live', 'online', 'idle', 'offline'], type: 'string' },
+    status: { enum: ['online', 'offline'], type: 'string' },
   },
-  required: ['id', 'name', 'handle', 'status', 'activity', 'listeners'],
+  required: ['id', 'handle', 'status'],
   type: 'object',
 };
 
