@@ -36,7 +36,7 @@ const saveProjectSchema = {
       state: { contentEncoding: 'base64', minLength: 1, type: 'string' },
       visibility: { enum: ['PRIVATE', 'SHARED', 'PUBLIC'], type: 'string' },
     },
-    required: ['id', 'name', 'bpm', 'duration', 'visibility', 'samples', 'state'],
+    required: ['id', 'name', 'duration', 'visibility', 'samples', 'state'],
     type: 'object',
   },
 };

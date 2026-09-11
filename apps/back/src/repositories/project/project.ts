@@ -25,6 +25,7 @@ class ProjectRepository {
       const upsertProject = await this.prisma.studioProject.upsert({
         create: {
           ...scalars,
+          bpm: scalars.bpm ?? 0,
           owner: { connect: { id: ownerId } },
           samples: { connect: samplesRef },
           state,

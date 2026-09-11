@@ -35,7 +35,7 @@ export interface UpsertProjectInput {
   ownerId: string;
   name: string;
   duration: number;
-  bpm: number;
+  bpm?: number;
   visibility: VisibilityType;
   key?: Key;
   mode?: Mode;
