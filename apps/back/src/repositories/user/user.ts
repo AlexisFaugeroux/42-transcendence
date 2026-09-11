@@ -199,10 +199,19 @@ class UserRepository {
         },
       });
 
+      const likesReceived = await this.prisma.trackLike.count({
+        where: {
+          track: {
+            ownerId: user.ownerId,
+          },
+        },
+      });
+
       return {
         ...this._formatProducer(user),
         followersCount: user._count.followedBy,
         followingCount: user._count.following,
+        likesReceived,
         isFollowing: user.followedBy.length > 0,
       };
     } catch (error: unknown) {

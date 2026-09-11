@@ -59,9 +59,8 @@ export function ProducerProfile(): JSX.Element {
                   <div>
                     <strong>{producer.followingCount}</strong> {t('producers.following')}
                   </div>
-                  {/* TODO: mock likes */}
                   <div>
-                    <strong>0</strong> {t('producers.likes')}
+                    <strong>{producer.likesReceived}</strong> {t('producers.likes')}
                   </div>
                 </div>
 

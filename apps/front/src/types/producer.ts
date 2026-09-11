@@ -14,5 +14,6 @@ export interface Producer {
 export interface ProducerProfile extends Producer {
   followersCount: number;
   followingCount: number;
+  likesReceived: number;
   isFollowing: boolean;
 }

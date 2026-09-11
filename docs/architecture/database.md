@@ -68,6 +68,7 @@ client). Commit both.
 | `User`                    | Account: `email` / `handle` / `artistName` (unique), hashed `password`, profile fields, `role`, `avatarUpdatedAt?`.                                                            |
 | `Sample`                  | Metadata: `name`, `visibility`, `url`, `duration` (ms, `Float`), `bytes`, optional `bpm` / `key` / `mode` / `family` / `kind`. Belongs to an `Owner`.                          |
 | `Track`                   | A rendered export: `title`, `description?`, `visibility`, `url`, `duration`, `bytes`, optional `bpm` / `key` / `mode`. Belongs to an `Owner`, optionally to a `StudioProject`. |
+| `TrackLike`               | A user's like on a track: `(userId, trackId)`. Unique pair; cascades if the user or the track is deleted.                                                                      |
 | `StudioProject`           | A studio session: serialized `state` (`Bytes`), `name`, `duration`, `bpm`, `visibility`, `type`, `archived`, optional `key` / `mode`. Belongs to an `Owner`.                   |
 | `Session`                 | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                                                                                                |
 | `Conversation`            | A DM thread: `pairKey` (unique), `lastMessageAt`.                                                                                                                              |
@@ -76,11 +77,11 @@ client). Commit both.
 
 Relationships: `User` 1–1 `Owner`; `Owner` 1–N `Sample` / `Track` /
 `StudioProject`; `Sample` N–N `StudioProject` (the samples a project uses);
-`StudioProject` 1–N `Track`; `User` 1–N `Session`; `User` N–N `User` (follow
-graph `UserFollows`); `Conversation` 1–N `ConversationParticipant` 1–N
-`Message`.
+`StudioProject` 1–N `Track`; `User` 1–N `TrackLike` N–1 `Track`; `User` 1–N
+`Session`; `User` N–N `User` (follow graph `UserFollows`); `Conversation` 1–N
+`ConversationParticipant` 1–N `Message`.
 
-Three modelling decisions worth knowing before you touch these tables:
+Modelling decisions worth knowing before you touch these tables:
 
 - **`Track.projectId` is nullable with `onDelete: SetNull`.** A track outlives
   the project it came from: deleting a session must not delete the audio the user
@@ -89,6 +90,10 @@ Three modelling decisions worth knowing before you touch these tables:
   Without it, two people opening a DM at the same moment would each create a
   thread. The uniqueness constraint makes the race impossible at the DB level
   instead of relying on application-level checks.
+- **`TrackLike` has `@@unique([userId, trackId])`.** Same idea as `pairKey`: one
+  like per (user, track). A double-click or two parallel requests cannot insert
+  two rows. Profile `likesReceived` stays a real count of distinct
+  likers×tracks, not inflated duplicates.
 - **`Message` points at `ConversationParticipant`, not at `User`,** through the
   composite foreign keys `(conversationId, authorId)` and `(conversationId, toId)`.
   That makes "author is a participant of this conversation" a referential
