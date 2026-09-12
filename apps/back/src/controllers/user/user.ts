@@ -147,13 +147,29 @@ class UserController {
   };
 
   public follow = async (req: FastifyRequest<FollowRoute>, reply: FastifyReply): Promise<void> => {
-    const target = await userRepository.findProfile({ handle: req.params.handle }, req.authUser.id);
+    const { id: userId } = req.authUser;
 
-    if (target.id === req.authUser.id) {
+    const target = await userRepository.findProfile({ handle: req.params.handle }, userId);
+    if (target.id === userId) {
       throw new BadRequestError('Cannot self-follow');
     }
 
-    await userRepository.follow(req.authUser.id, target.id);
+    await userRepository.follow(userId, target.id);
+
+    const sockets = websocketController.getSockets();
+    if (sockets.has(target.id)) {
+      const userSockets = sockets.get(userId);
+      if (userSockets) {
+        for (const socket of userSockets) {
+          socket.send(
+            JSON.stringify({
+              data: [target.id],
+              event: 'producerFollowed',
+            }),
+          );
+        }
+      }
+    }
 
     reply.code(204).send();
   };
@@ -162,13 +178,29 @@ class UserController {
     req: FastifyRequest<FollowRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
-    const target = await userRepository.findProfile({ handle: req.params.handle }, req.authUser.id);
+    const { id: userId } = req.authUser;
 
-    if (target.id === req.authUser.id) {
+    const target = await userRepository.findProfile({ handle: req.params.handle }, userId);
+    if (target.id === userId) {
       throw new BadRequestError('Cannot self-unfollow');
     }
 
-    await userRepository.unfollow(req.authUser.id, target.id);
+    await userRepository.unfollow(userId, target.id);
+
+    const sockets = websocketController.getSockets();
+    if (sockets.has(target.id)) {
+      const userSockets = sockets.get(userId);
+      if (userSockets) {
+        for (const socket of userSockets) {
+          socket.send(
+            JSON.stringify({
+              data: [target.id],
+              event: 'producerUnfollowed',
+            }),
+          );
+        }
+      }
+    }
 
     reply.code(204).send();
   };

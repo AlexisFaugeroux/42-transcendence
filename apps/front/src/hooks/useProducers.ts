@@ -49,10 +49,9 @@ export function useFollowing(handle: string, enabled = true, page = 1, limit = 2
 }
 
 // Mutations hooks
-
 export function useFollow() {
   const queryClient = useQueryClient();
-  const myHandle = useAuthUser().handle;
+  const { handle: myHandle, id: userId } = useAuthUser();
   const myFollowingKey = ['producer', myHandle, 'following'] as const;
 
   return useMutation({
@@ -87,13 +86,15 @@ export function useFollow() {
     onSuccess: (_data, handle) => {
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] }); // invalidate query -> trigger a new fetch
       void queryClient.invalidateQueries({ queryKey: myFollowingKey });
+
+      void queryClient.invalidateQueries({ queryKey: ['following', userId] });
     },
   });
 }
 
 export function useUnfollow() {
   const queryClient = useQueryClient();
-  const myHandle = useAuthUser().handle;
+  const { handle: myHandle, id: userId } = useAuthUser();
   const myFollowingKey = ['producer', myHandle, 'following'] as const;
 
   return useMutation({
@@ -145,6 +146,7 @@ export function useUnfollow() {
     onSuccess: (_data, handle) => {
       void queryClient.invalidateQueries({ queryKey: ['producer', handle] });
       void queryClient.invalidateQueries({ queryKey: myFollowingKey });
+      void queryClient.invalidateQueries({ queryKey: ['following', userId] });
     },
   });
 }

@@ -30,23 +30,38 @@ export function PresenceProvider({ children }: { children: ReactNode }): JSX.Ele
       if (message.event === 'OnlineFollowingAtConnection') {
         const usersAlreadyConnected = message.data;
         setFollowingConnected(() => {
-          const list = new Set<string>();
-          usersAlreadyConnected.forEach((user) => list.add(user));
-          return list;
+          const newSet = new Set<string>();
+          usersAlreadyConnected.forEach((user) => newSet.add(user));
+          return newSet;
         });
       } else if (message.event === 'FollowingConnected') {
         const userConnectedId = message.data[0];
         setFollowingConnected((current) => {
-          const list = new Set<string>(current);
-          list.add(userConnectedId);
-          return list;
+          const newSet = new Set(current);
+          newSet.add(userConnectedId);
+          return newSet;
         });
       } else if (message.event === 'FollowingDisconnected') {
         const userDisconnectedId = message.data[0];
         setFollowingConnected((current) => {
-          const list = new Set<string>(current);
-          list.delete(userDisconnectedId);
-          return list;
+          const newSet = new Set(current);
+          newSet.delete(userDisconnectedId);
+          return newSet;
+        });
+      } else if (message.event === 'producerFollowed') {
+        if (message.data.length > 1) return;
+        const followedUserId = message.data[0];
+        setFollowingConnected((current) => {
+          const newSet = new Set(current);
+          newSet.add(followedUserId);
+          return newSet;
+        });
+      } else if (message.event === 'producerUnfollowed') {
+        const unfollowedUserId = message.data[0];
+        setFollowingConnected((current) => {
+          const newSet = new Set(current);
+          newSet.delete(unfollowedUserId);
+          return newSet;
         });
       }
     };

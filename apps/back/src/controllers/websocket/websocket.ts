@@ -55,10 +55,13 @@ class WebsocketController {
 
     // recuperation des following par l'appelant
     const followingOnlineAtConnection = await this._getFollowingAtConnection(userId);
+    const followingOnlineAtConnectionIds = followingOnlineAtConnection.map(
+      (producer) => producer.id,
+    );
     if (!userSockets.has(socket)) return;
     socket.send(
       JSON.stringify({
-        data: followingOnlineAtConnection,
+        data: followingOnlineAtConnectionIds,
         event: 'OnlineFollowingAtConnection',
       }),
     );
