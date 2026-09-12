@@ -1,6 +1,6 @@
 import type { Role } from '@transcendence/permissions';
-import type { PaginatedResponse } from './pagination';
 import type { AuthUser } from './auth';
+import type { PaginatedResponse } from './pagination';
 
 export interface User {
   id: string;

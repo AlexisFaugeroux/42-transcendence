@@ -43,6 +43,7 @@ class ChatRepository {
           user: {
             select: {
               artistName: true,
+              handle: true,
               id: true,
             },
           },
@@ -81,8 +82,9 @@ class ChatRepository {
         ...this.include,
       });
       const participants = conversation.participants.map(({ unreadCount, user }) => ({
-        artistName: user.artistName,
+        handle: user.handle,
         id: user.id,
+        artistName: user.artistName,
         unreadCount,
       }));
 

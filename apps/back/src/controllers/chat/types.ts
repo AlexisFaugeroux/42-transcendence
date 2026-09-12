@@ -2,7 +2,7 @@ import type { RouteGenericInterface } from 'fastify';
 import type { Conversation, Message } from '../../domain/chat';
 import type { CreateMessageInput } from '../../domain/chat';
 
-export interface CreateChatRequest extends RouteGenericInterface {
+export interface CreateChatRoute extends RouteGenericInterface {
   Body: {
     authorId: string;
     toId: string;
@@ -11,19 +11,23 @@ export interface CreateChatRequest extends RouteGenericInterface {
   Reply: Conversation;
 }
 
-export interface ListMessages extends RouteGenericInterface {
+export interface ListMessagesRoute extends RouteGenericInterface {
   Querystring: {
     conversationId: string;
   };
   Reply: Message[];
 }
 
-export interface SendMessageRequest extends RouteGenericInterface {
+export interface ListConversationsRoute extends RouteGenericInterface {
+  Reply: Conversation[];
+}
+
+export interface SendMessageRoute extends RouteGenericInterface {
   Body: CreateMessageInput;
   Reply: Message;
 }
 
-export interface MarkAsReadRequest extends RouteGenericInterface {
+export interface MarkAsReadRoute extends RouteGenericInterface {
   Body: {
     conversationId: string;
   };
