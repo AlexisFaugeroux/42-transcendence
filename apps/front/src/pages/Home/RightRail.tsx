@@ -9,16 +9,14 @@ import { LiveUserRow, OnlineUserRow } from './UserRows';
 export function RightRail(): JSX.Element {
   const { t } = useTranslation();
   const live = ONLINE.filter((u) => u.status === 'live');
-  const presence = usePresence();
-  const users = presence.onlineUsers;
+  const { count, onlineUsers } = usePresence();
 
   return (
     <aside className={styles.rail}>
       <div className={styles.head}>
         <h3 className={styles.title}>{t('home.rail.connected')}</h3>
         <span className={styles.count}>
-          <span className={styles.dot}>●</span>{' '}
-          {t('home.rail.onlineCount', { count: presence.count })}
+          <span className={styles.dot}>●</span> {t('home.rail.onlineCount', { count })}
         </span>
       </div>
 
@@ -35,7 +33,7 @@ export function RightRail(): JSX.Element {
 
       <div className={`${styles.group} ${styles.onlineGroup}`}>
         <div className={styles.label}>{t('home.rail.online')}</div>
-        {users?.map((user) => (
+        {onlineUsers?.map((user) => (
           <OnlineUserRow key={user.handle} user={user} />
         ))}
       </div>

@@ -4,16 +4,17 @@ import { chatRepository } from '../../repositories/chat/chat';
 import { websocketController } from '../websocket/websocket';
 import { isAParticipant } from './helpers';
 import type {
-  CreateChatRequest,
-  ListMessages,
-  MarkAsReadRequest,
-  SendMessageRequest,
+  CreateChatRoute,
+  ListConversationsRoute,
+  ListMessagesRoute,
+  MarkAsReadRoute,
+  SendMessageRoute,
 } from './types';
 
 class ChatController {
   public createChat = async (
-    req: FastifyRequest<CreateChatRequest>,
-    reply: FastifyReply<CreateChatRequest>,
+    req: FastifyRequest<CreateChatRoute>,
+    reply: FastifyReply<CreateChatRoute>,
   ) => {
     const userId = req.authUser.id;
     const { authorId, toId, content } = req.body;
@@ -34,7 +35,10 @@ class ChatController {
     return;
   };
 
-  public listConversations = async (req: FastifyRequest, reply: FastifyReply) => {
+  public listConversations = async (
+    req: FastifyRequest,
+    reply: FastifyReply<ListConversationsRoute>,
+  ) => {
     const userId = req.authUser.id;
     const conversations = await chatRepository.listConversationsForUser(userId);
 
@@ -43,8 +47,8 @@ class ChatController {
   };
 
   public listMessages = async (
-    req: FastifyRequest<ListMessages>,
-    reply: FastifyReply<ListMessages>,
+    req: FastifyRequest<ListMessagesRoute>,
+    reply: FastifyReply<ListMessagesRoute>,
   ) => {
     const conversationId = req.query.conversationId;
     const userId = req.authUser.id;
@@ -59,8 +63,8 @@ class ChatController {
   };
 
   public sendMessage = async (
-    req: FastifyRequest<SendMessageRequest>,
-    reply: FastifyReply<SendMessageRequest>,
+    req: FastifyRequest<SendMessageRoute>,
+    reply: FastifyReply<SendMessageRoute>,
   ) => {
     const userId = req.authUser.id;
     const message = req.body;
@@ -78,7 +82,7 @@ class ChatController {
     return;
   };
 
-  public markAsRead = async (req: FastifyRequest<MarkAsReadRequest>, reply: FastifyReply) => {
+  public markAsRead = async (req: FastifyRequest<MarkAsReadRoute>, reply: FastifyReply) => {
     const userId = req.authUser.id;
     const conversationId = req.body.conversationId;
 

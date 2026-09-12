@@ -39,6 +39,7 @@ const markAsReadSchema = {
 
 export function chatRoutes(app: FastifyInstance) {
   app.get('/listConversations', { preHandler: app.authenticate }, chatController.listConversations);
+
   app.get('/listMessages', { preHandler: app.authenticate }, chatController.listMessages);
 
   app.post(

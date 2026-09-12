@@ -17,6 +17,7 @@ export interface Conversation {
   participants: {
     id: string;
     unreadCount: number;
+    handle: string;
     artistName: string;
   }[];
   messageSorted: Omit<Message, 'conversationId' | 'id'>[];

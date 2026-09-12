@@ -35,7 +35,7 @@ export function ConversationRow({ conversation, meId }: ConversationRowProps): J
       <span className={styles.body}>
         <span className={styles.topLine}>
           <span className={`${styles.name} ${me.unreadCount ? styles.unreadName : ''}`}>
-            {to.artistName}
+            {to.handle}
           </span>
           <span className={styles.time}>
             {formatConversationTime(lastMessageAt, t('chat.time.yesterday'))}

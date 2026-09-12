@@ -6,6 +6,7 @@ export interface HydratedConversation extends PrismaConversation {
     user: {
       id: string;
       artistName: string;
+      handle: string;
     };
     messagesReceived: {
       content: string;

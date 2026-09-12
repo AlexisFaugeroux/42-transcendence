@@ -1,5 +1,5 @@
-import type { FastifyInstance } from 'fastify';
 import { Role } from '@transcendence/permissions';
+import type { FastifyInstance } from 'fastify';
 import { userController } from '../controllers/user/user';
 
 const authUserSchema = {
@@ -57,11 +57,12 @@ const authUserResponseSchema = {
 const onlineUserSchema = {
   additionalProperties: false,
   properties: {
+    artistName: { type: 'string' },
     handle: { type: 'string' },
     id: { type: 'string' },
     status: { enum: ['online', 'offline'], type: 'string' },
   },
-  required: ['id', 'handle', 'status'],
+  required: ['id', 'handle', 'status', 'artistName'],
   type: 'object',
 };
 
