@@ -1,5 +1,5 @@
-import type { Project } from '@opendaw/studio-core';
 import { UUID } from '@opendaw/lib-std';
+import type { Project } from '@opendaw/studio-core';
 import { useMutation } from '@tanstack/react-query';
 import { saveProject } from '../api/project';
 import { useProject } from '../contexts/ProjectContext';
@@ -15,6 +15,7 @@ interface ProjectMeta {
 }
 
 function buildPayload(meta: ProjectMeta, project: Project, name = meta.name): ProjectProperties {
+  console.log(meta);
   return {
     bpm: project.timelineBox.bpm.getValue(),
     duration: meta.duration,

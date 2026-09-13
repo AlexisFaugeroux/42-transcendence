@@ -16,8 +16,8 @@ import type {
   GetUsersRoute,
   ListSessionsRoute,
   RevokeSessionRoute,
-  UpdateUserRoute,
   UpdateUserRoleRoute,
+  UpdateUserRoute,
 } from './types';
 
 class AdminController {

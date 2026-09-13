@@ -49,6 +49,7 @@ export interface GetProjectInput {
 }
 
 export interface UpdateProjectInput {
+  id: string;
   name?: string;
   archived?: boolean;
 }

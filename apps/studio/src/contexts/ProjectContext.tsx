@@ -59,7 +59,7 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
         state: '',
       };
 
-      const { audioContext, project } = await initializeOpenDaw(
+      const { audioContext, project, id } = await initializeOpenDaw(
         {
           localAudioBuffers: localAudioBuffersRef.current,
         },
@@ -69,13 +69,13 @@ export function ProjectProvider({ children }: { children: ReactNode }): JSX.Elem
       if (!mounted) return;
 
       const url = new URL(window.location.href);
-      url.searchParams.set('projectId', initialMeta.id ?? '');
+      url.searchParams.set('projectId', initialMeta.id ?? id);
       window.history.replaceState(window.history.state, '', url);
 
       setValue({
         audioContext,
         localAudioBuffers: localAudioBuffersRef.current,
-        meta: initialMeta,
+        meta: { ...initialMeta, id },
         project,
       });
     })();
