@@ -3,7 +3,7 @@ import { useAuthUser } from '@transcendence/auth';
 import { useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
 import type { Conversation, Message } from '../types/chat';
-import type { SocketEvent } from '../types/event';
+import type { WebSocketEvent } from '../types/event';
 import { useSocket } from '../websocket/WebSocketProvider';
 
 export function MessageListener(): null {
@@ -13,7 +13,7 @@ export function MessageListener(): null {
   const url = useMatch('/messages/:id');
 
   useEffect(() => {
-    const handler = (event: SocketEvent) => {
+    const handler = (event: WebSocketEvent) => {
       if (event.event !== 'message') return;
       const newMessage = event.data;
       const conversations: Conversation[] | undefined = queryClient.getQueryData([

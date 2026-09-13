@@ -1,11 +1,11 @@
 import type { Message } from './chat';
 
-export type SocketEvent =
+export type WebSocketEvent =
   | {
       event:
-        | 'OnlineFollowingAtConnection'
-        | 'FollowingConnected'
-        | 'FollowingDisconnected'
+        | 'onlineFollowingAtConnection'
+        | 'followingConnected'
+        | 'followingDisconnected'
         | 'producerFollowed'
         | 'producerUnfollowed';
       data: string[];
