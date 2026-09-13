@@ -9,6 +9,7 @@ import type {
   SaveProjectRoute,
   UpdateProjectRoute,
 } from './types';
+
 class ProjectController {
   public save = async (req: FastifyRequest<SaveProjectRoute>, reply: FastifyReply) => {
     const { state, ...rest } = req.body;
@@ -71,11 +72,11 @@ class ProjectController {
     if (!Object.keys(req.body).length) throw new BadRequestError('No field to update');
 
     const user = await userRepository.find({ id: req.authUser.id });
-    const project = await projectRepository.findById(req.query.id);
+    const project = await projectRepository.findById(req.body.id);
 
     if (user.ownerId !== project.ownerId) throw new ForbiddenError();
 
-    const updated = await projectRepository.update(req.query.id, req.body);
+    const updated = await projectRepository.update(req.body.id, req.body);
 
     reply.code(200).send(updated);
   };

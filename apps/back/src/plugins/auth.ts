@@ -39,7 +39,7 @@ async function authPlugin(app: FastifyInstance) {
       if (session) {
         req.authUser = { id: session.userId, role: session.role, sid: session.id };
       }
-    } catch {
+    } catch (error) {
       req.log.debug(error, 'no valid session, rate limiting by ip');
     }
   });

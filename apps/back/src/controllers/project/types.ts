@@ -18,9 +18,6 @@ export interface ListProjectRoute extends RouteGenericInterface {
 
 export interface UpdateProjectRoute extends RouteGenericInterface {
   Body: UpdateProjectInput;
-  Querystring: {
-    id: string;
-  };
   Reply: Project;
 }
 

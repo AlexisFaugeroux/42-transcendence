@@ -17,9 +17,7 @@ infra/nginx/certs
 **/generated/prisma
 
 **/public/audio/manifest.json
-samples/platform/
-samples/alex/
-samples/julien/
+samples/*/
 avatars/*
 !avatars/avatars.zip
 tracks/*

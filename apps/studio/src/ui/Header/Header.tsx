@@ -7,6 +7,7 @@ import {
   MsnIcon,
   MsnWordmark,
   Separator,
+  SettingFilled,
   theme,
 } from '@transcendence/ui';
 import { type JSX, type MouseEvent, useEffect, useState } from 'react';
@@ -182,10 +183,12 @@ export function Header(): JSX.Element {
                 <span className={styles.projectEyebrow}>{t('studio.header.project')}</span>
                 <span className={styles.projectTitle}>{meta.name}</span>
                 <span className={styles.projectCaret} aria-hidden>
-                  <StudioIcon name="triangle" size={10} />
+                  <SettingFilled size={10} style={{ color: theme.orange }} />
                 </span>
               </button>
             </Dropdown>
+            <Separator />
+
             <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
               ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
             </span>
