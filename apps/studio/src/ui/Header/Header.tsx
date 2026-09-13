@@ -1,5 +1,3 @@
-import { UUID } from '@opendaw/lib-std';
-import { useMutation } from '@tanstack/react-query';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
 import {
   ConfigProvider,
@@ -12,12 +10,10 @@ import {
   theme,
 } from '@transcendence/ui';
 import { type JSX, type MouseEvent, useEffect, useState } from 'react';
-import { saveProject } from '../../api/project';
 import { useProject } from '../../contexts/ProjectContext';
 import { useTracks } from '../../contexts/TracksContext';
+import { useRenameProject, useSaveProject } from '../../hooks/useProject';
 import { reloadClipsAndTracks } from '../../lib/projectSetup';
-import type { ProjectProperties } from '../../lib/types';
-import { arrayBufferToBase64 } from '../../utils/base64';
 import { StudioIcon } from '../components/StudioIcon/StudioIcon';
 import { ExportModal } from './ExportModal';
 import styles from './Header.module.scss';
@@ -41,6 +37,8 @@ export function Header(): JSX.Element {
   const { meta, project } = useProject();
   const { setClips, setTracks } = useTracks();
   const { t } = useTranslation();
+  const { isPending: isSaving, mutate: save } = useSaveProject();
+  const { isPending: isRenaming, mutate: rename } = useRenameProject();
 
   useEffect(() => {
     const syncEditingUi = (): void => {
@@ -73,28 +71,16 @@ export function Header(): JSX.Element {
     syncArrangement();
   };
 
-  const { isPending, mutate: save } = useMutation({
-    mutationFn: saveProject,
-    onSuccess: () => {
-      project.editing.markSaved();
-      setSaved(true);
-    },
-  });
-
-  const buildPayload = (name = meta.name): ProjectProperties => ({
-    ...meta,
-    bpm: project.timelineBox.bpm.getValue(),
-    name,
-    samples: project.collectSampleUUIDs().map((uuid) => UUID.toString(uuid)),
-    state: arrayBufferToBase64(project.toArrayBuffer()),
-  });
-
   const goHome = (): void => {
     window.location.href = `${FRONT_URL}/home`;
   };
 
   const onSave = (): void => {
-    save(buildPayload());
+    save(undefined, {
+      onSuccess: () => {
+        setSaved(true);
+      },
+    });
   };
 
   const onLogoClick = (event: MouseEvent<HTMLAnchorElement>): void => {
@@ -109,7 +95,7 @@ export function Header(): JSX.Element {
 
   const onSaveAndLeave = (): void => {
     setLeaveError(null);
-    save(buildPayload(), {
+    save(undefined, {
       onError: (error) => {
         setLeaveError(error instanceof Error ? error.message : String(error));
       },
@@ -119,13 +105,11 @@ export function Header(): JSX.Element {
 
   const onRenameConfirm = (name: string): void => {
     setRenameError(null);
-    save(buildPayload(name), {
+    rename(name, {
       onError: (error) => {
         setRenameError(error instanceof Error ? error.message : String(error));
       },
       onSuccess: () => {
-        meta.renameProject(name);
-        project.editing.markSaved();
         setSaved(true);
         setRenameOpen(false);
       },
@@ -134,7 +118,7 @@ export function Header(): JSX.Element {
 
   const menuItems: MenuProps['items'] = [
     {
-      disabled: saved || isPending,
+      disabled: saved || isSaving,
       icon: <StudioIcon name="save" color={theme.fg1} size={10} style={{ marginRight: '4px' }} />,
       key: 'save',
       label: t('common.save'),
@@ -171,81 +155,82 @@ export function Header(): JSX.Element {
 
   return (
     <header className={styles.header}>
-      <a className={styles.sessionsLink} href={`${FRONT_URL}/home`} onClick={onLogoClick}>
-        <MsnIcon name="msn" size="16px" color={theme.orange} />
-        <MsnWordmark size={12} accent="var(--color-orange)" />
-      </a>
-      <Separator />
+      <div className={styles.group}>
+        <a className={styles.sessionsLink} href={`${FRONT_URL}/home`} onClick={onLogoClick}>
+          <MsnIcon name="msn" size="16px" color={theme.orange} />
+          <MsnWordmark size={12} accent="var(--color-orange)" />
+        </a>
+        <Separator />
 
-      <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
-        <div className={styles.titleBloc}>
-          <Dropdown
-            trigger={['click']}
-            placement="bottomLeft"
-            menu={{
-              items: menuItems,
-              onClick: onMenuClick,
-              style: { border: `1px solid ${theme.lineSoft}` },
-            }}
-          >
-            <button
-              type="button"
-              className={styles.titleMenu}
-              title={t('studio.header.projectMenu')}
-              aria-label={t('studio.header.projectMenu')}
+        <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
+          <div className={styles.titleBloc}>
+            <Dropdown
+              trigger={['click']}
+              placement="bottomLeft"
+              menu={{
+                items: menuItems,
+                onClick: onMenuClick,
+                style: { border: `1px solid ${theme.lineSoft}` },
+              }}
             >
-              <span className={styles.projectEyebrow}>{t('studio.header.project')}</span>
-              <span className={styles.projectTitle}>{meta.name}</span>
-              <span className={styles.projectCaret} aria-hidden>
-                <StudioIcon name="triangle" size={10} />
-              </span>
-            </button>
-          </Dropdown>
-          <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
-            ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
-          </span>
+              <button
+                type="button"
+                className={styles.titleMenu}
+                title={t('studio.header.projectMenu')}
+                aria-label={t('studio.header.projectMenu')}
+              >
+                <span className={styles.projectEyebrow}>{t('studio.header.project')}</span>
+                <span className={styles.projectTitle}>{meta.name}</span>
+                <span className={styles.projectCaret} aria-hidden>
+                  <StudioIcon name="triangle" size={10} />
+                </span>
+              </button>
+            </Dropdown>
+            <span className={styles.projectState} data-saved={saved ? 'true' : 'false'}>
+              ● {saved ? t('studio.header.saved') : t('studio.header.unsaved')}
+            </span>
+          </div>
+        </ConfigProvider>
+        <Separator />
+
+        <div>
+          <IconBtn
+            title={t('studio.header.undo')}
+            color={canUndo ? undefined : 'var(--fg3)'}
+            background="transparent"
+            borderWidth={0}
+            width={24}
+            height={24}
+            onClick={onUndo}
+          >
+            <StudioIcon name="undo" size={13} />
+          </IconBtn>
+          <IconBtn
+            title={t('studio.header.redo')}
+            color={canRedo ? undefined : 'var(--fg3)'}
+            background="transparent"
+            borderWidth={0}
+            width={24}
+            height={24}
+            onClick={onRedo}
+          >
+            <StudioIcon name="redo" size={13} />
+          </IconBtn>
         </div>
-      </ConfigProvider>
-      <Separator />
-
-      <div>
-        <IconBtn
-          title={t('studio.header.undo')}
-          color={canUndo ? undefined : 'var(--fg3)'}
-          background="transparent"
-          borderWidth={0}
-          width={24}
-          height={24}
-          onClick={onUndo}
-        >
-          <StudioIcon name="undo" size={13} />
-        </IconBtn>
-        <IconBtn
-          title={t('studio.header.redo')}
-          color={canRedo ? undefined : 'var(--fg3)'}
-          background="transparent"
-          borderWidth={0}
-          width={24}
-          height={24}
-          onClick={onRedo}
-        >
-          <StudioIcon name="redo" size={13} />
-        </IconBtn>
       </div>
-      <Separator />
 
-      <Transport />
-      <Separator />
+      <div className={styles.group}>
+        <Transport />
+        <Separator />
+        <Metrics />
+      </div>
 
-      <Metrics />
-
-      <div className={styles.spacer} />
-
-      <Meter />
-      <Separator />
-
-      <div className={styles.actions}>
-        <LanguageSelect compact />
+      <div className={`${styles.group} ${styles.groupEnd}`}>
+        <Meter />
+        <Separator />
+        <div className={styles.actions}>
+          <LanguageSelect compact />
+        </div>
       </div>
 
       <ExportModal
@@ -261,10 +246,10 @@ export function Header(): JSX.Element {
       <RenameProjectModal
         open={renameOpen}
         initialName={meta.name ?? ''}
-        saving={isPending}
+        saving={isRenaming}
         error={renameError}
         onCancel={() => {
-          if (!isPending) {
+          if (!isRenaming) {
             setRenameOpen(false);
             setRenameError(null);
           }
@@ -274,10 +259,10 @@ export function Header(): JSX.Element {
 
       <LeaveStudioModal
         open={leaveOpen}
-        saving={isPending}
+        saving={isSaving}
         error={leaveError}
         onCancel={() => {
-          if (!isPending) {
+          if (!isSaving) {
             setLeaveOpen(false);
             setLeaveError(null);
           }

@@ -69,22 +69,6 @@ export function Transport(): JSX.Element {
         <StudioIcon name="stop" size={14} />
       </IconBtn>
       <IconBtn
-        title="Record"
-        color={theme.red}
-        background={theme.void}
-        borderColor={theme.lineSoft}
-        borderWidth={0.5}
-        borderStyle="solid"
-        borderRadius={3}
-        width={26}
-        height={26}
-        onClick={() => {
-          /* TODO: link rec button to audio engine */
-        }}
-      >
-        <StudioIcon name="rec" size={14} />
-      </IconBtn>
-      <IconBtn
         title="Loop"
         color={theme.orange}
         background={

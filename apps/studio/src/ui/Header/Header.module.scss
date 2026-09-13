@@ -3,12 +3,24 @@
   min-height: 40px;
   background: var(--bg-panel);
   border-bottom: 1px solid var(--line-faint);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   flex-shrink: 0;
   align-items: center;
   padding: 0 6px;
-  gap: 0;
+  gap: 16px;
   font-size: 12px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.groupEnd {
+  justify-self: end;
 }
 
 .sessionsLink {
@@ -18,7 +30,6 @@
   gap: 5px;
   text-decoration: none;
   padding: 0 8px;
-  height: 100%;
   flex-shrink: 0;
 }
 
@@ -104,11 +115,6 @@
   &[data-saved='false'] {
     color: var(--color-red);
   }
-}
-
-.spacer {
-  flex: 1;
-  min-width: 8px;
 }
 
 .actions {
