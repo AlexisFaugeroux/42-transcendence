@@ -2,8 +2,10 @@
 set -e
 npx prisma migrate deploy
 
-unzip -o samples/platform -d samples/platform
-rm -rf samples/platform.zip
+for archive in samples/platform*.zip; do
+  unzip -o "$archive" -d samples/platform
+done
+rm -f samples/platform*.zip
 
 unzip -o samples/alex -d samples/alex
 rm -rf samples/alex.zip

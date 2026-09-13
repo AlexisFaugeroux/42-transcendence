@@ -30,7 +30,7 @@ RUN pnpm --filter @transcendence/back deploy --prod --legacy /prod
 FROM base AS runtime
 WORKDIR /app
 COPY --from=build /prod .
-COPY samples/platform.zip samples/platform.zip
+COPY samples/platform*.zip samples/
 COPY samples/alex.zip samples/alex.zip
 COPY samples/julien.zip samples/julien.zip
 COPY avatars/avatars.zip avatars/avatars.zip
