@@ -8,13 +8,13 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import type { SocketEvent } from '../types/event';
+import type { WebSocketEvent } from '../types/event';
 
 interface WebsocketContextValue {
   subscribe: (handler: eventHandler) => () => void;
 }
 
-type eventHandler = (input: SocketEvent) => void;
+type eventHandler = (input: WebSocketEvent) => void;
 
 const websocketContext = createContext<WebsocketContextValue | null>(null);
 
@@ -42,7 +42,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
     };
 
     ws.onmessage = (event: MessageEvent<string>) => {
-      const message = JSON.parse(event.data) as SocketEvent;
+      const message = JSON.parse(event.data) as WebSocketEvent;
       handlers.current.forEach((handler) => {
         handler(message);
       });

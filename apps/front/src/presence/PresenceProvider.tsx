@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { createContext } from 'react';
 import { useState } from 'react';
 import { useFollowing } from '../hooks/useFollowing';
-import type { SocketEvent } from '../types/event';
+import type { WebSocketEvent } from '../types/event';
 import type { UserOnlineStatus } from '../types/user';
 import { useSocket } from '../websocket/WebSocketProvider';
 
@@ -26,22 +26,22 @@ export function PresenceProvider({ children }: { children: ReactNode }): JSX.Ele
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const handler = (message: SocketEvent) => {
-      if (message.event === 'OnlineFollowingAtConnection') {
+    const handler = (message: WebSocketEvent) => {
+      if (message.event === 'onlineFollowingAtConnection') {
         const usersAlreadyConnected = message.data;
         setFollowingConnected(() => {
           const newSet = new Set<string>();
           usersAlreadyConnected.forEach((user) => newSet.add(user));
           return newSet;
         });
-      } else if (message.event === 'FollowingConnected') {
+      } else if (message.event === 'followingConnected') {
         const userConnectedId = message.data[0];
         setFollowingConnected((current) => {
           const newSet = new Set(current);
           newSet.add(userConnectedId);
           return newSet;
         });
-      } else if (message.event === 'FollowingDisconnected') {
+      } else if (message.event === 'followingDisconnected') {
         const userDisconnectedId = message.data[0];
         setFollowingConnected((current) => {
           const newSet = new Set(current);
@@ -77,7 +77,9 @@ export function PresenceProvider({ children }: { children: ReactNode }): JSX.Ele
     );
   }
 
-  const onlineFollowing = following.filter((f) => followingConnected.has(f.id));
+  const onlineFollowing = following
+    .filter((f) => followingConnected.has(f.id))
+    .map((f) => ({ ...f, status: 'online' as const }));
 
   return (
     <presenceContext.Provider

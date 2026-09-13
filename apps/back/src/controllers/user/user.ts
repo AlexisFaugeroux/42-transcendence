@@ -10,7 +10,7 @@ import { avatarStorageService } from '../../services/avatarStorage';
 import { imageService } from '../../services/imageService';
 import { parsePagination, toPaginatedResponse } from '../../utils/pagination';
 import { hashPassword, verifyPassword } from '../../utils/password';
-import { websocketController } from '../websocket/websocket';
+import { webSocketRegistry } from '../../utils/websockets';
 import { formatUserWithOnlineStatus } from './helpers';
 import type {
   FollowRoute,
@@ -116,10 +116,8 @@ class UserController {
     const userIds = items.map((i) => i.id);
     const users = await userRepository.get({ ids: userIds });
 
-    const sockets = websocketController.getSockets();
-
     const response: UserOnlineStatus[] = users.map((user) => {
-      const isOnline = sockets.has(user.id);
+      const isOnline = webSocketRegistry.isOnline(user.id);
 
       return {
         ...formatUserWithOnlineStatus(user),
@@ -156,19 +154,8 @@ class UserController {
 
     await userRepository.follow(userId, target.id);
 
-    const sockets = websocketController.getSockets();
-    if (sockets.has(target.id)) {
-      const userSockets = sockets.get(userId);
-      if (userSockets) {
-        for (const socket of userSockets) {
-          socket.send(
-            JSON.stringify({
-              data: [target.id],
-              event: 'producerFollowed',
-            }),
-          );
-        }
-      }
+    if (webSocketRegistry.isOnline(target.id)) {
+      webSocketRegistry.sendToUsers([userId], { data: [target.id], event: 'producerFollowed' });
     }
 
     reply.code(204).send();
@@ -187,19 +174,8 @@ class UserController {
 
     await userRepository.unfollow(userId, target.id);
 
-    const sockets = websocketController.getSockets();
-    if (sockets.has(target.id)) {
-      const userSockets = sockets.get(userId);
-      if (userSockets) {
-        for (const socket of userSockets) {
-          socket.send(
-            JSON.stringify({
-              data: [target.id],
-              event: 'producerUnfollowed',
-            }),
-          );
-        }
-      }
+    if (webSocketRegistry.isOnline(target.id)) {
+      webSocketRegistry.sendToUsers([userId], { data: [target.id], event: 'producerUnfollowed' });
     }
 
     reply.code(204).send();
@@ -253,10 +229,8 @@ class UserController {
     const userIds = items.map((i) => i.id);
     const users = await userRepository.get({ ids: userIds });
 
-    const sockets = websocketController.getSockets();
-
     const response: UserOnlineStatus[] = users.map((user) => {
-      const isOnline = sockets.has(user.id);
+      const isOnline = webSocketRegistry.isOnline(user.id);
 
       return {
         ...formatUserWithOnlineStatus(user),

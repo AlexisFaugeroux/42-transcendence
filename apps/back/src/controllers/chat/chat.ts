@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { UnauthorizedError } from '../../domain/errors';
 import { chatRepository } from '../../repositories/chat/chat';
-import { websocketController } from '../websocket/websocket';
+import { webSocketRegistry } from '../../utils/websockets';
 import { isAParticipant } from './helpers';
 import type {
   CreateChatRoute,
@@ -21,15 +21,18 @@ class ChatController {
 
     if (authorId !== userId) throw new UnauthorizedError('Unauthorized to send this message');
 
-    const create = await chatRepository.createConversation(userId, toId);
+    const newConv = await chatRepository.createConversation(userId, toId);
     const messageSent = await chatRepository.createMessage({
       authorId,
       toId,
       content,
-      conversationId: create.id,
+      conversationId: newConv.id,
     });
-    await websocketController.sendMessage(messageSent);
-    const conversation = await chatRepository.listOneConversation(create.id);
+
+    const participantsIds = newConv.participants.map((p) => p.id);
+    webSocketRegistry.sendToUsers(participantsIds, { data: messageSent, event: 'message' });
+
+    const conversation = await chatRepository.listOneConversation(newConv.id);
 
     reply.code(200).send(conversation);
     return;
@@ -58,6 +61,7 @@ class ChatController {
       throw new UnauthorizedError('Unauthorized to get those messages');
 
     const messages = await chatRepository.listMessageByConversationId(conversationId);
+
     reply.code(200).send(messages);
     return;
   };
@@ -75,10 +79,11 @@ class ChatController {
     if (authorId !== userId || !isAParticipant(authorId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
 
-    const toSend = await chatRepository.createMessage(message);
-    await websocketController.sendMessage(toSend);
+    const participantsIds = conversation.participants.map((p) => p.id);
+    const newMessage = await chatRepository.createMessage(message);
+    webSocketRegistry.sendToUsers(participantsIds, { data: newMessage, event: 'message' });
 
-    reply.code(200).send(toSend);
+    reply.code(200).send(newMessage);
     return;
   };
 
@@ -89,7 +94,9 @@ class ChatController {
     const conversation = await chatRepository.listOneConversation(conversationId);
     if (!isAParticipant(userId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
+
     await chatRepository.markAsRead(conversationId, userId);
+
     reply.code(200).send();
   };
 }
