@@ -6,7 +6,8 @@
       "firstname": "Prénom",
       "handle": "Pseudo",
       "lastname": "Nom",
-      "password": "Mot de passe"
+      "password": "Mot de passe",
+      "role": "Type de compte"
     },
     "login": {
       "action": "Se connecter",
@@ -38,6 +39,7 @@
       "haveAccount": "Vous avez déjà un compte ?",
       "loginLink": "Se connecter →",
       "passwordPlaceholder": "10 caractères minimum",
+      "roleHint": "Les producteurs peuvent importer des samples, ouvrir des sessions studio et exporter des morceaux. Les auditeurs peuvent suivre des producteurs et écouter leurs morceaux. Seul un admin pourra le modifier ensuite.",
       "submit": "Créer le compte",
       "submitting": "Création du compte…",
       "subtitle": "Gratuit pendant la bêta. Aucun traçage, aucune carte bancaire.",
@@ -45,6 +47,10 @@
       "successTitle": "Votre inscription est confirmée !",
       "termsNotice": "En créant un compte, vous acceptez nos <terms>conditions d'utilisation</terms> et notre <privacy>politique de confidentialité</privacy>.",
       "title": "Créer votre compte"
+    },
+    "role": {
+      "guest": "Je veux écouter et suivre",
+      "producer": "Je veux produire"
     },
     "validation": {
       "artistNameRequired": "Veuillez choisir un nom d'artiste.",
