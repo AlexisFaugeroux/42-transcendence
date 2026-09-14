@@ -77,7 +77,7 @@
   /* === Shadows === */
   --glow-active: 0 0 3px -1px var(--color-active);
   --glow-frame: 0 0 3px -1px currentColor;
-  --shadow-floating: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-floating: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
 
   /* === Spacing (em-based; UI uses em widely) === */
   --gap-1: 0.25em;
