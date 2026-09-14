@@ -39,6 +39,8 @@ const msnTheme: ThemeConfig = {
     borderRadiusSM: 2,
     borderRadiusLG: 6,
 
+    boxShadowSecondary: 'var(--shadow-floating)',
+
     wireframe: false,
   },
   components: {
