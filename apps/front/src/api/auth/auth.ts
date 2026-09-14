@@ -12,6 +12,7 @@ export async function registerRequest(body: RegisterBody): Promise<RegisterRespo
       handle: body.handle,
       lastname: body.lastname,
       password: body.password,
+      role: body.role,
     }),
     credentials: 'include',
     headers: {

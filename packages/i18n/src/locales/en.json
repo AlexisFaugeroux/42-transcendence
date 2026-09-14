@@ -6,7 +6,8 @@
       "firstname": "First name",
       "handle": "Handle",
       "lastname": "Last name",
-      "password": "Password"
+      "password": "Password",
+      "role": "Account type"
     },
     "login": {
       "action": "Log in",
@@ -38,6 +39,7 @@
       "haveAccount": "Already have an account?",
       "loginLink": "Log in →",
       "passwordPlaceholder": "At least 10 characters",
+      "roleHint": "Producers can upload samples, open studio sessions and export tracks. Listeners can follow producers and play their tracks. Only an admin can change this afterwards.",
       "submit": "Create account",
       "submitting": "Creating account…",
       "subtitle": "Free during beta. No tracking, no credit card.",
@@ -45,6 +47,10 @@
       "successTitle": "You've successfully registered!",
       "termsNotice": "By creating an account you agree to our <terms>Terms</terms> and <privacy>Privacy policy</privacy>.",
       "title": "Create your account"
+    },
+    "role": {
+      "guest": "I want to listen and follow",
+      "producer": "I want to produce"
     },
     "validation": {
       "artistNameRequired": "Please choose an artist name.",

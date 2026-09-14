@@ -9,6 +9,7 @@ import {
   MsnIcon,
   MsnWordmark,
   notification,
+  Select,
   theme,
 } from '@transcendence/ui';
 import type { JSX } from 'react';
@@ -17,6 +18,7 @@ import { registerRequest } from '../../api/auth/auth';
 import type { RegisterBody } from '../../api/auth/types';
 import { PasswordStrength } from './PasswordStrength';
 import styles from './Register.module.scss';
+import { Role } from '@transcendence/permissions';
 
 export default function Register(): JSX.Element {
   const [form] = Form.useForm<RegisterBody>();
@@ -140,6 +142,21 @@ export default function Register(): JSX.Element {
               </Form.Item>
 
               <Form.Item
+                label={t('auth.fields.role')}
+                name="role"
+                extra={t('auth.register.roleHint')}
+                initialValue={Role.ARTIST}
+              >
+                <Select
+                  placeholder={t('auth.role.producer')}
+                  options={[
+                    { label: t('auth.role.producer'), value: Role.ARTIST },
+                    { label: t('auth.role.guest'), value: Role.GUEST },
+                  ]}
+                />
+              </Form.Item>
+
+              <Form.Item
                 label={t('auth.fields.password')}
                 name="password"
                 style={{ marginBottom: 8 }}
@@ -151,7 +168,6 @@ export default function Register(): JSX.Element {
                 <Input.Password size="large" placeholder={t('auth.register.passwordPlaceholder')} />
               </Form.Item>
 
-              {/* Lives just under the password field; renders nothing while empty. */}
               <PasswordStrength value={password} />
 
               <p className={styles.terms}>

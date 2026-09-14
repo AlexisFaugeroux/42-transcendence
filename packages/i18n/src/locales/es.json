@@ -6,7 +6,8 @@
       "firstname": "Nombre",
       "handle": "Alias",
       "lastname": "Apellidos",
-      "password": "Contraseña"
+      "password": "Contraseña",
+      "role": "Tipo de cuenta"
     },
     "login": {
       "action": "Iniciar sesión",
@@ -38,6 +39,7 @@
       "haveAccount": "¿Ya tienes una cuenta?",
       "loginLink": "Iniciar sesión →",
       "passwordPlaceholder": "Al menos 10 caracteres",
+      "roleHint": "Los productores pueden subir samples, abrir sesiones de estudio y exportar temas. Los oyentes pueden seguir a productores y escuchar sus temas. Solo un administrador podrá cambiarlo después.",
       "submit": "Crear cuenta",
       "submitting": "Creando la cuenta…",
       "subtitle": "Gratis durante la beta. Sin seguimiento, sin tarjeta.",
@@ -45,6 +47,10 @@
       "successTitle": "¡Tu registro se ha completado!",
       "termsNotice": "Al crear una cuenta aceptas nuestras <terms>condiciones de uso</terms> y nuestra <privacy>política de privacidad</privacy>.",
       "title": "Crea tu cuenta"
+    },
+    "role": {
+      "guest": "Quiero escuchar y seguir",
+      "producer": "Quiero producir"
     },
     "validation": {
       "artistNameRequired": "Elige un nombre artístico.",
