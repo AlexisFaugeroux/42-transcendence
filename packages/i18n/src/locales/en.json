@@ -388,6 +388,8 @@
     }
   },
   "nav": {
+    "admin": "Admin",
+    "administration": "Administration",
     "exports": "Exports",
     "following": "Following",
     "home": "Home",

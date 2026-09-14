@@ -2,12 +2,12 @@ import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { useFollowing } from '../hooks/useProducers';
+import { useSavedSessions } from '../hooks/useSavedSessions';
 import { useTracks } from '../hooks/useTracks';
+import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
 import styles from './LeftNav.module.scss';
 import { NavItem } from './NavItem';
-import { SOCIAL_ITEMS, WORKSPACE_ITEMS, type NavItemDef } from './navItems';
-import { useSavedSessions } from '../hooks/useSavedSessions';
-import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
+import { ADMIN_ITEMS, type NavItemDef, SOCIAL_ITEMS, WORKSPACE_ITEMS } from './navItems';
 
 export function LeftNav(): JSX.Element {
   const { t } = useTranslation();
@@ -26,6 +26,12 @@ export function LeftNav(): JSX.Element {
 
   return (
     <nav className={styles.nav}>
+      <div className={styles.sectionLabel}>{t('nav.administration')}</div>
+      {ADMIN_ITEMS.map((item) => (
+        <NavItem key={item.to} {...item} badge={badges[item.to]} />
+      ))}
+
+      <div className={styles.gap} />
       <div className={styles.sectionLabel}>{t('nav.workspace')}</div>
       {WORKSPACE_ITEMS.map((item) => (
         <NavItem key={item.to} {...item} badge={badges[item.to]} />
