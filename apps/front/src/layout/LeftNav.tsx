@@ -5,33 +5,36 @@ import { useFollowing } from '../hooks/useProducers';
 import { useTracks } from '../hooks/useTracks';
 import styles from './LeftNav.module.scss';
 import { NavItem } from './NavItem';
-import { SOCIAL_ITEMS, WORKSPACE_ITEMS } from './navItems';
+import { SOCIAL_ITEMS, WORKSPACE_ITEMS, type NavItemDef } from './navItems';
+import { useSavedSessions } from '../hooks/useSavedSessions';
+import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
 
 export function LeftNav(): JSX.Element {
   const { t } = useTranslation();
   const me = useAuthUser();
   const { data: following } = useFollowing(me.handle);
   const { data: tracks } = useTracks();
+  const { data: sessions } = useSavedSessions();
+  const unreadMessagesCount = useUnreadMessagesCount();
+
+  const badges: Record<NavItemDef['to'], number | undefined> = {
+    '/tracks': tracks?.length,
+    '/sessions': sessions?.length,
+    '/following': following?.total,
+    '/messages': unreadMessagesCount,
+  };
 
   return (
     <nav className={styles.nav}>
       <div className={styles.sectionLabel}>{t('nav.workspace')}</div>
       {WORKSPACE_ITEMS.map((item) => (
-        <NavItem
-          key={item.to}
-          {...item}
-          badge={item.to === '/tracks' ? String(tracks?.length ?? 0) : item.badge}
-        />
+        <NavItem key={item.to} {...item} badge={badges[item.to]} />
       ))}
 
       <div className={styles.gap} />
       <div className={styles.sectionLabel}>{t('nav.social')}</div>
       {SOCIAL_ITEMS.map((item) => (
-        <NavItem
-          key={item.to}
-          {...item}
-          badge={item.to === '/following' ? String(following?.total ?? 0) : item.badge}
-        />
+        <NavItem key={item.to} {...item} badge={badges[item.to]} />
       ))}
 
       <div className={styles.spacer} />
