@@ -596,6 +596,8 @@
       "title": "No sessions yet"
     },
     "new": {
+      "deniedDescription": "Your account is a listener account. Only an admin can change this.",
+      "deniedTitle": "The studio is for producers",
       "lead": "Pick the kind of session, then we'll set up the right workspace.",
       "submit": "Create & open",
       "title": "Start a new session",
@@ -731,6 +733,11 @@
         "key": "Key",
         "name": "Name"
       }
+    },
+    "denied": {
+      "back": "Back to MakeSomeNoise",
+      "body": "Your account is a listener account: it gives you streaming and follows, not production. Only an admin can change this.",
+      "title": "The studio is for producers"
     },
     "devices": {
       "addEffect": "Add an effect",

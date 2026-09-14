@@ -41,3 +41,44 @@
     }
   }
 }
+
+.denied {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-app);
+}
+
+.deniedCard {
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 32px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-2);
+  background: var(--bg-card);
+
+  .deniedBrand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .deniedTitle {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-22);
+    color: var(--fg1);
+  }
+
+  .deniedBody {
+    margin: 0;
+    font-size: var(--fs-13);
+    line-height: 1.6;
+    color: var(--fg2);
+  }
+}
