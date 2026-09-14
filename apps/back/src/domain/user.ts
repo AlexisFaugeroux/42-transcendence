@@ -73,9 +73,11 @@ export interface UpdateUserInput {
   location?: string;
   artistName?: string;
   password?: string;
-  role?: Role;
   bio?: string;
 }
+
+export const USER_SEARCH_FIELDS = ['handle', 'artistName', 'email'] as const;
+export type UserSearchField = (typeof USER_SEARCH_FIELDS)[number];
 
 export interface UserResponse {
   user: AuthUser;
