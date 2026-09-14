@@ -1,9 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Permissions } from '@transcendence/permissions';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
+import { RequirePermission } from './auth/RequirePermission';
 import { AppLayout } from './layout/AppLayout';
+import { Admin } from './pages/Admin/Admin';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Following } from './pages/Following/Following';
 import { Home } from './pages/Home/Home';
@@ -38,16 +41,41 @@ export function App(): JSX.Element {
           <Route element={<RequireAuth />}>
             <Route element={<AppLayout />}>
               <Route path="/home" element={<Home />} />
-              <Route path="/library" element={<Samples />} />
-              <Route path="/tracks" element={<Tracks />} />
-              <Route path="/liked" element={<Liked />} />
-              <Route path="/sessions" element={<Sessions />} />
               <Route path="/settings" element={<Dashboard />} />
+
+              <Route
+                element={
+                  <RequirePermission
+                    permission={[
+                      Permissions.USER_READ,
+                      Permissions.USER_WRITE,
+                      Permissions.USER_DELETE,
+                      Permissions.SESSION_REVOKE,
+                    ]}
+                  />
+                }
+              >
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+
+              <Route element={<RequirePermission permission={Permissions.SAMPLE_WRITE} />}>
+                <Route path="/library" element={<Samples />} />
+              </Route>
+
+              <Route element={<RequirePermission permission={Permissions.TRACK_WRITE} />}>
+                <Route path="/tracks" element={<Tracks />} />
+              </Route>
+
+              <Route element={<RequirePermission permission={Permissions.STUDIO_ACCESS} />}>
+                <Route path="/sessions" element={<Sessions />} />
+              </Route>
+
               <Route path="/producers" element={<Producers />} />
               <Route path="/producers/:handle" element={<ProducerProfile />} />
               <Route path="/following" element={<Following />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/messages/:conversationId" element={<Messages />} />
+              <Route path="/liked" element={<Liked />} />
               {/*
               <Route path="/exports" element={<Exports />} />
               <Route path="/playlists" element={<Playlists />} />
@@ -58,6 +86,7 @@ export function App(): JSX.Element {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
+
       {import.meta.env.DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     </QueryClientProvider>
   );

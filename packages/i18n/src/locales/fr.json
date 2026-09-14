@@ -1,4 +1,62 @@
 {
+  "admin": {
+    "dashboard": {
+      "eyebrow": "Plateforme",
+      "title": "Administration",
+      "users": "Utilisateurs"
+    },
+    "users": {
+      "actions": {
+        "revoke": "Déconnecter"
+      },
+      "delete": {
+        "body": "Cette action supprime définitivement <code>{{handle}}</code>, ses samples, ses morceaux et tous ses fichiers sur disque. Elle est irréversible.",
+        "confirmLabel": "Saisissez le pseudo pour confirmer",
+        "deletedDescription": "Le compte, ses samples, ses morceaux et tous ses fichiers sur disque ont été supprimés.",
+        "deletedTitle": "Compte supprimé",
+        "failedTitle": "La suppression a échoué",
+        "mismatchDescription": "Saisissez le pseudo exact pour confirmer la suppression.",
+        "mismatchTitle": "Le pseudo ne correspond pas",
+        "title": "Supprimer ce compte ?"
+      },
+      "edit": {
+        "body": "Vous modifiez le profil de <code>{{handle}}</code>.",
+        "failedTitle": "La modification a échoué",
+        "title": "Modifier le profil",
+        "updatedDescription": "Les modifications ont été enregistrées.",
+        "updatedTitle": "Profil modifié"
+      },
+      "revoke": {
+        "body": "Toutes les sessions actives de <code>{{handle}}</code> seront révoquées. Le compte sera déconnecté à sa prochaine requête.",
+        "expiresLabel": "Expiration de la session en cours",
+        "expiresUnknown": "Aucune session active",
+        "failedTitle": "La révocation a échoué",
+        "revokedDescription": "Le compte sera déconnecté à sa prochaine requête.",
+        "revokedTitle": "Sessions révoquées",
+        "title": "Déconnecter ce compte ?"
+      },
+      "role": {
+        "failedTitle": "Le changement de rôle a échoué",
+        "updatedDescription": "Le nouveau rôle prend effet à la prochaine requête du compte.",
+        "updatedTitle": "Rôle modifié"
+      },
+      "roles": {
+        "ADMIN": "Admin",
+        "ARTIST": "Artiste",
+        "GUEST": "Invité",
+        "MODERATOR": "Modérateur"
+      },
+      "searchPlaceholder": "Rechercher par nom d'artiste, pseudo ou e-mail…",
+      "table": {
+        "actions": "Actions",
+        "artistName": "Nom d'artiste",
+        "email": "E-mail",
+        "handle": "Pseudo",
+        "joined": "Inscription",
+        "role": "Rôle"
+      }
+    }
+  },
   "auth": {
     "fields": {
       "artistName": "Nom d'artiste",

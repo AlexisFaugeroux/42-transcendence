@@ -1,4 +1,4 @@
-import { useAuthUser } from '@transcendence/auth';
+import { useAuthUser, useIsAllowed } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import type { JSX } from 'react';
 import { useFollowing } from '../hooks/useProducers';
@@ -18,6 +18,14 @@ export function LeftNav(): JSX.Element {
   const { data: sessions } = useSavedSessions();
   const { data: liked } = useLikedTracks();
   const unreadMessagesCount = useUnreadMessagesCount();
+  const isAllowed = useIsAllowed();
+
+  const isVisible = (navItems: NavItemDef[]) =>
+    navItems.filter((item) => !item.permission || isAllowed(item.permission));
+
+  const admin = isVisible(ADMIN_ITEMS);
+  const workspace = isVisible(WORKSPACE_ITEMS);
+  const social = isVisible(SOCIAL_ITEMS);
 
   const badges: Record<NavItemDef['to'], number | undefined> = {
     '/tracks': tracks?.length,
@@ -29,22 +37,34 @@ export function LeftNav(): JSX.Element {
 
   return (
     <nav className={styles.nav}>
-      <div className={styles.sectionLabel}>{t('nav.administration')}</div>
-      {ADMIN_ITEMS.map((item) => (
-        <NavItem key={item.to} {...item} badge={badges[item.to]} />
-      ))}
+      {admin.length > 0 && (
+        <>
+          <div className={styles.sectionLabel}>{t('nav.administration')}</div>
+          {admin.map((item) => (
+            <NavItem key={item.to} {...item} badge={badges[item.to]} />
+          ))}
+        </>
+      )}
 
-      <div className={styles.gap} />
-      <div className={styles.sectionLabel}>{t('nav.workspace')}</div>
-      {WORKSPACE_ITEMS.map((item) => (
-        <NavItem key={item.to} {...item} badge={badges[item.to]} />
-      ))}
+      {workspace.length > 0 && (
+        <>
+          <div className={styles.gap} />
+          <div className={styles.sectionLabel}>{t('nav.workspace')}</div>
+          {workspace.map((item) => (
+            <NavItem key={item.to} {...item} badge={badges[item.to]} />
+          ))}
+        </>
+      )}
 
-      <div className={styles.gap} />
-      <div className={styles.sectionLabel}>{t('nav.social')}</div>
-      {SOCIAL_ITEMS.map((item) => (
-        <NavItem key={item.to} {...item} badge={badges[item.to]} />
-      ))}
+      {social.length > 0 && (
+        <>
+          <div className={styles.gap} />
+          <div className={styles.sectionLabel}>{t('nav.social')}</div>
+          {social.map((item) => (
+            <NavItem key={item.to} {...item} badge={badges[item.to]} />
+          ))}
+        </>
+      )}
 
       <div className={styles.spacer} />
 

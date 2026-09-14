@@ -4,10 +4,9 @@ import { MsnIcon, Pagination, Spin } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useFollowing } from '../../hooks/useProducers';
+import { PAGE_SIZE } from '../constants';
 import { ProducerCard } from '../Producers/ProducerCard';
 import styles from '../Producers/Producers.module.scss';
-
-const PAGE_SIZE = 20;
 
 export function Following(): JSX.Element {
   const me = useAuthUser();

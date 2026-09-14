@@ -51,21 +51,21 @@ export function Samples(): JSX.Element {
   const [editTarget, setEditTarget] = useState<Sample | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
 
-  const notifySuccess = (message: string, description: string): void => {
+  const notifySuccess = (title: string, description: string): void => {
     notificationApi.open({
       description,
       duration: 5,
       icon: <CheckCircleOutlined style={{ color: theme.green }} />,
-      message,
+      title,
     });
   };
 
-  const notifyError = (message: string, description: string): void => {
+  const notifyError = (title: string, description: string): void => {
     notificationApi.open({
       description,
       duration: 5,
       icon: <CloseCircleOutlined style={{ color: theme.red }} />,
-      message,
+      title,
     });
   };
 

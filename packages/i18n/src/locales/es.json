@@ -1,4 +1,62 @@
 {
+  "admin": {
+    "dashboard": {
+      "eyebrow": "Plataforma",
+      "title": "Administración",
+      "users": "Usuarios"
+    },
+    "users": {
+      "actions": {
+        "revoke": "Desconectar"
+      },
+      "delete": {
+        "body": "Esta acción elimina definitivamente <code>{{handle}}</code>, sus samples, sus temas y todos sus archivos en disco. Es irreversible.",
+        "confirmLabel": "Escribe el alias para confirmar",
+        "deletedDescription": "La cuenta, sus samples, sus temas y todos sus archivos en disco se han eliminado.",
+        "deletedTitle": "Cuenta eliminada",
+        "failedTitle": "La eliminación ha fallado",
+        "mismatchDescription": "Escribe el alias exacto para confirmar la eliminación.",
+        "mismatchTitle": "El alias no coincide",
+        "title": "¿Eliminar esta cuenta?"
+      },
+      "edit": {
+        "body": "Estás editando el perfil de <code>{{handle}}</code>.",
+        "failedTitle": "La modificación ha fallado",
+        "title": "Editar perfil",
+        "updatedDescription": "Los cambios se han guardado.",
+        "updatedTitle": "Perfil actualizado"
+      },
+      "revoke": {
+        "body": "Se revocarán todas las sesiones activas de <code>{{handle}}</code>. La cuenta se desconectará en su próxima petición.",
+        "expiresLabel": "Caducidad de la sesión actual",
+        "expiresUnknown": "Sin sesión activa",
+        "failedTitle": "La revocación ha fallado",
+        "revokedDescription": "La cuenta se desconectará en su próxima petición.",
+        "revokedTitle": "Sesiones revocadas",
+        "title": "¿Desconectar esta cuenta?"
+      },
+      "role": {
+        "failedTitle": "El cambio de rol ha fallado",
+        "updatedDescription": "El nuevo rol se aplica en la próxima petición de la cuenta.",
+        "updatedTitle": "Rol actualizado"
+      },
+      "roles": {
+        "ADMIN": "Admin",
+        "ARTIST": "Artista",
+        "GUEST": "Oyente",
+        "MODERATOR": "Moderador"
+      },
+      "searchPlaceholder": "Buscar por nombre artístico, alias o correo…",
+      "table": {
+        "actions": "Acciones",
+        "artistName": "Nombre artístico",
+        "email": "Correo electrónico",
+        "handle": "Alias",
+        "joined": "Registro",
+        "role": "Rol"
+      }
+    }
+  },
   "auth": {
     "fields": {
       "artistName": "Nombre artístico",

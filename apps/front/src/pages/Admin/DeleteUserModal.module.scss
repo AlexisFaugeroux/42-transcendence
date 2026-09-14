@@ -1,0 +1,22 @@
+.body {
+  margin: 0 0 16px;
+  color: var(--fg2);
+  font-size: var(--fs-13);
+  line-height: 1.6;
+
+  code {
+    font-family: var(--font-mono);
+    color: var(--fg1);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  color: var(--fg2);
+  font-size: var(--fs-12);
+}
