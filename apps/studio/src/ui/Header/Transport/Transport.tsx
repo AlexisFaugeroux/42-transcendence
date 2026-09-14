@@ -29,20 +29,8 @@ export function Transport(): JSX.Element {
     };
   }, [project.timelineBox.loopArea.enabled]);
 
-  /* TODO: link rec buttons to audio engine */
   return (
     <div className={styles.transportContainer}>
-      <IconBtn
-        color={theme.red}
-        background={isPlaying ? `color-mix(in srgb, ${theme.red} 18%, ${theme.void}` : theme.void}
-        borderColor={isPlaying ? theme.red : theme.lineSoft}
-        boxShadow={isPlaying ? `0 0 8px -3px ${theme.red}` : 'none'}
-        onClick={() => {
-          console.log('rec-prout');
-        }}
-      >
-        <StudioIcon name="rec" size={18} />
-      </IconBtn>
       <IconBtn
         color={theme.green}
         background={isPlaying ? `color-mix(in srgb, ${theme.green} 18%, ${theme.void}` : theme.void}
