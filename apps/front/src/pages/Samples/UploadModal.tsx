@@ -122,7 +122,7 @@ export function UploadModal({
         description: error.message,
         duration: 5,
         icon: <CloseCircleOutlined style={{ color: theme.red }} />,
-        message: t('samples.upload.errorTitle'),
+        title: t('samples.upload.errorTitle'),
       });
     },
     onSuccess: (count) => {
@@ -130,7 +130,7 @@ export function UploadModal({
         description: t('samples.upload.successDescription', { count }),
         duration: 5,
         icon: <CheckCircleOutlined style={{ color: theme.green }} />,
-        message: t('samples.upload.successTitle'),
+        title: t('samples.upload.successTitle'),
       });
       onClose();
     },

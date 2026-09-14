@@ -9,11 +9,9 @@ class WebsocketController {
 
     socket.on('close', () => {
       if (webSocketRegistry.remove(userId, socket) > 0) return;
-      this._broadcastToFollowers(userId, 'followingDisconnected', socket).catch(
-        (error: unknown) => {
-          req.log.error(error);
-        },
-      );
+      this._broadcastToFollowers(userId, 'followingDisconnected').catch((error: unknown) => {
+        req.log.error(error);
+      });
     });
 
     const openSockets = webSocketRegistry.add(userId, socket);
@@ -29,18 +27,13 @@ class WebsocketController {
 
     if (openSockets > 1) return;
 
-    await this._broadcastToFollowers(userId, 'followingConnected', socket);
+    await this._broadcastToFollowers(userId, 'followingConnected');
   };
 
-  private _broadcastToFollowers = async (
-    userId: string,
-    event: PresenceEvent['event'],
-    socket: WebSocket,
-  ) => {
+  private _broadcastToFollowers = async (userId: string, event: PresenceEvent['event']) => {
     const { items: followers } = await userRepository.listFollowers({ id: userId });
     const followersIds = followers.map((follower) => follower.id);
 
-    if (socket.readyState !== socket.OPEN) return;
     webSocketRegistry.sendToUsers(followersIds, { event, data: [userId] });
   };
 }

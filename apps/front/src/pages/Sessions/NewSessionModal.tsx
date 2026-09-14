@@ -25,12 +25,12 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
   const { t } = useTranslation();
   const [notificationApi, notificationContext] = notification.useNotification();
 
-  const notifyError = (message: string, description: string): void => {
+  const notifyError = (title: string, description: string): void => {
     notificationApi.open({
       description,
       duration: 5,
       icon: <CloseCircleOutlined style={{ color: theme.red }} />,
-      message,
+      title,
     });
   };
 

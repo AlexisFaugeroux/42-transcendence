@@ -29,14 +29,12 @@ const getUsersSchema = {
   },
 };
 
-// The profile fields an admin may rewrite. `role` and `password` are absent on
-// purpose: the first has its own route and its own guard, the second would land
-// in the database unhashed.
 const updateUserSchema = {
   body: {
     additionalProperties: false,
     minProperties: 1,
     properties: {
+      id: { format: 'uuid', type: 'string' },
       artistName: { maxLength: 32, minLength: 1, type: 'string' },
       bio: { maxLength: 500, type: 'string' },
       email: { format: 'email', type: 'string' },
@@ -60,18 +58,21 @@ const updateUserSchema = {
     },
     type: 'object',
   },
-  querystring: userIdQuerySchema,
 };
 
 const updateUserRoleSchema = {
   body: {
     additionalProperties: false,
     properties: {
+      id: { format: 'uuid', type: 'string' },
       role: { enum: Object.values(Role), type: 'string' },
     },
-    required: ['role'],
+    required: ['id', 'role'],
     type: 'object',
   },
+};
+
+const listSessionsSchema = {
   querystring: userIdQuerySchema,
 };
 
@@ -80,14 +81,14 @@ const deleteUserSchema = {
 };
 
 const revokeSessionsSchema = {
-  querystring: userIdQuerySchema,
+  body: userIdQuerySchema,
 };
 
 export function adminRoutes(app: FastifyInstance) {
   app.get(
     '/users/get',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_READ)],
       schema: getUsersSchema,
     },
@@ -97,17 +98,26 @@ export function adminRoutes(app: FastifyInstance) {
   app.put(
     '/users/update',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserSchema,
     },
     adminController.update,
   );
 
+  app.get(
+    '/users/sessions',
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.SESSION_REVOKE)],
+      schema: listSessionsSchema,
+    },
+    adminController.sessions,
+  );
+
   app.put(
     '/users/role',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserRoleSchema,
     },
@@ -117,7 +127,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.delete(
     '/users/delete',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_DELETE)],
       schema: deleteUserSchema,
     },
@@ -127,7 +137,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.post(
     '/users/revoke',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
       preHandler: [app.authenticate, app.authorize(Permissions.SESSION_REVOKE)],
       schema: revokeSessionsSchema,
     },

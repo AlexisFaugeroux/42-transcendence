@@ -2,11 +2,12 @@ import { Role } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
 import { BadRequestError, ConflictError } from '../../domain/errors';
 import type { PaginatedResponse } from '../../domain/pagination';
+import type { SessionListResponse } from '../../domain/session';
 import {
   type GetUserInput,
   type UpdateUserInput,
-  USER_SEARCH_FIELDS,
   type User,
+  USER_SEARCH_FIELDS,
 } from '../../domain/user';
 import { sessionRepository } from '../../repositories/session/session';
 import { userRepository } from '../../repositories/user/user';
@@ -14,6 +15,7 @@ import { sampleStorageService } from '../../services/audio/sampleStorage';
 import { trackStorageService } from '../../services/audio/trackStorage';
 import { avatarStorageService } from '../../services/avatarStorage';
 import { parsePagination, toPaginatedResponse } from '../../utils/pagination';
+import { webSocketRegistry } from '../../utils/websockets';
 
 export interface GetUsersRoute extends RouteGenericInterface {
   Querystring: Pick<GetUserInput, 'roles'> & {
@@ -25,14 +27,12 @@ export interface GetUsersRoute extends RouteGenericInterface {
 }
 
 export interface UpdateUserRoute extends RouteGenericInterface {
-  Querystring: { id: string };
-  Body: UpdateUserInput;
+  Body: UpdateUserInput & { id: string };
   Reply: User;
 }
 
 export interface UpdateUserRoleRoute extends RouteGenericInterface {
-  Querystring: { id: string };
-  Body: { role: Role };
+  Body: { id: string; role: Role };
 }
 
 export interface DeleteUserRoute extends RouteGenericInterface {
@@ -40,7 +40,12 @@ export interface DeleteUserRoute extends RouteGenericInterface {
 }
 
 export interface RevokeSessionRoute extends RouteGenericInterface {
+  Body: { id: string };
+}
+
+export interface ListSessionsRoute extends RouteGenericInterface {
   Querystring: { id: string };
+  Reply: SessionListResponse;
 }
 
 class AdminController {
@@ -68,7 +73,7 @@ class AdminController {
     req: FastifyRequest<UpdateUserRoute>,
     reply: FastifyReply<UpdateUserRoute>,
   ): Promise<void> => {
-    const updatedUser = await userRepository.update(req.query.id, req.body);
+    const updatedUser = await userRepository.update(req.body.id, req.body);
 
     reply.code(200).send(updatedUser);
   };
@@ -77,15 +82,15 @@ class AdminController {
     req: FastifyRequest<UpdateUserRoleRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
-    if (req.query.id === req.authUser.id) throw new BadRequestError('Cannot self update role');
+    if (req.body.id === req.authUser.id) throw new BadRequestError('Cannot self update role');
 
     const { items: admins } = await userRepository.get({ roles: [Role.ADMIN] });
     // Do not downgrade the last admin to a lower role
-    if (admins.length === 1 && admins[0].id === req.query.id && req.body.role !== Role.ADMIN) {
+    if (admins.length === 1 && admins[0].id === req.body.id && req.body.role !== Role.ADMIN) {
       throw new ConflictError('Cannot assign lower role to last admin user');
     }
 
-    await userRepository.update(req.query.id, { role: req.body.role });
+    await userRepository.update(req.body.id, { role: req.body.role });
 
     reply.code(204).send();
   };
@@ -113,8 +118,21 @@ class AdminController {
     reply.code(204).send();
   };
 
+  public sessions = async (
+    req: FastifyRequest<ListSessionsRoute>,
+    reply: FastifyReply<ListSessionsRoute>,
+  ): Promise<void> => {
+    const { items, total } = await sessionRepository.listValidForUser(req.query.id);
+
+    reply.code(200).send({ items, total });
+  };
+
   public revokeSession = async (req: FastifyRequest<RevokeSessionRoute>, reply: FastifyReply) => {
-    await sessionRepository.revokeAllForUser(req.query.id);
+    const { id } = req.body;
+
+    await sessionRepository.revokeAllForUser(id);
+
+    webSocketRegistry.closeAll(id);
 
     reply.code(204).send();
   };

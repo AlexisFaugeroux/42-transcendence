@@ -8,16 +8,20 @@ class AvatarStorageService {
     this._avatarsRoot = avatarsRoot;
   }
 
-  public async write(userId: string, data: Buffer): Promise<string> {
+  public async write(ownerId: string, data: Buffer): Promise<string> {
     await mkdir(this._avatarsRoot, { recursive: true });
-    const filePath = path.join(this._avatarsRoot, `${userId}.webp`);
+    const filePath = path.join(this._avatarsRoot, `${ownerId}.webp`);
     await writeFile(filePath, data);
-    return `${userId}.webp`;
+    return `${ownerId}.webp`;
   }
 
   public async remove(userId: string): Promise<void> {
     const filePath = path.join(this._avatarsRoot, `${userId}.webp`);
-    await unlink(filePath);
+    try {
+      await unlink(filePath);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

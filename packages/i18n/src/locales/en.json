@@ -1,4 +1,62 @@
 {
+  "admin": {
+    "dashboard": {
+      "eyebrow": "Platform",
+      "title": "Administration",
+      "users": "Users"
+    },
+    "users": {
+      "actions": {
+        "revoke": "Log out"
+      },
+      "delete": {
+        "body": "This permanently removes <code>{{handle}}</code>, their samples, their tracks and every file on disk. This cannot be undone.",
+        "confirmLabel": "Type the handle to confirm",
+        "deletedDescription": "The account, its samples, its tracks and every file on disk were removed.",
+        "deletedTitle": "Account deleted",
+        "failedTitle": "Deletion failed",
+        "mismatchDescription": "Type the exact handle to confirm this deletion.",
+        "mismatchTitle": "Handle does not match",
+        "title": "Delete this account?"
+      },
+      "edit": {
+        "body": "You are editing the profile of <code>{{handle}}</code>.",
+        "failedTitle": "Update failed",
+        "title": "Edit profile",
+        "updatedDescription": "The changes have been saved.",
+        "updatedTitle": "Profile updated"
+      },
+      "revoke": {
+        "body": "Every active session of <code>{{handle}}</code> will be revoked. They will be signed out on their next request.",
+        "expiresLabel": "Current session expires",
+        "expiresUnknown": "No active session",
+        "failedTitle": "Revocation failed",
+        "revokedDescription": "The account will be signed out on its next request.",
+        "revokedTitle": "Sessions revoked",
+        "title": "Log this account out?"
+      },
+      "role": {
+        "failedTitle": "Role change failed",
+        "updatedDescription": "The new role takes effect on the account's next request.",
+        "updatedTitle": "Role updated"
+      },
+      "roles": {
+        "ADMIN": "Admin",
+        "ARTIST": "Artist",
+        "GUEST": "Guest",
+        "MODERATOR": "Moderator"
+      },
+      "searchPlaceholder": "Search by artist name, handle or email…",
+      "table": {
+        "actions": "Actions",
+        "artistName": "Artist name",
+        "email": "Email",
+        "handle": "Handle",
+        "joined": "Joined",
+        "role": "Role"
+      }
+    }
+  },
   "auth": {
     "fields": {
       "artistName": "Artist name",

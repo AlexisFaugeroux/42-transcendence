@@ -56,7 +56,7 @@ class UserController {
 
     await sampleStorageService.deleteDirectory(user.ownerId);
     await trackStorageService.deleteDirectory(user.ownerId);
-    await avatarStorageService.remove(req.authUser.id);
+    await avatarStorageService.remove(user.ownerId);
 
     reply.code(204).send();
   };
@@ -196,8 +196,9 @@ class UserController {
       throw new PayloadTooLargeError('Avatar file is too large');
     }
 
+    const { ownerId } = await userRepository.find({ id: req.authUser.id });
     const webp = await imageService.normalizeAvatar(buffer);
-    await avatarStorageService.write(req.authUser.id, webp);
+    await avatarStorageService.write(ownerId, webp);
 
     const updatedUser = await userRepository.update(req.authUser.id, {
       avatarUpdatedAt: dayjs().toISOString(),
@@ -207,7 +208,8 @@ class UserController {
   };
 
   public deleteAvatar = async (req: FastifyRequest, reply: FastifyReply) => {
-    await avatarStorageService.remove(req.authUser.id);
+    const { ownerId } = await userRepository.find({ id: req.authUser.id });
+    await avatarStorageService.remove(ownerId);
     await userRepository.update(req.authUser.id, {
       avatarUpdatedAt: null,
     });

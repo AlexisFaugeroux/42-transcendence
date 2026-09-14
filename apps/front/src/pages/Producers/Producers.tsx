@@ -16,6 +16,7 @@ export function Producers(): JSX.Element {
   useEffect(() => {
     const id = window.setTimeout(() => {
       setDebouncedQ(query.trim());
+      setPage(1);
     }, 300);
 
     return () => {

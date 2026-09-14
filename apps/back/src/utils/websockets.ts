@@ -64,6 +64,17 @@ class WebSocketRegistry {
     return sockets.size;
   }
 
+  public closeAll(userId: string) {
+    const sockets = this._sockets.get(userId);
+    if (!sockets) return;
+
+    for (const socket of sockets) {
+      socket.close();
+      sockets.delete(socket);
+      if (sockets.size === 0) this._sockets.delete(userId);
+    }
+  }
+
   public send(socket: WebSocket, payload: WebSocketEvent): void {
     if (socket.readyState !== socket.OPEN) return;
     socket.send(JSON.stringify(payload));

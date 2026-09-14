@@ -20,7 +20,7 @@ interface ProfileSectionProps {
   onCancel: () => void;
   onSave: () => void;
   avatarUpdatedAt: string | null;
-  userId: string;
+  ownerId: string;
 }
 
 export function ProfileSection({
@@ -34,7 +34,7 @@ export function ProfileSection({
   onEdit,
   onSave,
   setField,
-  userId,
+  ownerId,
 }: ProfileSectionProps): JSX.Element {
   const { setAuthUser } = useUser();
   const user = useAuthUser();
@@ -85,7 +85,7 @@ export function ProfileSection({
       <Card>
         <Row label={t('settings.profile.avatar')}>
           <div className={styles.avatarRow}>
-            <Avatar size={64} src={avatarUrl(userId, avatarUpdatedAt) ?? undefined}>
+            <Avatar size={64} src={avatarUrl(ownerId, avatarUpdatedAt) ?? undefined}>
               {form.artistName.slice(0, 2).toUpperCase()}
             </Avatar>
             {isEditing ? (

@@ -1,0 +1,28 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search {
+  width: 320px;
+  max-width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.handle {
+  color: var(--fg2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+}
+
+.roleSelect {
+  width: 100%;
+}

@@ -106,5 +106,4 @@ class AuthController {
   };
 }
 
-// Singleton shared by the route layer.
 export const authController = new AuthController();

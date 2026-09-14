@@ -112,7 +112,7 @@ export function Dashboard(): JSX.Element {
               onEdit={startEditing}
               onCancel={cancel}
               onSave={save}
-              userId={user.id}
+              ownerId={user.ownerId}
             />
           </section>
           <section id="account">

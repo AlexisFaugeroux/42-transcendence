@@ -18,6 +18,7 @@ import {
   UnauthorizedError,
 } from './domain/errors';
 import authPlugin from './plugins/auth';
+import { adminRoutes } from './routes/admin';
 import { authRoutes } from './routes/auth';
 import { chatRoutes } from './routes/chat';
 import { producerRoutes } from './routes/producer';
@@ -26,7 +27,6 @@ import { sampleRoutes } from './routes/sample';
 import { trackRoutes } from './routes/track';
 import { userRoutes } from './routes/user';
 import { websocketRoutes } from './routes/websocket';
-import { adminRoutes } from './routes/admin';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
