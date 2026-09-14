@@ -26,6 +26,7 @@ import { sampleRoutes } from './routes/sample';
 import { trackRoutes } from './routes/track';
 import { userRoutes } from './routes/user';
 import { websocketRoutes } from './routes/websocket';
+import { adminRoutes } from './routes/admin';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
@@ -95,6 +96,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(websocket);
 
   // Routes
+  await app.register(adminRoutes, { prefix: '/api/admin' });
   await app.register(websocketRoutes, { prefix: '/api' });
   await app.register(chatRoutes, { prefix: '/api/chat' });
   await app.register(sampleRoutes, { prefix: '/api/samples' });

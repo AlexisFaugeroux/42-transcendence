@@ -1,3 +1,4 @@
+import type { Role } from '@transcendence/permissions';
 import type {
   CreateUserInput,
   GetUserInput,
@@ -5,6 +6,7 @@ import type {
   ProducerProfile,
   UpdateUserInput,
   User,
+  UserSearchField,
   UserWithPassword,
 } from '../../domain/user';
 import type { PrismaClient, User as PrismaUser } from '../../generated/prisma/client';
@@ -14,15 +16,19 @@ import { toLinks } from './helpers';
 import type { FollowListOptions, UniqueRef } from './types';
 
 class UserRepository {
-  private readonly prisma: PrismaClient;
+  private static readonly _DEFAULT_SEARCH_FIELDS: readonly UserSearchField[] = [
+    'handle',
+    'artistName',
+  ];
+  private readonly _prisma: PrismaClient;
 
   constructor(client: PrismaClient) {
-    this.prisma = client;
+    this._prisma = client;
   }
 
   public async create(input: CreateUserInput): Promise<User> {
     try {
-      const createdUser: PrismaUser = await this.prisma.$transaction(async (tx) => {
+      const createdUser: PrismaUser = await this._prisma.$transaction(async (tx) => {
         const owner = await tx.owner.create({ data: { type: 'USER' } });
 
         return tx.user.create({
@@ -44,7 +50,7 @@ class UserRepository {
 
   public async find(ref: UniqueRef): Promise<User> {
     try {
-      const user: PrismaUser = await this.prisma.user.findUniqueOrThrow({
+      const user: PrismaUser = await this._prisma.user.findUniqueOrThrow({
         where: ref,
       });
 
@@ -70,18 +76,37 @@ class UserRepository {
     }
   }
 
-  public async get(input: GetUserInput): Promise<User[]> {
-    const filters = this._buildFilters(input);
+  public async get(
+    input: GetUserInput & {
+      searchOn?: readonly UserSearchField[];
+      skip?: number;
+      take?: number;
+      q?: string;
+    },
+  ): Promise<{ items: User[]; total: number }> {
+    const filters = {
+      ...this._buildFilters(input),
+      ...this._searchWhere(input.q, input.searchOn),
+    };
 
     const where = Object.keys(filters).length ? filters : undefined;
 
-    const users: PrismaUser[] = await this.prisma.user.findMany({
-      where,
-    });
+    const [users, total] = await Promise.all([
+      this._prisma.user.findMany({
+        where,
+        orderBy: {
+          handle: 'asc',
+        },
+        ...(input.take !== undefined ? { skip: input.skip, take: input.take } : {}),
+      }),
+      this._prisma.user.count({
+        where,
+      }),
+    ]);
 
     const formattedUsers = users.map((user) => this._format(user));
 
-    return formattedUsers;
+    return { items: formattedUsers, total };
   }
 
   public async listPublic(
@@ -90,17 +115,17 @@ class UserRepository {
     q?: string,
   ): Promise<{ items: Producer[]; total: number }> {
     try {
-      const where = this._publicSearchWhere(q);
+      const where = this._searchWhere(q);
 
       const [users, total] = await Promise.all([
-        this.prisma.user.findMany({
+        this._prisma.user.findMany({
           where,
           orderBy: {
             artistName: 'asc',
           },
           ...(take !== undefined ? { skip, take } : {}),
         }),
-        this.prisma.user.count({ where }),
+        this._prisma.user.count({ where }),
       ]);
 
       return {
@@ -117,9 +142,9 @@ class UserRepository {
     options: FollowListOptions = {},
   ): Promise<{ items: Producer[]; total: number }> {
     try {
-      const where = this._publicSearchWhere(options.q);
+      const where = this._searchWhere(options.q);
 
-      const user = await this.prisma.user.findUniqueOrThrow({
+      const user = await this._prisma.user.findUniqueOrThrow({
         where: ref,
         include: {
           followedBy: {
@@ -149,9 +174,9 @@ class UserRepository {
     options: FollowListOptions = {},
   ): Promise<{ items: Producer[]; total: number }> {
     try {
-      const where = this._publicSearchWhere(options.q);
+      const where = this._searchWhere(options.q);
 
-      const user = await this.prisma.user.findUniqueOrThrow({
+      const user = await this._prisma.user.findUniqueOrThrow({
         where: ref,
         include: {
           following: {
@@ -180,7 +205,7 @@ class UserRepository {
 
   public async findProfile(ref: UniqueRef, viewerId: string): Promise<ProducerProfile> {
     try {
-      const user = await this.prisma.user.findUniqueOrThrow({
+      const user = await this._prisma.user.findUniqueOrThrow({
         where: ref,
         include: {
           _count: {
@@ -199,7 +224,7 @@ class UserRepository {
         },
       });
 
-      const likesReceived = await this.prisma.trackLike.count({
+      const likesReceived = await this._prisma.trackLike.count({
         where: {
           track: {
             ownerId: user.ownerId,
@@ -221,7 +246,7 @@ class UserRepository {
 
   public async follow(followerId: string, targetId: string): Promise<void> {
     try {
-      await this.prisma.user.update({
+      await this._prisma.user.update({
         data: {
           following: {
             connect: { id: targetId },
@@ -236,7 +261,7 @@ class UserRepository {
 
   public async unfollow(followerId: string, targetId: string): Promise<void> {
     try {
-      await this.prisma.user.update({
+      await this._prisma.user.update({
         data: {
           following: {
             disconnect: { id: targetId },
@@ -249,9 +274,9 @@ class UserRepository {
     }
   }
 
-  public async update(id: string, input: UpdateUserInput): Promise<User> {
+  public async update(id: string, input: UpdateUserInput & { role?: Role }): Promise<User> {
     try {
-      const updatedUser: PrismaUser = await this.prisma.user.update({
+      const updatedUser: PrismaUser = await this._prisma.user.update({
         data: input,
         where: { id },
       });
@@ -266,7 +291,7 @@ class UserRepository {
 
   public async delete(id: string): Promise<void> {
     try {
-      await this.prisma.$transaction(async (tx) => {
+      await this._prisma.$transaction(async (tx) => {
         const user = await tx.user.delete({ where: { id } });
         await tx.sample.deleteMany({ where: { ownerId: user.ownerId } });
         await tx.owner.delete({ where: { id: user.ownerId } });
@@ -334,15 +359,13 @@ class UserRepository {
     };
   }
 
-  private _publicSearchWhere(q?: string) {
+  private _searchWhere(q?: string, fields = UserRepository._DEFAULT_SEARCH_FIELDS) {
     const search = q?.trim();
-    if (search)
-      return {
-        OR: [
-          { handle: { contains: search, mode: 'insensitive' as const } },
-          { artistName: { contains: search, mode: 'insensitive' as const } },
-        ],
-      };
+    if (!search) return;
+
+    return {
+      OR: fields.map((field) => ({ [field]: { contains: search, mode: 'insensitive' as const } })),
+    };
   }
 }
 

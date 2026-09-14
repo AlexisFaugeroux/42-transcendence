@@ -1,3 +1,4 @@
+import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { projectController } from '../controllers/project/project';
 
@@ -86,32 +87,41 @@ const updateProjectSchema = {
 export function projectRoutes(app: FastifyInstance) {
   app.put(
     '/save',
-    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: saveProjectSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
+      schema: saveProjectSchema,
+    },
     projectController.save,
   );
 
   app.get(
     '/load',
-    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: loadProjectSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
+      schema: loadProjectSchema,
+    },
     projectController.load,
   );
 
   app.get(
     '/list',
-    { preHandler: [app.authenticate, app.authorize('studio:access')] },
+    { preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)] },
     projectController.list,
   );
 
   app.put(
     '/update',
-    { preHandler: [app.authenticate, app.authorize('studio:access')], schema: updateProjectSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
+      schema: updateProjectSchema,
+    },
     projectController.update,
   );
 
   app.delete(
     '/delete',
     {
-      preHandler: [app.authenticate, app.authorize('studio:access')],
+      preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: deleteProjectSchema,
     },
     projectController.detele,

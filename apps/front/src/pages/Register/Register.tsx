@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
 import { LanguageSelect, Trans, useTranslation } from '@transcendence/i18n';
+import { Role } from '@transcendence/permissions';
 import {
   Button,
   CheckOutlined,
@@ -18,7 +19,6 @@ import { registerRequest } from '../../api/auth/auth';
 import type { RegisterBody } from '../../api/auth/types';
 import { PasswordStrength } from './PasswordStrength';
 import styles from './Register.module.scss';
-import { Role } from '@transcendence/permissions';
 
 export default function Register(): JSX.Element {
   const [form] = Form.useForm<RegisterBody>();

@@ -114,7 +114,7 @@ class UserController {
     }
 
     const userIds = items.map((i) => i.id);
-    const users = await userRepository.get({ ids: userIds });
+    const { items: users } = await userRepository.get({ ids: userIds });
 
     const response: UserOnlineStatus[] = users.map((user) => {
       const isOnline = webSocketRegistry.isOnline(user.id);
@@ -203,7 +203,7 @@ class UserController {
       avatarUpdatedAt: dayjs().toISOString(),
     });
 
-    reply.code(201).send({ user: updatedUser });
+    reply.code(200).send({ user: updatedUser });
   };
 
   public deleteAvatar = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -227,7 +227,7 @@ class UserController {
     }
 
     const userIds = items.map((i) => i.id);
-    const users = await userRepository.get({ ids: userIds });
+    const { items: users } = await userRepository.get({ ids: userIds });
 
     const response: UserOnlineStatus[] = users.map((user) => {
       const isOnline = webSocketRegistry.isOnline(user.id);

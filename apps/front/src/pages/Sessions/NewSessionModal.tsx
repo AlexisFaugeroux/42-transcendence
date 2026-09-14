@@ -1,4 +1,6 @@
+import { useIsAllowed } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
+import { Permissions } from '@transcendence/permissions';
 import { CloseCircleOutlined, Input, Modal, MsnIcon, notification, theme } from '@transcendence/ui';
 import { type CSSProperties, type JSX, useState } from 'react';
 import styles from './NewSessionModal.module.scss';
@@ -10,8 +12,6 @@ import {
   TYPE_ICON,
   TYPE_LABEL,
 } from './sessions.data';
-import { useIsAllowed } from '@transcendence/auth';
-import { Permissions } from '@transcendence/permissions';
 
 interface NewSessionModalProps {
   open: boolean;
