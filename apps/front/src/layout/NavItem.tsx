@@ -5,7 +5,11 @@ import { NavLink } from 'react-router-dom';
 import styles from './NavItem.module.scss';
 import type { NavItemDef } from './navItems';
 
-export function NavItem({ badge, badgeColor, icon, labelKey, to }: NavItemDef): JSX.Element {
+interface NavItemProps extends NavItemDef {
+  badge?: number;
+}
+
+export function NavItem({ badge, badgeColor, icon, labelKey, to }: NavItemProps): JSX.Element {
   const { t } = useTranslation();
 
   return (
