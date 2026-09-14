@@ -12,6 +12,9 @@
   },
   "main": "src/index.ts",
   "prettier": "@transcendence/prettier-config",
+  "dependencies": {
+    "@transcendence/permissions": "workspace:*"
+  },
   "devDependencies": {
     "@transcendence/prettier-config": "workspace:*",
     "@types/react": "19.2.14",
