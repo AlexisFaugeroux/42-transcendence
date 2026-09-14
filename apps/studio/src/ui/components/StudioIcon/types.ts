@@ -33,6 +33,7 @@ export type StudioIconLabel =
   | 'pencil'
   | 'cursor'
   | 'scissors'
+  | 'forbidden'
   // effect devices — glyphs from openDAW, one per EffectFactory.defaultIcon
   | 'maximizer'
   | 'fold'

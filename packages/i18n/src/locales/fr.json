@@ -93,6 +93,7 @@
     "unreadNew_other": "{{count}} nouveaux"
   },
   "common": {
+    "availableSoon": "Bientôt disponible",
     "cancel": "Annuler",
     "delete": "Supprimer",
     "download": "Télécharger",

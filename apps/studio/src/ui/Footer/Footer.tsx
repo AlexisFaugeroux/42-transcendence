@@ -26,10 +26,6 @@ export function Footer(): JSX.Element {
         value={<span style={{ color: theme.green }}>● {t('common.yes')}</span>}
       />
       <FooterItem
-        label={t('studio.footer.users')}
-        value={<span>{t('studio.footer.live', { count: 3 })}</span>}
-      />
-      <FooterItem
         label={t('studio.footer.latency')}
         value={t('studio.footer.latencyValue', { ms: latency.toFixed() })}
         accent={latencyColor(latency)}
