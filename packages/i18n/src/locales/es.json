@@ -596,6 +596,8 @@
       "title": "Aún no hay sesiones"
     },
     "new": {
+      "deniedDescription": "Tu cuenta es una cuenta de oyente. Solo un administrador puede cambiarlo.",
+      "deniedTitle": "El estudio es solo para productores",
       "lead": "Elige el tipo de sesión y prepararemos el espacio de trabajo adecuado.",
       "submit": "Crear y abrir",
       "title": "Empezar una nueva sesión",
@@ -731,6 +733,11 @@
         "key": "Tonalidad",
         "name": "Nombre"
       }
+    },
+    "denied": {
+      "back": "Volver a MakeSomeNoise",
+      "body": "Tu cuenta es una cuenta de oyente: da acceso a la escucha y a los seguimientos, no a la producción. Solo un administrador puede cambiarlo.",
+      "title": "El estudio es solo para productores"
     },
     "devices": {
       "addEffect": "Añadir un efecto",
