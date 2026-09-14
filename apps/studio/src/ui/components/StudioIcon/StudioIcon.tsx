@@ -114,6 +114,12 @@ const STUDIO_ICONS: Record<StudioIconLabel, IconDefinition | undefined> = {
       fill="currentColor"
     />
   ),
+  forbidden: (
+    <g fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <circle cx="12" cy="12" r="8" />
+      <path d="M6.34 6.34l11.32 11.32" />
+    </g>
+  ),
   gate: {
     viewBox: '-2 -2 28 28',
     children: (

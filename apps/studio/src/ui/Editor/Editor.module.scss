@@ -1,0 +1,17 @@
+.editor {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-panel);
+  color: var(--fg3);
+  font-size: 12px;
+}
