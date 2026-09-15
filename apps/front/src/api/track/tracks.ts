@@ -2,6 +2,7 @@ import { apiError, apiFetch } from '@transcendence/auth';
 import type { Track, UpdateTrackInput } from '../../types/track';
 import { getPeaks } from '../samples/samples';
 import type { GetTracksFilters } from './types';
+import type { Paginated } from '../../types/pagination';
 
 /** Public media URL for a track `.wav` / `.peaks` path returned by the API. */
 export function trackMediaUrl(path: string): string {
@@ -83,6 +84,18 @@ export async function unlikeTrack(id: string): Promise<void> {
   });
 
   if (!res.ok) throw await apiError(res, '/api/tracks/unlike');
+}
+
+export async function getLikedTracks(page = 1, limit = 20): Promise<Paginated<Track>> {
+  const searchParams = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+
+  const res = await apiFetch(`/api/tracks/liked?${searchParams.toString()}`);
+  if (!res.ok) throw await apiError(res, '/api/tracks/liked');
+
+  return (await res.json()) as Paginated<Track>;
 }
 
 export async function getTrackPeaks(peaksUrl: string) {

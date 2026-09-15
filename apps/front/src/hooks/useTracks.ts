@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 import {
   deleteTrack,
+  getLikedTracks,
   getProducerTracks,
   getTracks,
   likeTrack,
@@ -26,6 +27,15 @@ export function useProducerTracks(handle: string, filters: GetTracksFilters = {}
     enabled: Boolean(handle) && enabled,
     queryFn: () => getProducerTracks(handle, filters),
     queryKey: ['producer', handle, 'tracks', filters],
+  });
+}
+
+export function useLikedTracks(page = 1, limit = 20) {
+  const user = useAuthUser();
+
+  return useQuery({
+    queryFn: () => getLikedTracks(page, limit),
+    queryKey: ['liked', user.id, page, limit],
   });
 }
 
@@ -56,6 +66,29 @@ function mapTrackList(
 ): Track[] | undefined {
   if (!tracks) return tracks;
   return tracks.map((track) => (track.id === id ? patchTrackLike(track, liked) : track));
+}
+
+function patchLikedPage(
+  page: Paginated<Track> | undefined,
+  id: string,
+  liked: boolean,
+): Paginated<Track> | undefined {
+  if (!page) return page;
+
+  if (!liked) {
+    const items = page.items.filter((track) => track.id !== id);
+    if (items.length === page.items.length) return page;
+    return {
+      ...page,
+      items,
+      total: Math.max(0, page.total - 1),
+    };
+  }
+
+  return {
+    ...page,
+    items: mapTrackList(page.items, id, true) ?? page.items,
+  };
 }
 
 export function useUpdateTrack() {
@@ -134,13 +167,9 @@ export function useToggleTrackLike() {
         },
         (old) => mapTrackList(old, id, liked),
       );
-      queryClient.setQueriesData<Paginated<Track>>({ queryKey: ['liked'] }, (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          items: mapTrackList(old.items, id, liked) ?? old.items,
-        };
-      });
+      queryClient.setQueriesData<Paginated<Track>>({ queryKey: ['liked'] }, (old) =>
+        patchLikedPage(old, id, liked),
+      );
 
       return { previousLiked, previousProducerTracks, previousTracks }; // snapshot for rollback
     },
