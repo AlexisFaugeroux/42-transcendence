@@ -834,6 +834,7 @@
       "mode": "Modo",
       "title": "Título"
     },
+    "like": "Me gusta",
     "loadError": "No se pudieron cargar las pistas",
     "noResults": {
       "clearFilters": "Borrar filtros",
@@ -854,6 +855,7 @@
       "allVisibilities": "Todas las visibilidades",
       "searchPlaceholder": "Buscar por título o descripción…"
     },
+    "unlike": "Ya no me gusta",
     "updateError": "No se pudo actualizar la pista",
     "visibility": "Visibilidad"
   }

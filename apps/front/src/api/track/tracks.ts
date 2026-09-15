@@ -65,6 +65,26 @@ export async function deleteTrack(id: string): Promise<void> {
   if (!res.ok) throw await apiError(res, '/api/tracks/delete');
 }
 
+export async function likeTrack(id: string): Promise<void> {
+  const searchParams = new URLSearchParams({ id });
+
+  const res = await apiFetch(`/api/tracks/like?${searchParams.toString()}`, {
+    method: 'POST',
+  });
+
+  if (!res.ok) throw await apiError(res, '/api/tracks/like');
+}
+
+export async function unlikeTrack(id: string): Promise<void> {
+  const searchParams = new URLSearchParams({ id });
+
+  const res = await apiFetch(`/api/tracks/unlike?${searchParams.toString()}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) throw await apiError(res, '/api/tracks/unlike');
+}
+
 export async function getTrackPeaks(peaksUrl: string) {
   return getPeaks(trackMediaUrl(peaksUrl));
 }

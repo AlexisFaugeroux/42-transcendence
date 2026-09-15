@@ -16,6 +16,8 @@ export interface Track {
   bpm?: number;
   bytes: number;
   createdAt: string;
+  likesCount: number;
+  isLiked: boolean;
 }
 
 export interface UpdateTrackInput {

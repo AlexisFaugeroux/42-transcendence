@@ -834,6 +834,7 @@
       "mode": "Mode",
       "title": "Title"
     },
+    "like": "Like",
     "loadError": "Could not load tracks",
     "noResults": {
       "clearFilters": "Clear filters",
@@ -854,6 +855,7 @@
       "allVisibilities": "All visibilities",
       "searchPlaceholder": "Search by title or description…"
     },
+    "unlike": "Unlike",
     "updateError": "Could not update the track",
     "visibility": "Visibility"
   }

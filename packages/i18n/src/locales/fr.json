@@ -834,6 +834,7 @@
       "mode": "Mode",
       "title": "Titre"
     },
+    "like": "Aimer",
     "loadError": "Impossible de charger les morceaux",
     "noResults": {
       "clearFilters": "Réinitialiser les filtres",
@@ -854,6 +855,7 @@
       "allVisibilities": "Toutes les visibilités",
       "searchPlaceholder": "Rechercher par titre ou description…"
     },
+    "unlike": "Ne plus aimer",
     "updateError": "Impossible de mettre à jour le morceau",
     "visibility": "Visibilité"
   }

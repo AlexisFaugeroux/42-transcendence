@@ -6,17 +6,13 @@
 
 .row {
   display: grid;
-  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px 72px;
+  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px auto;
   gap: 14px;
   align-items: center;
   background: var(--bg-panel-2);
   border: 0.5px solid var(--line-soft);
   border-radius: 4px;
   padding: 10px 14px;
-}
-
-.list[data-readonly='true'] .row {
-  grid-template-columns: 40px minmax(140px, 1.4fr) minmax(160px, 2fr) 80px 100px;
 }
 
 .play {
@@ -68,6 +64,36 @@
   gap: 2px;
 }
 
+.like,
+.liked {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.like {
+  color: var(--fg2);
+
+  &:hover:not(:disabled) {
+    color: var(--color-red);
+  }
+}
+
+.liked {
+  color: var(--color-red);
+}
+
 .download {
   display: inline-flex;
   align-items: center;
@@ -101,7 +127,7 @@
 
 @media (max-width: 900px) {
   .row {
-    grid-template-columns: 40px 1fr 72px;
+    grid-template-columns: 40px 1fr auto;
     grid-template-areas:
       'play title actions'
       'play wave actions'
