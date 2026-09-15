@@ -4,7 +4,10 @@ import type { Track as PrismaTrack } from '../../generated/prisma/client';
 import type { TrackWhereInput } from '../../generated/prisma/models';
 import { inFilter } from '../helpers';
 
-export function formatTrack(track: PrismaTrack): Track {
+export function formatTrack(
+  track: PrismaTrack,
+  likes: { likesCount: number; isLiked: boolean } = { likesCount: 0, isLiked: false },
+): Track {
   const { createdAt, updatedAt, ...rest } = track;
 
   const formattedCreatedAt = formatISO(createdAt);
@@ -14,6 +17,8 @@ export function formatTrack(track: PrismaTrack): Track {
     bpm: rest.bpm ?? undefined,
     createdAt: formattedCreatedAt,
     peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks'),
+    likesCount: likes.likesCount,
+    isLiked: likes.isLiked,
   };
 }
 

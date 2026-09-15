@@ -88,4 +88,13 @@ export function producerRoutes(app: FastifyInstance) {
     },
     trackController.get,
   );
+
+  app.get(
+    '/:handle/liked',
+    {
+      preHandler: app.authenticate,
+      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
+    },
+    trackController.listLikedByHandle,
+  );
 }
