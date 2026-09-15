@@ -112,11 +112,50 @@ const deleteTrackSchema = {
   },
 };
 
+const likeTrackSchema = {
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      id: { format: 'uuid', type: 'string' },
+    },
+    required: ['id'],
+    type: 'object',
+  },
+};
+
+const likedListQuerySchema = {
+  additionalProperties: false,
+  properties: {
+    page: { type: 'string' },
+    limit: { type: 'string' },
+    q: { type: 'string' },
+  },
+  type: 'object',
+};
+
 export function trackRoutes(app: FastifyInstance) {
   app.get(
     '/get',
     { preHandler: app.authenticate, schema: { querystring: getTrackQuerySchema } },
     trackController.get,
+  );
+
+  app.get(
+    '/liked',
+    { preHandler: app.authenticate, schema: { querystring: likedListQuerySchema } },
+    trackController.listLiked,
+  );
+
+  app.post(
+    '/like',
+    { preHandler: app.authenticate, schema: likeTrackSchema },
+    trackController.like,
+  );
+
+  app.delete(
+    '/unlike',
+    { preHandler: app.authenticate, schema: likeTrackSchema },
+    trackController.unlike,
   );
 
   app.post(

@@ -45,9 +45,11 @@ PUT    /api/project/save
 GET    /api/users/
 GET    /api/users/:handle
 GET    /api/users/:handle/followers
+GET    /api/users/:handle/following
 POST   /api/users/:handle/follow
 DELETE /api/users/:handle/follow
 GET    /api/users/:handle/tracks
+GET    /api/users/:handle/liked
 ```
 
 The split follows what the identifier _is_. Everywhere else the id is an internal
@@ -85,17 +87,16 @@ routes.
 
 ### `/api/users` (other producers)
 
-All authenticated. `GET /`, `/:handle/followers` and `/:handle/following` accept
-`page` / `limit` / `q` and answer the paginated envelope
+All authenticated. `GET /`, `/:handle/followers`, `/:handle/following` and
+`/:handle/liked` accept `page` / `limit` / `q` and answer the paginated envelope
 `{ items, total, page, limit }` — the old `{ producers: [...] }` wrapper is gone
 (`PublicProducersResponse` was replaced by `PaginatedProducersResponse`). `q`
-matches `handle` and `artistName`, case-insensitively. See
-[../pagination.md](../pagination.md).
+matches `handle` and `artistName` on producer lists, and track `title` on
+`/:handle/liked`, case-insensitively. See [../pagination.md](../pagination.md).
 
-`follow` / `unfollow` / `:handle/tracks` are rate-limited to
-5/min. `handle` is validated by a shared `handleParamsSchema`
-(`^[\w.]+$`, 3–32 chars) — one object reused by all seven routes, so the pattern
-cannot drift between them.
+`/:handle/liked` lists tracks that producer liked, **public only** (same filter
+on `total`). `follow` / `unfollow` / `:handle/tracks` are rate-limited to 5/min.
+`handle` is validated by a shared `handleParamsSchema` (`^[\w.]+$`, 3–32 chars).
 
 ### `/api/samples` and `/api/tracks`
 
@@ -108,6 +109,17 @@ including the differences between the two upload pipelines, in
 returns the paginated envelope; the studio omits both paging params and reads
 `items` (see [../pagination.md](../pagination.md)). `/api/tracks/get` is not
 paginated — the tracks page filters and sorts client-side.
+
+Tracks also expose likes (RPC, id in querystring):
+
+| Route                | Notes                                                              |
+| -------------------- | ------------------------------------------------------------------ |
+| `POST   /like?id=`   | idempotent; 400 if liking your own track                           |
+| `DELETE /unlike?id=` | idempotent                                                         |
+| `GET    /liked`      | my liked tracks, newest like first; `page` / `limit` / `q` (title) |
+
+Every track payload from `GET /get`, `/:handle/tracks`, and the liked lists
+includes `likesCount` and `isLiked` (viewer).
 
 ### `/api/project`
 
