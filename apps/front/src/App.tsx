@@ -20,6 +20,7 @@ import { Samples } from './pages/Samples/Samples';
 import { Sessions } from './pages/Sessions/Sessions';
 import { Terms } from './pages/Terms/Terms';
 import { Tracks } from './pages/Tracks/Tracks';
+import { Liked } from './pages/Liked/Liked';
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ export function App(): JSX.Element {
               <Route path="/home" element={<Home />} />
               <Route path="/library" element={<Samples />} />
               <Route path="/tracks" element={<Tracks />} />
+              <Route path="/liked" element={<Liked />} />
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/settings" element={<Dashboard />} />
               <Route path="/producers" element={<Producers />} />
@@ -48,7 +50,6 @@ export function App(): JSX.Element {
               <Route path="/messages/:conversationId" element={<Messages />} />
               {/*
               <Route path="/exports" element={<Exports />} />
-              <Route path="/liked" element={<Liked />} />
               <Route path="/playlists" element={<Playlists />} />
               */}
             </Route>

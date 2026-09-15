@@ -8,6 +8,7 @@ import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
 import styles from './LeftNav.module.scss';
 import { NavItem } from './NavItem';
 import { ADMIN_ITEMS, type NavItemDef, SOCIAL_ITEMS, WORKSPACE_ITEMS } from './navItems';
+import { useLikedTracks } from '../hooks/useTracks';
 
 export function LeftNav(): JSX.Element {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export function LeftNav(): JSX.Element {
   const { data: following } = useFollowing(me.handle);
   const { data: tracks } = useTracks();
   const { data: sessions } = useSavedSessions();
+  const { data: liked } = useLikedTracks();
   const unreadMessagesCount = useUnreadMessagesCount();
 
   const badges: Record<NavItemDef['to'], number | undefined> = {
@@ -22,6 +24,7 @@ export function LeftNav(): JSX.Element {
     '/sessions': sessions?.length,
     '/following': following?.total,
     '/messages': unreadMessagesCount,
+    '/liked': liked?.total,
   };
 
   return (
