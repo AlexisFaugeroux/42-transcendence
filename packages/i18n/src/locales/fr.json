@@ -123,15 +123,6 @@
     "searchPlaceholder": "Rechercher un alias ou @handle...",
     "title": "Abonnements"
   },
-  "liked": {
-    "browseProducers": "Parcourir les producteurs",
-    "count_one": "{{count}} track aimée",
-    "count_other": "{{count}} tracks aimées",
-    "empty": "Aucune track aimée pour l’instant.",
-    "eyebrow": "Social",
-    "loadError": "Impossible de charger vos tracks aimées.",
-    "title": "Favoris"
-  },
   "header": {
     "following": "Abonnements",
     "home": "Accueil",
@@ -390,6 +381,15 @@
     "terms": {
       "navLabel": "CGU"
     }
+  },
+  "liked": {
+    "browseProducers": "Parcourir les producteurs",
+    "count_one": "{{count}} track aimée",
+    "count_other": "{{count}} tracks aimées",
+    "empty": "Aucune track aimée pour l’instant.",
+    "eyebrow": "Social",
+    "loadError": "Impossible de charger vos tracks aimées.",
+    "title": "Favoris"
   },
   "music": {
     "note": {

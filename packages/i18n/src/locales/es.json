@@ -123,15 +123,6 @@
     "searchPlaceholder": "Buscar alias o @handle...",
     "title": "Siguiendo"
   },
-  "liked": {
-    "browseProducers": "Explorar productores",
-    "count_one": "{{count}} pista que te gusta",
-    "count_other": "{{count}} pistas que te gustan",
-    "empty": "Aún no hay pistas que te gusten.",
-    "eyebrow": "Social",
-    "loadError": "No se pudieron cargar tus pistas favoritas.",
-    "title": "Me gusta"
-  },
   "header": {
     "following": "Siguiendo",
     "home": "Inicio",
@@ -390,6 +381,15 @@
     "terms": {
       "navLabel": "Condiciones"
     }
+  },
+  "liked": {
+    "browseProducers": "Explorar productores",
+    "count_one": "{{count}} pista que te gusta",
+    "count_other": "{{count}} pistas que te gustan",
+    "empty": "Aún no hay pistas que te gusten.",
+    "eyebrow": "Social",
+    "loadError": "No se pudieron cargar tus pistas favoritas.",
+    "title": "Me gusta"
   },
   "music": {
     "note": {

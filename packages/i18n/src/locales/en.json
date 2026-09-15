@@ -123,15 +123,6 @@
     "searchPlaceholder": "Search alias or @handle...",
     "title": "Following"
   },
-  "liked": {
-    "browseProducers": "Browse producers",
-    "count_one": "{{count}} liked track",
-    "count_other": "{{count}} liked tracks",
-    "empty": "No liked tracks yet.",
-    "eyebrow": "Social",
-    "loadError": "Couldn’t load your liked tracks.",
-    "title": "Liked"
-  },
   "header": {
     "following": "Following",
     "home": "Home",
@@ -390,6 +381,15 @@
     "terms": {
       "navLabel": "Terms"
     }
+  },
+  "liked": {
+    "browseProducers": "Browse producers",
+    "count_one": "{{count}} liked track",
+    "count_other": "{{count}} liked tracks",
+    "empty": "No liked tracks yet.",
+    "eyebrow": "Social",
+    "loadError": "Couldn’t load your liked tracks.",
+    "title": "Liked"
   },
   "music": {
     "note": {

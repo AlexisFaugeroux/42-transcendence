@@ -98,6 +98,22 @@ export async function getLikedTracks(page = 1, limit = 20): Promise<Paginated<Tr
   return (await res.json()) as Paginated<Track>;
 }
 
+export async function getProducerLikedTracks(
+  handle: string,
+  page = 1,
+  limit = 20,
+): Promise<Paginated<Track>> {
+  const searchParams = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  const path = `/api/users/${encodeURIComponent(handle)}/liked`;
+  const res = await apiFetch(`${path}?${searchParams.toString()}`);
+  if (!res.ok) throw await apiError(res, path);
+
+  return (await res.json()) as Paginated<Track>;
+}
+
 export async function getTrackPeaks(peaksUrl: string) {
   return getPeaks(trackMediaUrl(peaksUrl));
 }

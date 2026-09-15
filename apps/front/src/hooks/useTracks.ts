@@ -3,6 +3,7 @@ import { useAuthUser } from '@transcendence/auth';
 import {
   deleteTrack,
   getLikedTracks,
+  getProducerLikedTracks,
   getProducerTracks,
   getTracks,
   likeTrack,
@@ -36,6 +37,14 @@ export function useLikedTracks(page = 1, limit = 20) {
   return useQuery({
     queryFn: () => getLikedTracks(page, limit),
     queryKey: ['liked', user.id, page, limit],
+  });
+}
+
+export function useProducerLikedTracks(handle: string, enabled = true, page = 1, limit = 20) {
+  return useQuery({
+    enabled: Boolean(handle) && enabled,
+    queryFn: () => getProducerLikedTracks(handle, page, limit),
+    queryKey: ['producer', handle, 'liked', page, limit],
   });
 }
 
@@ -91,6 +100,18 @@ function patchLikedPage(
   };
 }
 
+function mapProducerLikedPage(
+  page: Paginated<Track> | undefined,
+  id: string,
+  liked: boolean,
+): Paginated<Track> | undefined {
+  if (!page) return page;
+  return {
+    ...page,
+    items: mapTrackList(page.items, id, liked) ?? page.items,
+  };
+}
+
 export function useUpdateTrack() {
   const invalidateTrackQueries = useInvalidateTrackQueries();
 
@@ -114,6 +135,7 @@ type ToggleTrackLikeContext = {
   previousTracks: [readonly unknown[], Track[] | undefined][];
   previousProducerTracks: [readonly unknown[], Track[] | undefined][];
   previousLiked: [readonly unknown[], Paginated<Track> | undefined][];
+  previousProducerLiked: [readonly unknown[], Paginated<Track> | undefined][];
 };
 
 export function useToggleTrackLike() {
@@ -139,6 +161,11 @@ export function useToggleTrackLike() {
           queryClient.setQueryData(key, data);
         }
       }
+      if (context?.previousProducerLiked) {
+        for (const [key, data] of context.previousProducerLiked) {
+          queryClient.setQueryData(key, data);
+        }
+      }
       invalidateTrackQueries();
     },
 
@@ -149,6 +176,7 @@ export function useToggleTrackLike() {
       await queryClient.cancelQueries({ queryKey: ['producer'] });
       await queryClient.cancelQueries({ queryKey: ['liked'] });
 
+      // snapshots
       const previousTracks = queryClient.getQueriesData<Track[]>({ queryKey: ['tracks'] });
       const previousProducerTracks = queryClient.getQueriesData<Track[]>({
         predicate: (query) => query.queryKey[0] === 'producer' && query.queryKey[2] === 'tracks',
@@ -156,8 +184,11 @@ export function useToggleTrackLike() {
       const previousLiked = queryClient.getQueriesData<Paginated<Track>>({
         queryKey: ['liked'],
       });
+      const previousProducerLiked = queryClient.getQueriesData<Paginated<Track>>({
+        predicate: (query) => query.queryKey[0] === 'producer' && query.queryKey[2] === 'liked',
+      });
 
-      // update the cache with the new data
+      // update the cache with the new data (optimistic)
       queryClient.setQueriesData<Track[]>({ queryKey: ['tracks'] }, (old) =>
         mapTrackList(old, id, liked),
       );
@@ -170,8 +201,19 @@ export function useToggleTrackLike() {
       queryClient.setQueriesData<Paginated<Track>>({ queryKey: ['liked'] }, (old) =>
         patchLikedPage(old, id, liked),
       );
+      queryClient.setQueriesData<Paginated<Track>>(
+        {
+          predicate: (query) => query.queryKey[0] === 'producer' && query.queryKey[2] === 'liked',
+        },
+        (old) => mapProducerLikedPage(old, id, liked),
+      );
 
-      return { previousLiked, previousProducerTracks, previousTracks }; // snapshot for rollback
+      return {
+        previousLiked,
+        previousProducerLiked,
+        previousProducerTracks,
+        previousTracks,
+      };
     },
 
     onSuccess: () => {
