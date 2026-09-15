@@ -1,9 +1,11 @@
+import { useAuthUser } from '@transcendence/auth';
 import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
 import { Dropdown, type MenuProps, MsnIcon, Tag } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { trackMediaUrl } from '../../api/track/tracks';
 import { useSamplePlayer } from '../../contexts/SamplePlayerProvider';
+import { useToggleTrackLike } from '../../hooks/useTracks';
 import { VISIBILITIES, type Visibility } from '../../types/sample';
 import type { Track } from '../../types/track';
 import { VISIBILITY_LABEL } from '../Samples/constants';
@@ -34,6 +36,8 @@ export function TrackList({
 }: TrackListProps): JSX.Element {
   const { t } = useTranslation();
   const player = useSamplePlayer();
+  const me = useAuthUser();
+  const toggleLike = useToggleTrackLike();
 
   return (
     <div className={styles.list} data-readonly={readOnly || undefined}>
@@ -41,6 +45,7 @@ export function TrackList({
         const wavUrl = trackMediaUrl(track.url);
         const peaksUrl = trackMediaUrl(track.peaksUrl);
         const isActive = player.currentId === track.id;
+        const isOwn = track.ownerId === me.ownerId;
 
         const menuItems: MenuProps['items'] = readOnly
           ? []
@@ -106,27 +111,43 @@ export function TrackList({
             <span className={styles.mono}>{formatTrackDuration(track.duration)}</span>
             <span className={styles.mono}>{formatDate(track.createdAt, 'L')}</span>
 
-            {readOnly ? null : (
-              <div className={styles.actions}>
-                <a
-                  className={styles.download}
-                  href={wavUrl}
-                  download={`${track.title}.wav`}
-                  title={t('common.download')}
-                >
-                  <MsnIcon name="download" size="14px" />
-                </a>
-                <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
-                  <button
-                    type="button"
-                    className={styles.menuButton}
-                    aria-label={t('tracks.actions')}
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={track.isLiked ? styles.liked : styles.like}
+                disabled={isOwn || toggleLike.isPending}
+                aria-label={track.isLiked ? t('tracks.unlike') : t('tracks.like')}
+                onClick={() => {
+                  if (isOwn) return;
+                  toggleLike.mutate({ id: track.id, isLiked: track.isLiked });
+                }}
+              >
+                <MsnIcon name="heart" size="12px" />
+                <span>{track.likesCount}</span>
+              </button>
+
+              {readOnly ? null : (
+                <>
+                  <a
+                    className={styles.download}
+                    href={wavUrl}
+                    download={`${track.title}.wav`}
+                    title={t('common.download')}
                   >
-                    ⋯
-                  </button>
-                </Dropdown>
-              </div>
-            )}
+                    <MsnIcon name="download" size="14px" />
+                  </a>
+                  <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
+                    <button
+                      type="button"
+                      className={styles.menuButton}
+                      aria-label={t('tracks.actions')}
+                    >
+                      ...
+                    </button>
+                  </Dropdown>
+                </>
+              )}
+            </div>
           </div>
         );
       })}
