@@ -1,6 +1,6 @@
+import { ConflictError } from '../../domain/errors';
 import type { CreateTrackInput, GetTracksInput, Track, UpdateTrackInput } from '../../domain/track';
 import type { PrismaClient, Track as PrismaTrack } from '../../generated/prisma/client';
-import { Prisma } from '../../generated/prisma/client';
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
 import { buildFilters, formatTrack } from './helpers';
@@ -82,10 +82,9 @@ class TrackRepository {
         data: { trackId, userId },
       });
     } catch (error: unknown) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return;
-      }
-      throw mapError(error, 'TrackLike');
+      const mappedError = mapError(error, 'TrackLike');
+      if (mappedError instanceof ConflictError) return;
+      throw mappedError;
     }
   }
 

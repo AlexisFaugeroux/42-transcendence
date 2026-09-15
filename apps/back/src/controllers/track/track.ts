@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { BadRequestError, ForbiddenError } from '../../domain/errors';
+import { BadRequestError, ConflictError, ForbiddenError } from '../../domain/errors';
 import { trackRepository } from '../../repositories/track/track';
 import { userRepository } from '../../repositories/user/user';
 import { trackStorageService } from '../../services/audio/trackStorage';
@@ -77,7 +77,7 @@ class TrackFileController {
     const track = await trackRepository.findById(req.query.id);
 
     if (track.ownerId === user.ownerId) {
-      throw new BadRequestError('Cannot like your own track');
+      throw new ConflictError('Cannot like your own track');
     }
 
     await trackRepository.like(userId, track.id);
