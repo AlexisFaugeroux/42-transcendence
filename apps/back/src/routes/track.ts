@@ -1,3 +1,4 @@
+import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { trackController } from '../controllers/track/track';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
@@ -160,13 +161,16 @@ export function trackRoutes(app: FastifyInstance) {
 
   app.post(
     '/upload',
-    { preHandler: [app.authenticate, app.authorize('track:write')] },
+    { preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)] },
     trackController.upload,
   );
 
   app.put(
     '/update',
-    { preHandler: [app.authenticate, app.authorize('track:write')], schema: updateTrackSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)],
+      schema: updateTrackSchema,
+    },
     trackController.update,
   );
 

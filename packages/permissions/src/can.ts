@@ -6,6 +6,7 @@ export const ROLES_PERMISSIONS: Record<RoleType, PermissionsType[]> = {
     Permissions.MANAGE_ACCOUNTS,
     Permissions.SAMPLE_WRITE,
     Permissions.TRACK_WRITE,
+    Permissions.TRACK_MODERATE,
     Permissions.STUDIO_ACCESS,
     Permissions.USER_READ,
     Permissions.USER_WRITE,
@@ -15,6 +16,7 @@ export const ROLES_PERMISSIONS: Record<RoleType, PermissionsType[]> = {
   [Role.MODERATOR]: [
     Permissions.SAMPLE_WRITE,
     Permissions.TRACK_WRITE,
+    Permissions.TRACK_MODERATE,
     Permissions.STUDIO_ACCESS,
     Permissions.USER_READ,
   ],

@@ -1,8 +1,8 @@
 import { apiError, apiFetch } from '@transcendence/auth';
+import type { Paginated } from '../../types/pagination';
 import type { Track, UpdateTrackInput } from '../../types/track';
 import { getPeaks } from '../samples/samples';
 import type { GetTracksFilters } from './types';
-import type { Paginated } from '../../types/pagination';
 
 /** Public media URL for a track `.wav` / `.peaks` path returned by the API. */
 export function trackMediaUrl(path: string): string {

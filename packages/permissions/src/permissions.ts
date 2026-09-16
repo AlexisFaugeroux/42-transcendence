@@ -2,6 +2,7 @@ export const Permissions = {
   MANAGE_ACCOUNTS: 'manage_accounts',
   SAMPLE_WRITE: 'sample:write',
   TRACK_WRITE: 'track:write',
+  TRACK_MODERATE: 'track:moderate',
   STUDIO_ACCESS: 'studio:access',
   USER_READ: 'user:read',
   USER_WRITE: 'user:write',
