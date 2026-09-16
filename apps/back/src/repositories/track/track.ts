@@ -42,6 +42,62 @@ class TrackRepository {
     }
   }
 
+  // to be used by admin controller only
+  public async getAll(input: {
+    skip?: number;
+    take?: number;
+    q?: string;
+  }): Promise<{ items: Track[]; total: number }> {
+    try {
+      const search = input.q?.trim();
+      const where = search
+        ? {
+            OR: [
+              { title: { contains: search, mode: 'insensitive' as const } },
+              {
+                owner: {
+                  user: { artistName: { contains: search, mode: 'insensitive' as const } },
+                },
+              },
+            ],
+          }
+        : undefined;
+
+      const [tracks, total] = await Promise.all([
+        this._prisma.track.findMany({
+          include: {
+            owner: { include: { user: true } },
+            _count: { select: { likes: true } },
+          },
+          where,
+          skip: input.skip,
+          take: input.take,
+          orderBy: { createdAt: 'desc' },
+        }),
+        this._prisma.track.count({
+          where,
+        }),
+      ]);
+
+      const formattedTracks = tracks.map(({ _count, owner, ...track }) => {
+        let artistName: string | undefined, handle: string | undefined;
+
+        if (owner.user) {
+          ({ artistName, handle } = owner.user);
+        }
+
+        return {
+          ...formatTrack(track, { likesCount: _count.likes, isLiked: false }),
+          ...(owner.user && artistName && handle && { owner: { artistName, handle } }),
+        };
+      });
+
+      return { items: formattedTracks, total };
+    } catch (error) {
+      throw mapError(error, 'Track');
+    }
+  }
+
   public async get(input: GetTracksInput & { viewerId: string }): Promise<Track[]> {
     const tracks = await this._prisma.track.findMany({
       include: {

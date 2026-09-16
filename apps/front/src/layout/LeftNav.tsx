@@ -4,11 +4,11 @@ import type { JSX } from 'react';
 import { useFollowing } from '../hooks/useProducers';
 import { useSavedSessions } from '../hooks/useSavedSessions';
 import { useTracks } from '../hooks/useTracks';
+import { useLikedTracks } from '../hooks/useTracks';
 import { useUnreadMessagesCount } from '../hooks/useUnreadMessagesCount';
 import styles from './LeftNav.module.scss';
 import { NavItem } from './NavItem';
 import { ADMIN_ITEMS, type NavItemDef, SOCIAL_ITEMS, WORKSPACE_ITEMS } from './navItems';
-import { useLikedTracks } from '../hooks/useTracks';
 
 export function LeftNav(): JSX.Element {
   const { t } = useTranslation();

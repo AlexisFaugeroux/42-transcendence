@@ -131,17 +131,18 @@ export function useDeleteTrack() {
   });
 }
 
-type ToggleTrackLikeContext = {
+interface ToggleTrackLikeContext {
   previousTracks: [readonly unknown[], Track[] | undefined][];
   previousProducerTracks: [readonly unknown[], Track[] | undefined][];
   previousLiked: [readonly unknown[], Paginated<Track> | undefined][];
   previousProducerLiked: [readonly unknown[], Paginated<Track> | undefined][];
-};
+}
 
 export function useToggleTrackLike() {
   const queryClient = useQueryClient();
   const invalidateTrackQueries = useInvalidateTrackQueries();
 
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- TData d'une mutation qui ne renvoie rien
   return useMutation<void, Error, { id: string; isLiked: boolean }, ToggleTrackLikeContext>({
     mutationFn: ({ id, isLiked }) => (isLiked ? unlikeTrack(id) : likeTrack(id)),
 

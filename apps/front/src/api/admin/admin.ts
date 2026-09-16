@@ -1,7 +1,7 @@
 import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
+import type { Role } from '@transcendence/permissions';
 import type { Paginated } from '../../types/pagination';
 import type { SessionList, UpdateUserBody, User } from './types';
-import type { Role } from '@transcendence/permissions';
 
 export async function getUsers(page = 1, limit = 20, q = ''): Promise<Paginated<User>> {
   const searchParams = new URLSearchParams({ page: String(page), limit: String(limit) });

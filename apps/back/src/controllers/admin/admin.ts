@@ -1,55 +1,27 @@
 import { Role } from '@transcendence/permissions';
-import type { FastifyReply, FastifyRequest, RouteGenericInterface } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { BadRequestError, ConflictError } from '../../domain/errors';
-import type { PaginatedResponse } from '../../domain/pagination';
-import type { SessionListResponse } from '../../domain/session';
-import {
-  type GetUserInput,
-  type UpdateUserInput,
-  type User,
-  USER_SEARCH_FIELDS,
-} from '../../domain/user';
+import { USER_SEARCH_FIELDS } from '../../domain/user';
 import { sessionRepository } from '../../repositories/session/session';
+import { trackRepository } from '../../repositories/track/track';
 import { userRepository } from '../../repositories/user/user';
 import { sampleStorageService } from '../../services/audio/sampleStorage';
 import { trackStorageService } from '../../services/audio/trackStorage';
 import { avatarStorageService } from '../../services/avatarStorage';
 import { parsePagination, toPaginatedResponse } from '../../utils/pagination';
 import { webSocketRegistry } from '../../utils/websockets';
-
-export interface GetUsersRoute extends RouteGenericInterface {
-  Querystring: Pick<GetUserInput, 'roles'> & {
-    page?: string;
-    limit?: string;
-    q?: string;
-  };
-  Reply: PaginatedResponse<User>;
-}
-
-export interface UpdateUserRoute extends RouteGenericInterface {
-  Body: UpdateUserInput & { id: string };
-  Reply: User;
-}
-
-export interface UpdateUserRoleRoute extends RouteGenericInterface {
-  Body: { id: string; role: Role };
-}
-
-export interface DeleteUserRoute extends RouteGenericInterface {
-  Querystring: { id: string };
-}
-
-export interface RevokeSessionRoute extends RouteGenericInterface {
-  Body: { id: string };
-}
-
-export interface ListSessionsRoute extends RouteGenericInterface {
-  Querystring: { id: string };
-  Reply: SessionListResponse;
-}
+import type {
+  DeleteUserRoute,
+  GetTracksRoute,
+  GetUsersRoute,
+  ListSessionsRoute,
+  RevokeSessionRoute,
+  UpdateUserRoute,
+  UpdateUserRoleRoute,
+} from './types';
 
 class AdminController {
-  public get = async (
+  public getUsers = async (
     req: FastifyRequest<GetUsersRoute>,
     reply: FastifyReply<GetUsersRoute>,
   ): Promise<void> => {
@@ -69,7 +41,7 @@ class AdminController {
     reply.code(200).send(toPaginatedResponse(pagination, users, total));
   };
 
-  public update = async (
+  public updateUser = async (
     req: FastifyRequest<UpdateUserRoute>,
     reply: FastifyReply<UpdateUserRoute>,
   ): Promise<void> => {
@@ -78,7 +50,7 @@ class AdminController {
     reply.code(200).send(updatedUser);
   };
 
-  public role = async (
+  public updateRole = async (
     req: FastifyRequest<UpdateUserRoleRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
@@ -95,7 +67,7 @@ class AdminController {
     reply.code(204).send();
   };
 
-  public delete = async (
+  public deleteUser = async (
     req: FastifyRequest<DeleteUserRoute>,
     reply: FastifyReply,
   ): Promise<void> => {
@@ -118,7 +90,7 @@ class AdminController {
     reply.code(204).send();
   };
 
-  public sessions = async (
+  public getSessions = async (
     req: FastifyRequest<ListSessionsRoute>,
     reply: FastifyReply<ListSessionsRoute>,
   ): Promise<void> => {
@@ -135,6 +107,19 @@ class AdminController {
     webSocketRegistry.closeAll(id);
 
     reply.code(204).send();
+  };
+
+  public getTracks = async (
+    req: FastifyRequest<GetTracksRoute>,
+    reply: FastifyReply<GetTracksRoute>,
+  ): Promise<void> => {
+    const pagination = parsePagination(req.query.page, req.query.limit);
+    const skip = pagination.unpaginated ? undefined : pagination.skip;
+    const take = pagination.unpaginated ? undefined : pagination.take;
+
+    const { items: tracks, total } = await trackRepository.getAll({ skip, take, q: req.query.q });
+
+    reply.code(200).send(toPaginatedResponse(pagination, tracks, total));
   };
 }
 

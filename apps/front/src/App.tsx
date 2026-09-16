@@ -12,6 +12,7 @@ import { Following } from './pages/Following/Following';
 import { Home } from './pages/Home/Home';
 import { Landing } from './pages/Landing/Landing';
 import { Legal } from './pages/Legal/Legal';
+import { Liked } from './pages/Liked/Liked';
 import Login from './pages/Login/Login';
 import { Messages } from './pages/Messages/Messages';
 import { NotFound } from './pages/NotFound/NotFound';
@@ -23,7 +24,6 @@ import { Samples } from './pages/Samples/Samples';
 import { Sessions } from './pages/Sessions/Sessions';
 import { Terms } from './pages/Terms/Terms';
 import { Tracks } from './pages/Tracks/Tracks';
-import { Liked } from './pages/Liked/Liked';
 
 const queryClient = new QueryClient();
 

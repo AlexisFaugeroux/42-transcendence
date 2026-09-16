@@ -1,6 +1,6 @@
 import type { RouteGenericInterface } from 'fastify';
-import type { GetTracksInput, Track, UpdateTrackInput } from '../../domain/track';
 import type { PaginatedResponse } from '../../domain/pagination';
+import type { GetTracksInput, Track, UpdateTrackInput } from '../../domain/track';
 
 export interface LikeTrackRoute extends RouteGenericInterface {
   Querystring: { id: string };

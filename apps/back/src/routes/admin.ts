@@ -29,6 +29,18 @@ const getUsersSchema = {
   },
 };
 
+const getTracksSchema = {
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      page: { type: 'string' },
+      limit: { type: 'string' },
+      q: { type: 'string' },
+    },
+    type: 'object',
+  },
+};
+
 const updateUserSchema = {
   body: {
     additionalProperties: false,
@@ -92,7 +104,7 @@ export function adminRoutes(app: FastifyInstance) {
       preHandler: [app.authenticate, app.authorize(Permissions.USER_READ)],
       schema: getUsersSchema,
     },
-    adminController.get,
+    adminController.getUsers,
   );
 
   app.put(
@@ -102,7 +114,7 @@ export function adminRoutes(app: FastifyInstance) {
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserSchema,
     },
-    adminController.update,
+    adminController.updateUser,
   );
 
   app.get(
@@ -111,7 +123,7 @@ export function adminRoutes(app: FastifyInstance) {
       preHandler: [app.authenticate, app.authorize(Permissions.SESSION_REVOKE)],
       schema: listSessionsSchema,
     },
-    adminController.sessions,
+    adminController.getSessions,
   );
 
   app.put(
@@ -121,7 +133,7 @@ export function adminRoutes(app: FastifyInstance) {
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserRoleSchema,
     },
-    adminController.role,
+    adminController.updateRole,
   );
 
   app.delete(
@@ -131,7 +143,7 @@ export function adminRoutes(app: FastifyInstance) {
       preHandler: [app.authenticate, app.authorize(Permissions.USER_DELETE)],
       schema: deleteUserSchema,
     },
-    adminController.delete,
+    adminController.deleteUser,
   );
 
   app.post(
@@ -142,5 +154,15 @@ export function adminRoutes(app: FastifyInstance) {
       schema: revokeSessionsSchema,
     },
     adminController.revokeSession,
+  );
+
+  app.get(
+    '/tracks/get',
+    {
+      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      preHandler: [app.authenticate, app.authorize(Permissions.TRACK_MODERATE)],
+      schema: getTracksSchema,
+    },
+    adminController.getTracks,
   );
 }

@@ -1,3 +1,4 @@
+import { can, Permissions } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { BadRequestError, ConflictError, ForbiddenError } from '../../domain/errors';
@@ -171,7 +172,8 @@ class TrackFileController {
     const user = await userRepository.find({ id: req.authUser.id });
     const track = await trackRepository.findById(req.query.id);
 
-    if (track.ownerId !== user.ownerId) throw new ForbiddenError();
+    const isOwner = track.ownerId === user.ownerId;
+    if (!isOwner && !can(req.authUser.role, Permissions.TRACK_MODERATE)) throw new ForbiddenError();
 
     await trackStorageService.remove(track.id, track.ownerId);
 
