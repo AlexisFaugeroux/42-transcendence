@@ -28,8 +28,6 @@ export function Sessions(): JSX.Element {
   const { t } = useTranslation();
   const [bucket, setBucket] = useState<Bucket>('owned');
   const [query, setQuery] = useState('');
-  const [type, setType] = useState('all');
-  const [genre, setGenre] = useState('all');
   const [sort, setSort] = useState<SessSort>('edited');
   const [newOpen, setNewOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Session | null>(null);
@@ -134,8 +132,6 @@ export function Sessions(): JSX.Element {
 
   const clearFilters = (): void => {
     setQuery('');
-    setType('all');
-    setGenre('all');
   };
 
   const openNew = (): void => {
@@ -183,10 +179,6 @@ export function Sessions(): JSX.Element {
         <SessToolbar
           query={query}
           setQuery={setQuery}
-          type={type}
-          setType={setType}
-          genre={genre}
-          setGenre={setGenre}
           sort={sort}
           setSort={setSort}
           shown={filtered.length}

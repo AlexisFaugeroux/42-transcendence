@@ -2,8 +2,8 @@ import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
 import { Button } from '@transcendence/ui';
 import type { JSX } from 'react';
+import { CoverArt } from '../../components/CoverArt/CoverArt';
 import type { Session } from '../Sessions/sessions.data';
-import { CoverArt } from './CoverArt';
 import { KIND_COLOR, KIND_ICON, KIND_LABEL } from './home.data';
 import styles from './SavedSessionTile.module.scss';
 

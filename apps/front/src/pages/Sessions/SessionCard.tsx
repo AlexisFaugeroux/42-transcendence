@@ -1,9 +1,14 @@
 import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
-import { Button, Dropdown, type MenuProps, MsnIcon } from '@transcendence/ui';
+import { Button, Dropdown, type MenuProps, MsnIcon, type MsnIconLabel } from '@transcendence/ui';
 import type { CSSProperties, JSX } from 'react';
+import { CoverArt } from '../../components/CoverArt/CoverArt';
 import styles from './SessionCard.module.scss';
 import { type Session, TYPE_COLOR, TYPE_ICON, TYPE_LABEL } from './sessions.data';
+
+const menuIcon = (name: MsnIconLabel): JSX.Element => (
+  <MsnIcon name={name} size="12px" style={{ marginInlineEnd: 6 }} />
+);
 
 interface SessionCardProps {
   session: Session;
@@ -38,13 +43,13 @@ export function SessionCard({
 
   const menuItems: MenuProps['items'] = [
     {
-      icon: <MsnIcon name="play" size="12px" />,
+      icon: menuIcon('play'),
       key: 'open',
       label: t('sessions.card.openInEditor'),
       onClick: loadProject,
     },
     {
-      icon: <MsnIcon name="settings" size="12px" />,
+      icon: menuIcon('settings'),
       key: 'rename',
       label: t('sessions.card.rename'),
       onClick: () => {
@@ -52,12 +57,12 @@ export function SessionCard({
       },
     },
     {
-      icon: <MsnIcon name="download" size="12px" />,
+      icon: menuIcon('download'),
       key: 'export',
       label: t('sessions.card.exportBounce'),
     },
     {
-      icon: <MsnIcon name="folder" size="12px" />,
+      icon: menuIcon('folder'),
       key: 'archive',
       label: archived ? t('sessions.card.unarchive') : t('sessions.card.archive'),
       onClick: () => {
@@ -67,7 +72,7 @@ export function SessionCard({
     { type: 'divider' },
     {
       danger: true,
-      icon: <MsnIcon name="bell" size="12px" />,
+      icon: menuIcon('bell'),
       key: 'delete',
       label: t('common.delete'),
       onClick: () => {
@@ -79,15 +84,18 @@ export function SessionCard({
   return (
     <div className={styles.card} data-archived={archived}>
       <div className={styles.cover} style={{ '--type-color': color } as CSSProperties}>
+        {session.cover ? (
+          <img className={styles.image} src={session.cover} alt="" />
+        ) : (
+          <CoverArt size={88} accent={color} icon={TYPE_ICON[session.type]} />
+        )}
+        <span className={styles.scrim} />
         {archived ? (
           <span className={styles.ribbon}>{t('sessions.card.archivedRibbon')}</span>
         ) : null}
         <span className={styles.badge}>
           <MsnIcon name={TYPE_ICON[session.type]} size="11px" /> {t(TYPE_LABEL[session.type])}
         </span>
-        <div className={styles.logo}>
-          <MsnIcon name={TYPE_ICON[session.type]} size="38px" />
-        </div>
       </div>
 
       <div className={styles.body}>

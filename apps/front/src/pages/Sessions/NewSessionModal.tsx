@@ -48,11 +48,11 @@ export function NewSessionModal({ onClose, open }: NewSessionModalProps): JSX.El
       >
         <p className={styles.lead}>{t('sessions.new.lead')}</p>
 
-        <div className={styles.typeCard} style={{ '--c': TYPE_COLOR.production } as CSSProperties}>
+        <div className={styles.typeCard} style={{ '--c': TYPE_COLOR.PRODUCE } as CSSProperties}>
           <span className={styles.typeHead}>
-            <MsnIcon name={TYPE_ICON.production} size="18px" /> {t(TYPE_LABEL.production)}
+            <MsnIcon name={TYPE_ICON.PRODUCE} size="18px" /> {t(TYPE_LABEL.PRODUCE)}
           </span>
-          <span className={styles.typeDesc}>{t(TYPE_DESCRIPTION.production)}</span>
+          <span className={styles.typeDesc}>{t(TYPE_DESCRIPTION.PRODUCE)}</span>
         </div>
 
         <div className={styles.fields}>

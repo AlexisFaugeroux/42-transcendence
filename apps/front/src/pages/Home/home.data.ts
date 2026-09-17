@@ -65,9 +65,6 @@ export interface SavedSession {
   duration: string;
 }
 
-// Producteurs en direct : maquette. Le recorder n'existe pas encore, donc `activity`
-// et `listeners` ne viennent d'aucun endpoint — ce type ne peut pas être celui de la
-// présence réelle (types/user.ts UserOnlineStatus).
 export interface LiveProducer {
   id: string;
   artistName: string;
@@ -151,7 +148,6 @@ export interface ActivityItem {
   when: string;
 }
 
-// Same as SAVED_SESSIONS: sample feed rows, replaced by the activity endpoint.
 export const ACTIVITY: ActivityItem[] = [
   { did: 'liked', what: 'your track “Liquid Drum 808”', when: '3m', who: 'Maya Okafor' },
   { did: 'commented', what: 'on “Tape Saturator demo”', when: '12m', who: 'Theo Rivera' },
