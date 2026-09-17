@@ -1,6 +1,10 @@
 import { Permissions, Role } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { adminController } from '../controllers/admin/admin';
+import { paginatedResponseSchema } from './schemas/pagination';
+import { sessionListResponseSchema } from './schemas/session';
+import { trackSchema } from './schemas/track';
+import { adminUserSchema } from './schemas/user';
 
 const userIdQuerySchema = {
   additionalProperties: false,
@@ -27,6 +31,9 @@ const getUsersSchema = {
     },
     type: 'object',
   },
+  response: {
+    200: paginatedResponseSchema(adminUserSchema),
+  },
 };
 
 const getTracksSchema = {
@@ -38,6 +45,9 @@ const getTracksSchema = {
       q: { type: 'string' },
     },
     type: 'object',
+  },
+  response: {
+    200: paginatedResponseSchema(trackSchema),
   },
 };
 
@@ -70,6 +80,9 @@ const updateUserSchema = {
     },
     type: 'object',
   },
+  response: {
+    200: adminUserSchema,
+  },
 };
 
 const updateUserRoleSchema = {
@@ -82,18 +95,30 @@ const updateUserRoleSchema = {
     required: ['id', 'role'],
     type: 'object',
   },
+  response: {
+    204: { type: 'null' },
+  },
 };
 
 const listSessionsSchema = {
   querystring: userIdQuerySchema,
+  response: {
+    200: sessionListResponseSchema,
+  },
 };
 
 const deleteUserSchema = {
   querystring: userIdQuerySchema,
+  response: {
+    204: { type: 'null' },
+  },
 };
 
 const revokeSessionsSchema = {
   body: userIdQuerySchema,
+  response: {
+    204: { type: 'null' },
+  },
 };
 
 export function adminRoutes(app: FastifyInstance) {

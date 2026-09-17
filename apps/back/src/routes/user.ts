@@ -1,75 +1,6 @@
-import { Role } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { userController } from '../controllers/user/user';
-
-const authUserSchema = {
-  additionalProperties: false,
-  properties: {
-    artistName: { type: 'string' },
-    avatarUpdatedAt: { type: ['string', 'null'] },
-    bio: { type: 'string' },
-    email: { type: 'string' },
-    firstname: { type: 'string' },
-    handle: { type: 'string' },
-    id: { type: 'string' },
-    joined: { format: 'date-time', type: 'string' },
-    lastname: { type: 'string' },
-    links: {
-      items: {
-        additionalProperties: false,
-        properties: {
-          kind: { type: 'string' },
-          url: { type: 'string' },
-        },
-        required: ['kind', 'url'],
-        type: 'object',
-      },
-      type: ['array', 'null'],
-    },
-    location: { type: 'string' },
-    ownerId: { type: 'string' },
-    role: { enum: Object.values(Role), type: 'string' },
-  },
-  required: [
-    'id',
-    'ownerId',
-    'artistName',
-    'email',
-    'joined',
-    'firstname',
-    'lastname',
-    'avatarUpdatedAt',
-    'handle',
-    'role',
-  ],
-  type: 'object',
-};
-
-const authUserResponseSchema = {
-  additionalProperties: false,
-  properties: {
-    user: authUserSchema,
-  },
-  required: ['user'],
-  type: 'object',
-};
-
-const onlineUserSchema = {
-  additionalProperties: false,
-  properties: {
-    artistName: { type: 'string' },
-    handle: { type: 'string' },
-    id: { type: 'string' },
-    status: { enum: ['online', 'offline'], type: 'string' },
-  },
-  required: ['id', 'handle', 'status', 'artistName'],
-  type: 'object',
-};
-
-const onlineUsersResponseSchema = {
-  items: onlineUserSchema,
-  type: 'array',
-};
+import { authUserResponseSchema, onlineUsersResponseSchema } from './schemas/user';
 
 const updateProfileSchema = {
   body: {
@@ -105,12 +36,22 @@ const updateProfileSchema = {
 
 const changePasswordSchema = {
   body: {
+    additionalProperties: false,
     properties: {
       newPassword: { maxLength: 128, minLength: 8, type: 'string' },
       oldPassword: { maxLength: 128, minLength: 8, type: 'string' },
     },
     required: ['oldPassword', 'newPassword'],
     type: 'object',
+  },
+  response: {
+    204: { type: 'null' },
+  },
+};
+
+const noContentSchema = {
+  response: {
+    204: { type: 'null' },
   },
 };
 
@@ -151,6 +92,7 @@ export function userRoutes(app: FastifyInstance) {
     '/delete',
     {
       preHandler: app.authenticate,
+      schema: noContentSchema,
     },
     userController.deleteUser,
   );
@@ -182,5 +124,9 @@ export function userRoutes(app: FastifyInstance) {
     userController.listFollowersById,
   );
 
-  app.delete('/delete/avatar', { preHandler: app.authenticate }, userController.deleteAvatar);
+  app.delete(
+    '/delete/avatar',
+    { preHandler: app.authenticate, schema: noContentSchema },
+    userController.deleteAvatar,
+  );
 }

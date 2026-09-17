@@ -1,4 +1,4 @@
-import type { VisibilityType } from '../generated/prisma/enums';
+import type { ProjectType, VisibilityType } from '../generated/prisma/enums';
 import type { Key, Mode } from './sample';
 
 export interface Project {
@@ -9,6 +9,7 @@ export interface Project {
   ownerId: string;
   duration: number;
   bpm: number;
+  type: ProjectType;
   key?: Key;
   mode?: Mode;
   archived: boolean;

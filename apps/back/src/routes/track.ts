@@ -2,6 +2,8 @@ import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { trackController } from '../controllers/track/track';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
+import { paginatedResponseSchema } from './schemas/pagination';
+import { trackSchema, tracksResponseSchema } from './schemas/track';
 
 const trackFilterProperties = {
   bpms: {
@@ -100,6 +102,9 @@ const updateTrackSchema = {
     required: ['id'],
     type: 'object',
   },
+  response: {
+    200: trackSchema,
+  },
 };
 
 const deleteTrackSchema = {
@@ -111,6 +116,9 @@ const deleteTrackSchema = {
     required: ['id'],
     type: 'object',
   },
+  response: {
+    204: { type: 'null' },
+  },
 };
 
 const likeTrackSchema = {
@@ -121,6 +129,9 @@ const likeTrackSchema = {
     },
     required: ['id'],
     type: 'object',
+  },
+  response: {
+    204: { type: 'null' },
   },
 };
 
@@ -134,16 +145,33 @@ const likedListQuerySchema = {
   type: 'object',
 };
 
+const getTrackSchema = {
+  querystring: getTrackQuerySchema,
+  response: {
+    200: tracksResponseSchema,
+  },
+};
+
+const likedListSchema = {
+  querystring: likedListQuerySchema,
+  response: {
+    200: paginatedResponseSchema(trackSchema),
+  },
+};
+
+// Multipart: the body cannot be schema-validated, it is checked in utils/validation.ts.
+const uploadTrackSchema = {
+  response: {
+    201: trackSchema,
+  },
+};
+
 export function trackRoutes(app: FastifyInstance) {
-  app.get(
-    '/get',
-    { preHandler: app.authenticate, schema: { querystring: getTrackQuerySchema } },
-    trackController.get,
-  );
+  app.get('/get', { preHandler: app.authenticate, schema: getTrackSchema }, trackController.get);
 
   app.get(
     '/liked',
-    { preHandler: app.authenticate, schema: { querystring: likedListQuerySchema } },
+    { preHandler: app.authenticate, schema: likedListSchema },
     trackController.listLiked,
   );
 
@@ -161,7 +189,10 @@ export function trackRoutes(app: FastifyInstance) {
 
   app.post(
     '/upload',
-    { preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)] },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)],
+      schema: uploadTrackSchema,
+    },
     trackController.upload,
   );
 

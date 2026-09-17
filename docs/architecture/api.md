@@ -184,6 +184,20 @@ See [chat.md](./chat.md).
   file. No Zod. `additionalProperties: false` is the norm; multipart is the
   exception and is validated by hand in `utils/validation.ts`, because
   `req.file()` fields arrive untyped.
+- **Every route declares a request schema for each input source it reads and a
+  `response` schema for its success code** — including `{ 204: { type: 'null' } }`
+  for the ones that answer without a body.
+- **A response schema removes every property it does not declare.** That is the
+  point — it is the only mechanical guarantee that a field never leaks, and the
+  reason #231 (a password hash in the payload) cannot happen twice. It is also the
+  trap: a forgotten field does not raise, it silently disappears. Shared response
+  shapes live in `routes/schemas/` (`authUserSchema`, `producerSchema`,
+  `trackSchema`, `sampleSchema`, `conversationSchema`, `projectSchema`, and
+  `paginatedResponseSchema(itemSchema)`); build on those instead of retyping an
+  entity. `response` covers only the codes it lists — errors keep flowing through
+  the single `setErrorHandler`.
+- **Dates cross the wire as ISO strings**, converted by the repositories'
+  `_format()`, so they are declared `{ format: 'date-time', type: 'string' }`.
 - **Handlers throw domain errors**, they never build an error body.
   `domain/errors.ts` holds the classes and one `setErrorHandler` in `app.ts` maps
   each to a status. A new error class without a branch there silently becomes a 500.

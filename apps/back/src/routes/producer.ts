@@ -1,6 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import { trackController } from '../controllers/track/track';
 import { userController } from '../controllers/user/user';
+import { paginatedResponseSchema } from './schemas/pagination';
+import { trackSchema, tracksResponseSchema } from './schemas/track';
+import { producerProfileResponseSchema, producerSchema } from './schemas/user';
 import { producerTracksQuerySchema } from './track';
 
 const handleParamsSchema = {
@@ -22,12 +25,21 @@ const paginationQuerySchema = {
   type: 'object',
 };
 
+const paginatedProducersResponse = { 200: paginatedResponseSchema(producerSchema) };
+
+const followSchema = {
+  params: handleParamsSchema,
+  response: {
+    204: { type: 'null' },
+  },
+};
+
 export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/',
     {
       preHandler: app.authenticate,
-      schema: { querystring: paginationQuerySchema },
+      schema: { querystring: paginationQuerySchema, response: paginatedProducersResponse },
     },
     userController.listProducers,
   );
@@ -36,7 +48,7 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema },
+      schema: { params: handleParamsSchema, response: { 200: producerProfileResponseSchema } },
     },
     userController.getProfile,
   );
@@ -45,7 +57,11 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle/followers',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
+      schema: {
+        params: handleParamsSchema,
+        querystring: paginationQuerySchema,
+        response: paginatedProducersResponse,
+      },
     },
     userController.listFollowerProducers,
   );
@@ -54,7 +70,11 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle/following',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
+      schema: {
+        params: handleParamsSchema,
+        querystring: paginationQuerySchema,
+        response: paginatedProducersResponse,
+      },
     },
     userController.listFollowing,
   );
@@ -64,7 +84,7 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema },
+      schema: followSchema,
     },
     userController.follow,
   );
@@ -74,7 +94,7 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema },
+      schema: followSchema,
     },
     userController.unfollow,
   );
@@ -84,7 +104,11 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema, querystring: producerTracksQuerySchema },
+      schema: {
+        params: handleParamsSchema,
+        querystring: producerTracksQuerySchema,
+        response: { 200: tracksResponseSchema },
+      },
     },
     trackController.get,
   );
@@ -93,7 +117,11 @@ export function producerRoutes(app: FastifyInstance) {
     '/:handle/liked',
     {
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema, querystring: paginationQuerySchema },
+      schema: {
+        params: handleParamsSchema,
+        querystring: paginationQuerySchema,
+        response: { 200: paginatedResponseSchema(trackSchema) },
+      },
     },
     trackController.listLikedByHandle,
   );

@@ -1,6 +1,8 @@
 import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { projectController } from '../controllers/project/project';
+import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
+import { projectSchema, projectsResponseSchema } from './schemas/project';
 
 const saveProjectSchema = {
   body: {
@@ -9,36 +11,18 @@ const saveProjectSchema = {
       bpm: { maximum: 1000, minimum: 1, type: 'number' },
       duration: { minimum: 0, type: 'number' },
       id: { minLength: 1, type: 'string' },
-      key: {
-        enum: [
-          'A_key',
-          'A_sharp_key',
-          'B_flat_key',
-          'B_key',
-          'C_key',
-          'C_sharp_key',
-          'D_flat_key',
-          'D_key',
-          'D_sharp_key',
-          'E_flat_key',
-          'E_key',
-          'F_key',
-          'F_sharp_key',
-          'G_flat_key',
-          'G_key',
-          'G_sharp_key',
-          'A_flat_key',
-        ],
-        type: 'string',
-      },
-      mode: { enum: ['MAJOR', 'MINOR'], type: 'string' },
+      key: { enum: Object.values(Key), type: 'string' },
+      mode: { enum: Object.values(Mode), type: 'string' },
       name: { maxLength: 128, minLength: 1, type: 'string' },
       samples: { items: { type: 'string' }, type: 'array', uniqueItems: true },
       state: { contentEncoding: 'base64', minLength: 1, type: 'string' },
-      visibility: { enum: ['PRIVATE', 'SHARED', 'PUBLIC'], type: 'string' },
+      visibility: { enum: Object.values(VisibilityType), type: 'string' },
     },
     required: ['id', 'name', 'duration', 'visibility', 'samples', 'state'],
     type: 'object',
+  },
+  response: {
+    204: { type: 'null' },
   },
 };
 
@@ -51,6 +35,15 @@ const loadProjectSchema = {
     required: ['id'],
     type: 'object',
   },
+  response: {
+    200: projectSchema,
+  },
+};
+
+const listProjectsSchema = {
+  response: {
+    200: projectsResponseSchema,
+  },
 };
 
 const deleteProjectSchema = {
@@ -61,6 +54,9 @@ const deleteProjectSchema = {
     },
     required: ['id'],
     type: 'object',
+  },
+  response: {
+    204: { type: 'null' },
   },
 };
 
@@ -81,6 +77,9 @@ const updateProjectSchema = {
     },
     required: ['id'],
     type: 'object',
+  },
+  response: {
+    200: projectSchema,
   },
 };
 
@@ -105,7 +104,10 @@ export function projectRoutes(app: FastifyInstance) {
 
   app.get(
     '/list',
-    { preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)] },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
+      schema: listProjectsSchema,
+    },
     projectController.list,
   );
 
