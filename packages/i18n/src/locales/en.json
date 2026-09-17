@@ -220,9 +220,6 @@
     "tracks": "Tracks"
   },
   "home": {
-    "activity": {
-      "title": "Recent activity"
-    },
     "greeting": {
       "startNew": "Start a new session",
       "subtitle": "Pick up where you left off, or start something new.",
@@ -235,8 +232,6 @@
     },
     "rail": {
       "connected": "Connected",
-      "invite": "Invite to session",
-      "liveNow": "Live now",
       "online": "Online",
       "onlineCount_one": "{{count}} online",
       "onlineCount_other": "{{count}} online"
@@ -281,9 +276,6 @@
         },
         "title": "Recording Session"
       }
-    },
-    "topBar": {
-      "searchPlaceholder": "Search sessions, samples, friends…"
     }
   },
   "landing": {
@@ -482,18 +474,14 @@
   "nav": {
     "admin": "Admin",
     "administration": "Administration",
-    "exports": "Exports",
     "following": "Following",
     "home": "Home",
     "library": "Library",
     "liked": "Liked",
     "messages": "Messages",
     "mySessions": "My Sessions",
-    "playlists": "Playlists",
     "producers": "Producers",
     "social": "Social",
-    "storage": "Storage",
-    "storageUsage": "{{used, number}} / {{total, number}} GB",
     "tracks": "Tracks",
     "workspace": "Workspace"
   },

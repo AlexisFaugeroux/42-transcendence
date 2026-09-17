@@ -77,10 +77,6 @@ export function App(): JSX.Element {
               <Route path="/messages" element={<Messages />} />
               <Route path="/messages/:conversationId" element={<Messages />} />
               <Route path="/liked" element={<Liked />} />
-              {/*
-              <Route path="/exports" element={<Exports />} />
-              <Route path="/playlists" element={<Playlists />} />
-              */}
             </Route>
           </Route>
 

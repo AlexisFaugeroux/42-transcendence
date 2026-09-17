@@ -220,9 +220,6 @@
     "tracks": "Pistas"
   },
   "home": {
-    "activity": {
-      "title": "Actividad reciente"
-    },
     "greeting": {
       "startNew": "Empezar una nueva sesión",
       "subtitle": "Continúa donde lo dejaste o empieza algo nuevo.",
@@ -235,8 +232,6 @@
     },
     "rail": {
       "connected": "Conectados",
-      "invite": "Invitar a la sesión",
-      "liveNow": "En directo",
       "online": "En línea",
       "onlineCount_one": "{{count}} en línea",
       "onlineCount_other": "{{count}} en línea"
@@ -281,9 +276,6 @@
         },
         "title": "Sesión de grabación"
       }
-    },
-    "topBar": {
-      "searchPlaceholder": "Buscar sesiones, samples, amigos…"
     }
   },
   "landing": {
@@ -482,18 +474,14 @@
   "nav": {
     "admin": "Admin",
     "administration": "Administración",
-    "exports": "Exportaciones",
     "following": "Siguiendo",
     "home": "Inicio",
     "library": "Biblioteca",
     "liked": "Me gusta",
     "messages": "Mensajes",
     "mySessions": "Mis sesiones",
-    "playlists": "Playlists",
     "producers": "Productores",
     "social": "Social",
-    "storage": "Almacenamiento",
-    "storageUsage": "{{used, number}} / {{total, number}} GB",
     "tracks": "Temas",
     "workspace": "Espacio de trabajo"
   },

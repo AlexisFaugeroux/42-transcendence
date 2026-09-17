@@ -1,4 +1,3 @@
-// Mirror Home TopBar layout: brand column ≈ left nav, then search, then actions.
 .header {
   height: 56px;
   flex-shrink: 0;
@@ -21,11 +20,6 @@
   flex-shrink: 0;
 }
 
-.search {
-  flex: 1;
-  max-width: 480px;
-}
-
 .spacer {
   flex: 1;
 }
@@ -40,9 +34,5 @@
 @media (max-width: 720px) {
   .brand {
     width: auto;
-  }
-
-  .search {
-    display: none;
   }
 }

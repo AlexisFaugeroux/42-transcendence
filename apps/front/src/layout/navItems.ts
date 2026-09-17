@@ -34,12 +34,6 @@ export const WORKSPACE_ITEMS: NavItemDef[] = [
     to: '/library',
     permission: Permissions.SAMPLE_WRITE,
   },
-  {
-    icon: 'download',
-    labelKey: 'nav.exports',
-    to: '/exports',
-    permission: Permissions.TRACK_WRITE,
-  },
 ];
 
 export const SOCIAL_ITEMS: NavItemDef[] = [
@@ -51,6 +45,5 @@ export const SOCIAL_ITEMS: NavItemDef[] = [
     to: '/messages',
   },
   { icon: 'heart', labelKey: 'nav.liked', to: '/liked' },
-  { icon: 'list', labelKey: 'nav.playlists', to: '/playlists' },
   { icon: 'users', labelKey: 'nav.producers', to: '/producers' },
 ];

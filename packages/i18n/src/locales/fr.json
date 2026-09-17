@@ -220,9 +220,6 @@
     "tracks": "Morceaux"
   },
   "home": {
-    "activity": {
-      "title": "Activité récente"
-    },
     "greeting": {
       "startNew": "Démarrer une nouvelle session",
       "subtitle": "Reprenez où vous en étiez, ou lancez quelque chose de neuf.",
@@ -235,8 +232,6 @@
     },
     "rail": {
       "connected": "Connectés",
-      "invite": "Inviter en session",
-      "liveNow": "En direct",
       "online": "En ligne",
       "onlineCount_one": "{{count}} en ligne",
       "onlineCount_other": "{{count}} en ligne"
@@ -281,9 +276,6 @@
         },
         "title": "Session d'enregistrement"
       }
-    },
-    "topBar": {
-      "searchPlaceholder": "Rechercher des sessions, samples, amis…"
     }
   },
   "landing": {
@@ -482,18 +474,14 @@
   "nav": {
     "admin": "Admin",
     "administration": "Administration",
-    "exports": "Exports",
     "following": "Abonnements",
     "home": "Accueil",
     "library": "Bibliothèque",
     "liked": "Favoris",
     "messages": "Messages",
     "mySessions": "Mes sessions",
-    "playlists": "Playlists",
     "producers": "Producteurs",
     "social": "Social",
-    "storage": "Stockage",
-    "storageUsage": "{{used, number}} / {{total, number}} Go",
     "tracks": "Morceaux",
     "workspace": "Espace de travail"
   },
