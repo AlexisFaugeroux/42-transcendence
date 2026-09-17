@@ -3,6 +3,7 @@ import type { MsnIconLabel } from '@transcendence/ui';
 
 export interface Feature {
   id: string;
+  available: boolean;
   icon: MsnIconLabel;
   color: string;
   titleKey: TranslationKey;
@@ -21,6 +22,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(25, 90%, 55%)',
     descKey: 'landing.features.beatMaker.desc',
     icon: 'produce',
+    available: true,
     id: 'beatMaker',
     titleKey: 'landing.features.beatMaker.title',
   },
@@ -34,6 +36,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(8, 85%, 55%)',
     descKey: 'landing.features.recording.desc',
     icon: 'record',
+    available: false,
     id: 'recording',
     titleKey: 'landing.features.recording.title',
   },
@@ -47,6 +50,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(210, 90%, 50%)',
     descKey: 'landing.features.mixer.desc',
     icon: 'mix',
+    available: false,
     id: 'mixer',
     titleKey: 'landing.features.mixer.title',
   },
@@ -60,6 +64,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(190, 75%, 50%)',
     descKey: 'landing.features.streaming.desc',
     icon: 'waveform',
+    available: true,
     id: 'streaming',
     titleKey: 'landing.features.streaming.title',
   },
@@ -73,6 +78,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(140, 65%, 45%)',
     descKey: 'landing.features.social.desc',
     icon: 'users',
+    available: true,
     id: 'social',
     titleKey: 'landing.features.social.title',
   },
@@ -86,6 +92,7 @@ export const FEATURES: Feature[] = [
     color: 'hsl(280, 65%, 60%)',
     descKey: 'landing.features.chat.desc',
     icon: 'chat',
+    available: true,
     id: 'chat',
     titleKey: 'landing.features.chat.title',
   },
@@ -93,6 +100,7 @@ export const FEATURES: Feature[] = [
 
 export interface DeepDive {
   id: string;
+  available: boolean;
   accent: string;
   eyebrowKey: TranslationKey;
   titleKey: TranslationKey;
@@ -105,6 +113,7 @@ export const DEEP_DIVES: DeepDive[] = [
     accent: 'hsl(25, 90%, 55%)',
     bodyKey: 'landing.deepDives.production.body',
     eyebrowKey: 'landing.deepDives.production.eyebrow',
+    available: true,
     id: 'production',
     image: 'DAW — step sequencer, sampler, drum kit',
     titleKey: 'landing.deepDives.production.title',
@@ -113,16 +122,18 @@ export const DEEP_DIVES: DeepDive[] = [
     accent: 'hsl(8, 85%, 55%)',
     bodyKey: 'landing.deepDives.streaming.body',
     eyebrowKey: 'landing.deepDives.streaming.eyebrow',
+    available: false,
     id: 'streaming',
-    image: 'STREAM_SCREENSHOT — live session view with listener cursors',
+    image: '',
     titleKey: 'landing.deepDives.streaming.title',
   },
   {
     accent: 'hsl(210, 90%, 50%)',
     bodyKey: 'landing.deepDives.mixing.body',
     eyebrowKey: 'landing.deepDives.mixing.eyebrow',
+    available: false,
     id: 'mixing',
-    image: 'MIXER_SCREENSHOT — channel strip mixer with master meter',
+    image: '',
     titleKey: 'landing.deepDives.mixing.title',
   },
 ];

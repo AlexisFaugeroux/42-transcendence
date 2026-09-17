@@ -43,10 +43,6 @@ export function Hero(): JSX.Element {
                 {t('auth.register.action')} <MsnIcon name="arrowR" size="12px" />
               </Button>
             </Link>
-            <Button size="large">
-              <MsnIcon name="play" size="12px" /> {t('landing.hero.watchDemo')}
-            </Button>
-            <span className={styles.muted}>2:14</span>
           </div>
 
           <div className={styles.social}>

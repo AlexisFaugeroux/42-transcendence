@@ -11,7 +11,7 @@ export function LegalEs(): JSX.Element {
         <p className={styles.body}>
           MakeSomeNoise es un proyecto educativo desarrollado en el marco del plan de estudios de la
           escuela 42 (ft_transcendence), sin finalidad comercial. Publicado por los miembros del
-          equipo (por completar). Contacto: por completar.
+          equipo (afaugero, anaudibe, jbayonne, mpelage). Contacto: makesomenoise_team@gmail.com.
         </p>
       </section>
 
@@ -23,8 +23,7 @@ export function LegalEs(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Alojamiento</h2>
         <p className={styles.body}>
-          El sitio está alojado en la infraestructura del proyecto (nombre y dirección del proveedor
-          por completar).
+          El sitio está alojado en la infraestructura del proyecto (makesomenoise.com).
         </p>
       </section>
 

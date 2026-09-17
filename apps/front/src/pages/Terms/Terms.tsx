@@ -8,17 +8,12 @@ import { TermsEs } from './Terms.es';
 import { TermsFr } from './Terms.fr';
 import styles from './Terms.module.scss';
 
-// Long-form legal prose lives in one component per language rather than in the
-// JSON locales: whole paragraphs are unreadable as translation keys and impossible
-// to review in a diff.
 const CONTENT: Record<Language, FC> = {
   en: TermsEn,
   es: TermsEs,
   fr: TermsFr,
 };
 
-// Static terms of use page. Placeholder content adapted to MakeSomeNoise —
-// the "to be completed" fields are for the team to fill in (see issue #144).
 export function Terms(): JSX.Element {
   const { i18n } = useTranslation();
   const Content = CONTENT[toLanguage(i18n.resolvedLanguage)];

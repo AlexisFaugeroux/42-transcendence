@@ -82,7 +82,8 @@ export function PrivacyFr(): JSX.Element {
         <p className={styles.body}>
           Vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et de
           portabilité de vos données. La suppression du compte est disponible directement depuis la
-          page Paramètres ; pour toute autre demande, contactez-nous à : à compléter.
+          page Paramètres ; pour toute autre demande, contactez-nous à :
+          makesomenoise_team@gmail.com.
         </p>
       </section>
     </>

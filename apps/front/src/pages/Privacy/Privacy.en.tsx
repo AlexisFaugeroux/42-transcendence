@@ -76,8 +76,8 @@ export function PrivacyEn(): JSX.Element {
         <h2 className={styles.heading}>8. Your rights (GDPR)</h2>
         <p className={styles.body}>
           You have the right to access, rectify, delete and port your data. Account deletion is
-          available directly from the Settings page; for any other request, contact us at: to be
-          completed.
+          available directly from the Settings page; for any other request, contact us at:
+          makesomenoise_team@gmail.com.
         </p>
       </section>
     </>

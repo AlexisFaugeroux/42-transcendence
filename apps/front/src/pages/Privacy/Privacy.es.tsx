@@ -79,7 +79,7 @@ export function PrivacyEs(): JSX.Element {
         <p className={styles.body}>
           Tienes derecho de acceso, rectificación, supresión y portabilidad de tus datos. La
           eliminación de la cuenta está disponible directamente desde la página Ajustes; para
-          cualquier otra solicitud, escríbenos a: por completar.
+          cualquier otra solicitud, escríbenos a: makesomenoise_team@gmail.com.
         </p>
       </section>
     </>
