@@ -15,22 +15,24 @@ services/      non-DB work — audio/{audioStorage,sampleStorage,trackStorage},
                avatarStorage, imageService, wav (WAV decoding), msnp (peaks)
 repositories/  the only layer that touches Prisma
 domain/        hand-written types + error classes
-utils/         prisma client, password, bytes, multipart validation
-plugins/       Fastify plugins (auth: cookie + jwt + rate-limit + decorators)
+utils/         prisma client, password, bytes, multipart validation, pagination,
+               websockets (the socket registry)
+plugins/       Fastify plugins (auth: cookie + jwt + rate-limit + `authenticate` /
+               `authorize` decorators)
 ```
 
 **Prisma stops at the repository.** Controllers receive domain types, never `PrismaSample`.
 Repositories convert via a private `_format()` and map Prisma error codes to domain errors, so a
 P2002 surfaces as `ConflictError` and the HTTP layer never learns Prisma codes exist. The one place
-still breaking this is `controllers/auth.ts` (register / login / me).
+still breaking this is `controllers/auth/auth.ts` (register / login / me).
 
 The `sample` slice is the reference implementation — mirror it.
 
 ## Route prefixes
 
 Registered in `src/app.ts`: `/api/ws`, `/api/auth`, `/api/user` (yourself), `/api/users` (other
-producers), `/api/samples`, `/api/tracks`, `/api/project`, `/api/chat`. Full map in
-`docs/architecture/api.md`.
+producers), `/api/samples`, `/api/tracks`, `/api/project`, `/api/chat`, `/api/admin` (back-office).
+Full map in `docs/architecture/api.md`.
 
 `/api/user` and `/api/users` are two different route files. Check which one you are in.
 
@@ -60,4 +62,5 @@ Requires `POSTGRES_URL`, `JWT_SECRET` and `MEDIA_ROOT` in `.env` (dev `MEDIA_ROO
 - `docs/architecture/realtime.md` — the WebSocket registry and heartbeat
 - `docs/architecture/chat.md` — the DM data model and its known issues
 - `docs/authentication.md` — JWT + session, revocation
+- `docs/architecture/permissions.md` — roles, the permission matrix, `app.authorize`
 - `docs/wav.md` · `docs/peaks.md` — the audio formats the services parse and write

@@ -4,7 +4,8 @@ App: `apps/back` — every prefix registered in `src/app.ts`.
 
 A one-page inventory. The per-domain reasoning lives in
 [audio-file-storage.md](./audio-file-storage.md),
-[chat.md](./chat.md), [realtime.md](./realtime.md) and
+[chat.md](./chat.md), [realtime.md](./realtime.md),
+[permissions.md](./permissions.md) and
 [../authentication.md](../authentication.md).
 
 ## Prefixes
@@ -19,6 +20,7 @@ A one-page inventory. The per-domain reasoning lives in
 | `/api/tracks`  | `routes/track.ts`     | rendered exports                             |
 | `/api/project` | `routes/project.ts`   | studio project persistence                   |
 | `/api/chat`    | `routes/chat.ts`      | direct messages                              |
+| `/api/admin`   | `routes/admin.ts`     | back-office: accounts, sessions, moderation  |
 
 > **`/api/user` and `/api/users` are two different route files.** Singular is
 > yourself, identified by the session; plural is somebody else, identified by a
@@ -105,6 +107,11 @@ Same four verbs each — `GET /get`, `POST /upload`, `PUT /update?id=`,
 including the differences between the two upload pipelines, in
 [audio-file-storage.md](./audio-file-storage.md).
 
+Writing is gated: `sample:write` on the sample upload/update/delete,
+`track:write` on the track upload/update. Reading is not — a listener account can
+browse and play. `DELETE /api/tracks/delete` carries no `authorize` because its
+rule is _owner **or** `track:moderate`_, which the controller checks itself.
+
 `GET /api/samples/get` also takes `page` / `limit` / `q` (matching `name`) and
 returns the paginated envelope; the studio omits both paging params and reads
 `items` (see [../pagination.md](../pagination.md)). `/api/tracks/get` is not
@@ -131,6 +138,9 @@ includes `likesCount` and `isLiked` (viewer).
 | `PUT    /update?id=` | `name` and/or `archived`, `minProperties: 1`                   |
 | `DELETE /delete?id=` |                                                                |
 
+All five require `studio:access`, so a listener account cannot persist a project
+even by calling the API directly.
+
 `save` is a `PUT` with a client-supplied `id`, not a `POST`: the studio generates
 the project id, so saving is idempotent — the same call creates or overwrites, and
 a retried save after a flaky connection cannot produce two projects.
@@ -140,6 +150,29 @@ from its serialized `state`, so letting a client patch `bpm` or `duration`
 independently would let the metadata contradict the payload. Archiving is a flag
 rather than a delete because a session may already have published tracks pointing
 at it.
+
+### `/api/admin`
+
+The back-office. Every route is `[app.authenticate, app.authorize(<permission>)]`
+and rate-limited to 60/min. The permission is the entire access rule; the
+controllers add business guards on top of it, never a second role check.
+
+| Route                      | Permission       | Notes                                                                                             |
+| -------------------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
+| `GET    /users/get`        | `user:read`      | `page` / `limit` / `q`, `q` on handle, artistName, email                                          |
+| `PUT    /users/update`     | `user:write`     | same profile fields as `/api/user/update/profile`                                                 |
+| `PUT    /users/role`       | `user:write`     | 400 on self, 409 on downgrading the last admin                                                    |
+| `GET    /users/sessions`   | `session:revoke` | the target's valid sessions                                                                       |
+| `POST   /users/revoke`     | `session:revoke` | revokes all of them **and closes their sockets**                                                  |
+| `DELETE /users/delete?id=` | `user:delete`    | 400 on self, 409 on the last admin; wipes the row, the samples, the tracks and every file on disk |
+| `GET    /tracks/get`       | `track:moderate` | every track on the platform; `page` / `limit` / `q` (title or artist name)                        |
+
+**There is no admin delete route for tracks.** Moderation widens the business
+route instead: `DELETE /api/tracks/delete` accepts the owner **or** a holder of
+`track:moderate`. A second deletion path would eventually forget one of the steps
+the real one performs (the row, the `.wav`, the `.peaks`). Same reasoning behind
+the 400/409 guards above: an install must not be able to lock itself out of its
+own back-office. See [permissions.md](./permissions.md).
 
 ### `/api/chat`
 
@@ -154,6 +187,12 @@ See [chat.md](./chat.md).
 - **Handlers throw domain errors**, they never build an error body.
   `domain/errors.ts` holds the classes and one `setErrorHandler` in `app.ts` maps
   each to a status. A new error class without a branch there silently becomes a 500.
+- **Authorization is a second preHandler**, never an `if` in the handler:
+  `preHandler: [app.authenticate, app.authorize(Permissions.USER_READ)]`. It
+  answers **403, never 401** — a 401 logs the whole frontend out. The exception is
+  a rule a flat permission cannot express, _owner **or** moderator_, where the
+  controller calls `can()` itself (`DELETE /api/tracks/delete`).
+  [permissions.md](./permissions.md) has the matrix.
 - **Identity always comes from `req.authUser`**, never from the body or the URL,
   even when the client also sends it. Where a client does send an id (chat's
   `authorId`), the server verifies it matches the session.

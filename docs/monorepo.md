@@ -58,12 +58,19 @@ timezone in one place is what keeps a timestamp rendered identically by the API
 and by both frontends — `repositories/*` call `formatISO` when mapping rows out.
 
 `permissions` holds the authorization vocabulary: `Role`
-(`ADMIN | ARTIST | MODERATOR | GUEST`), `Permissions` (`MANAGE_ACCOUNTS` so far) and
-`can(role, perm)` over a `ROLES_PERMISSIONS` record. Both are plain `as const`
-objects with a matching type alias, deliberately **not** TS enums — a `const enum`
-cannot be erased by the esbuild bundle the backend ships, and a runtime object is
-what lets the backend map its Prisma `Role` onto the same values. The Prisma enum
-and this package are kept in sync by hand; nothing calls `can()` yet.
+(`ADMIN | ARTIST | MODERATOR | GUEST`), nine `Permissions` (`studio:access`,
+`sample:write`, `track:write`, `track:moderate`, `user:read`, `user:write`,
+`user:delete`, `session:revoke`, `manage_accounts`) and `can(role, perm)` over a
+`ROLES_PERMISSIONS` record. Both are plain `as const` objects with a matching type
+alias, deliberately **not** TS enums — a `const enum` cannot be erased by the
+esbuild bundle the backend ships, and a runtime object is what lets the backend map
+its Prisma `Role` onto the same values. The Prisma enum and this package are kept
+in sync by hand.
+
+`can()` is what the backend's `app.authorize` preHandler, the frontend's
+`usePermissions` hook and the studio's access guard all call, so a rendered button
+and an allowed route come from the same record. See
+[architecture/permissions.md](./architecture/permissions.md).
 
 `i18n` wraps i18next + react-i18next and owns the three locale files
 (`src/locales/{en,fr,es}.json`). It ships an `I18nProvider` and a

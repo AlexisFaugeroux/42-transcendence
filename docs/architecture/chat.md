@@ -74,8 +74,9 @@ the `Message`, bumps `Conversation.lastMessageAt` and increments the recipient's
 `unreadCount` together. A message that existed without its `lastMessageAt` bump
 would sort to the bottom of the conversation list and effectively be invisible.
 
-After the write, the controller calls `websocketController.sendMessage(message)`,
-which looks the conversation's participants up in the socket registry and pushes a
+After the write, the controller calls
+`webSocketRegistry.sendToUsers(participantIds, { event: 'message', data })`, which
+looks each participant up in the socket registry and pushes a
 `{ event: 'message', data }` frame to each of their open sockets. Participants who
 are offline get nothing — they will read it from `listMessages` on their next
 visit. There is no offline queue because the database _is_ the queue.

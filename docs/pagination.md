@@ -35,12 +35,16 @@ Constants: `PAGINATION_DEFAULT_LIMIT`, `PAGINATION_MAX_LIMIT` in `apps/back/src/
 
 Case-insensitive `contains` filter. `total` counts matches, not the full list.
 
-| Endpoint                           | Fields matched         |
-| ---------------------------------- | ---------------------- |
-| `GET /api/users`                   | `handle`, `artistName` |
-| `GET /api/users/:handle/followers` | same                   |
-| `GET /api/users/:handle/following` | same                   |
-| `GET /api/samples/get`             | `name`                 |
+| Endpoint                           | Fields matched                    |
+| ---------------------------------- | --------------------------------- |
+| `GET /api/users`                   | `handle`, `artistName`            |
+| `GET /api/users/:handle/followers` | same                              |
+| `GET /api/users/:handle/following` | same                              |
+| `GET /api/users/:handle/liked`     | track `title`                     |
+| `GET /api/samples/get`             | `name`                            |
+| `GET /api/tracks/liked`            | track `title`                     |
+| `GET /api/admin/users/get`         | `handle`, `artistName`, `email`   |
+| `GET /api/admin/tracks/get`        | track `title`, owner `artistName` |
 
 ## Covered endpoints
 
@@ -49,7 +53,16 @@ Case-insensitive `contains` filter. `total` counts matches, not the full list.
 | `GET /api/users`                   | Public producers list                                          |
 | `GET /api/users/:handle/followers` |                                                                |
 | `GET /api/users/:handle/following` |                                                                |
+| `GET /api/users/:handle/liked`     | That producer's likes, public tracks only                      |
 | `GET /api/samples/get`             | Existing filters kept; `page`/`limit`/`q` stripped before repo |
+| `GET /api/tracks/liked`            | The caller's likes, newest like first                          |
+| `GET /api/admin/users/get`         | Back-office accounts list (`user:read`)                        |
+| `GET /api/admin/tracks/get`        | Back-office moderation list (`track:moderate`)                 |
+
+`USER_SEARCH_FIELDS` (`domain/user.ts`) is what widens the admin account search to
+`email`: the public producer list must not let anyone probe email addresses, so the
+searchable columns are passed in by the caller rather than hard-coded in the
+repository.
 
 `sampleRepository.get` now orders by `createdAt: 'desc'`; a paginated list needs a
 deterministic order or rows drift between pages.

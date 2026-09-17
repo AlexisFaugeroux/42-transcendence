@@ -15,19 +15,40 @@ valid.
 
 ## Where it lives
 
-| Piece                    | File                                            | Role                                                        |
-| ------------------------ | ----------------------------------------------- | ----------------------------------------------------------- |
-| password util            | `src/utils/password.ts`                         | hash / verify (`node:crypto` scrypt)                        |
-| JWT sign/verify          | `src/plugins/auth.ts`                           | `@fastify/jwt`; `signAuthToken` decorator + `jwtVerify`     |
-| `SessionRepository`      | `src/repositories/session.ts`                   | create / find-valid / revoke sessions                       |
-| `authenticate` hook      | `src/plugins/auth.ts`                           | cookie → verify JWT → check session → attach `req.authUser` |
-| auth controller / routes | `src/controllers/auth.ts`, `src/routes/auth.ts` | handlers under the `/api/auth` prefix                       |
+| Piece                    | File                                                 | Role                                                        |
+| ------------------------ | ---------------------------------------------------- | ----------------------------------------------------------- |
+| password util            | `src/utils/password.ts`                              | hash / verify (`node:crypto` scrypt)                        |
+| JWT sign/verify          | `src/plugins/auth.ts`                                | `@fastify/jwt`; `signAuthToken` decorator + `jwtVerify`     |
+| `SessionRepository`      | `src/repositories/session/session.ts`                | create / find-valid / revoke / list sessions                |
+| `authenticate` hook      | `src/plugins/auth.ts`                                | cookie → verify JWT → check session → attach `req.authUser` |
+| `authorize` factory      | `src/plugins/auth.ts`                                | permission check on top of `authenticate` — 403 on failure  |
+| auth controller / routes | `src/controllers/auth/auth.ts`, `src/routes/auth.ts` | handlers under the `/api/auth` prefix                       |
 
 `authenticate` runs as a `preHandler` on protected routes and attaches
-`req.authUser = { id, sid }` (typed in `src/types/fastify.d.ts`), else 401. It is
-also what guards the WebSocket route (`GET /api/ws`), so a socket cannot open
+`req.authUser = { id, role, sid }` (typed in `src/types/fastify.d.ts`), else 401.
+It is also what guards the WebSocket route (`GET /api/ws`), so a socket cannot open
 without a valid session — the same cookie, the same check, no second auth
 mechanism.
+
+**The role rides along in `authUser` because the session row is already being
+read.** `findValid` selects it in the same query, so authorization costs no extra
+round-trip, and a role changed from the back-office takes effect on the account's
+next request instead of at its next login.
+
+## Authentication vs authorization
+
+`authenticate` answers _are you signed in_; `app.authorize(permission)` answers
+_are you allowed_. They compose as a preHandler pair, in that order:
+
+```ts
+preHandler: [app.authenticate, app.authorize(Permissions.USER_READ)];
+```
+
+`authorize` throws `ForbiddenError` → **403, and never 401**. A 401 makes the
+frontend's `apiFetch` dispatch `auth:unauthorized`, which clears the user and logs
+the whole app out; a missing permission is not an expired session and must not
+sign anyone out. The roles, the permission matrix and the front-end mirror of it
+live in [architecture/permissions.md](./architecture/permissions.md).
 
 `register`, `login` and `me` still query Prisma directly from the controller,
 which is the one place in the backend that breaks the "Prisma stops at the
@@ -52,7 +73,10 @@ into the repository when that file is next touched.
 
 ```
 POST /register   (5/min)  validate → reject if email/artistName/handle taken →
-                          hash → create Owner(USER) + User(ARTIST) → 201 { user }
+                          hash → create Owner(USER) + User(role) → 201 { user }
+                          role is chosen by the visitor but the schema only
+                          accepts ARTIST | GUEST, so MODERATOR and ADMIN are
+                          unreachable from the public API
                           (no auto-login: no cookie set)
 POST /login      (5/min)  verify password (generic 401 on failure) →
                           create Session → sign JWT → Set-Cookie → 200 { user }
@@ -68,12 +92,20 @@ Account management lives under a different prefix — `PUT /api/user/update/pass
 `DELETE /api/user/delete`, avatar upload/delete — see
 [architecture/api.md](./architecture/api.md).
 
+An admin can also act on somebody else's sessions: `GET /api/admin/users/sessions`
+lists the valid ones and `POST /api/admin/users/revoke` calls
+`revokeAllForUser`, then `webSocketRegistry.closeAll(userId)` so the account's open
+sockets drop immediately rather than lingering until its next HTTP call.
+
 Rate limiting is opt-in per route (`@fastify/rate-limit`, `global: false`).
 
 ## Frontend
 
 `@transcendence/auth` (`packages/auth`) provides the shared React auth context +
-API client used by `front` and `studio`.
+API client used by `front` and `studio`. It also re-exports the permission side of
+the session as `useIsAllowed()` and `usePermissions(perm)`, both reading the role
+off the authenticated user — see
+[architecture/permissions.md](./architecture/permissions.md).
 
 ## Out of scope (for now)
 

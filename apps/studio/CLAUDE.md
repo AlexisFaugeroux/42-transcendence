@@ -21,6 +21,19 @@ than a full-featured production tool.
    (`api/project.ts`); `LeaveStudioModal` prompts to save on exit.
 7. **Export** — offline (faster-than-real-time) render via `hooks/useOfflineRender`, then upload as
    a `Track` from `ExportModal` (`api/track.ts`).
+8. **Undo / redo** — `ui/Header/Header.tsx` drives `project.editing` (`canUndo` / `undo` / `redo`)
+   and subscribes to it to keep the buttons and the saved indicator in sync; clips are resynced
+   after a jump so the React layer cannot drift from the box graph.
+9. **Track rename and focus** — rename in place from the rack (`ui/Timeline/Rack/Rack.tsx`); the
+   active track is highlighted and the effect chain follows it.
+
+Unreleased surfaces are masked rather than hidden: the `Editor` panel renders an "available soon"
+mask, and the Nano / Vaporisateur entries of the add-track menu are disabled behind the same label
+(`common.availableSoon`). A control that does nothing is worse than a control that says why.
+
+**Access is gated.** `App.tsx` checks `usePermissions(Permissions.STUDIO_ACCESS)` before anything
+boots: a `GUEST` (listener) account is refused, every other role is let through. See
+`docs/architecture/permissions.md`.
 
 **Non-goals (for now):** MIDI editing, automation, plugin hosting, live recording, real-time
 collaborative editing.
@@ -52,6 +65,7 @@ studio/
 │   ├── lib/           <- arrangementFactory, audioUtils, projectSetup, resolveCssColor, types
 │   ├── utils/         <- base64 (project state <-> transport encoding)
 │   └── ui/
+│       ├── AddTrackButton.tsx
 │       ├── Timeline/  (Timeline, Grid, LoopRegion, Rack, constants)
 │       ├── Header/    (Transport, Meter, Metrics, ExportModal, LeaveStudioModal)
 │       ├── Browser/   (Samples, Devices — the draggable effect list)

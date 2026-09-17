@@ -48,6 +48,13 @@ is no way for the two to drift apart in how they name or clean up files.
 swallows per-file errors — it is called on rollback paths where a missing file is
 the normal case, not a failure.
 
+> **`ownerId` is the resource owner's, never the caller's.** The two are the same
+> value for as long as only owners delete their own files, which is why passing
+> `user.ownerId` went unnoticed until moderation shipped: a moderator deleting
+> somebody else's track made the server look in the wrong directory, drop the row
+> and leave the `.wav` and `.peaks` orphaned on the volume. Read the id off the
+> resource (`track.ownerId`). See [permissions.md](./permissions.md).
+
 `writeStream` is also where the size limit is enforced: `@fastify/multipart` sets
 `stream.truncated` when the file exceeded `MAX_UPLOAD_BYTES` (100 MiB), and the
 method deletes what it wrote and throws `PayloadTooLargeError`. Checking a
@@ -106,7 +113,7 @@ the `/api/auth` prefix, not `/api/samples`. Getting it wrong is silent and total
 a mistyped path 404s, which `auth_request` turns into a 500, so _every_ sample
 becomes unreachable while the app otherwise looks healthy.
 
-The backend handler (`checkAccess` in `controllers/auth.ts`) runs the
+The backend handler (`checkAccess` in `controllers/auth/auth.ts`) runs the
 `authenticate` hook, parses `<kind>/<ownerId>/<fileId>.<ext>` out of the
 `X-Original-URI` path, then allows the file if it is `PUBLIC` / `SHARED` or the
 requester owns it.

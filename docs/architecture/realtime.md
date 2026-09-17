@@ -37,23 +37,37 @@ already there.
 
 ## The registry
 
-`controllers/websocket.ts` holds two in-memory structures:
+`utils/websockets.ts` holds the registry — one `WebSocketRegistry` class, exported
+as the `webSocketRegistry` singleton — with two in-memory structures:
 
 | Structure  | Type                          | Purpose                            |
 | ---------- | ----------------------------- | ---------------------------------- |
 | `_sockets` | `Map<userId, Set<WebSocket>>` | every open socket, grouped by user |
 | `_alive`   | `WeakMap<WebSocket, boolean>` | heartbeat state for each socket    |
 
+It is a util rather than part of `controllers/websocket.ts` because three callers
+need it and only one of them is the socket route: the chat controller delivers
+messages through `sendToUsers`, the user controller emits follow events, and the
+admin controller calls `closeAll(userId)` so revoking an account's sessions drops
+its live sockets instead of leaving them open until the next HTTP call. The
+controller keeps presence, the registry keeps connections.
+
+| Method                        | Used by                                     |
+| ----------------------------- | ------------------------------------------- |
+| `add` / `remove` / `isOnline` | the socket route and the presence broadcast |
+| `send` / `sendToUsers`        | presence, chat delivery, follow events      |
+| `closeAll(userId)`            | `POST /api/admin/users/revoke`              |
+
 **A user maps to a _set_ of sockets, not one socket.** Three tabs are three
 sockets for one user. That is what makes the next rule possible.
 
 **Presence transitions fire on the edges, not on every connect.** A
-`FollowingConnected` broadcast only happens when the set goes from empty to one,
-and `FollowingDisconnected` only when it goes back to zero:
+`followingConnected` broadcast only happens when the set goes from empty to one,
+and `followingDisconnected` only when it goes back to zero:
 
 ```ts
-if (nbUserSocket > 1) return; // already online — no broadcast
-await this._broadcastToFollowers(userId, "FollowingConnected");
+if (openSockets > 1) return; // already online — no broadcast
+await this._broadcastToFollowers(userId, "followingConnected");
 ```
 
 Without this, opening a second tab would tell all your followers you just came
@@ -65,7 +79,7 @@ disappear with the socket.
 
 ## Heartbeat
 
-The constructor starts one interval for the whole process:
+The registry's constructor starts one interval for the whole process:
 
 ```ts
 setInterval(() => {
@@ -87,15 +101,24 @@ process can still exit.
 
 ## The wire protocol
 
-Every frame is JSON with the same envelope — `{ event, data }`. The client's
-`SocketEvent` union (`apps/front/src/types/event.ts`) is the contract:
+Every frame is JSON with the same envelope — `{ event, data }`. The union is
+declared on both ends and named `WebSocketEvent`
+(`apps/back/src/utils/websockets.ts`, `apps/front/src/types/event.ts`); the two are
+kept in sync by hand:
 
 | `event`                       | `data`     | Direction | Meaning                                                             |
 | ----------------------------- | ---------- | --------- | ------------------------------------------------------------------- |
-| `OnlineFollowingAtConnection` | `string[]` | → client  | user ids of followed producers already online, sent once on connect |
-| `FollowingConnected`          | `string[]` | → client  | a followed producer just came online                                |
-| `FollowingDisconnected`       | `string[]` | → client  | a followed producer went offline                                    |
+| `onlineFollowingAtConnection` | `string[]` | → client  | user ids of followed producers already online, sent once on connect |
+| `followingConnected`          | `string[]` | → client  | a followed producer just came online                                |
+| `followingDisconnected`       | `string[]` | → client  | a followed producer went offline                                    |
+| `producerFollowed`            | `string[]` | → client  | you just followed someone — sent to **you**, not to them            |
+| `producerUnfollowed`          | `string[]` | → client  | you just unfollowed someone                                         |
 | `message`                     | `Message`  | → client  | a chat message in one of your conversations                         |
+
+Event names are camelCase. `producerFollowed` / `producerUnfollowed` exist because
+the presence set is keyed by the people you follow: following someone mid-session
+has to add them to that set (and show them online if they are), which neither a
+connect nor a disconnect event would ever tell you.
 
 **The client never sends a frame.** Chat messages are posted over HTTP
 (`POST /api/chat/sendMessage`) and the socket is used only for the fan-out. That
@@ -103,7 +126,7 @@ keeps validation, rate limiting and error responses in the REST layer, where the
 already exist, instead of duplicating them in a message router — and it means a
 failed send surfaces as an HTTP error the UI can render, not as silence.
 
-**`OnlineFollowingAtConnection` is a snapshot, the other two are deltas.** A
+**`onlineFollowingAtConnection` is a snapshot, the other two are deltas.** A
 client that only received deltas would start with an empty presence map and stay
 wrong until someone happened to connect. The snapshot is sent before the connect
 broadcast, and guarded by a re-check that the socket is still in the set —
@@ -121,7 +144,7 @@ Three providers, split by responsibility:
 | Module                        | Responsibility                                                                                      |
 | ----------------------------- | --------------------------------------------------------------------------------------------------- |
 | `websocket/WebSocketProvider` | owns the single socket, fans frames out to subscribers                                              |
-| `presence/PresenceProvider`   | keeps the online-user set from the three presence events                                            |
+| `presence/PresenceProvider`   | keeps the online-user set from the five presence events                                             |
 | `message/MessageListener`     | turns `message` frames into message **and conversation-list** cache updates (unread badge included) |
 
 `WebSocketProvider` exposes only `subscribe(handler)` returning an unsubscribe

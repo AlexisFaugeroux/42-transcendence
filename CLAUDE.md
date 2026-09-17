@@ -96,10 +96,15 @@ samples library, studio workspace.
   `docs/architecture/audio-file-storage.md` and `docs/peaks.md`.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **API shape:** RPC-style paths (`/get`, `/upload`, `/update?id=`) everywhere except
-  `/api/users/:handle/*`. Eight prefixes, mapped in `docs/architecture/api.md`.
+  `/api/users/:handle/*`. Nine prefixes, mapped in `docs/architecture/api.md`.
 - **Pagination:** list endpoints share one `page` / `limit` / `q` contract returning
   `{ items, total, page, limit }`; omitting both paging params returns the full list.
   See `docs/pagination.md`.
+- **Permissions:** four roles (`GUEST`, `ARTIST`, `MODERATOR`, `ADMIN`) over one
+  explicit permission table in `@transcendence/permissions`, shared by the three
+  apps. The server guard is `app.authorize(permission)` (403, never 401); the front
+  and the studio render from the same `can()`. Back-office at `/admin`.
+  See `docs/architecture/permissions.md`.
 - **Real-time:** a single WebSocket endpoint (`/api/ws`, `@fastify/websocket`),
   authenticated by the same session cookie as the REST API. Carries presence
   (which followed producers are online) and chat delivery, with a `{ event, data }`
