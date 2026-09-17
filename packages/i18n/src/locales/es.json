@@ -684,7 +684,7 @@
     "new": {
       "deniedDescription": "Tu cuenta es una cuenta de oyente. Solo un administrador puede cambiarlo.",
       "deniedTitle": "El estudio es solo para productores",
-      "lead": "Elige el tipo de sesión y prepararemos el espacio de trabajo adecuado.",
+      "lead": "Por ahora solo está disponible la sesión de producción. Ponle un título y preparamos el espacio de trabajo.",
       "submit": "Crear y abrir",
       "title": "Empezar una nueva sesión",
       "titleField": "Título",

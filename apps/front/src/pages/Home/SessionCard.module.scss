@@ -1,3 +1,8 @@
+.slot {
+  position: relative;
+  display: grid;
+}
+
 .card {
   text-align: left;
   background: var(--bg-card);
@@ -14,6 +19,32 @@
   &:hover {
     border-color: var(--line-hover);
   }
+}
+
+.muted {
+  cursor: default;
+  filter: grayscale(1);
+  opacity: 0.4;
+
+  &:hover {
+    border-color: var(--line-soft);
+  }
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg-app) 35%, transparent);
+  color: var(--fg2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: not-allowed;
 }
 
 .top {

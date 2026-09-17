@@ -28,12 +28,6 @@ export function SessionsEmpty({
         <span style={{ color: theme.orange }}>
           <MsnIcon name="produce" size="22px" />
         </span>
-        <span style={{ color: theme.red }}>
-          <MsnIcon name="record" size="22px" />
-        </span>
-        <span style={{ color: theme.blue }}>
-          <MsnIcon name="mix" size="22px" />
-        </span>
       </div>
       <h3 className={styles.title}>{t('sessions.emptyOwned.title')}</h3>
       <p className={styles.text}>{t('sessions.emptyOwned.text')}</p>

@@ -684,7 +684,7 @@
     "new": {
       "deniedDescription": "Votre compte est un compte auditeur. Seul un admin peut le modifier.",
       "deniedTitle": "Le studio est réservé aux producteurs",
-      "lead": "Choisissez le type de session, puis nous préparerons l'espace de travail adapté.",
+      "lead": "Seule la session de production est disponible pour l'instant. Donnez-lui un titre, nous préparons l'espace de travail.",
       "submit": "Créer & ouvrir",
       "title": "Démarrer une nouvelle session",
       "titleField": "Titre",
