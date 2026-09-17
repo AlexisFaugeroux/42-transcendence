@@ -3,7 +3,26 @@
     "dashboard": {
       "eyebrow": "Plateforme",
       "title": "Administration",
+      "tracks": "Morceaux",
       "users": "Utilisateurs"
+    },
+    "tracks": {
+      "delete": {
+        "body": "Le morceau « {{title}} » et ses fichiers sur disque seront supprimés définitivement.",
+        "deletedDescription": "{{title}} a été supprimé.",
+        "deletedTitle": "Morceau supprimé",
+        "failedTitle": "La suppression a échoué",
+        "title": "Supprimer ce morceau ?"
+      },
+      "searchPlaceholder": "Rechercher par titre ou nom d'artiste…",
+      "table": {
+        "actions": "Actions",
+        "createdAt": "Date",
+        "owner": "Propriétaire",
+        "title": "Titre",
+        "unknownOwner": "Compte supprimé",
+        "visibility": "Visibilité"
+      }
     },
     "users": {
       "actions": {

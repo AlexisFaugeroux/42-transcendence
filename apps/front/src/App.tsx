@@ -51,6 +51,7 @@ export function App(): JSX.Element {
                       Permissions.USER_WRITE,
                       Permissions.USER_DELETE,
                       Permissions.SESSION_REVOKE,
+                      Permissions.TRACK_MODERATE,
                     ]}
                   />
                 }

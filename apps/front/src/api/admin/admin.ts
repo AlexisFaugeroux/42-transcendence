@@ -1,6 +1,7 @@
-import { ApiErrorReponse, apiFetch } from '@transcendence/auth';
+import { apiError, ApiErrorReponse, apiFetch } from '@transcendence/auth';
 import type { Role } from '@transcendence/permissions';
 import type { Paginated } from '../../types/pagination';
+import type { Track } from '../../types/track';
 import type { SessionList, UpdateUserBody, User } from './types';
 
 export async function getUsers(page = 1, limit = 20, q = ''): Promise<Paginated<User>> {
@@ -78,6 +79,18 @@ export async function revokeAllUserSessions(id: string): Promise<void> {
       `[api/admin/users/revoke] Sessions revoke failed: ${res.status}`,
       res.status,
     );
+}
+
+export async function getAdminTracks(page = 1, limit = 20, q = ''): Promise<Paginated<Track>> {
+  const searchParams = new URLSearchParams({ page: String(page), limit: String(limit) });
+
+  const search = q.trim();
+  if (search) searchParams.set('q', search);
+
+  const res = await apiFetch(`/api/admin/tracks/get?${searchParams.toString()}`);
+  if (!res.ok) throw await apiError(res, '/api/admin/tracks/get');
+
+  return (await res.json()) as Paginated<Track>;
 }
 
 export async function getUserSessions(id: string): Promise<SessionList> {

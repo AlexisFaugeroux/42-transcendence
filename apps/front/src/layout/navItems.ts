@@ -15,7 +15,7 @@ export const ADMIN_ITEMS: NavItemDef[] = [
     icon: 'settings',
     labelKey: 'nav.admin',
     to: '/admin',
-    permission: Permissions.MANAGE_ACCOUNTS,
+    permission: Permissions.USER_READ,
   },
 ];
 

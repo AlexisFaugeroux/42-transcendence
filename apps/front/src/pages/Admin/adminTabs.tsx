@@ -1,6 +1,7 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import { type Permissions as PermissionsType, Permissions } from '@transcendence/permissions';
 import type { ReactNode } from 'react';
+import { Tracks } from './Tracks';
 import { Users } from './Users';
 
 export interface AdminTab {
@@ -16,5 +17,11 @@ export const ADMIN_TABS: AdminTab[] = [
     key: 'users',
     labelKey: 'admin.dashboard.users',
     permission: [Permissions.USER_READ, Permissions.USER_WRITE, Permissions.USER_DELETE],
+  },
+  {
+    children: <Tracks />,
+    key: 'tracks',
+    labelKey: 'admin.dashboard.tracks',
+    permission: [Permissions.TRACK_MODERATE],
   },
 ];
