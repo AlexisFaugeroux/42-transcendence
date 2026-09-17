@@ -1,3 +1,5 @@
+import type { Role } from '@transcendence/permissions';
+
 export interface Message {
   id: string;
   content: string;
@@ -19,6 +21,7 @@ export interface Conversation {
     unreadCount: number;
     handle: string;
     artistName: string;
+    role: Role;
   }[];
   messageSorted: Omit<Message, 'conversationId' | 'id'>[];
 }

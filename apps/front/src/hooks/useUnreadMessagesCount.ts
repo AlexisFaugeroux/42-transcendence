@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAuthUser } from '@transcendence/auth';
+import { useAuthUser, usePermissions } from '@transcendence/auth';
+import { Permissions } from '@transcendence/permissions';
 import { getConversations } from '../api/chat/chat';
 import type { Conversation } from '../types/chat';
 
@@ -23,8 +24,10 @@ export function filterUnreadConversations(
 
 function useConversationsQuery() {
   const user = useAuthUser();
+  const canChat = usePermissions(Permissions.CHAT_ACCESS);
 
   return useQuery({
+    enabled: canChat,
     queryFn: getConversations,
     queryKey: ['conversations', user.id],
   });

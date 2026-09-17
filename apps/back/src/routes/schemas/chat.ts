@@ -1,3 +1,5 @@
+import { Role } from '@transcendence/permissions';
+
 const messageProperties = {
   authorId: { type: 'string' },
   content: { type: 'string' },
@@ -37,9 +39,10 @@ export const conversationSchema = {
           artistName: { type: 'string' },
           handle: { type: 'string' },
           id: { type: 'string' },
+          role: { enum: Object.values(Role), type: 'string' },
           unreadCount: { minimum: 0, type: 'integer' },
         },
-        required: ['id', 'unreadCount', 'handle', 'artistName'],
+        required: ['id', 'unreadCount', 'handle', 'artistName', 'role'],
         type: 'object',
       },
       type: 'array',

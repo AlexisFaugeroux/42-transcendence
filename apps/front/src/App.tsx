@@ -74,8 +74,10 @@ export function App(): JSX.Element {
               <Route path="/producers" element={<Producers />} />
               <Route path="/producers/:handle" element={<ProducerProfile />} />
               <Route path="/following" element={<Following />} />
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/messages/:conversationId" element={<Messages />} />
+              <Route element={<RequirePermission permission={Permissions.CHAT_ACCESS} />}>
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/messages/:conversationId" element={<Messages />} />
+              </Route>
               <Route path="/liked" element={<Liked />} />
             </Route>
           </Route>

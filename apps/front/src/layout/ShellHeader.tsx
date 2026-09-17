@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { useAuthUser, useUser } from '@transcendence/auth';
+import { useAuthUser, usePermissions, useUser } from '@transcendence/auth';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
+import { Permissions } from '@transcendence/permissions';
 import {
   Button,
   CloseCircleOutlined,
@@ -27,6 +28,7 @@ export function ShellHeader(): JSX.Element {
   const { logout } = useUser();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const canChat = usePermissions(Permissions.CHAT_ACCESS);
   const [notificationApi, notificationContext] = notification.useNotification();
 
   const items: MenuProps['items'] = [
@@ -93,7 +95,7 @@ export function ShellHeader(): JSX.Element {
       <div className={styles.right}>
         <LanguageSelect />
 
-        <NotificationsBell />
+        {canChat ? <NotificationsBell /> : null}
 
         <ConfigProvider theme={{ token: { colorBgElevated: theme.bgPanel3 } }}>
           <Dropdown

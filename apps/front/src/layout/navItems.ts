@@ -43,6 +43,7 @@ export const SOCIAL_ITEMS: NavItemDef[] = [
     icon: 'chat',
     labelKey: 'nav.messages',
     to: '/messages',
+    permission: Permissions.CHAT_ACCESS,
   },
   { icon: 'heart', labelKey: 'nav.liked', to: '/liked' },
   { icon: 'users', labelKey: 'nav.producers', to: '/producers' },

@@ -3,6 +3,7 @@ export const Permissions = {
   SAMPLE_WRITE: 'sample:write',
   TRACK_WRITE: 'track:write',
   TRACK_MODERATE: 'track:moderate',
+  CHAT_ACCESS: 'chat:access',
   STUDIO_ACCESS: 'studio:access',
   USER_READ: 'user:read',
   USER_WRITE: 'user:write',

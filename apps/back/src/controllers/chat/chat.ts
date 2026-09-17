@@ -1,8 +1,10 @@
+import { can, Permissions } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { UnauthorizedError } from '../../domain/errors';
+import { ForbiddenError, UnauthorizedError } from '../../domain/errors';
 import { chatRepository } from '../../repositories/chat/chat';
+import { userRepository } from '../../repositories/user/user';
 import { webSocketRegistry } from '../../utils/websockets';
-import { isAParticipant } from './helpers';
+import { chatRecipientIds, isAParticipant } from './helpers';
 import type {
   CreateChatRoute,
   ListConversationsRoute,
@@ -21,6 +23,11 @@ class ChatController {
 
     if (authorId !== userId) throw new UnauthorizedError('Unauthorized to send this message');
 
+    const recipient = await userRepository.find({ id: toId });
+    if (!can(recipient.role, Permissions.CHAT_ACCESS)) {
+      throw new ForbiddenError('This account cannot receive messages');
+    }
+
     const newConv = await chatRepository.createConversation(userId, toId);
     const messageSent = await chatRepository.createMessage({
       authorId,
@@ -29,8 +36,10 @@ class ChatController {
       conversationId: newConv.id,
     });
 
-    const participantsIds = newConv.participants.map((p) => p.id);
-    webSocketRegistry.sendToUsers(participantsIds, { data: messageSent, event: 'message' });
+    webSocketRegistry.sendToUsers(chatRecipientIds(newConv.participants), {
+      data: messageSent,
+      event: 'message',
+    });
 
     const conversation = await chatRepository.listOneConversation(newConv.id);
 
@@ -79,9 +88,13 @@ class ChatController {
     if (authorId !== userId || !isAParticipant(authorId, conversation.participants))
       throw new UnauthorizedError('Unauthorized to send this message');
 
-    const participantsIds = conversation.participants.map((p) => p.id);
+    const recipients = chatRecipientIds(conversation.participants);
+    if (!recipients.includes(message.toId)) {
+      throw new ForbiddenError('This account cannot receive messages');
+    }
+
     const newMessage = await chatRepository.createMessage(message);
-    webSocketRegistry.sendToUsers(participantsIds, { data: newMessage, event: 'message' });
+    webSocketRegistry.sendToUsers(recipients, { data: newMessage, event: 'message' });
 
     reply.code(200).send(newMessage);
     return;
