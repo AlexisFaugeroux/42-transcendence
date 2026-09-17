@@ -1,6 +1,6 @@
 import { can, Permissions } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { ForbiddenError, UnauthorizedError } from '../../domain/errors';
+import { ForbiddenError } from '../../domain/errors';
 import { chatRepository } from '../../repositories/chat/chat';
 import { userRepository } from '../../repositories/user/user';
 import { webSocketRegistry } from '../../utils/websockets';
@@ -21,7 +21,7 @@ class ChatController {
     const userId = req.authUser.id;
     const { authorId, toId, content } = req.body;
 
-    if (authorId !== userId) throw new UnauthorizedError('Unauthorized to send this message');
+    if (authorId !== userId) throw new ForbiddenError('You cannot act as another account');
 
     const recipient = await userRepository.find({ id: toId });
     if (!can(recipient.role, Permissions.CHAT_ACCESS)) {
@@ -67,7 +67,7 @@ class ChatController {
     const conversation = await chatRepository.listOneConversation(conversationId);
 
     if (!isAParticipant(userId, conversation.participants))
-      throw new UnauthorizedError('Unauthorized to get those messages');
+      throw new ForbiddenError('You are not a participant of this conversation');
 
     const messages = await chatRepository.listMessageByConversationId(conversationId);
 
@@ -85,8 +85,10 @@ class ChatController {
 
     const conversation = await chatRepository.listOneConversation(conversationId);
 
-    if (authorId !== userId || !isAParticipant(authorId, conversation.participants))
-      throw new UnauthorizedError('Unauthorized to send this message');
+    if (authorId !== userId) throw new ForbiddenError('You cannot act as another account');
+    if (!isAParticipant(authorId, conversation.participants)) {
+      throw new ForbiddenError('You are not a participant of this conversation');
+    }
 
     const recipients = chatRecipientIds(conversation.participants);
     if (!recipients.includes(message.toId)) {
@@ -105,8 +107,9 @@ class ChatController {
     const conversationId = req.body.conversationId;
 
     const conversation = await chatRepository.listOneConversation(conversationId);
-    if (!isAParticipant(userId, conversation.participants))
-      throw new UnauthorizedError('Unauthorized to send this message');
+    if (!isAParticipant(userId, conversation.participants)) {
+      throw new ForbiddenError('You are not a participant of this conversation');
+    }
 
     await chatRepository.markAsRead(conversationId, userId);
 
