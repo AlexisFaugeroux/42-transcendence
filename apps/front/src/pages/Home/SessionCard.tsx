@@ -7,6 +7,7 @@ import type { SessionType } from './home.data';
 import styles from './SessionCard.module.scss';
 
 export function SessionCard({
+  available,
   blurbKey,
   color,
   icon,
@@ -17,8 +18,41 @@ export function SessionCard({
 
   const { t } = useTranslation();
 
+  const body = (
+    <>
+      <div className={styles.top}>
+        <div className={styles.iconBox} style={{ color }}>
+          <MsnIcon name={icon} size="22px" />
+        </div>
+        <MsnIcon name="arrowR" size="18px" color="hsl(0, 0%, 38%)" />
+      </div>
+      <div>
+        <div className={styles.title}>{t(titleKey)}</div>
+        <p className={styles.blurb}>{t(blurbKey)}</p>
+      </div>
+      <div className={styles.tags}>
+        {metaKeys.map((metaKey) => (
+          <Tag key={metaKey} color={color}>
+            {t(metaKey)}
+          </Tag>
+        ))}
+      </div>
+    </>
+  );
+
+  if (!available) {
+    return (
+      <div className={styles.slot}>
+        <div className={`${styles.card} ${styles.muted}`} aria-disabled>
+          {body}
+        </div>
+        <span className={styles.mask}>{t('common.availableSoon')}</span>
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className={styles.slot}>
       <NewSessionModal
         open={newOpen}
         onClose={() => {
@@ -31,23 +65,7 @@ export function SessionCard({
           setNewOpen(true);
         }}
       >
-        <div className={styles.top}>
-          <div className={styles.iconBox} style={{ color }}>
-            <MsnIcon name={icon} size="22px" />
-          </div>
-          <MsnIcon name="arrowR" size="18px" color="hsl(0, 0%, 38%)" />
-        </div>
-        <div>
-          <div className={styles.title}>{t(titleKey)}</div>
-          <p className={styles.blurb}>{t(blurbKey)}</p>
-        </div>
-        <div className={styles.tags}>
-          {metaKeys.map((metaKey) => (
-            <Tag key={metaKey} color={color}>
-              {t(metaKey)}
-            </Tag>
-          ))}
-        </div>
+        {body}
       </button>
     </div>
   );

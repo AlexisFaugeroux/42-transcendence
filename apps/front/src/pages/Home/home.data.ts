@@ -10,10 +10,12 @@ export interface SessionType {
   icon: MsnIconLabel;
   color: string;
   metaKeys: TranslationKey[];
+  available: boolean;
 }
 
 export const SESSION_TYPES: SessionType[] = [
   {
+    available: false,
     blurbKey: 'home.sessionTypes.record.blurb',
     color: 'hsl(8, 85%, 55%)',
     icon: 'record',
@@ -26,6 +28,7 @@ export const SESSION_TYPES: SessionType[] = [
     titleKey: 'home.sessionTypes.record.title',
   },
   {
+    available: true,
     blurbKey: 'home.sessionTypes.produce.blurb',
     color: 'hsl(25, 90%, 55%)',
     icon: 'produce',
@@ -38,6 +41,7 @@ export const SESSION_TYPES: SessionType[] = [
     titleKey: 'home.sessionTypes.produce.title',
   },
   {
+    available: false,
     blurbKey: 'home.sessionTypes.mix.blurb',
     color: 'hsl(210, 90%, 50%)',
     icon: 'mix',
