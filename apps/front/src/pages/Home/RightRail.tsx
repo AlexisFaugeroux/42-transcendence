@@ -1,14 +1,11 @@
 import { useTranslation } from '@transcendence/i18n';
-import { Button, MsnIcon } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { usePresence } from '../../presence/PresenceProvider';
-import { ONLINE } from './home.data';
 import styles from './RightRail.module.scss';
-import { LiveUserRow, OnlineUserRow } from './UserRows';
+import { OnlineUserRow } from './UserRows';
 
 export function RightRail(): JSX.Element {
   const { t } = useTranslation();
-  const live = ONLINE.filter((u) => u.status === 'live');
   const { count, onlineUsers } = usePresence();
 
   return (
@@ -20,28 +17,11 @@ export function RightRail(): JSX.Element {
         </span>
       </div>
 
-      <div className={styles.group}>
-        <div className={styles.liveLabel}>
-          <span className={styles.liveDot} /> {t('home.rail.liveNow')}
-        </div>
-        {live.map((user) => (
-          <LiveUserRow key={user.handle} user={user} />
-        ))}
-      </div>
-
-      <div className={styles.divider} />
-
       <div className={`${styles.group} ${styles.onlineGroup}`}>
         <div className={styles.label}>{t('home.rail.online')}</div>
         {onlineUsers?.map((user) => (
           <OnlineUserRow key={user.handle} user={user} />
         ))}
-      </div>
-
-      <div className={styles.invite}>
-        <Button block>
-          <MsnIcon name="plus" size="12px" /> {t('home.rail.invite')}
-        </Button>
       </div>
     </aside>
   );

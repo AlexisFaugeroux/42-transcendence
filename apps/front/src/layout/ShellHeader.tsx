@@ -7,7 +7,6 @@ import {
   ConfigProvider,
   Dropdown,
   FileProtectOutlined,
-  Input,
   LogoutOutlined,
   type MenuProps,
   MsnIcon,
@@ -88,13 +87,6 @@ export function ShellHeader(): JSX.Element {
         <MsnIcon name="msn" size="20px" color="var(--color-orange)" />
         <MsnWordmark size={15} accent="var(--color-orange)" />
       </Link>
-
-      <Input
-        className={styles.search}
-        variant="filled"
-        prefix={<MsnIcon name="search" size="13px" />}
-        placeholder={t('home.topBar.searchPlaceholder')}
-      />
 
       <div className={styles.spacer} />
 

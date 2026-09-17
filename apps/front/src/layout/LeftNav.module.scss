@@ -20,35 +20,3 @@
 .gap {
   height: 14px;
 }
-
-.spacer {
-  flex: 1;
-}
-
-.storage {
-  background: var(--bg-card);
-  border-radius: 3px;
-  padding: 10px;
-  margin-top: 12px;
-}
-
-.storageHead {
-  display: flex;
-  justify-content: space-between;
-  color: var(--fg3);
-  font-size: 10px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.track {
-  height: 3px;
-  background: var(--color-void);
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  background: var(--color-green);
-}

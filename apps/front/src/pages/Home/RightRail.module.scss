@@ -54,31 +54,3 @@
   text-transform: uppercase;
   margin-bottom: 4px;
 }
-
-.liveLabel {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-purple);
-  font-size: 10px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-}
-
-.liveDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-purple);
-  box-shadow: 0 0 4px var(--color-purple);
-}
-
-.divider {
-  height: 1px;
-  background: var(--line-faint);
-}
-
-.invite {
-  padding-top: 12px;
-  border-top: 1px solid var(--line-faint);
-}
