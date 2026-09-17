@@ -26,6 +26,7 @@ export interface UserOnlineStatus {
   id: string;
   artistName: string;
   handle: string;
+  role: Role;
   status: 'online' | 'offline';
 }
 

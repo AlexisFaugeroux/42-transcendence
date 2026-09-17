@@ -45,6 +45,7 @@ class ChatRepository {
               artistName: true,
               handle: true,
               id: true,
+              role: true,
             },
           },
         },
@@ -85,6 +86,7 @@ class ChatRepository {
         handle: user.handle,
         id: user.id,
         artistName: user.artistName,
+        role: user.role,
         unreadCount,
       }));
 

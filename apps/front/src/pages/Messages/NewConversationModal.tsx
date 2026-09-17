@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
 import { Button, Form, Input, Modal, Spin } from '@transcendence/ui';
+import { can, Permissions } from '@transcendence/permissions';
 import { type JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { openConversation } from '../../api/chat/chat';
@@ -57,7 +58,9 @@ export function NewConversationModal({ onClose, open }: NewSessionConvProps): JS
 
   const conversations = queryClient.getQueryData<Conversation[]>(['conversations', me.id]) ?? [];
 
-  const userWithoutConversation = users.filter(
+  const reachableUsers = users.filter((user) => can(user.role, Permissions.CHAT_ACCESS));
+
+  const userWithoutConversation = reachableUsers.filter(
     (user) =>
       !conversations.some((conv) =>
         conv.participants.some((participant) => participant.id === user.id),

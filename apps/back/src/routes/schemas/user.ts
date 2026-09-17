@@ -102,9 +102,10 @@ export const onlineUserSchema = {
     artistName: { type: 'string' },
     handle: { type: 'string' },
     id: { type: 'string' },
+    role: roleSchema,
     status: { enum: ['online', 'offline'], type: 'string' },
   },
-  required: ['id', 'handle', 'status', 'artistName'],
+  required: ['id', 'handle', 'status', 'artistName', 'role'],
   type: 'object',
 };
 

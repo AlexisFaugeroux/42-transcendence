@@ -1,9 +1,12 @@
+import type { Role } from '@transcendence/permissions';
+
 // Miroir de UserOnlineStatus (apps/back/src/domain/user.ts) : ce que renvoient
 // /api/user/listFollowing et /api/user/listFollowers.
 export interface UserOnlineStatus {
   id: string;
   artistName: string;
   handle: string;
+  role: Role;
   status: 'online' | 'offline';
 }
 

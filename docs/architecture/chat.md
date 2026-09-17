@@ -74,6 +74,11 @@ the `Message`, bumps `Conversation.lastMessageAt` and increments the recipient's
 `unreadCount` together. A message that existed without its `lastMessageAt` bump
 would sort to the bottom of the conversation list and effectively be invisible.
 
+Every `/api/chat/*` route sits behind `app.authorize(Permissions.CHAT_ACCESS)`, so a
+listener account (`GUEST`) gets a 403 and never reaches a controller. The same
+permission decides who can be _written to_: see
+[permissions.md](./permissions.md).
+
 After the write, the controller calls
 `webSocketRegistry.sendToUsers(participantIds, { event: 'message', data })`, which
 looks each participant up in the socket registry and pushes a

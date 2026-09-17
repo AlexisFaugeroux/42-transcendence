@@ -9,6 +9,7 @@ export function formatConversation(conv: HydratedConversation): Conversation {
     handle: user.handle,
     id: user.id,
     artistName: user.artistName,
+    role: user.role,
     unreadCount,
   }));
 

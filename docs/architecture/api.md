@@ -176,7 +176,8 @@ own back-office. See [permissions.md](./permissions.md).
 
 ### `/api/chat`
 
-See [chat.md](./chat.md).
+All five routes require `chat:access`, which a `GUEST` does not hold. See
+[chat.md](./chat.md).
 
 ## Conventions that apply everywhere
 

@@ -1,3 +1,4 @@
+import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
 import { chatController } from '../controllers/chat/chat';
 import {
@@ -74,31 +75,46 @@ const listMessagesSchema = {
 export function chatRoutes(app: FastifyInstance) {
   app.get(
     '/listConversations',
-    { preHandler: app.authenticate, schema: listConversationsSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
+      schema: listConversationsSchema,
+    },
     chatController.listConversations,
   );
 
   app.get(
     '/listMessages',
-    { preHandler: app.authenticate, schema: listMessagesSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
+      schema: listMessagesSchema,
+    },
     chatController.listMessages,
   );
 
   app.post(
     '/createConversation',
-    { preHandler: app.authenticate, schema: createChatSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
+      schema: createChatSchema,
+    },
     chatController.createChat,
   );
 
   app.post(
     '/sendMessage',
-    { preHandler: app.authenticate, schema: sendMessageSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
+      schema: sendMessageSchema,
+    },
     chatController.sendMessage,
   );
 
   app.post(
     '/markAsRead',
-    { preHandler: app.authenticate, schema: markAsReadSchema },
+    {
+      preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
+      schema: markAsReadSchema,
+    },
     chatController.markAsRead,
   );
 }

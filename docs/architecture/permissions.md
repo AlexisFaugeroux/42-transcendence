@@ -17,6 +17,7 @@ cannot drift apart.
 | `STUDIO_ACCESS`   | `studio:access`   |       |   ✓    |     ✓     |   ✓   |
 | `SAMPLE_WRITE`    | `sample:write`    |       |   ✓    |     ✓     |   ✓   |
 | `TRACK_WRITE`     | `track:write`     |       |   ✓    |     ✓     |   ✓   |
+| `CHAT_ACCESS`     | `chat:access`     |       |   ✓    |     ✓     |   ✓   |
 | `TRACK_MODERATE`  | `track:moderate`  |       |        |     ✓     |   ✓   |
 | `USER_READ`       | `user:read`       |       |        |     ✓     |   ✓   |
 | `USER_WRITE`      | `user:write`      |       |        |           |   ✓   |
@@ -95,8 +96,15 @@ session, and answering 401 would kick a legitimately signed-in user to the login
 screen.
 
 Routes currently gated: `/api/project/*` and `/api/samples/upload|update|delete`
-(`studio:access`, `sample:write`), `/api/tracks/upload|update` (`track:write`), and
-all of `/api/admin/*`. Full list in [api.md](./api.md).
+(`studio:access`, `sample:write`), `/api/tracks/upload|update` (`track:write`), all
+five `/api/chat/*` (`chat:access`), and all of `/api/admin/*`. Full list in
+[api.md](./api.md).
+
+`chat:access` runs in both directions. Holding it is what lets an account open the
+messaging, and **not** holding it is what makes an account unreachable: the chat
+controller refuses a `toId` that cannot receive, and the WebSocket fan-out filters
+the conversation's participants through the same `can()` before delivering a frame.
+Otherwise a listener would accumulate messages in a page they cannot open.
 
 ## Ownership _or_ moderation
 
