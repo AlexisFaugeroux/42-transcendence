@@ -1,46 +1,88 @@
 import type { FastifyInstance } from 'fastify';
 import { chatController } from '../controllers/chat/chat';
+import {
+  conversationSchema,
+  conversationsResponseSchema,
+  messageSchema,
+  messagesResponseSchema,
+} from './schemas/chat';
 
 const sendMessageSchema = {
-  additionalProperties: false,
   body: {
+    additionalProperties: false,
     properties: {
-      authorId: { type: 'string' },
-      content: { type: 'string' },
-      conversationId: { type: 'string' },
-      toId: { type: 'string' },
+      authorId: { format: 'uuid', type: 'string' },
+      content: { minLength: 1, type: 'string' },
+      conversationId: { format: 'uuid', type: 'string' },
+      toId: { format: 'uuid', type: 'string' },
     },
     required: ['authorId', 'content', 'toId', 'conversationId'],
     type: 'object',
+  },
+  response: {
+    200: messageSchema,
   },
 };
 
 const createChatSchema = {
   body: {
+    additionalProperties: false,
     properties: {
-      authorId: { type: 'string' },
-      content: { type: 'string' },
-      toId: { type: 'string' },
+      authorId: { format: 'uuid', type: 'string' },
+      content: { minLength: 1, type: 'string' },
+      toId: { format: 'uuid', type: 'string' },
     },
     required: ['authorId', 'toId', 'content'],
     type: 'object',
+  },
+  response: {
+    200: conversationSchema,
   },
 };
 
 const markAsReadSchema = {
   body: {
+    additionalProperties: false,
     properties: {
-      conversationId: { type: 'string' },
+      conversationId: { format: 'uuid', type: 'string' },
     },
     required: ['conversationId'],
     type: 'object',
   },
 };
 
-export function chatRoutes(app: FastifyInstance) {
-  app.get('/listConversations', { preHandler: app.authenticate }, chatController.listConversations);
+const listConversationsSchema = {
+  response: {
+    200: conversationsResponseSchema,
+  },
+};
 
-  app.get('/listMessages', { preHandler: app.authenticate }, chatController.listMessages);
+const listMessagesSchema = {
+  querystring: {
+    additionalProperties: false,
+    properties: {
+      conversationId: { format: 'uuid', type: 'string' },
+    },
+    required: ['conversationId'],
+    type: 'object',
+  },
+  response: {
+    200: messagesResponseSchema,
+  },
+};
+
+export function chatRoutes(app: FastifyInstance) {
+  app.get(
+    '/listConversations',
+    { preHandler: app.authenticate, schema: listConversationsSchema },
+    chatController.listConversations,
+  );
+
+  app.get(
+    '/listMessages',
+    { preHandler: app.authenticate, schema: listMessagesSchema },
+    chatController.listMessages,
+  );
 
   app.post(
     '/createConversation',

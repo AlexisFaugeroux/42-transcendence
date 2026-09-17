@@ -2,6 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import { sampleController } from '../controllers/sample/sample';
 import { USER_KINDS } from '../domain/sample';
 import { Family, Key, Mode, SampleKind, VisibilityType } from '../generated/prisma/enums';
+import { paginatedResponseSchema } from './schemas/pagination';
+import { sampleSchema, sampleWithOwnerTypeSchema } from './schemas/sample';
 
 const getSampleQuerySchema = {
   additionalProperties: false,
@@ -81,6 +83,20 @@ const getSampleQuerySchema = {
   type: 'object',
 };
 
+const getSampleSchema = {
+  querystring: getSampleQuerySchema,
+  response: {
+    200: paginatedResponseSchema(sampleWithOwnerTypeSchema),
+  },
+};
+
+// Multipart: the body cannot be schema-validated, it is checked in utils/validation.ts.
+const uploadSampleSchema = {
+  response: {
+    201: sampleSchema,
+  },
+};
+
 const storageSampleSchema = {
   querystring: {
     additionalProperties: false,
@@ -136,6 +152,9 @@ const updateSampleSchema = {
     required: ['id'],
     type: 'object',
   },
+  response: {
+    200: sampleSchema,
+  },
 };
 
 const deleteSampleSchema = {
@@ -147,14 +166,13 @@ const deleteSampleSchema = {
     required: ['id'],
     type: 'object',
   },
+  response: {
+    204: { type: 'null' },
+  },
 };
 
 export function sampleRoutes(app: FastifyInstance) {
-  app.get(
-    '/get',
-    { preHandler: app.authenticate, schema: { querystring: getSampleQuerySchema } },
-    sampleController.get,
-  );
+  app.get('/get', { preHandler: app.authenticate, schema: getSampleSchema }, sampleController.get);
 
   app.get(
     '/storage',
@@ -164,7 +182,7 @@ export function sampleRoutes(app: FastifyInstance) {
 
   app.post(
     '/upload',
-    { preHandler: [app.authenticate, app.authorize('sample:write')] },
+    { preHandler: [app.authenticate, app.authorize('sample:write')], schema: uploadSampleSchema },
     sampleController.upload,
   );
 
