@@ -10,8 +10,8 @@ export function LegalFr(): JSX.Element {
         <h2 className={styles.heading}>Éditeur</h2>
         <p className={styles.body}>
           MakeSomeNoise est un projet pédagogique réalisé dans le cadre du cursus de l&apos;école 42
-          (ft_transcendence), sans finalité commerciale. Publié par les membres de l&apos;équipe (à
-          compléter). Contact : à compléter.
+          (ft_transcendence), sans finalité commerciale. Publié par les membres de l&apos;équipe
+          (afaugero, anaudibe, jbayonne, mpelage). Contact : makesomenoise_team@gmail.com.
         </p>
       </section>
 
@@ -23,8 +23,7 @@ export function LegalFr(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Hébergement</h2>
         <p className={styles.body}>
-          Le site est hébergé sur l&apos;infrastructure du projet (nom et adresse de
-          l&apos;hébergeur à compléter).
+          Le site est hébergé sur l&apos;infrastructure du projet (makesomenoise.com).
         </p>
       </section>
 

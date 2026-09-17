@@ -1,3 +1,8 @@
+.slot {
+  position: relative;
+  display: grid;
+}
+
 .card {
   background: hsl(197, 14%, 12%); // --bg-card
   border: 0.5px solid rgba(255, 255, 255, 0.07);
@@ -38,4 +43,25 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-top: auto; // pin tags to the bottom
+}
+
+.muted {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-void) 35%, transparent);
+  color: var(--fg2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: not-allowed;
 }

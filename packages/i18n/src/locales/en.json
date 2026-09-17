@@ -380,37 +380,7 @@
       "title": "A studio, a stage, and a community — in one tab."
     },
     "footer": {
-      "community": {
-        "discord": "Discord",
-        "discover": "Discover",
-        "liveNow": "Live now",
-        "newsletter": "Newsletter",
-        "playlists": "Playlists",
-        "title": "Community"
-      },
-      "company": {
-        "about": "About",
-        "contact": "Contact",
-        "press": "Press kit",
-        "title": "Company"
-      },
       "copyright": "© {{year}} MakeSomeNoise. Built with ♥.",
-      "product": {
-        "beatMaker": "Beat maker",
-        "features": "Features",
-        "mixer": "Mixer",
-        "recording": "Recording",
-        "stream": "Stream",
-        "title": "Product"
-      },
-      "resources": {
-        "changelog": "Changelog",
-        "manuals": "Manuals",
-        "roadmap": "Roadmap",
-        "status": "Status",
-        "title": "Resources",
-        "tutorials": "Tutorials"
-      },
       "tagline": "A browser-based studio with a built-in audience. No installs, no tracking."
     },
     "hero": {
@@ -420,15 +390,7 @@
       "producers": "<strong>{{total, number}}+ producers</strong> already making noise",
       "titleLine1": "Make beats.",
       "titleLine2": "Record takes.",
-      "titleLine3": "Make some noise.",
-      "watchDemo": "Watch a demo"
-    },
-    "nav": {
-      "community": "Community",
-      "features": "Features",
-      "makeBeats": "Make beats",
-      "manuals": "Manuals",
-      "stream": "Stream"
+      "titleLine3": "Make some noise."
     },
     "stats": {
       "downloads": "downloads required",
@@ -438,9 +400,6 @@
     }
   },
   "legal": {
-    "cookies": {
-      "navLabel": "Cookies"
-    },
     "mentions": {
       "navLabel": "Legal mentions"
     },

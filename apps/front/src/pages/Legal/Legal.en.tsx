@@ -10,8 +10,8 @@ export function LegalEn(): JSX.Element {
         <h2 className={styles.heading}>Publisher</h2>
         <p className={styles.body}>
           MakeSomeNoise is an educational project built as part of the 42 school curriculum
-          (ft_transcendence), with no commercial purpose. Published by the team members (to be
-          completed). Contact: to be completed.
+          (ft_transcendence), with no commercial purpose. Published by the team members (afaugero,
+          anaudibe, jbayonne, mpelage). Contact: makesomenoise_team@gmail.com.
         </p>
       </section>
 
@@ -23,7 +23,7 @@ export function LegalEn(): JSX.Element {
       <section className={styles.section}>
         <h2 className={styles.heading}>Hosting</h2>
         <p className={styles.body}>
-          The site is hosted on the project infrastructure (host name and address to be completed).
+          The site is hosted on the project infrastructure (makesomenoise.com).
         </p>
       </section>
 

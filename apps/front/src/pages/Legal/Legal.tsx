@@ -14,8 +14,6 @@ const CONTENT: Record<Language, FC> = {
   fr: LegalFr,
 };
 
-// Static legal notice page. Placeholder content adapted to MakeSomeNoise —
-// the "to be completed" fields are for the team to fill in (see issue #143).
 export function Legal(): JSX.Element {
   const { i18n } = useTranslation();
   const Content = CONTENT[toLanguage(i18n.resolvedLanguage)];

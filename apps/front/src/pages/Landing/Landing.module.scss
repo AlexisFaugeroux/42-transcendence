@@ -4,17 +4,3 @@
   background: hsl(197, 14%, 3%); // --color-void
   color: hsl(0, 0%, 92%); // --fg1
 }
-
-// Reusable centered container. Each section renders a full-width <section>
-// with its own background, and puts its content inside a .inner.
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-@media (max-width: 600px) {
-  .inner {
-    padding: 0 16px;
-  }
-}

@@ -380,37 +380,7 @@
       "title": "Un studio, une scène et une communauté — dans un seul onglet."
     },
     "footer": {
-      "community": {
-        "discord": "Discord",
-        "discover": "Découvrir",
-        "liveNow": "En direct",
-        "newsletter": "Newsletter",
-        "playlists": "Playlists",
-        "title": "Communauté"
-      },
-      "company": {
-        "about": "À propos",
-        "contact": "Contact",
-        "press": "Kit presse",
-        "title": "Entreprise"
-      },
       "copyright": "© {{year}} MakeSomeNoise. Fait avec ♥.",
-      "product": {
-        "beatMaker": "Beat maker",
-        "features": "Fonctionnalités",
-        "mixer": "Mixage",
-        "recording": "Enregistrement",
-        "stream": "Diffusion",
-        "title": "Produit"
-      },
-      "resources": {
-        "changelog": "Journal des versions",
-        "manuals": "Manuels",
-        "roadmap": "Feuille de route",
-        "status": "État du service",
-        "title": "Ressources",
-        "tutorials": "Tutoriels"
-      },
       "tagline": "Un studio dans le navigateur avec un public intégré. Sans installation, sans traçage."
     },
     "hero": {
@@ -420,15 +390,7 @@
       "producers": "<strong>{{total, number}}+ producteurs</strong> font déjà du bruit",
       "titleLine1": "Faites des beats.",
       "titleLine2": "Enregistrez vos prises.",
-      "titleLine3": "Make some noise.",
-      "watchDemo": "Voir une démo"
-    },
-    "nav": {
-      "community": "Communauté",
-      "features": "Fonctionnalités",
-      "makeBeats": "Faire des beats",
-      "manuals": "Manuels",
-      "stream": "Diffuser"
+      "titleLine3": "Make some noise."
     },
     "stats": {
       "downloads": "téléchargement requis",
@@ -438,9 +400,6 @@
     }
   },
   "legal": {
-    "cookies": {
-      "navLabel": "Cookies"
-    },
     "mentions": {
       "navLabel": "Mentions légales"
     },
