@@ -2,13 +2,14 @@ import type { TranslationKey } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
 import type { MsnIconLabel } from '@transcendence/ui';
 
-export type SessionType = 'production' | 'recording' | 'mixing';
+export type SessionType = 'PRODUCE' | 'RECORD' | 'MIX';
 
 export interface Session {
   id: string;
   state: string;
   samples: string[];
   name: string;
+  cover?: string | null;
   ownerId: string;
   duration: number;
   bpm: number;
@@ -20,42 +21,28 @@ export interface Session {
   archived: boolean;
 }
 
-export const SESS_TYPES: SessionType[] = ['production', 'recording', 'mixing'];
-export const SESS_GENRES = [
-  'house',
-  'ambient',
-  'drum&bass',
-  'hip-hop',
-  'techno',
-  'indie',
-  'lo-fi',
-  'experimental',
-  'vocal',
-];
-
-// The three session types map onto brand hues — reference the theme, don't restate raw hsl().
 export const TYPE_COLOR: Record<SessionType, string> = {
-  mixing: theme.blue,
-  production: theme.orange,
-  recording: theme.red,
+  MIX: theme.blue,
+  PRODUCE: theme.orange,
+  RECORD: theme.red,
 };
 
 export const TYPE_ICON: Record<SessionType, MsnIconLabel> = {
-  mixing: 'mix',
-  production: 'produce',
-  recording: 'record',
+  MIX: 'mix',
+  PRODUCE: 'produce',
+  RECORD: 'record',
 };
 
 export const TYPE_LABEL: Record<SessionType, TranslationKey> = {
-  mixing: 'sessions.type.mixing',
-  production: 'sessions.type.production',
-  recording: 'sessions.type.recording',
+  MIX: 'sessions.type.mixing',
+  PRODUCE: 'sessions.type.production',
+  RECORD: 'sessions.type.recording',
 };
 
 export const TYPE_DESCRIPTION: Record<SessionType, TranslationKey> = {
-  mixing: 'sessions.typeDescription.mixing',
-  production: 'sessions.typeDescription.production',
-  recording: 'sessions.typeDescription.recording',
+  MIX: 'sessions.typeDescription.mixing',
+  PRODUCE: 'sessions.typeDescription.production',
+  RECORD: 'sessions.typeDescription.recording',
 };
 
 export type SessSort = 'edited' | 'name' | 'bpm';

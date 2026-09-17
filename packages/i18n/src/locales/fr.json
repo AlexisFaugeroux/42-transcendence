@@ -713,8 +713,6 @@
     },
     "title": "Mes sessions",
     "toolbar": {
-      "all": "Toutes",
-      "allGenres": "Tous les genres",
       "searchPlaceholder": "Rechercher par titre…"
     },
     "type": {
