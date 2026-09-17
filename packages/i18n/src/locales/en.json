@@ -3,7 +3,26 @@
     "dashboard": {
       "eyebrow": "Platform",
       "title": "Administration",
+      "tracks": "Tracks",
       "users": "Users"
+    },
+    "tracks": {
+      "delete": {
+        "body": "The track “{{title}}” and its files on disk will be permanently deleted.",
+        "deletedDescription": "{{title}} has been deleted.",
+        "deletedTitle": "Track deleted",
+        "failedTitle": "Deletion failed",
+        "title": "Delete this track?"
+      },
+      "searchPlaceholder": "Search by title or artist name…",
+      "table": {
+        "actions": "Actions",
+        "createdAt": "Date",
+        "owner": "Owner",
+        "title": "Title",
+        "unknownOwner": "Deleted account",
+        "visibility": "Visibility"
+      }
     },
     "users": {
       "actions": {

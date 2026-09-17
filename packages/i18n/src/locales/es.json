@@ -3,7 +3,26 @@
     "dashboard": {
       "eyebrow": "Plataforma",
       "title": "Administración",
+      "tracks": "Temas",
       "users": "Usuarios"
+    },
+    "tracks": {
+      "delete": {
+        "body": "El tema «{{title}}» y sus archivos en disco se eliminarán definitivamente.",
+        "deletedDescription": "{{title}} se ha eliminado.",
+        "deletedTitle": "Tema eliminado",
+        "failedTitle": "La eliminación ha fallado",
+        "title": "¿Eliminar este tema?"
+      },
+      "searchPlaceholder": "Buscar por título o nombre artístico…",
+      "table": {
+        "actions": "Acciones",
+        "createdAt": "Fecha",
+        "owner": "Propietario",
+        "title": "Título",
+        "unknownOwner": "Cuenta eliminada",
+        "visibility": "Visibilidad"
+      }
     },
     "users": {
       "actions": {
