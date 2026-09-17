@@ -78,7 +78,7 @@ class ChatRepository {
         return conversationCreated;
       });
 
-      const conversation = await prisma.conversation.findFirstOrThrow({
+      const conversation = await this.prisma.conversation.findFirstOrThrow({
         where: { id: conv.id },
         ...this.include,
       });
@@ -97,7 +97,7 @@ class ChatRepository {
         ...conv,
       };
     } catch (e) {
-      throw mapError(e, 'conversation creation');
+      throw mapError(e, 'Conversation');
     }
   }
 
@@ -149,20 +149,24 @@ class ChatRepository {
 
       return storedMessgage;
     } catch (e) {
-      throw mapError(e, 'conversation creation');
+      throw mapError(e, 'Message');
     }
   }
 
   public async listMessageByConversationId(idConv: string): Promise<Message[]> {
-    const conversation = await prisma.conversation.findFirstOrThrow({
-      where: { id: idConv },
-      ...this.include,
-    });
-    const messages = conversation.participants[0].messagesSent.concat(
-      conversation.participants[0].messagesReceived,
-    );
-    messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-    return messages.map((message) => ({ ...message, conversationId: idConv }));
+    try {
+      const conversation = await this.prisma.conversation.findFirstOrThrow({
+        where: { id: idConv },
+        ...this.include,
+      });
+      const messages = conversation.participants[0].messagesSent.concat(
+        conversation.participants[0].messagesReceived,
+      );
+      messages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+      return messages.map((message) => ({ ...message, conversationId: idConv }));
+    } catch (e) {
+      throw mapError(e, 'Conversation');
+    }
   }
 
   public async listConversationsForUser(userId: string): Promise<Conversation[]> {
@@ -191,13 +195,17 @@ class ChatRepository {
   }
 
   public async listOneConversation(idConv: string): Promise<Conversation> {
-    const conversation = await this.prisma.conversation.findFirstOrThrow({
-      where: {
-        id: idConv,
-      },
-      ...this.include,
-    });
-    return formatConversation(conversation);
+    try {
+      const conversation = await this.prisma.conversation.findFirstOrThrow({
+        where: {
+          id: idConv,
+        },
+        ...this.include,
+      });
+      return formatConversation(conversation);
+    } catch (e) {
+      throw mapError(e, 'Conversation');
+    }
   }
 
   public async markAsRead(conversationId: string, userId: string) {
@@ -216,7 +224,7 @@ class ChatRepository {
         },
       });
     } catch (e) {
-      throw mapError(e, 'Failed to update read state');
+      throw mapError(e, 'Conversation');
     }
   }
 
@@ -235,7 +243,7 @@ class ChatRepository {
     try {
       await this.prisma.conversation.delete({ where: { id: idConv } });
     } catch (e) {
-      throw mapError(e, 'Failed to conversation');
+      throw mapError(e, 'Conversation');
     }
   }
 
@@ -243,7 +251,7 @@ class ChatRepository {
     try {
       await this.prisma.message.delete({ where: { id } });
     } catch (e) {
-      throw mapError(e, 'Failed to message');
+      throw mapError(e, 'Message');
     }
   }
 }
