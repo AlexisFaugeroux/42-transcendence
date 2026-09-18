@@ -39,7 +39,12 @@ services:
   front:
     profiles:
       - "prod"
-    build: { context: ., dockerfile: apps/front/Dockerfile }
+    build:
+      context: .
+      dockerfile: apps/front/Dockerfile
+      args:
+        VITE_API_URL: ""
+        VITE_STUDIO_URL: /studio
     restart: always
     networks:
       - transcendence_net
@@ -47,7 +52,12 @@ services:
   studio:
     profiles:
       - "prod"
-    build: { context: ., dockerfile: apps/studio/Dockerfile }
+    build:
+      context: .
+      dockerfile: apps/studio/Dockerfile
+      args:
+        VITE_API_URL: ""
+        VITE_STUDIO_URL: ""
     restart: always
     networks:
       - transcendence_net

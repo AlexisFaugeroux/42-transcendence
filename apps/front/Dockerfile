@@ -18,6 +18,10 @@ RUN pnpm install --frozen-lockfile --filter @transcendence/front...
 # Copy source code and build
 COPY apps/front apps/front
 COPY packages packages
+ARG VITE_API_URL
+ARG VITE_STUDIO_URL
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_STUDIO_URL=$VITE_STUDIO_URL
 RUN pnpm --filter @transcendence/front build
 
 # Runtime - serves statique app file with nginx

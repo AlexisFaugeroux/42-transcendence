@@ -27,7 +27,7 @@ function StudioDenied(): JSX.Element {
         <h1 className={styles.deniedTitle}>{t('studio.denied.title')}</h1>
         <p className={styles.deniedBody}>{t('studio.denied.body')}</p>
 
-        <Button href={FRONT_URL} size="large">
+        <Button href={`${FRONT_URL}/`} size="large">
           {t('studio.denied.back')}
         </Button>
       </div>
@@ -99,7 +99,7 @@ function App(): JSX.Element | null {
   const { loading, user } = useUser();
 
   useEffect(() => {
-    if (!loading && !user) window.location.href = FRONT_URL;
+    if (!loading && !user) window.location.href = `${FRONT_URL}/`;
   }, [loading, user]);
 
   if (loading || !user) return null;
