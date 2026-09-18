@@ -85,6 +85,10 @@ const getSampleQuerySchema = {
 };
 
 const getSampleSchema = {
+  description:
+    'Your samples plus the platform library, filterable by BPM, key, mode, family, kind and visibility, searchable through q, and paginated. Omitting page and limit returns the full list.',
+  summary: 'List samples',
+  tags: ['samples'],
   querystring: getSampleQuerySchema,
   response: {
     200: paginatedResponseSchema(sampleWithOwnerTypeSchema),
@@ -93,12 +97,19 @@ const getSampleSchema = {
 
 // Multipart: the body cannot be schema-validated, it is checked in utils/validation.ts.
 const uploadSampleSchema = {
+  description:
+    'Multipart upload of a .wav. The file is decoded server-side, a .peaks waveform sidecar is written next to it, and the quota is checked before the row is inserted.',
+  summary: 'Upload a sample',
+  tags: ['samples'],
   response: {
     201: sampleSchema,
   },
 };
 
 const storageSampleSchema = {
+  description: 'Bytes used, per-family breakdown, the per-upload limit and the account quota.',
+  summary: 'Get your storage usage',
+  tags: ['samples'],
   querystring: {
     additionalProperties: false,
     properties: {},
@@ -131,6 +142,9 @@ const storageSampleSchema = {
 };
 
 const updateSampleSchema = {
+  description: 'Partial update of the metadata of a sample you own. The audio itself is immutable.',
+  summary: 'Update a sample',
+  tags: ['samples'],
   body: {
     additionalProperties: false,
     minProperties: 1,
@@ -159,6 +173,9 @@ const updateSampleSchema = {
 };
 
 const deleteSampleSchema = {
+  description: 'Delete a sample you own, together with its .wav and its .peaks sidecar.',
+  summary: 'Delete a sample',
+  tags: ['samples'],
   querystring: {
     additionalProperties: false,
     properties: {

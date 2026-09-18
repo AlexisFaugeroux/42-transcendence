@@ -7,7 +7,7 @@ export function websocketRoutes(app: FastifyInstance) {
     '/ws',
     {
       config: { rateLimit: RATE_LIMITS.read },
-      preHandler: app.authenticate,
+      preHandler: app.authenticateSession,
       websocket: true,
     },
     websocketController.ws,

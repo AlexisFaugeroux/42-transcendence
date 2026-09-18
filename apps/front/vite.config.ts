@@ -12,6 +12,7 @@ export default defineConfig({
         ws: true,
       },
       '/avatars': 'http://localhost:8081',
+      '/documentation': 'http://localhost:8080',
       '/samples': 'http://localhost:8081',
       // Media files under /tracks/… — not the SPA page GET /tracks (Accept: text/html).
       '/tracks': {

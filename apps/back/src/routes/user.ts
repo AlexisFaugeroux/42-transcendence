@@ -4,6 +4,10 @@ import { userController } from '../controllers/user/user';
 import { authUserResponseSchema, onlineUsersResponseSchema } from './schemas/user';
 
 const updateProfileSchema = {
+  description:
+    'Partial update of the authenticated account: identity, handle, artist name, bio, location and external links.',
+  summary: 'Update your profile',
+  tags: ['user'],
   body: {
     additionalProperties: false,
     properties: {
@@ -36,6 +40,10 @@ const updateProfileSchema = {
 };
 
 const changePasswordSchema = {
+  description:
+    'Requires the current password. Session-only: an API key cannot change the password of its own account.',
+  summary: 'Change your password',
+  tags: ['user'],
   body: {
     additionalProperties: false,
     properties: {
@@ -50,22 +58,52 @@ const changePasswordSchema = {
   },
 };
 
-const noContentSchema = {
+const deleteAccountSchema = {
+  description:
+    'Permanently delete the authenticated account and everything that cascades from it. Session-only: an API key cannot delete its own account.',
   response: {
     204: { type: 'null' },
   },
+  summary: 'Delete your account',
+  tags: ['user'],
+};
+
+const deleteAvatarSchema = {
+  description: 'Remove your avatar. The generated default is shown again afterwards.',
+  response: {
+    204: { type: 'null' },
+  },
+  summary: 'Delete your avatar',
+  tags: ['user'],
 };
 
 const uploadAvatarSchema = {
+  description:
+    'Multipart upload of a JPEG, PNG or WebP image, converted server-side and served publicly from /avatars/.',
+  summary: 'Upload your avatar',
+  tags: ['user'],
   response: {
     200: authUserResponseSchema,
   },
 };
 
-const listOnlineUsersSchema = {
+const listFollowingSchema = {
+  description: 'The producers you follow, each with the presence known to the WebSocket registry.',
   response: {
     200: onlineUsersResponseSchema,
   },
+  summary: 'List who you follow, with their online status',
+  tags: ['user'],
+};
+
+const listFollowersSchema = {
+  description:
+    'The producers who follow you, each with the presence known to the WebSocket registry.',
+  response: {
+    200: onlineUsersResponseSchema,
+  },
+  summary: 'List your followers, with their online status',
+  tags: ['user'],
 };
 
 export function userRoutes(app: FastifyInstance) {
@@ -83,7 +121,7 @@ export function userRoutes(app: FastifyInstance) {
     '/update/password',
     {
       config: { rateLimit: RATE_LIMITS.auth },
-      preHandler: app.authenticate,
+      preHandler: app.authenticateSession,
       schema: changePasswordSchema,
     },
     userController.updatePassword,
@@ -93,8 +131,8 @@ export function userRoutes(app: FastifyInstance) {
     '/delete',
     {
       config: { rateLimit: RATE_LIMITS.destructive },
-      preHandler: app.authenticate,
-      schema: noContentSchema,
+      preHandler: app.authenticateSession,
+      schema: deleteAccountSchema,
     },
     userController.deleteUser,
   );
@@ -114,7 +152,7 @@ export function userRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
-      schema: listOnlineUsersSchema,
+      schema: listFollowingSchema,
     },
     userController.listFollowingById,
   );
@@ -124,14 +162,14 @@ export function userRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
-      schema: listOnlineUsersSchema,
+      schema: listFollowersSchema,
     },
     userController.listFollowersById,
   );
 
   app.delete(
     '/delete/avatar',
-    { preHandler: app.authenticate, schema: noContentSchema },
+    { preHandler: app.authenticate, schema: deleteAvatarSchema },
     userController.deleteAvatar,
   );
 }

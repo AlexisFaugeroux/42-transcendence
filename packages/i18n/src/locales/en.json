@@ -178,6 +178,7 @@
   "common": {
     "availableSoon": "Available soon",
     "cancel": "Cancel",
+    "close": "Close",
     "delete": "Delete",
     "download": "Download",
     "edit": "Edit",
@@ -697,6 +698,37 @@
       "subtitle": "Login credentials and security.",
       "title": "Account"
     },
+    "apiKeys": {
+      "columns": {
+        "expires": "Expires",
+        "lastUsed": "Last used",
+        "name": "Name",
+        "prefix": "Key"
+      },
+      "copied": "Key copied to your clipboard",
+      "copy": "Copy",
+      "copyFailed": "The key could not be copied",
+      "create": "Create a key",
+      "createFailed": "The key could not be created",
+      "createTitle": "Create an API key",
+      "createdTitle": "Your new API key",
+      "createdWarning": "Copy it now. It is stored hashed and will never be shown again.",
+      "empty": "No API key yet.",
+      "expiryDays": "{{count}} days",
+      "expiryLabel": "Expires after",
+      "nameLabel": "Name",
+      "namePlaceholder": "What will use this key?",
+      "nameRequired": "Please name this key.",
+      "neverUsed": "Never used",
+      "noExpiry": "No expiry",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke this key? Anything using it stops working immediately.",
+      "revokeFailed": "The key could not be revoked",
+      "revoked": "The key has been revoked",
+      "subtitle": "Let a script or a third-party service use the API on your behalf.",
+      "title": "API keys",
+      "usage": "Send it in the x-api-key header on every request:"
+    },
     "danger": {
       "action": "Delete account",
       "confirmLabel": "Type <code>{{handle}}</code> to confirm",
@@ -720,6 +752,7 @@
     },
     "nav": {
       "account": "Account",
+      "apiKeys": "API keys",
       "danger": "Danger zone",
       "label": "Settings",
       "profile": "Profile"

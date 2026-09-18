@@ -6,6 +6,9 @@ import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
 import { projectSchema, projectsResponseSchema } from './schemas/project';
 
 const saveProjectSchema = {
+  description: 'Persist the serialized state of a studio session, creating it or overwriting it.',
+  summary: 'Save a studio project',
+  tags: ['project'],
   body: {
     additionalProperties: false,
     properties: {
@@ -28,6 +31,9 @@ const saveProjectSchema = {
 };
 
 const loadProjectSchema = {
+  description: 'The serialized state of one of your sessions, ready to be reopened in the studio.',
+  summary: 'Load a studio project',
+  tags: ['project'],
   querystring: {
     additionalProperties: false,
     properties: {
@@ -42,12 +48,18 @@ const loadProjectSchema = {
 };
 
 const listProjectsSchema = {
+  description: 'The sessions of the authenticated account, paginated.',
+  summary: 'List your studio projects',
+  tags: ['project'],
   response: {
     200: projectsResponseSchema,
   },
 };
 
 const deleteProjectSchema = {
+  description: 'Delete one of your sessions. Tracks exported from it are kept.',
+  summary: 'Delete a studio project',
+  tags: ['project'],
   querystring: {
     additionalProperties: false,
     properties: {
@@ -62,6 +74,9 @@ const deleteProjectSchema = {
 };
 
 const updateProjectSchema = {
+  description: 'Rename, archive or change the visibility of one of your sessions.',
+  summary: 'Update a studio project',
+  tags: ['project'],
   body: {
     additionalProperties: false,
     minProperties: 1,

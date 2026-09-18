@@ -17,6 +17,8 @@ infra/nginx/certs
 
 **/generated/prisma
 
+apps/back/openapi.json
+
 **/public/audio/manifest.json
 samples/*/
 avatars/*

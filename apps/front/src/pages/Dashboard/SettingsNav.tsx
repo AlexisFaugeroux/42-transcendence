@@ -13,6 +13,7 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   { icon: 'user', id: 'profile', labelKey: 'settings.nav.profile' },
   { icon: 'settings', id: 'account', labelKey: 'settings.nav.account' },
+  { icon: 'folder', id: 'apiKeys', labelKey: 'settings.nav.apiKeys' },
   { icon: 'bell', id: 'danger', labelKey: 'settings.nav.danger' },
 ];
 
@@ -20,7 +21,6 @@ export function SettingsNav(): JSX.Element {
   const [activeId, setActiveId] = useState('profile');
   const { t } = useTranslation();
 
-  // Watch the three <section> elements and highlight whichever is most in view.
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {

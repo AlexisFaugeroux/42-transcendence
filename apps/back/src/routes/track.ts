@@ -82,6 +82,9 @@ const getTrackQuerySchema = {
 };
 
 const updateTrackSchema = {
+  description: 'Partial update of the metadata of a track you own.',
+  summary: 'Update a track',
+  tags: ['tracks'],
   body: {
     additionalProperties: false,
     minProperties: 1,
@@ -109,6 +112,9 @@ const updateTrackSchema = {
 };
 
 const deleteTrackSchema = {
+  description: 'Delete a track you own. A moderator may delete any track.',
+  summary: 'Delete a track',
+  tags: ['tracks'],
   querystring: {
     additionalProperties: false,
     properties: {
@@ -122,18 +128,34 @@ const deleteTrackSchema = {
   },
 };
 
-const likeTrackSchema = {
-  querystring: {
-    additionalProperties: false,
-    properties: {
-      id: { format: 'uuid', type: 'string' },
-    },
-    required: ['id'],
-    type: 'object',
+const trackIdQuerySchema = {
+  additionalProperties: false,
+  properties: {
+    id: { format: 'uuid', type: 'string' },
   },
+  required: ['id'],
+  type: 'object',
+};
+
+const likeTrackSchema = {
+  description:
+    'Idempotent: a second like from the same account is a no-op, enforced by a unique constraint.',
+  querystring: trackIdQuerySchema,
   response: {
     204: { type: 'null' },
   },
+  summary: 'Like a track',
+  tags: ['tracks'],
+};
+
+const unlikeTrackSchema = {
+  description: 'Remove your like from a track. Removing a like that does not exist is a no-op.',
+  querystring: trackIdQuerySchema,
+  response: {
+    204: { type: 'null' },
+  },
+  summary: 'Unlike a track',
+  tags: ['tracks'],
 };
 
 const likedListQuerySchema = {
@@ -147,6 +169,10 @@ const likedListQuerySchema = {
 };
 
 const getTrackSchema = {
+  description:
+    'Tracks visible to you, filterable by owner and visibility, searchable through q and paginated.',
+  summary: 'List tracks',
+  tags: ['tracks'],
   querystring: getTrackQuerySchema,
   response: {
     200: tracksResponseSchema,
@@ -154,6 +180,9 @@ const getTrackSchema = {
 };
 
 const likedListSchema = {
+  description: 'The tracks the authenticated account has liked, paginated.',
+  summary: 'List liked tracks',
+  tags: ['tracks'],
   querystring: likedListQuerySchema,
   response: {
     200: paginatedResponseSchema(trackSchema),
@@ -162,6 +191,10 @@ const likedListSchema = {
 
 // Multipart: the body cannot be schema-validated, it is checked in utils/validation.ts.
 const uploadTrackSchema = {
+  description:
+    'Multipart upload of a rendered .wav export, with its title, description, visibility and musical metadata.',
+  summary: 'Publish a track',
+  tags: ['tracks'],
   response: {
     201: trackSchema,
   },
@@ -203,7 +236,7 @@ export function trackRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.write },
       preHandler: app.authenticate,
-      schema: likeTrackSchema,
+      schema: unlikeTrackSchema,
     },
     trackController.unlike,
   );

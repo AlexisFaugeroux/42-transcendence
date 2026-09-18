@@ -2,7 +2,7 @@ services:
   db:
     ports:
       - 5432:5432
-    env_files:
+    env_file:
       - "apps/back/.env"
 
   nginx-media:

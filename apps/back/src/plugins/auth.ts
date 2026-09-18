@@ -10,7 +10,9 @@ import type {
 } from 'fastify';
 import fp from 'fastify-plugin';
 import { ForbiddenError } from '../domain/errors';
+import { apiKeyRepository } from '../repositories/apiKey/apiKey';
 import { SessionRepository, sessionRepository } from '../repositories/session/session';
+import { API_KEY_HEADER, readKeyPrefix } from '../utils/apiKey';
 
 export function authCookieOptions() {
   return {
@@ -37,17 +39,41 @@ async function authPlugin(app: FastifyInstance) {
       const payload = await req.jwtVerify<{ sub: string; sid: string }>();
       const session = await sessionRepository.findValid(payload.sid);
       if (session) {
-        req.authUser = { id: session.userId, role: session.role, sid: session.id };
+        req.authUser = {
+          apiKeyId: null,
+          id: session.userId,
+          role: session.role,
+          sid: session.id,
+        };
+        return;
       }
     } catch (error) {
-      req.log.debug(error, 'no valid session, rate limiting by ip');
+      req.log.debug(error, 'no valid session, trying the API key header');
     }
+
+    const header = req.headers[API_KEY_HEADER];
+    if (typeof header !== 'string') return;
+
+    const prefix = readKeyPrefix(header);
+    if (prefix === null) return;
+
+    const apiKey = await apiKeyRepository.resolve(header, prefix);
+    if (!apiKey) {
+      req.log.debug('no valid API key, rate limiting by ip');
+      return;
+    }
+
+    req.authUser = { apiKeyId: apiKey.id, id: apiKey.userId, role: apiKey.role, sid: null };
+
+    void apiKeyRepository.touch(apiKey.id).catch((error: unknown) => {
+      req.log.warn(error, 'could not record API key usage');
+    });
   });
 
   await app.register(rateLimit, {
     global: false,
     hook: 'preHandler',
-    keyGenerator: (req) => req.authUser?.id ?? req.ip,
+    keyGenerator: (req) => req.authUser?.apiKeyId ?? req.authUser?.id ?? req.ip,
   });
 
   app.decorate(
@@ -60,6 +86,17 @@ async function authPlugin(app: FastifyInstance) {
   app.decorate('authenticate', async function (req: FastifyRequest, reply: FastifyReply) {
     if (!req.authUser) reply.code(401).send({ message: 'unauthorized' });
   });
+
+  app.decorate(
+    'authenticateSession',
+    function (req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) {
+      if (!req.authUser?.sid) {
+        reply.code(401).send({ message: 'unauthorized' });
+        return;
+      }
+      done();
+    },
+  );
 
   app.decorate('authorize', (permission: Permissions) => {
     return function authorize(

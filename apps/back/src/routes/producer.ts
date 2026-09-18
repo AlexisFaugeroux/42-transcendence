@@ -29,6 +29,19 @@ const paginationQuerySchema = {
 const paginatedProducersResponse = { 200: paginatedResponseSchema(producerSchema) };
 
 const followSchema = {
+  description: 'Follow a producer. The followed account receives a live event over the WebSocket.',
+  summary: 'Follow a producer',
+  tags: ['producers'],
+  params: handleParamsSchema,
+  response: {
+    204: { type: 'null' },
+  },
+};
+
+const unfollowSchema = {
+  description: 'Stop following a producer. Unfollowing someone you do not follow is a no-op.',
+  summary: 'Unfollow a producer',
+  tags: ['producers'],
   params: handleParamsSchema,
   response: {
     204: { type: 'null' },
@@ -41,7 +54,13 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
-      schema: { querystring: paginationQuerySchema, response: paginatedProducersResponse },
+      schema: {
+        description: 'Every producer, searchable through q and paginated.',
+        querystring: paginationQuerySchema,
+        response: paginatedProducersResponse,
+        summary: 'List producers',
+        tags: ['producers'],
+      },
     },
     userController.listProducers,
   );
@@ -51,7 +70,13 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
-      schema: { params: handleParamsSchema, response: { 200: producerProfileResponseSchema } },
+      schema: {
+        description: 'The public profile of a producer, addressed by their handle.',
+        params: handleParamsSchema,
+        response: { 200: producerProfileResponseSchema },
+        summary: 'Get a producer profile',
+        tags: ['producers'],
+      },
     },
     userController.getProfile,
   );
@@ -62,9 +87,12 @@ export function producerRoutes(app: FastifyInstance) {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
+        description: 'The producers who follow this handle, paginated.',
         params: handleParamsSchema,
         querystring: paginationQuerySchema,
         response: paginatedProducersResponse,
+        summary: 'List a producer followers',
+        tags: ['producers'],
       },
     },
     userController.listFollowerProducers,
@@ -76,9 +104,12 @@ export function producerRoutes(app: FastifyInstance) {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
+        description: 'The producers this handle follows, paginated.',
         params: handleParamsSchema,
         querystring: paginationQuerySchema,
         response: paginatedProducersResponse,
+        summary: 'List who a producer follows',
+        tags: ['producers'],
       },
     },
     userController.listFollowing,
@@ -99,7 +130,7 @@ export function producerRoutes(app: FastifyInstance) {
     {
       config: { rateLimit: RATE_LIMITS.write },
       preHandler: app.authenticate,
-      schema: followSchema,
+      schema: unfollowSchema,
     },
     userController.unfollow,
   );
@@ -110,9 +141,12 @@ export function producerRoutes(app: FastifyInstance) {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
+        description: 'The tracks published by this producer that you are allowed to see.',
         params: handleParamsSchema,
         querystring: producerTracksQuerySchema,
         response: { 200: tracksResponseSchema },
+        summary: 'List a producer tracks',
+        tags: ['producers'],
       },
     },
     trackController.get,
@@ -124,9 +158,12 @@ export function producerRoutes(app: FastifyInstance) {
       config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
+        description: 'The tracks this producer has liked, paginated.',
         params: handleParamsSchema,
         querystring: paginationQuerySchema,
         response: { 200: paginatedResponseSchema(trackSchema) },
+        summary: 'List a producer liked tracks',
+        tags: ['producers'],
       },
     },
     trackController.listLikedByHandle,
