@@ -4,6 +4,7 @@ import type { MsnIconLabel } from '@transcendence/ui';
 import type { JSX } from 'react';
 import styles from './Community.module.scss';
 import { ImagePlaceholder } from './ImagePlaceholder';
+import frontProducer from '../../assets/landing/front-producers.png';
 
 interface Bullet {
   icon: MsnIconLabel;
@@ -42,13 +43,13 @@ export function Community(): JSX.Element {
             ))}
           </ul>
         </div>
-
-        <ImagePlaceholder
-          label="COMMUNITY_SCREENSHOT — chat / live listening party"
-          height={360}
-          accent="hsl(210, 90%, 50%)"
-        />
-      </div>
+          <img
+            src={frontProducer}
+            alt={t('landing.hero.screenshotAlt')}
+            className={styles.shot}
+            fetchPriority="high"
+          />      
+          </div>
     </section>
   );
 }
