@@ -564,7 +564,6 @@
     "toolbar": {
       "allFamilies": "All families",
       "allTypes": "All types",
-      "favorites": "Favorites",
       "searchPlaceholder": "Search by name…"
     },
     "upload": {

@@ -44,7 +44,6 @@ export function Samples(): JSX.Element {
   const [debouncedQ, setDebouncedQ] = useState('');
   const [families, setFamilies] = useState<Family[]>([]);
   const [kinds, setKinds] = useState<Kind[]>([]);
-  const [favOnly, setFavOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>('recent');
   const [view, setView] = useState<ViewMode>('list');
   const [confirmDelete, setConfirmDelete] = useState<DeleteTarget>(null);
@@ -156,7 +155,6 @@ export function Samples(): JSX.Element {
     setQuery('');
     setFamilies([]);
     setKinds([]);
-    setFavOnly(false);
   };
 
   const confirmDeletion = (): void => {
@@ -236,8 +234,6 @@ export function Samples(): JSX.Element {
                 setFamilies={setFamilies}
                 kinds={kinds}
                 setKinds={setKinds}
-                favOnly={favOnly}
-                setFavOnly={setFavOnly}
                 sort={sort}
                 setSort={setSort}
                 view={view}

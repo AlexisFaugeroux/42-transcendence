@@ -1,5 +1,5 @@
 import { useTranslation } from '@transcendence/i18n';
-import { Button, Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
+import { Input, MsnIcon, Segmented, Select } from '@transcendence/ui';
 import type { JSX } from 'react';
 import type { Family, Kind } from '../../types/sample';
 import { SORT_LABEL } from './constants';
@@ -16,8 +16,6 @@ interface ToolbarProps {
   setFamilies: (v: Family[]) => void;
   kinds: Kind[];
   setKinds: (v: Kind[]) => void;
-  favOnly: boolean;
-  setFavOnly: (v: boolean) => void;
   sort: SortKey;
   setSort: (v: SortKey) => void;
   view: ViewMode;
@@ -31,11 +29,9 @@ const SORT_ORDER: SortKey[] = ['recent', 'name', 'duration', 'size', 'bpm'];
 export function Toolbar(props: ToolbarProps): JSX.Element {
   const {
     families,
-    favOnly,
     kinds,
     query,
     setFamilies,
-    setFavOnly,
     setKinds,
     setQuery,
     setSort,
@@ -81,15 +77,6 @@ export function Toolbar(props: ToolbarProps): JSX.Element {
         options={KIND_OPTIONS}
         style={{ width: 180 }}
       />
-
-      <Button
-        type={favOnly ? 'primary' : 'default'}
-        onClick={() => {
-          setFavOnly(!favOnly);
-        }}
-      >
-        <MsnIcon name="heart" size="11px" /> {t('samples.toolbar.favorites')}
-      </Button>
 
       <span className={styles.count}>
         {shownCount}/{totalCount}
