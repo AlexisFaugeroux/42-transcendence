@@ -1,3 +1,4 @@
+import './disableProductionConsole';
 import './main.scss';
 import '@transcendence/ui/styles/colors_and_type.css';
 import { QueryClient } from '@tanstack/react-query';

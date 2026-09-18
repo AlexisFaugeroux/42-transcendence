@@ -114,13 +114,13 @@ export async function _doInitializeOpenDaw(
 ): Promise<ProjectSetupResult> {
   const { localAudioBuffers, onStatusUpdate } = options;
 
-  console.log('========================================');
-  console.log('openDAW -> headless -> initializing');
-  console.log('WorkersUrl', WorkersUrl);
-  console.log('WorkletsUrl', WorkletsUrl);
-  console.log('crossOriginIsolated:', crossOriginIsolated);
-  console.log('SharedArrayBuffer available:', typeof SharedArrayBuffer !== 'undefined');
-  console.log('========================================');
+  console.debug('========================================');
+  console.debug('openDAW -> headless -> initializing');
+  console.debug('WorkersUrl', WorkersUrl);
+  console.debug('WorkletsUrl', WorkletsUrl);
+  console.debug('crossOriginIsolated:', crossOriginIsolated);
+  console.debug('SharedArrayBuffer available:', typeof SharedArrayBuffer !== 'undefined');
+  console.debug('========================================');
 
   // CRITICAL: Ensure cross-origin isolation is enabled
   assert(crossOriginIsolated, 'window must be crossOriginIsolated');
