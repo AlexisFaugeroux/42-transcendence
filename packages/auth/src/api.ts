@@ -68,3 +68,56 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 
   return res;
 }
+
+// fetch() reports no upload progress, so multipart uploads go through
+// XMLHttpRequest instead.
+export function apiUpload(
+  path: string,
+  body: FormData,
+  onProgress?: (ratio: number) => void,
+): Promise<Response> {
+  return new Promise<Response>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', path);
+    xhr.withCredentials = true;
+
+    if (onProgress)
+      xhr.upload.onprogress = (event: ProgressEvent): void => {
+        if (event.lengthComputable) onProgress(event.loaded / event.total);
+      };
+
+    xhr.onload = (): void => {
+      if (xhr.status === 0) {
+        reject(new ApiErrorReponse(`[${path}] Network error`, 0));
+        return;
+      }
+
+      if (xhr.status === 401) window.dispatchEvent(new Event('auth:unauthorized'));
+
+      const headers = new Headers();
+      const contentType = xhr.getResponseHeader('Content-Type');
+      if (contentType) headers.set('Content-Type', contentType);
+
+      const bodyless = xhr.status === 204 || xhr.status === 205 || xhr.status === 304;
+
+      resolve(
+        new Response(bodyless ? null : xhr.responseText, {
+          headers,
+          status: xhr.status,
+          statusText: xhr.statusText,
+        }),
+      );
+    };
+
+    xhr.onerror = (): void => {
+      reject(new ApiErrorReponse(`[${path}] Network error`, 0));
+    };
+
+    xhr.onabort = (): void => {
+      reject(new ApiErrorReponse(`[${path}] Upload aborted`, 0));
+    };
+
+    xhr.send(body);
+  });
+}
