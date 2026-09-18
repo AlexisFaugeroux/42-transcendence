@@ -153,7 +153,8 @@ export function Sessions(): JSX.Element {
             <div className={styles.eyebrow}>{t('nav.workspace')}</div>
             <h1 className={styles.title}>{t('sessions.title')}</h1>
             <p className={styles.subtitle}>
-              {t('sessions.counts', { active: counts.owned, archived: counts.archived })}
+              {t('sessions.countsActive', { count: counts.owned })} ·{' '}
+              {t('sessions.countsArchived', { count: counts.archived })}
             </p>
           </div>
           <Button type="primary" size="large" onClick={openNew}>

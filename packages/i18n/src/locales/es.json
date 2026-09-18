@@ -165,7 +165,7 @@
     "sendError": "No se pudo enviar tu mensaje",
     "threadEmpty": {
       "cta": "Escribir a un productor",
-      "text": "Elige una conversación a la izquierda, o busca un productor por alias o handle para empezar una nueva.",
+      "text": "Elige una conversación a la izquierda, o busca un productor por nombre artístico o alias para empezar una nueva.",
       "title": "Ninguna conversación abierta"
     },
     "time": {
@@ -197,7 +197,7 @@
     "emptySearch": "No se encontraron productores.",
     "eyebrow": "Social",
     "loadError": "No se pudo cargar tu lista de seguidos.",
-    "searchPlaceholder": "Buscar alias o @handle...",
+    "searchPlaceholder": "Buscar nombre artístico o @alias…",
     "title": "Siguiendo"
   },
   "header": {
@@ -217,13 +217,15 @@
     "producers": "Productores",
     "sessions": "Sesiones",
     "settings": "Ajustes",
-    "tracks": "Pistas"
+    "tracks": "Temas"
   },
   "home": {
     "greeting": {
+      "afternoon": "Buenas tardes, {{name}}.",
+      "evening": "Buenas noches, {{name}}.",
+      "morning": "Buenos días, {{name}}.",
       "startNew": "Empezar una nueva sesión",
-      "subtitle": "Continúa donde lo dejaste o empieza algo nuevo.",
-      "title": "Buenas noches, {{name}}."
+      "subtitle": "Continúa donde lo dejaste o empieza algo nuevo."
     },
     "kind": {
       "mixing": "mezcla",
@@ -413,11 +415,11 @@
   },
   "liked": {
     "browseProducers": "Explorar productores",
-    "count_one": "{{count}} pista que te gusta",
-    "count_other": "{{count}} pistas que te gustan",
-    "empty": "Aún no hay pistas que te gusten.",
+    "count_one": "{{count}} tema que te gusta",
+    "count_other": "{{count}} temas que te gustan",
+    "empty": "Aún no hay temas que te gusten.",
     "eyebrow": "Social",
-    "loadError": "No se pudieron cargar tus pistas favoritas.",
+    "loadError": "No se pudieron cargar tus temas favoritos.",
     "title": "Me gusta"
   },
   "music": {
@@ -455,9 +457,9 @@
     "empty": "Todavía no hay productores.",
     "emptyFollowers": "Aún no hay seguidores.",
     "emptyFollowing": "Aún no sigue a nadie.",
-    "emptyLiked": "Ninguna pista marcada.",
+    "emptyLiked": "Ningún tema marcado.",
     "emptySearch": "No se encontraron productores.",
-    "emptyTracks": "Todavía no hay pistas.",
+    "emptyTracks": "Todavía no hay temas.",
     "eyebrow": "Comunidad",
     "follow": "Seguir",
     "followers": "Seguidores",
@@ -467,12 +469,12 @@
     "listLoadError": "No se pudo cargar esta lista.",
     "loadError": "No se pudieron cargar los productores.",
     "notFound": "Productor no encontrado.",
-    "searchPlaceholder": "Buscar alias o @handle…",
+    "searchPlaceholder": "Buscar nombre artístico o @alias…",
     "tabs": {
       "followers": "Seguidores",
       "following": "Siguiendo",
       "liked": "Me gusta",
-      "tracks": "Pistas"
+      "tracks": "Temas"
     },
     "title": "Productores",
     "unfollow": "Siguiendo",
@@ -485,7 +487,8 @@
       "bodyMulti": "Estos archivos se quitarán de tu biblioteca. Las sesiones que los usen podrían fallar.",
       "bodyOne": "El archivo <code>{{name}}</code> se quitará de tu biblioteca. Las sesiones que lo usen podrían fallar",
       "failedTitle": "Error al eliminar",
-      "partialFailure": "Se han conservado {{kept}} de {{total}} samples",
+      "partialFailure_one": "Se ha conservado {{count}} de {{total}} samples",
+      "partialFailure_other": "Se han conservado {{count}} de {{total}} samples",
       "successDescription_one": "{{count}} sample eliminado de tu biblioteca",
       "successDescription_other": "{{count}} samples eliminados de tu biblioteca",
       "successTitle": "Samples eliminados",
@@ -568,7 +571,8 @@
       "dropTitle": "Suelta aquí los archivos de audio",
       "errorTitle": "Error al subir",
       "fileTooLarge": "Archivo demasiado grande (máx. {{max}} por archivo)",
-      "partialFailure": "No se han podido subir {{failed}} de {{total}} archivos",
+      "partialFailure_one": "No se ha podido subir {{count}} de {{total}} archivos",
+      "partialFailure_other": "No se han podido subir {{count}} de {{total}} archivos",
       "queue_one": "Cola · {{count}} archivo · {{size}}",
       "queue_other": "Cola · {{count}} archivos · {{size}}",
       "status": {
@@ -611,7 +615,10 @@
       "restore": "Restaurar",
       "unarchive": "Desarchivar"
     },
-    "counts": "{{active}} activas · {{archived}} archivadas",
+    "countsActive_one": "{{count}} activa",
+    "countsActive_other": "{{count}} activas",
+    "countsArchived_one": "{{count}} archivada",
+    "countsArchived_other": "{{count}} archivadas",
     "delete": {
       "body": "<code>{{title}}</code> y todas sus pistas, automatizaciones y ediciones se eliminarán definitivamente. Los samples referenciados desde tu biblioteca se conservan.",
       "errorTitle": "Error al eliminar",
@@ -719,7 +726,7 @@
     },
     "profile": {
       "addLink": "Añadir enlace",
-      "alias": "Alias de productor",
+      "alias": "Nombre artístico",
       "aliasPlaceholder": "Tu nombre artístico",
       "avatar": "Avatar",
       "avatarDeleted": "Tu avatar se ha eliminado",
@@ -756,12 +763,13 @@
     },
     "browser": {
       "devices": "Dispositivos",
+      "loadError": "No se pudieron cargar los samples. Recarga la página.",
       "myLibrary": "Mi biblioteca",
       "samples": "Samples",
       "searchPlaceholder": "Buscar un sample",
       "sharedLibrary": "Biblioteca compartida",
       "table": {
-        "bpm": "Bpm",
+        "bpm": "BPM",
         "key": "Tonalidad",
         "name": "Nombre"
       }
@@ -773,7 +781,7 @@
     },
     "devices": {
       "addEffect": "Añadir un efecto",
-      "bypass": "Omitir",
+      "bypass": "Bypass",
       "enable": "Activar",
       "expand": "Desplegar",
       "instrument": "Instrumento",
@@ -800,7 +808,7 @@
         "missingProject": "Proyecto no encontrado. Guarda la sesión e inténtalo de nuevo.",
         "rendering": "Renderizando…",
         "submit": "Exportar",
-        "title": "Exportar pista",
+        "title": "Exportar tema",
         "titleRequired": "El título es obligatorio.",
         "trackTitle": "Título",
         "untitled": "Sin título",
@@ -843,35 +851,40 @@
       "bar": "comp.",
       "beat": "pulso",
       "bpm": "bpm",
-      "meter": "compás"
+      "meter": "métrica"
     },
     "panels": {
       "browser": "Navegador",
       "devices": "Dispositivos",
       "editor": "Editor",
       "timeline": "Línea de tiempo"
+    },
+    "transport": {
+      "loop": "Loop",
+      "play": "Reproducir",
+      "stop": "Parar"
     }
   },
   "tracks": {
-    "actions": "Acciones de la pista",
-    "count_one": "{{count}} pista",
-    "count_other": "{{count}} pistas",
+    "actions": "Acciones del tema",
+    "count_one": "{{count}} tema",
+    "count_other": "{{count}} temas",
     "delete": {
-      "body": "La pista <code>{{title}}</code> se eliminará definitivamente.",
+      "body": "El tema <code>{{title}}</code> se eliminará definitivamente.",
       "errorTitle": "Error al eliminar",
       "successDescription": "{{title}} se ha eliminado",
-      "successTitle": "Pista eliminada",
-      "title": "¿Eliminar esta pista?"
+      "successTitle": "Tema eliminado",
+      "title": "¿Eliminar este tema?"
     },
     "edit": "Editar",
     "editModal": {
-      "errorTitle": "No se pudo guardar la pista",
+      "errorTitle": "No se pudo guardar el tema",
       "successDescription": "{{title}} se ha guardado",
-      "successTitle": "Pista actualizada",
-      "title": "Editar pista"
+      "successTitle": "Tema actualizado",
+      "title": "Editar tema"
     },
-    "empty": "Todavía no hay pistas. Exporta una desde el studio.",
-    "eyebrow": "Pistas",
+    "empty": "Todavía no hay temas. Exporta uno desde el estudio.",
+    "eyebrow": "Temas",
     "fields": {
       "bpm": "BPM",
       "description": "Descripción",
@@ -880,28 +893,28 @@
       "title": "Título"
     },
     "like": "Me gusta",
-    "loadError": "No se pudieron cargar las pistas",
+    "loadError": "No se pudieron cargar los temas",
     "noResults": {
       "clearFilters": "Borrar filtros",
       "text": "Prueba a borrar los filtros o a buscar otro término.",
-      "title": "Ninguna pista coincide con estos filtros"
+      "title": "Ningún tema coincide con estos filtros"
     },
     "pause": "Pausa",
     "play": "Reproducir",
     "sort": {
       "bpm": "BPM",
       "duration": "Duración",
-      "recent": "Añadidas recientemente",
+      "recent": "Añadidos recientemente",
       "size": "Tamaño",
       "title": "Título (A→Z)"
     },
-    "title": "Mis pistas",
+    "title": "Mis temas",
     "toolbar": {
       "allVisibilities": "Todas las visibilidades",
       "searchPlaceholder": "Buscar por título o descripción…"
     },
     "unlike": "Ya no me gusta",
-    "updateError": "No se pudo actualizar la pista",
+    "updateError": "No se pudo actualizar el tema",
     "visibility": "Visibilidad"
   }
 }

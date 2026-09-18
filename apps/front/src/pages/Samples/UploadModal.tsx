@@ -113,7 +113,9 @@ export function UploadModal({
       await onUploaded();
 
       if (failed)
-        throw new Error(t('samples.upload.partialFailure', { failed, total: pending.length }));
+        throw new Error(
+          t('samples.upload.partialFailure', { count: failed, total: pending.length }),
+        );
 
       return pending.length;
     },

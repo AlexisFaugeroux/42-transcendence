@@ -139,7 +139,7 @@ export function Samples(): JSX.Element {
         setSelectedKeys(failedIds);
         notifyError(
           t('samples.delete.failedTitle'),
-          t('samples.delete.partialFailure', { kept: failedIds.length, total: ids.length }),
+          t('samples.delete.partialFailure', { count: failedIds.length, total: ids.length }),
         );
         return;
       }

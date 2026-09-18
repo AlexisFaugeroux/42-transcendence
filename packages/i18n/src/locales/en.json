@@ -62,7 +62,7 @@
       "roles": {
         "ADMIN": "Admin",
         "ARTIST": "Artist",
-        "GUEST": "Guest",
+        "GUEST": "Listener",
         "MODERATOR": "Moderator"
       },
       "searchPlaceholder": "Search by artist name, handle or email…",
@@ -165,7 +165,7 @@
     "sendError": "Couldn’t send your message",
     "threadEmpty": {
       "cta": "Message a producer",
-      "text": "Pick a conversation on the left, or search a producer by alias or handle to start a new one.",
+      "text": "Pick a conversation on the left, or search a producer by artist name or handle to start a new one.",
       "title": "No conversation open"
     },
     "time": {
@@ -197,7 +197,7 @@
     "emptySearch": "No producers found.",
     "eyebrow": "Social",
     "loadError": "Couldn’t load your following list.",
-    "searchPlaceholder": "Search alias or @handle...",
+    "searchPlaceholder": "Search artist name or @handle…",
     "title": "Following"
   },
   "header": {
@@ -221,9 +221,11 @@
   },
   "home": {
     "greeting": {
+      "afternoon": "Good afternoon, {{name}}.",
+      "evening": "Good evening, {{name}}.",
+      "morning": "Good morning, {{name}}.",
       "startNew": "Start a new session",
-      "subtitle": "Pick up where you left off, or start something new.",
-      "title": "Good evening, {{name}}."
+      "subtitle": "Pick up where you left off, or start something new."
     },
     "kind": {
       "mixing": "mixing",
@@ -467,7 +469,7 @@
     "listLoadError": "Couldn’t load this list.",
     "loadError": "Couldn’t load producers.",
     "notFound": "Producer not found.",
-    "searchPlaceholder": "Search alias or @handle…",
+    "searchPlaceholder": "Search artist name or @handle…",
     "tabs": {
       "followers": "Followers",
       "following": "Following",
@@ -485,7 +487,8 @@
       "bodyMulti": "These files will be removed from your library. Sessions that use these might crash.",
       "bodyOne": "The file <code>{{name}}</code> will be removed from your library. Sessions that use it might crash",
       "failedTitle": "Deletion failed",
-      "partialFailure": "{{kept}} of {{total}} samples were kept",
+      "partialFailure_one": "{{count}} of {{total}} samples was kept",
+      "partialFailure_other": "{{count}} of {{total}} samples were kept",
       "successDescription_one": "{{count}} sample removed from your library",
       "successDescription_other": "{{count}} samples removed from your library",
       "successTitle": "Samples deleted",
@@ -568,7 +571,8 @@
       "dropTitle": "Drop audio files here",
       "errorTitle": "Upload failed",
       "fileTooLarge": "File is too large (max {{max}} per file).",
-      "partialFailure": "{{failed}} of {{total}} files could not be uploaded",
+      "partialFailure_one": "{{count}} of {{total}} files could not be uploaded",
+      "partialFailure_other": "{{count}} of {{total}} files could not be uploaded",
       "queue_one": "Queue · {{count}} file · {{size}}",
       "queue_other": "Queue · {{count}} files · {{size}}",
       "status": {
@@ -611,7 +615,10 @@
       "restore": "Restore",
       "unarchive": "Unarchive"
     },
-    "counts": "{{active}} active · {{archived}} archived",
+    "countsActive_one": "{{count}} active",
+    "countsActive_other": "{{count}} active",
+    "countsArchived_one": "{{count}} archived",
+    "countsArchived_other": "{{count}} archived",
     "delete": {
       "body": "<code>{{title}}</code> and all its tracks, automation and edits will be permanently removed. Sample files referenced from your library are kept.",
       "errorTitle": "Delete failed",
@@ -719,7 +726,7 @@
     },
     "profile": {
       "addLink": "Add link",
-      "alias": "Producer alias",
+      "alias": "Artist name",
       "aliasPlaceholder": "Your artist name",
       "avatar": "Avatar",
       "avatarDeleted": "Your avatar has been removed",
@@ -756,12 +763,13 @@
     },
     "browser": {
       "devices": "Devices",
+      "loadError": "Couldn’t load the samples. Reload the page.",
       "myLibrary": "My library",
       "samples": "Samples",
       "searchPlaceholder": "Search a sample",
       "sharedLibrary": "Shared library",
       "table": {
-        "bpm": "Bpm",
+        "bpm": "BPM",
         "key": "Key",
         "name": "Name"
       }
@@ -850,6 +858,11 @@
       "devices": "Devices",
       "editor": "Editor",
       "timeline": "Timeline"
+    },
+    "transport": {
+      "loop": "Loop",
+      "play": "Play",
+      "stop": "Stop"
     }
   },
   "tracks": {
