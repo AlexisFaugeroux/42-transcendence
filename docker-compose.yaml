@@ -53,7 +53,7 @@ services:
       - transcendence_net
 
   reverse-proxy-seeder:
-    profies:
+    profiles:
       - "prod"
     image: alpine:latest
     command: >
