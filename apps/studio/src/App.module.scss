@@ -42,7 +42,7 @@
   }
 }
 
-.denied {
+.notice {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -51,7 +51,7 @@
   background: var(--bg-app);
 }
 
-.deniedCard {
+.noticeCard {
   max-width: 420px;
   display: flex;
   flex-direction: column;
@@ -62,20 +62,20 @@
   border-radius: var(--radius-2);
   background: var(--bg-card);
 
-  .deniedBrand {
+  .noticeBrand {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  .deniedTitle {
+  .noticeTitle {
     margin: 0;
     font-family: var(--font-display);
     font-size: var(--fs-22);
     color: var(--fg1);
   }
 
-  .deniedBody {
+  .noticeBody {
     margin: 0;
     font-size: var(--fs-13);
     line-height: 1.6;

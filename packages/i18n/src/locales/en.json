@@ -859,6 +859,11 @@
       "editor": "Editor",
       "timeline": "Timeline"
     },
+    "smallScreen": {
+      "back": "Back to MakeSomeNoise",
+      "body": "The studio needs room: the timeline, the sample browser and the effect rack don’t fit on a narrow screen. Open MakeSomeNoise on a computer to produce — the rest of the site works fine here.",
+      "title": "The studio needs a computer screen"
+    },
     "transport": {
       "loop": "Loop",
       "play": "Play",

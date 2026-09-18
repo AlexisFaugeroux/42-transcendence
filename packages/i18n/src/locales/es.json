@@ -859,6 +859,11 @@
       "editor": "Editor",
       "timeline": "Línea de tiempo"
     },
+    "smallScreen": {
+      "back": "Volver a MakeSomeNoise",
+      "body": "El estudio necesita espacio: la timeline, el navegador de samples y el rack de efectos no caben en una pantalla estrecha. Abre MakeSomeNoise desde un ordenador para producir — el resto del sitio funciona bien aquí.",
+      "title": "El estudio necesita una pantalla de ordenador"
+    },
     "transport": {
       "loop": "Loop",
       "play": "Reproducir",
