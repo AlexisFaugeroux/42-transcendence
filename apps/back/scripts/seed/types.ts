@@ -27,11 +27,20 @@ export interface SampleSet {
   visibility: VisibilityType | ((index: number) => VisibilityType);
 }
 
+export interface TrackFixture {
+  file: string;
+  owner: SampleOwner;
+  title: string;
+  description?: string;
+  visibility: VisibilityType;
+}
+
 export interface SeedConfig {
   users: UserFixture[];
   follows: Record<string, string[]>;
   conversations: ConversationFixture[];
   sampleSets: SampleSet[];
+  tracks?: TrackFixture[];
   avatars?: AvatarFixture[];
   mediaDir: string;
   cleanupDirs?: string[];

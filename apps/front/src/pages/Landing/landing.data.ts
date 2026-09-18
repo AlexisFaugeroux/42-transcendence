@@ -1,5 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import type { MsnIconLabel } from '@transcendence/ui';
+import studioTimeline from '../../assets/landing/studio-timeline.png';
 
 export interface Feature {
   id: string;
@@ -105,7 +106,7 @@ export interface DeepDive {
   eyebrowKey: TranslationKey;
   titleKey: TranslationKey;
   bodyKey: TranslationKey;
-  image: string;
+  image?: string;
 }
 
 export const DEEP_DIVES: DeepDive[] = [
@@ -115,7 +116,7 @@ export const DEEP_DIVES: DeepDive[] = [
     eyebrowKey: 'landing.deepDives.production.eyebrow',
     available: true,
     id: 'production',
-    image: 'DAW — step sequencer, sampler, drum kit',
+    image: studioTimeline,
     titleKey: 'landing.deepDives.production.title',
   },
   {
@@ -124,7 +125,6 @@ export const DEEP_DIVES: DeepDive[] = [
     eyebrowKey: 'landing.deepDives.streaming.eyebrow',
     available: false,
     id: 'streaming',
-    image: '',
     titleKey: 'landing.deepDives.streaming.title',
   },
   {
@@ -133,7 +133,6 @@ export const DEEP_DIVES: DeepDive[] = [
     eyebrowKey: 'landing.deepDives.mixing.eyebrow',
     available: false,
     id: 'mixing',
-    image: '',
     titleKey: 'landing.deepDives.mixing.title',
   },
 ];

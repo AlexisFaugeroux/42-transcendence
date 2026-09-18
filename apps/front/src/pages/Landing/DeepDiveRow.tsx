@@ -39,7 +39,11 @@ export function DeepDiveRow({
       </div>
       <div className={styles.art}>
         <div className={available ? '' : styles.muted}>
-          <ImagePlaceholder label={image} height={300} accent={accent} />
+          {image ? (
+            <img src={image} alt={t(titleKey)} className={styles.shot} loading="lazy" />
+          ) : (
+            <ImagePlaceholder label="" height={300} accent={accent} />
+          )}
         </div>
         {available ? null : <span className={styles.mask}>{t('common.availableSoon')}</span>}
       </div>

@@ -16,6 +16,11 @@ rm -rf samples/julien.zip
 unzip -o avatars/avatars.zip -d avatars
 rm -rf avatars/avatars.zip
 
+for archive in tracks/*.zip; do
+  unzip -o "$archive" -d tracks
+done
+rm -f tracks/*.zip
+
 node build/seedDb.prod.js
 exec "$@"
 

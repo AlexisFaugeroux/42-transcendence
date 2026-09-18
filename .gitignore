@@ -22,6 +22,8 @@ samples/alex/
 samples/julien/
 avatars/*
 !avatars/avatars.zip
+tracks/*
+!tracks/*.zip
 infra/media_data
 infra/audio_data
 
