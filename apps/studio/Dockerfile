@@ -18,6 +18,10 @@ RUN pnpm install --frozen-lockfile --filter @transcendence/studio...
 # Copy source code and build
 COPY apps/studio apps/studio
 COPY packages packages
+ARG VITE_API_URL
+ARG VITE_FRONT_URL
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_FRONT_URL=$VITE_FRONT_URL
 RUN pnpm --filter @transcendence/studio build
 
 # Runtime - serves statique app file with nginx

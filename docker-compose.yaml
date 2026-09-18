@@ -57,7 +57,7 @@ services:
       dockerfile: apps/studio/Dockerfile
       args:
         VITE_API_URL: ""
-        VITE_STUDIO_URL: ""
+        VITE_FRONT_URL: ""
     restart: always
     networks:
       - transcendence_net
