@@ -268,7 +268,7 @@ export async function seed(config: SeedConfig): Promise<void> {
       if (!user) throw new Error(`Cannot find user ${avatar.artistName}`);
 
       const webp = await imageService.normalizeAvatar(await readFile(avatar.file));
-      const dest = join(config.mediaDir, 'avatars', `${user.id}.webp`);
+      const dest = join(config.mediaDir, 'avatars', `${user.ownerId}.webp`);
       await mkdir(dirname(dest), { recursive: true });
       await writeFile(dest, webp);
 
