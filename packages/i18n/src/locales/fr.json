@@ -388,6 +388,7 @@
       "lead": "MakeSomeNoise est un studio dans le navigateur pour produire des beats, enregistrer des sessions et mixer des morceaux — avec un public intégré. Diffusez en direct, partagez vos formes d'onde et échangez avec d'autres producteurs sans quitter la page.",
       "noInstall": "Aucune installation. Tout tourne dans le navigateur.",
       "producers": "<strong>{{total, number}}+ producteurs</strong> font déjà du bruit",
+      "screenshotAlt": "Le studio MakeSomeNoise : navigateur de samples, timeline et rack d'effets",
       "titleLine1": "Faites des beats.",
       "titleLine2": "Enregistrez vos prises.",
       "titleLine3": "Make some noise."

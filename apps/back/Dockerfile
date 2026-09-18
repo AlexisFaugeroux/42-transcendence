@@ -34,6 +34,7 @@ COPY samples/platform*.zip samples/
 COPY samples/alex.zip samples/alex.zip
 COPY samples/julien.zip samples/julien.zip
 COPY avatars/avatars.zip avatars/avatars.zip
+COPY tracks/*.zip tracks/
 RUN chmod +x /app/docker-entrypoint.sh
 ENV NODE_ENV=production
 EXPOSE 8080

@@ -2,11 +2,9 @@ import { Trans, useTranslation } from '@transcendence/i18n';
 import { Avatar, Button, MsnIcon, Tag, theme } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
+import studioFull from '../../assets/landing/studio-full.png';
 import styles from './Hero.module.scss';
-import { ImagePlaceholder } from './ImagePlaceholder';
 
-// Sample data for the avatar stack (real data comes later from the backend).
-// Each producer gets a distinct accent hue from the theme.
 const PRODUCERS = [
   { color: theme.orange, name: 'Maya Okafor' },
   { color: theme.blue, name: 'Leo Tanaka' },
@@ -69,7 +67,12 @@ export function Hero(): JSX.Element {
         </div>
 
         <div className={styles.art}>
-          <ImagePlaceholder label="HERO_SCREENSHOT — beat maker / mixer view" height={420} />
+          <img
+            src={studioFull}
+            alt={t('landing.hero.screenshotAlt')}
+            className={styles.shot}
+            fetchPriority="high"
+          />
         </div>
       </div>
     </section>

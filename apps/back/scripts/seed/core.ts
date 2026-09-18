@@ -216,13 +216,46 @@ export async function seed(config: SeedConfig): Promise<void> {
     }
   }
 
+  if (config.tracks) {
+    console.log('Create tracks...');
+    for (const track of config.tracks) {
+      const ownerId = resolveOwnerId(track.owner);
+      const id = randomUUID();
+      const url = `${ownerId}/${id}.wav`;
+
+      const { channelData, durationMs, size } = await wavManager.decodeWav(track.file, {
+        channelData: true,
+      });
+
+      await prisma.track.create({
+        data: {
+          bytes: size,
+          description: track.description,
+          duration: durationMs,
+          id,
+          ownerId,
+          title: track.title,
+          url,
+          visibility: track.visibility,
+        },
+      });
+
+      const dest = join(config.mediaDir, 'tracks', url);
+      await mkdir(dirname(dest), { recursive: true });
+      await copyFile(track.file, dest);
+
+      if (channelData) {
+        await writeFile(dest.replace('.wav', '.peaks'), msnpManager.generatePeaks(channelData));
+      }
+    }
+  }
+
   if (config.avatars) {
     console.log('Create avatars...');
     for (const avatar of config.avatars) {
       const user = users.find((candidate) => candidate.artistName === avatar.artistName);
       if (!user) throw new Error(`Cannot find user ${avatar.artistName}`);
 
-      // same normalization as the upload endpoint, so both stay in sync
       const webp = await imageService.normalizeAvatar(await readFile(avatar.file));
       const dest = join(config.mediaDir, 'avatars', `${user.id}.webp`);
       await mkdir(dirname(dest), { recursive: true });

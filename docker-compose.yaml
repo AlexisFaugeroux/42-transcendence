@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:18-alpine
     env_file:
-      - "apps/back/.env"
+      - "apps/back/.env.prod"
     restart: always
     volumes:
       - db_data:/var/lib/postgresql
