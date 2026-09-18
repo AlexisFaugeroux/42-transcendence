@@ -18,8 +18,8 @@
     "db:studio": "prisma studio --url $(cat .env | grep POSTGRES_URL= | cut -d= -f2- )",
     "predev": "pnpm --filter @transcendence/date --filter @transcendence/permissions run build",
     "dev": "tsx watch src/index.ts",
-    "openapi": "tsx scripts/dumpOpenApi.ts",
     "fix": "prettier --write . && ESLINT_SORT=on eslint --fix . && pnpm run typecheck",
+    "openapi": "tsx scripts/dumpOpenApi.ts",
     "start": "node build/index.js",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
