@@ -69,7 +69,7 @@ export function Samples(): JSX.Element {
       {isError ? (
         <Flex>
           <CloseOutlined />
-          <span>Error while fetching samples, reload the page</span>
+          <span>{t('studio.browser.loadError')}</span>
         </Flex>
       ) : (
         <ConfigProvider

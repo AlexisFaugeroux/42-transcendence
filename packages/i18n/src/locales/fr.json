@@ -3,18 +3,18 @@
     "dashboard": {
       "eyebrow": "Plateforme",
       "title": "Administration",
-      "tracks": "Morceaux",
+      "tracks": "Tracks",
       "users": "Utilisateurs"
     },
     "tracks": {
       "delete": {
-        "body": "Le morceau « {{title}} » et ses fichiers sur disque seront supprimés définitivement.",
-        "deletedDescription": "{{title}} a été supprimé.",
-        "deletedTitle": "Morceau supprimé",
+        "body": "La track « {{title}} » et ses fichiers sur disque seront supprimés définitivement.",
+        "deletedDescription": "{{title}} a été supprimée.",
+        "deletedTitle": "Track supprimée",
         "failedTitle": "La suppression a échoué",
-        "title": "Supprimer ce morceau ?"
+        "title": "Supprimer cette track ?"
       },
-      "searchPlaceholder": "Rechercher par titre ou nom d'artiste…",
+      "searchPlaceholder": "Rechercher par titre ou nom d’artiste…",
       "table": {
         "actions": "Actions",
         "createdAt": "Date",
@@ -29,9 +29,9 @@
         "revoke": "Déconnecter"
       },
       "delete": {
-        "body": "Cette action supprime définitivement <code>{{handle}}</code>, ses samples, ses morceaux et tous ses fichiers sur disque. Elle est irréversible.",
+        "body": "Cette action supprime définitivement <code>{{handle}}</code>, ses samples, ses tracks et tous ses fichiers sur disque. Elle est irréversible.",
         "confirmLabel": "Saisissez le pseudo pour confirmer",
-        "deletedDescription": "Le compte, ses samples, ses morceaux et tous ses fichiers sur disque ont été supprimés.",
+        "deletedDescription": "Le compte, ses samples, ses tracks et tous ses fichiers sur disque ont été supprimés.",
         "deletedTitle": "Compte supprimé",
         "failedTitle": "La suppression a échoué",
         "mismatchDescription": "Saisissez le pseudo exact pour confirmer la suppression.",
@@ -62,13 +62,13 @@
       "roles": {
         "ADMIN": "Admin",
         "ARTIST": "Artiste",
-        "GUEST": "Invité",
+        "GUEST": "Auditeur",
         "MODERATOR": "Modérateur"
       },
-      "searchPlaceholder": "Rechercher par nom d'artiste, pseudo ou e-mail…",
+      "searchPlaceholder": "Rechercher par nom d’artiste, pseudo ou e-mail…",
       "table": {
         "actions": "Actions",
-        "artistName": "Nom d'artiste",
+        "artistName": "Nom d’artiste",
         "email": "E-mail",
         "handle": "Pseudo",
         "joined": "Inscription",
@@ -78,7 +78,7 @@
   },
   "auth": {
     "fields": {
-      "artistName": "Nom d'artiste",
+      "artistName": "Nom d’artiste",
       "email": "E-mail",
       "firstname": "Prénom",
       "handle": "Pseudo",
@@ -109,20 +109,20 @@
     },
     "register": {
       "action": "Inscription gratuite",
-      "alreadyTaken": "E-mail, nom d'artiste ou pseudo déjà utilisé.",
-      "artistNameHint": "Votre nom de producteur public. Affiché sur votre profil et vos morceaux.",
-      "eyebrow": "C'est parti",
-      "handleHint": "Utilisé dans l'URL de votre profil : makesomenoise.fm/@…",
+      "alreadyTaken": "E-mail, nom d’artiste ou pseudo déjà utilisé.",
+      "artistNameHint": "Votre nom de producteur public. Affiché sur votre profil et vos tracks.",
+      "eyebrow": "C’est parti",
+      "handleHint": "Utilisé dans l’URL de votre profil : makesomenoise.fm/@…",
       "haveAccount": "Vous avez déjà un compte ?",
       "loginLink": "Se connecter →",
       "passwordPlaceholder": "10 caractères minimum",
-      "roleHint": "Les producteurs peuvent importer des samples, ouvrir des sessions studio et exporter des morceaux. Les auditeurs peuvent suivre des producteurs et écouter leurs morceaux. Seul un admin pourra le modifier ensuite.",
+      "roleHint": "Les producteurs peuvent uploader des samples, ouvrir des sessions studio et exporter des tracks. Les auditeurs peuvent suivre des producteurs et écouter leurs tracks. Seul un admin pourra le modifier ensuite.",
       "submit": "Créer le compte",
       "submitting": "Création du compte…",
       "subtitle": "Gratuit pendant la bêta. Aucun traçage, aucune carte bancaire.",
       "successDescription": "Vous allez être redirigé vers la page de connexion dans quelques secondes",
       "successTitle": "Votre inscription est confirmée !",
-      "termsNotice": "En créant un compte, vous acceptez nos <terms>conditions d'utilisation</terms> et notre <privacy>politique de confidentialité</privacy>.",
+      "termsNotice": "En créant un compte, vous acceptez nos <terms>conditions d’utilisation</terms> et notre <privacy>politique de confidentialité</privacy>.",
       "title": "Créer votre compte"
     },
     "role": {
@@ -130,7 +130,7 @@
       "producer": "Je veux produire"
     },
     "validation": {
-      "artistNameRequired": "Veuillez choisir un nom d'artiste.",
+      "artistNameRequired": "Veuillez choisir un nom d’artiste.",
       "emailInvalid": "Cet e-mail ne semble pas valide.",
       "emailRequired": "Veuillez saisir votre e-mail.",
       "firstnameRequired": "Veuillez saisir votre prénom.",
@@ -165,7 +165,7 @@
     "sendError": "Impossible d’envoyer votre message",
     "threadEmpty": {
       "cta": "Écrire à un producteur",
-      "text": "Choisissez une conversation à gauche, ou cherchez un producteur par alias ou par handle pour en démarrer une nouvelle.",
+      "text": "Choisissez une conversation à gauche, ou cherchez un producteur par nom d’artiste ou par pseudo pour en démarrer une nouvelle.",
       "title": "Aucune conversation ouverte"
     },
     "time": {
@@ -197,7 +197,7 @@
     "emptySearch": "Aucun producteur trouvé.",
     "eyebrow": "Social",
     "loadError": "Impossible de charger votre liste d’abonnements.",
-    "searchPlaceholder": "Rechercher un alias ou @handle...",
+    "searchPlaceholder": "Rechercher un nom d’artiste ou un @pseudo…",
     "title": "Abonnements"
   },
   "header": {
@@ -217,13 +217,15 @@
     "producers": "Producteurs",
     "sessions": "Sessions",
     "settings": "Paramètres",
-    "tracks": "Morceaux"
+    "tracks": "Tracks"
   },
   "home": {
     "greeting": {
+      "afternoon": "Bon après-midi {{name}}.",
+      "evening": "Bonsoir {{name}}.",
+      "morning": "Bonjour {{name}}.",
       "startNew": "Démarrer une nouvelle session",
-      "subtitle": "Reprenez où vous en étiez, ou lancez quelque chose de neuf.",
-      "title": "Bonsoir {{name}}."
+      "subtitle": "Reprenez où vous en étiez, ou lancez quelque chose de neuf."
     },
     "kind": {
       "mixing": "mixage",
@@ -259,10 +261,10 @@
         "title": "Session de mixage"
       },
       "produce": {
-        "blurb": "Beat maker, séquenceur de batterie, boucles et pistes d'instruments sur la timeline.",
+        "blurb": "Beat maker, séquenceur de batterie, loops et pistes d’instruments sur la timeline.",
         "meta": {
           "beatMaker": "Beat maker",
-          "loops": "Boucles",
+          "loops": "Loops",
           "midi": "MIDI"
         },
         "title": "Production musicale"
@@ -274,13 +276,13 @@
           "multitrack": "Multipiste",
           "overdub": "Overdub"
         },
-        "title": "Session d'enregistrement"
+        "title": "Session d’enregistrement"
       }
     }
   },
   "landing": {
     "community": {
-      "body": "Diffusez vos sessions en direct. Ajoutez vos morceaux à des playlists partagées. Écrivez à un autre producteur pour échanger des stems. Likes, abonnements et commentaires rattachés à la forme d'onde elle-même — le retour arrive sur la mesure concernée.",
+      "body": "Diffusez vos sessions en direct. Ajoutez vos tracks à des playlists partagées. Écrivez à un autre producteur pour échanger des stems. Likes, abonnements et commentaires rattachés à la forme d’onde elle-même — le retour arrive sur la mesure concernée.",
       "bullets": {
         "likes": "Likes et commentaires épinglés à un instant",
         "messaging": "Messages privés et discussions de groupe",
@@ -299,17 +301,17 @@
     "deepDives": {
       "learnMore": "En savoir plus",
       "mixing": {
-        "body": "Bus préconfigurés, départs vers n'importe où, EQ et compression sur chaque canal. Sortez le master vers votre profil ou téléchargez un WAV propre.",
+        "body": "Bus préconfigurés, départs vers n’importe où, EQ et compression sur chaque canal. Sortez le master vers votre profil ou téléchargez un WAV propre.",
         "eyebrow": "Mixage",
         "title": "Des tranches de console qui ne vous gênent pas."
       },
       "production": {
-        "body": "Programmez vos beats sur une grille, changez de kit d'une touche, automatisez n'importe quel paramètre à la volée. Les caisses de boucles et un métronome global gardent le groove en place.",
+        "body": "Programmez vos beats sur une grille, changez de kit d’une touche, automatisez n’importe quel paramètre à la volée. Les crates de loops et un métronome global gardent le groove en place.",
         "eyebrow": "Production",
         "title": "Un DAW dans le navigateur, accessible partout"
       },
       "streaming": {
-        "body": "Passez en direct d'un clic. Les auditeurs voient la même forme d'onde que vous, commentent des mesures précises et découpent leurs moments préférés. Les rediffusions restent sur votre profil.",
+        "body": "Passez en direct d’un clic. Les auditeurs voient la même forme d’onde que vous, commentent des mesures précises et découpent leurs moments préférés. Les rediffusions restent sur votre profil.",
         "eyebrow": "Diffusion",
         "title": "Diffusez une session. Regardez les auditeurs arriver."
       }
@@ -317,12 +319,12 @@
     "features": {
       "beatMaker": {
         "bullets": {
-          "crates": "Caisses de boucles",
+          "crates": "Crates de loops",
           "library": "Bibliothèque de samples",
           "midi": "Éditeur MIDI",
           "sequencer": "Séquenceur pas à pas"
         },
-        "desc": "Séquenceur de batterie, boucles, pistes d'instruments et timeline. Composez un morceau dans votre onglet.",
+        "desc": "Séquenceur de batterie, loops, pistes d’instruments et timeline. Composez une track dans votre onglet.",
         "title": "Beat maker"
       },
       "chat": {
@@ -369,14 +371,14 @@
       "streaming": {
         "bullets": {
           "cursor": "Curseur synchronisé",
-          "listeners": "Compteur d'auditeurs",
+          "listeners": "Compteur d’auditeurs",
           "live": "Sessions en direct",
           "replay": "Rediffusion"
         },
-        "desc": "Envoyez vos prises en direct et vos morceaux finis aux auditeurs avec une forme d'onde synchronisée.",
-        "title": "Diffusion en forme d'onde"
+        "desc": "Envoyez vos prises en direct et vos tracks finies aux auditeurs avec une forme d’onde synchronisée.",
+        "title": "Streaming de la forme d’onde"
       },
-      "sub": "Tous les outils pour passer de l'idée à la sortie, plus un public en direct qui l'entend avant tout le monde.",
+      "sub": "Tous les outils pour passer de l’idée à la sortie, plus un public en direct qui l’entend avant tout le monde.",
       "title": "Un studio, une scène et une communauté — dans un seul onglet."
     },
     "footer": {
@@ -385,10 +387,10 @@
     },
     "hero": {
       "badge": "Bêta · accès ouvert",
-      "lead": "MakeSomeNoise est un studio dans le navigateur pour produire des beats, enregistrer des sessions et mixer des morceaux — avec un public intégré. Diffusez en direct, partagez vos formes d'onde et échangez avec d'autres producteurs sans quitter la page.",
+      "lead": "MakeSomeNoise est un studio dans le navigateur pour produire des beats, enregistrer des sessions et mixer des tracks — avec un public intégré. Diffusez en direct, partagez vos formes d’onde et échangez avec d’autres producteurs sans quitter la page.",
       "noInstall": "Aucune installation. Tout tourne dans le navigateur.",
       "producers": "<strong>{{total, number}}+ producteurs</strong> font déjà du bruit",
-      "screenshotAlt": "Le studio MakeSomeNoise : navigateur de samples, timeline et rack d'effets",
+      "screenshotAlt": "Le studio MakeSomeNoise : navigateur de samples, timeline et rack d’effets",
       "titleLine1": "Faites des beats.",
       "titleLine2": "Enregistrez vos prises.",
       "titleLine3": "Make some noise."
@@ -397,7 +399,7 @@
       "downloads": "téléchargement requis",
       "inBrowser": "audio dans le navigateur",
       "producers": "producteurs actifs",
-      "streamed": "morceaux diffusés"
+      "streamed": "tracks diffusées"
     }
   },
   "legal": {
@@ -413,12 +415,12 @@
   },
   "liked": {
     "browseProducers": "Parcourir les producteurs",
-    "count_one": "{{count}} track aimée",
-    "count_other": "{{count}} tracks aimées",
-    "empty": "Aucune track aimée pour l’instant.",
+    "count_one": "{{count}} track likée",
+    "count_other": "{{count}} tracks likées",
+    "empty": "Aucune track likée pour l’instant.",
     "eyebrow": "Social",
-    "loadError": "Impossible de charger vos tracks aimées.",
-    "title": "Favoris"
+    "loadError": "Impossible de charger vos tracks likées.",
+    "title": "Likes"
   },
   "music": {
     "note": {
@@ -437,17 +439,17 @@
     "following": "Abonnements",
     "home": "Accueil",
     "library": "Bibliothèque",
-    "liked": "Favoris",
+    "liked": "Likes",
     "messages": "Messages",
     "mySessions": "Mes sessions",
     "producers": "Producteurs",
     "social": "Social",
-    "tracks": "Morceaux",
+    "tracks": "Tracks",
     "workspace": "Espace de travail"
   },
   "notFound": {
-    "body": "On dirait que tu t'es perdu.e...",
-    "goHome": "Aller à l'accueil"
+    "body": "On dirait que vous avez perdu le nord…",
+    "goHome": "Aller à l’accueil"
   },
   "producers": {
     "count_one": "{{count}} producteur sur MakeSomeNoise",
@@ -455,7 +457,7 @@
     "empty": "Aucun producteur pour l’instant.",
     "emptyFollowers": "Pas encore d’abonnés.",
     "emptyFollowing": "Ne suit personne pour l’instant.",
-    "emptyLiked": "Aucune track aimée.",
+    "emptyLiked": "Aucune track likée.",
     "emptySearch": "Aucun producteur trouvé.",
     "emptyTracks": "Pas encore de tracks.",
     "eyebrow": "Communauté",
@@ -467,11 +469,11 @@
     "listLoadError": "Impossible de charger cette liste.",
     "loadError": "Impossible de charger les producteurs.",
     "notFound": "Producteur introuvable.",
-    "searchPlaceholder": "Rechercher un alias ou @handle…",
+    "searchPlaceholder": "Rechercher un nom d’artiste ou un @pseudo…",
     "tabs": {
       "followers": "Abonnés",
       "following": "Abonnements",
-      "liked": "Aimés",
+      "liked": "Likes",
       "tracks": "Tracks"
     },
     "title": "Producteurs",
@@ -483,9 +485,10 @@
     "bpm": "{{bpm}} BPM",
     "delete": {
       "bodyMulti": "Ces fichiers seront retirés de votre bibliothèque. Les sessions qui les utilisent risquent de planter.",
-      "bodyOne": "Le fichier <code>{{name}}</code> sera retiré de votre bibliothèque. Les sessions qui l'utilisent risquent de planter",
+      "bodyOne": "Le fichier <code>{{name}}</code> sera retiré de votre bibliothèque. Les sessions qui l’utilisent risquent de planter",
       "failedTitle": "Suppression échouée",
-      "partialFailure": "{{kept}} sample(s) sur {{total}} ont été conservés",
+      "partialFailure_one": "{{count}} sample sur {{total}} a été conservé",
+      "partialFailure_other": "{{count}} samples sur {{total}} ont été conservés",
       "successDescription_one": "{{count}} sample retiré de votre bibliothèque",
       "successDescription_other": "{{count}} samples retirés de votre bibliothèque",
       "successTitle": "Samples supprimés",
@@ -494,11 +497,11 @@
       "titleOne": "Supprimer ce sample ?"
     },
     "download": {
-      "failedDescription": "Le fichier n'a pas pu être téléchargé. Réessaie.",
+      "failedDescription": "Le fichier n’a pas pu être téléchargé. Réessayez.",
       "failedTitle": "Échec du téléchargement"
     },
     "edit": {
-      "errorTitle": "Impossible d'enregistrer le sample",
+      "errorTitle": "Impossible d’enregistrer le sample",
       "successDescription": "{{name}} a été enregistré",
       "successTitle": "Sample mis à jour",
       "title": "Modifier le sample"
@@ -554,7 +557,7 @@
       "name": "Nom",
       "size": "Taille",
       "type": "Type",
-      "waveform": "Forme d'onde"
+      "waveform": "Forme d’onde"
     },
     "title": "Samples",
     "toolbar": {
@@ -564,23 +567,24 @@
       "searchPlaceholder": "Rechercher par nom…"
     },
     "upload": {
-      "afterUpload": "Après l'envoi",
+      "afterUpload": "Après l’upload",
       "dropTitle": "Déposez vos fichiers audio ici",
-      "errorTitle": "Envoi échoué",
+      "errorTitle": "Upload échoué",
       "fileTooLarge": "Fichier trop grand (max {{max}} par fichier)",
-      "partialFailure": "{{failed}} fichier(s) sur {{total}} n'ont pas pu être envoyés",
-      "queue_one": "File · {{count}} fichier · {{size}}",
-      "queue_other": "File · {{count}} fichiers · {{size}}",
+      "partialFailure_one": "{{count}} fichier sur {{total}} n’a pas pu être uploadé",
+      "partialFailure_other": "{{count}} fichiers sur {{total}} n’ont pas pu être uploadés",
+      "queue_one": "File d’attente · {{count}} fichier · {{size}}",
+      "queue_other": "File d’attente · {{count}} fichiers · {{size}}",
       "status": {
         "error": "erreur",
         "queued": "en attente",
-        "uploading": "envoi"
+        "uploading": "upload"
       },
-      "submit_one": "Envoyer {{count}} fichier",
-      "submit_other": "Envoyer {{count}} fichiers",
+      "submit_one": "Uploader {{count}} fichier",
+      "submit_other": "Uploader {{count}} fichiers",
       "successDescription_one": "{{count}} sample est désormais disponible dans votre bibliothèque",
       "successDescription_other": "{{count}} samples sont désormais disponibles dans votre bibliothèque",
-      "successTitle": "Envoi terminé",
+      "successTitle": "Upload terminé",
       "title": "Ajouter des samples"
     },
     "visibility": {
@@ -606,12 +610,15 @@
       "exportBounce": "Exporter le bounce",
       "noBpm": "— BPM",
       "open": "Ouvrir",
-      "openInEditor": "Ouvrir dans l'éditeur",
+      "openInEditor": "Ouvrir dans l’éditeur",
       "rename": "Renommer",
       "restore": "Restaurer",
       "unarchive": "Désarchiver"
     },
-    "counts": "{{active}} active(s) · {{archived}} archivée(s)",
+    "countsActive_one": "{{count}} active",
+    "countsActive_other": "{{count}} actives",
+    "countsArchived_one": "{{count}} archivée",
+    "countsArchived_other": "{{count}} archivées",
     "delete": {
       "body": "<code>{{title}}</code> et toutes ses pistes, automations et modifications seront supprimées définitivement. Les samples référencés depuis votre bibliothèque sont conservés.",
       "errorTitle": "Suppression échouée",
@@ -622,17 +629,17 @@
     },
     "emptyArchived": {
       "text": "Les sessions archivées apparaîtront ici quand vous en aurez terminé avec elles.",
-      "title": "Rien d'archivé"
+      "title": "Rien d’archivé"
     },
     "emptyOwned": {
       "action": "Créer votre première session",
-      "text": "Les sessions sont l'endroit où vous enregistrez, produisez et mixez. Lancez la première — ça prend environ trois secondes.",
-      "title": "Aucune session pour l'instant"
+      "text": "Les sessions sont l’endroit où vous enregistrez, produisez et mixez. Lancez la première — ça prend environ trois secondes.",
+      "title": "Aucune session pour l’instant"
     },
     "new": {
       "deniedDescription": "Votre compte est un compte auditeur. Seul un admin peut le modifier.",
       "deniedTitle": "Le studio est réservé aux producteurs",
-      "lead": "Seule la session de production est disponible pour l'instant. Donnez-lui un titre, nous préparons l'espace de travail.",
+      "lead": "Seule la session de production est disponible pour l’instant. Donnez-lui un titre, nous préparons l’espace de travail.",
       "submit": "Créer & ouvrir",
       "title": "Démarrer une nouvelle session",
       "titleField": "Titre",
@@ -669,23 +676,23 @@
       "recording": "enregistrement"
     },
     "typeDescription": {
-      "mixing": "Stems en entrée, mix en sortie. Faders, bus, chaînes d'effets.",
+      "mixing": "Stems en entrée, mix en sortie. Faders, bus, chaînes d’effets.",
       "production": "DAW complet : pistes, MIDI, effets, automation.",
       "recording": "Capturez une prise. Multi-micro, punch-in, montage."
     }
   },
   "settings": {
     "account": {
-      "changeEmail": "Changer d'e-mail",
+      "changeEmail": "Changer d’e-mail",
       "changePassword": "Changer de mot de passe",
       "currentPasswordPlaceholder": "Mot de passe actuel",
-      "emailUpdateFailed": "Votre e-mail n'a pas pu être mis à jour",
+      "emailUpdateFailed": "Votre e-mail n’a pas pu être mis à jour",
       "emailUpdated": "Votre e-mail a été mis à jour",
       "memberSince": "Membre depuis",
       "newPassword": "Nouveau mot de passe",
       "oldPassword": "Ancien mot de passe",
       "oldPasswordRequired": "Veuillez saisir votre mot de passe actuel.",
-      "passwordUpdateFailed": "Votre mot de passe n'a pas pu être mis à jour",
+      "passwordUpdateFailed": "Votre mot de passe n’a pas pu être mis à jour",
       "passwordUpdated": "Votre mot de passe a été mis à jour",
       "subtitle": "Identifiants de connexion et sécurité.",
       "title": "Compte"
@@ -694,11 +701,11 @@
       "action": "Supprimer le compte",
       "confirmLabel": "Saisissez <code>{{handle}}</code> pour confirmer",
       "deleteFailed": "Une erreur est survenue lors de la suppression de votre compte",
-      "deletedDescription": "Désolés de vous voir partir. Toutes vos données ont été supprimées, y compris vos projets, morceaux et samples.",
+      "deletedDescription": "Désolés de vous voir partir. Toutes vos données ont été supprimées, y compris vos projets, tracks et samples.",
       "deletedTitle": "Votre compte a été supprimé",
-      "desc": "Supprime définitivement votre profil, les sessions dont vous êtes propriétaire, vos envois et votre historique. Les collaborateurs des sessions partagées conservent leurs copies. <strong>Cette action est irréversible.</strong>",
+      "desc": "Supprime définitivement votre profil, les sessions dont vous êtes propriétaire, vos uploads et votre historique. Les collaborateurs des sessions partagées conservent leurs copies. <strong>Cette action est irréversible.</strong>",
       "heading": "Supprimer ce compte",
-      "modalBody": "Cette action va <strong>supprimer définitivement</strong> votre profil, vos sessions, vos sons et votre historique. Il n'y a pas de retour en arrière.",
+      "modalBody": "Cette action va <strong>supprimer définitivement</strong> votre profil, vos sessions, vos sons et votre historique. Il n’y a pas de retour en arrière.",
       "modalConfirm": "Oui, supprimer définitivement",
       "modalTitle": "Supprimer votre compte ?",
       "reasonLabel": "Pourquoi partez-vous ? (facultatif)",
@@ -708,7 +715,7 @@
     },
     "dirty": {
       "discard": "Abandonner",
-      "fixFields": "Corrigez les champs signalés avant d'enregistrer.",
+      "fixFields": "Corrigez les champs signalés avant d’enregistrer.",
       "unsaved": "Vous avez des modifications non enregistrées."
     },
     "nav": {
@@ -719,17 +726,17 @@
     },
     "profile": {
       "addLink": "Ajouter un lien",
-      "alias": "Nom de producteur",
-      "aliasPlaceholder": "Votre nom d'artiste",
+      "alias": "Nom d’artiste",
+      "aliasPlaceholder": "Votre nom d’artiste",
       "avatar": "Avatar",
       "avatarDeleted": "Votre avatar a été supprimé",
-      "avatarDeletionFailed": "Votre avatar n'a pas pu être supprimé",
-      "avatarUpdateFailed": "Votre avatar n'a pas pu être mis à jour",
+      "avatarDeletionFailed": "Votre avatar n’a pas pu être supprimé",
+      "avatarUpdateFailed": "Votre avatar n’a pas pu être mis à jour",
       "avatarUpdated": "Votre avatar a été mis à jour",
       "bio": "Bio",
-      "bioHint_one": "Jusqu'à {{count}} caractère",
-      "bioHint_other": "Jusqu'à {{count}} caractères",
-      "changeImage": "Changer l'image",
+      "bioHint_one": "Jusqu’à {{count}} caractère",
+      "bioHint_other": "Jusqu’à {{count}} caractères",
+      "changeImage": "Changer l’image",
       "edit": "Modifier le profil",
       "editing": "Modification",
       "handle": "Pseudo",
@@ -741,9 +748,9 @@
       "locationPlaceholder": "Ville, pays",
       "subtitle": "Informations publiques affichées sur votre page de producteur.",
       "title": "Profil",
-      "updateFailed": "Votre profil n'a pas pu être mis à jour",
+      "updateFailed": "Votre profil n’a pas pu être mis à jour",
       "updated": "Votre profil a été mis à jour",
-      "uploadImage": "Envoyer une image"
+      "uploadImage": "Uploader une image"
     },
     "saveChanges": "Enregistrer les modifications"
   },
@@ -755,25 +762,26 @@
       "vaporisateur": "Synthé (Vaporisateur)"
     },
     "browser": {
-      "devices": "Appareils",
+      "devices": "Devices",
+      "loadError": "Impossible de charger les samples. Rechargez la page.",
       "myLibrary": "Ma bibliothèque",
       "samples": "Samples",
       "searchPlaceholder": "Chercher un sample",
       "sharedLibrary": "Bibliothèque partagée",
       "table": {
-        "bpm": "Bpm",
+        "bpm": "BPM",
         "key": "Tonalité",
         "name": "Nom"
       }
     },
     "denied": {
       "back": "Retour à MakeSomeNoise",
-      "body": "Votre compte est un compte auditeur : il donne accès à l'écoute et aux abonnements, pas à la production. Seul un admin peut le modifier.",
+      "body": "Votre compte est un compte auditeur : il donne accès à l’écoute et aux abonnements, pas à la production. Seul un admin peut le modifier.",
       "title": "Le studio est réservé aux producteurs"
     },
     "devices": {
       "addEffect": "Ajouter un effet",
-      "bypass": "Contourner",
+      "bypass": "Bypass",
       "enable": "Activer",
       "expand": "Déplier",
       "instrument": "Instrument",
@@ -797,14 +805,14 @@
       "export": {
         "button": "Exporter",
         "failed": "Échec de l’export",
-        "missingProject": "Projet introuvable. Enregistre la session puis réessaie.",
+        "missingProject": "Projet introuvable. Enregistrez la session puis réessayez.",
         "rendering": "Rendu en cours…",
         "submit": "Exporter",
-        "title": "Exporter le morceau",
+        "title": "Exporter la track",
         "titleRequired": "Le titre est obligatoire.",
         "trackTitle": "Titre",
         "untitled": "Sans titre",
-        "uploading": "Envoi en cours…",
+        "uploading": "Upload en cours…",
         "visibility": "Visibilité",
         "visibilityOptions": {
           "private": "Privé",
@@ -827,7 +835,7 @@
       "projectMenu": "Menu du projet",
       "redo": "Rétablir",
       "rename": {
-        "body": "Choisis un nouveau nom pour ce projet.",
+        "body": "Choisissez un nouveau nom pour ce projet.",
         "failed": "Échec du renommage",
         "required": "Le nom est obligatoire.",
         "submit": "Renommer",
@@ -843,35 +851,40 @@
       "bar": "mes.",
       "beat": "temps",
       "bpm": "bpm",
-      "meter": "mesure"
+      "meter": "métrique"
     },
     "panels": {
       "browser": "Navigateur",
-      "devices": "Appareils",
+      "devices": "Devices",
       "editor": "Éditeur",
       "timeline": "Timeline"
+    },
+    "transport": {
+      "loop": "Loop",
+      "play": "Lecture",
+      "stop": "Stop"
     }
   },
   "tracks": {
-    "actions": "Actions du morceau",
-    "count_one": "{{count}} morceau",
-    "count_other": "{{count}} morceaux",
+    "actions": "Actions de la track",
+    "count_one": "{{count}} track",
+    "count_other": "{{count}} tracks",
     "delete": {
-      "body": "Le morceau <code>{{title}}</code> sera supprimé définitivement.",
+      "body": "La track <code>{{title}}</code> sera supprimée définitivement.",
       "errorTitle": "Suppression échouée",
-      "successDescription": "{{title}} a été supprimé",
-      "successTitle": "Morceau supprimé",
-      "title": "Supprimer ce morceau ?"
+      "successDescription": "{{title}} a été supprimée",
+      "successTitle": "Track supprimée",
+      "title": "Supprimer cette track ?"
     },
     "edit": "Modifier",
     "editModal": {
-      "errorTitle": "Impossible d'enregistrer le morceau",
-      "successDescription": "{{title}} a été enregistré",
-      "successTitle": "Morceau mis à jour",
-      "title": "Modifier le morceau"
+      "errorTitle": "Impossible d’enregistrer la track",
+      "successDescription": "{{title}} a été enregistrée",
+      "successTitle": "Track mise à jour",
+      "title": "Modifier la track"
     },
-    "empty": "Aucun morceau pour l’instant. Exporte-en un depuis le studio.",
-    "eyebrow": "Morceaux",
+    "empty": "Aucune track pour l’instant. Exportez-en une depuis le studio.",
+    "eyebrow": "Tracks",
     "fields": {
       "bpm": "BPM",
       "description": "Description",
@@ -879,12 +892,12 @@
       "mode": "Mode",
       "title": "Titre"
     },
-    "like": "Aimer",
-    "loadError": "Impossible de charger les morceaux",
+    "like": "Like",
+    "loadError": "Impossible de charger les tracks",
     "noResults": {
       "clearFilters": "Réinitialiser les filtres",
       "text": "Essayez de réinitialiser les filtres ou de chercher un autre terme.",
-      "title": "Aucun morceau ne correspond à ces filtres"
+      "title": "Aucune track ne correspond à ces filtres"
     },
     "pause": "Pause",
     "play": "Lecture",
@@ -895,13 +908,13 @@
       "size": "Taille",
       "title": "Titre (A→Z)"
     },
-    "title": "Mes morceaux",
+    "title": "Mes tracks",
     "toolbar": {
       "allVisibilities": "Toutes les visibilités",
       "searchPlaceholder": "Rechercher par titre ou description…"
     },
-    "unlike": "Ne plus aimer",
-    "updateError": "Impossible de mettre à jour le morceau",
+    "unlike": "Unlike",
+    "updateError": "Impossible de mettre à jour la track",
     "visibility": "Visibilité"
   }
 }

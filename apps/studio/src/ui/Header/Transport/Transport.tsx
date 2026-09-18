@@ -1,3 +1,4 @@
+import { useTranslation } from '@transcendence/i18n';
 import { IconBtn, theme } from '@transcendence/ui';
 import { type JSX, useEffect, useState } from 'react';
 import { useProject } from '../../../contexts/ProjectContext';
@@ -6,6 +7,7 @@ import styles from './Transport.module.scss';
 
 export function Transport(): JSX.Element {
   const { audioContext, project } = useProject();
+  const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLooping, setIsLooping] = useState(() => project.timelineBox.loopArea.enabled.getValue());
 
@@ -32,7 +34,7 @@ export function Transport(): JSX.Element {
   return (
     <div className={styles.transportContainer}>
       <IconBtn
-        title="Play"
+        title={t('studio.transport.play')}
         color={theme.green}
         background={
           isPlaying ? `color-mix(in srgb, ${theme.green} 18%, ${theme.void})` : theme.void
@@ -53,7 +55,7 @@ export function Transport(): JSX.Element {
         <StudioIcon name="play" size={14} />
       </IconBtn>
       <IconBtn
-        title="Stop"
+        title={t('studio.transport.stop')}
         color={theme.fg1}
         background={isPlaying ? `color-mix(in srgb, ${theme.fg1} 18%, ${theme.void})` : theme.void}
         borderColor={isPlaying ? theme.fg1 : theme.lineSoft}
@@ -69,7 +71,7 @@ export function Transport(): JSX.Element {
         <StudioIcon name="stop" size={14} />
       </IconBtn>
       <IconBtn
-        title="Loop"
+        title={t('studio.transport.loop')}
         color={theme.orange}
         background={
           isLooping ? `color-mix(in srgb, ${theme.orange} 18%, ${theme.void})` : theme.void
