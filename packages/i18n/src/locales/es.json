@@ -568,6 +568,7 @@
     },
     "upload": {
       "afterUpload": "Después de subir",
+      "batch": "Archivo {{current}} de {{total}}",
       "dropTitle": "Suelta aquí los archivos de audio",
       "errorTitle": "Error al subir",
       "fileTooLarge": "Archivo demasiado grande (máx. {{max}} por archivo)",

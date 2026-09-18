@@ -1,4 +1,4 @@
-import { apiError, apiFetch } from '@transcendence/auth';
+import { apiError, apiFetch, apiUpload } from '@transcendence/auth';
 import { type DecodedPeaks, decodePeak } from '../../lib/peaks';
 import type { Paginated } from '../../types/pagination';
 import type { Sample } from '../../types/sample';
@@ -44,7 +44,11 @@ export async function getStorageUsage(): Promise<SampleStorageUsage> {
   return data;
 }
 
-export async function uploadSample(file: File, fields: UploadSampleFields): Promise<void> {
+export async function uploadSample(
+  file: File,
+  fields: UploadSampleFields,
+  onProgress?: (ratio: number) => void,
+): Promise<void> {
   const form = new FormData();
   // ⚠️ Append text fields BEFORE the file. With req.file() the busboy stream
   // only exposes fields that arrived *before* the file part — fields appended
@@ -58,10 +62,7 @@ export async function uploadSample(file: File, fields: UploadSampleFields): Prom
   form.append('sample', file);
 
   // do NOT set Content-Type — the browser sets the multipart boundary.
-  const res = await apiFetch('/api/samples/upload', {
-    body: form,
-    method: 'POST',
-  });
+  const res = await apiUpload('/api/samples/upload', form, onProgress);
 
   if (!res.ok) throw await apiError(res, '/api/samples/upload');
 }

@@ -568,6 +568,7 @@
     },
     "upload": {
       "afterUpload": "Après l’upload",
+      "batch": "Fichier {{current}} sur {{total}}",
       "dropTitle": "Déposez vos fichiers audio ici",
       "errorTitle": "Upload échoué",
       "fileTooLarge": "Fichier trop grand (max {{max}} par fichier)",

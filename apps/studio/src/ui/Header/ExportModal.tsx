@@ -35,6 +35,7 @@ export function ExportModal({
   const [title, setTitle] = useState(defaultTitle);
   const [visibility, setVisibility] = useState<TrackVisibility>('PRIVATE');
   const [phase, setPhase] = useState<Phase>('form');
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const busy = phase === 'rendering' || phase === 'uploading';
@@ -44,6 +45,7 @@ export function ExportModal({
     setTitle(defaultTitle.trim() || t('studio.header.export.untitled'));
     setVisibility('PRIVATE');
     setPhase('form');
+    setUploadProgress(null);
     setError(null);
   }, [defaultTitle, open, t]);
 
@@ -80,16 +82,22 @@ export function ExportModal({
         }
 
         setPhase('uploading');
-        await uploadTrack(wav, {
-          bpm,
-          projectId,
-          title: trimmed,
-          visibility,
-        });
+        setUploadProgress(null);
+        await uploadTrack(
+          wav,
+          {
+            bpm,
+            projectId,
+            title: trimmed,
+            visibility,
+          },
+          setUploadProgress,
+        );
         onClose();
       } catch (caught) {
         const message = caught instanceof Error ? caught.message : String(caught);
         setError(message || t('studio.header.export.failed'));
+        setUploadProgress(null);
         setPhase('form');
       }
     })();
@@ -154,9 +162,14 @@ export function ExportModal({
         ) : null}
 
         {phase === 'uploading' ? (
-          <p style={{ color: theme.fg2, fontSize: 12, margin: 0 }}>
-            {t('studio.header.export.uploading')}
-          </p>
+          <div>
+            <p style={{ color: theme.fg2, fontSize: 12, margin: '0 0 8px' }}>
+              {t('studio.header.export.uploading')}
+            </p>
+            {uploadProgress === null ? null : (
+              <Progress percent={Math.round(uploadProgress * 100)} size="small" />
+            )}
+          </div>
         ) : null}
 
         {error ? (

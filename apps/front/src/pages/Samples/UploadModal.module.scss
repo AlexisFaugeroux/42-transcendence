@@ -13,6 +13,9 @@
 }
 
 .queueLabel {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
   margin: 16px 0 8px;
   color: var(--fg3);
   font-size: 11px;
@@ -66,6 +69,10 @@
 .field :global(.ant-select),
 .field :global(.ant-input-number) {
   width: 100%;
+}
+
+.queueRow :global(.ant-progress) {
+  margin: 0;
 }
 
 .fileName {

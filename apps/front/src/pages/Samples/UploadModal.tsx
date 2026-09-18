@@ -9,6 +9,7 @@ import {
   Modal,
   MsnIcon,
   notification,
+  Progress,
   Select,
   theme,
   Upload,
@@ -29,6 +30,7 @@ interface QueueItem {
   file: File;
   fields: UploadSampleFields;
   error?: string;
+  progress?: number;
 }
 
 interface UploadModalProps {
@@ -49,6 +51,7 @@ export function UploadModal({
   usedBytes,
 }: UploadModalProps): JSX.Element {
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [batch, setBatch] = useState<{ current: number; total: number } | null>(null);
   const { i18n, t } = useTranslation();
   const locale = i18n.language;
   const [notificationApi, notificationContext] = notification.useNotification();
@@ -94,22 +97,29 @@ export function UploadModal({
     mutationFn: async () => {
       const pending = queue.filter((item) => item.status === 'queued');
       let failed = 0;
+      let index = 0;
 
       for (const item of pending) {
-        patch(item.uuid, { error: undefined, status: 'uploading' });
+        index += 1;
+        setBatch({ current: index, total: pending.length });
+        patch(item.uuid, { error: undefined, progress: undefined, status: 'uploading' });
 
         try {
-          await uploadSample(item.file, item.fields);
+          await uploadSample(item.file, item.fields, (ratio) => {
+            patch(item.uuid, { progress: ratio });
+          });
           deleteFromQueue(item.uuid);
         } catch (error) {
           patch(item.uuid, {
             error: error instanceof Error ? error.message : t('samples.upload.errorTitle'),
+            progress: undefined,
             status: 'error',
           });
           failed += 1;
         }
       }
 
+      setBatch(null);
       await onUploaded();
 
       if (failed)
@@ -188,10 +198,20 @@ export function UploadModal({
       </Upload.Dragger>
 
       <div className={styles.queueLabel}>
-        {t('samples.upload.queue', { count: queue.length, size: formatBytes(queueTotal, locale) })}
+        <span>
+          {t('samples.upload.queue', {
+            count: queue.length,
+            size: formatBytes(queueTotal, locale),
+          })}
+        </span>
+        {batch ? (
+          <span className={styles.accent}>
+            {t('samples.upload.batch', { current: batch.current, total: batch.total })}
+          </span>
+        ) : null}
       </div>
       <div className={styles.queue}>
-        {queue.map(({ error, fields, file, status, uuid }) => (
+        {queue.map(({ error, fields, file, progress, status, uuid }) => (
           <div key={uuid} className={styles.queueRow}>
             <div className={styles.topLine}>
               <span className={styles.fileName}>{file.name}</span>
@@ -210,6 +230,9 @@ export function UploadModal({
                 <DeleteOutlined />
               </Button>
             </div>
+            {status === 'uploading' && progress !== undefined ? (
+              <Progress percent={Math.round(progress * 100)} size="small" />
+            ) : null}
             {error ? <div className={styles.error}>{error}</div> : null}
             <div className={styles.selects}>
               <label className={styles.field}>
