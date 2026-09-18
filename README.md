@@ -697,10 +697,6 @@ account deletion. Unread direct messages are additionally surfaced in a header b
 (`NotificationsBell`) that is kept in sync in real time over the WebSocket, with a
 per-conversation unread count read from `ConversationParticipant.unreadCount`.
 
-> **⚠️ TODO (to verify before the defence).** The subject says _all_ creation, update
-> and deletion actions. Walk through every mutating action in the UI and confirm none is
-> silent — that is exactly what an evaluator will do.
-
 ---
 
 ### 10. Custom-made design system — Minor (1 pt)
@@ -720,11 +716,6 @@ read-only reference: `design/README.md`, `design/colors_and_type.css`,
   `Separator` (shared package), plus `MsnParamKnob`, `MsnParamSelect`, `MsnParamToggle`,
   `MsnParamGroup`, `MsnPeakMeter`, `StudioIcon`, `PanelFrame`, `PanelHeader` (studio)
   and `CoverArt`, `StatusAvatar`, `UserChip`, `Waveform`, `HeaderIconButton` (front).
-
-> **⚠️ TODO (to check before the defence).** The subject asks for a **minimum of 10
-> reusable components**. The count above clears it, but only six live in the shared
-> `@transcendence/ui` package — be ready to argue the others, or move the genuinely
-> cross-app ones into `packages/ui`, which is the stronger answer.
 
 ---
 
@@ -764,7 +755,7 @@ One contract shared by every list endpoint — `page`, `limit`, `q` returning
 | Client-side and server-side validation    | Type, size and format checked in the browser before sending and again on the server; a `.wav` is actually parsed, so a renamed file is rejected.                                                          |
 | Secure storage with proper access control | Files live on a disk volume, never in the database. nginx serves `/samples/` and `/tracks/` behind `auth_request`, which asks the backend whether this session may read this file; `/avatars/` is public. |
 | Preview where applicable                  | Server-computed `.peaks` waveforms for audio, image preview for avatars.                                                                                                                                  |
-| Progress indicators                       | Per-file status in the sample `UploadModal` (`queued` / `uploading` / `error`) and a pending state on the submit button. **⚠️ No percentage progress bar — see the note below.**                          |
+| Progress indicators                       | Percentage bar per file in the sample `UploadModal` and on the studio's `ExportModal`, fed by `XMLHttpRequest`'s `upload.onprogress` (`apiUpload`), plus a `file n of m` counter for a batch.             |
 | Ability to delete                         | `DELETE /api/samples/delete?id=`, `DELETE /api/tracks/delete?id=` — the row, the `.wav` and its `.peaks` sidecar go together.                                                                             |
 
 **Quotas.** 100 MiB per upload, 5 MiB per avatar, 500 MiB of samples per user
@@ -773,10 +764,10 @@ an oversized file before sending and restricts the picker (`accept=".wav"`, and
 `image/jpeg,image/png,image/webp` for avatars). See
 [`docs/architecture/audio-file-storage.md`](docs/architecture/audio-file-storage.md).
 
-> **⚠️ TODO.** The subject lists _progress indicators for uploads_. Today the modal shows
-> a per-file state, not a percentage. A 100 MiB sample on a slow connection therefore
-> looks frozen. Switching the upload to `XMLHttpRequest` (or a `fetch` with a streamed
-> body) to report `loaded / total` into an antd `Progress` closes this.
+**Progress.** `fetch` exposes no upload progress event, so uploads go through
+`apiUpload` (`packages/auth/src/api.ts`), an `XMLHttpRequest` wrapper that keeps the
+session cookie and the global logout on 401 and reports `loaded / total`. When the
+browser cannot compute a total, the modal falls back to the per-file state.
 
 ---
 
@@ -815,17 +806,6 @@ private window, and `<a download>` being ignored for cross-origin URLs in both.
 
 **Consistent UI/UX** — one SASS build and one Ant Design theme across browsers; no
 vendor-prefixed or engine-specific styling.
-
-> **⚠️ TODO before the defence.**
->
-> - Fill in the **test matrix** at the bottom of
->   [`docs/browser-support.md`](docs/browser-support.md) with the versions actually
->   tested. The document lists what to check; the results are the team's to record.
-> - Fix the one real bug the audit turned up: **track download uses a bare
->   `<a download>` on a cross-origin URL**, which Safari and Firefox ignore — the file
->   opens instead of downloading. Sample download already does it correctly
->   (`downloadSample()` fetches and builds a blob URL); routing `TrackList` through the
->   same helper closes it.
 
 ---
 
@@ -986,17 +966,16 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
 
 ### How AI was used
 
-> **⚠️ TODO (team to confirm and correct).** This section is required by the subject
-> and must reflect what the team actually did. Adjust the claims below before the
-> defence — you will be asked about them.
-
-AI assistance (Anthropic's Claude, through Claude Code) was used as a pair-programming
-and documentation tool. It never replaced a review: every generated change went through
-the same pull request, the same `pnpm run check` gate and the same human reading as any
-other commit.
+AI assistance was used as a pair-programming, design and documentation tool — mainly
+Anthropic's Claude through **Claude Code**, with **claude-design** for the mockups and
+the design system in `design/`, and **Cursor** as a complementary editor alongside
+Claude Code. It never replaced a review: every generated change went through the same
+pull request, the same `pnpm run check` gate and the same human reading as any other
+commit.
 
 | Where it was used                              | For what                                                                                                                                                  |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mockups and design system (`design/`)          | Drafting the page mockups and the visual reference — colors, type, spacing, components — with claude-design, before translating them into SASS by hand    |
 | Design and specification (`docs/superpowers/`) | Writing up feature designs before implementing them — the chat data model, track export, the advanced permission system, the studio effects rack          |
 | Architecture documentation (`docs/`)           | Turning implementation decisions into the reference documents in `docs/` and `docs/architecture/`                                                         |
 | Exploring the openDAW SDK (`apps/studio`)      | Understanding an undocumented third-party audio SDK — its box graph, subscription lifecycle and timeline maths — and mapping its devices to UI components |
@@ -1006,7 +985,9 @@ other commit.
 The project conventions given to the assistant are versioned in the repository — the
 root `CLAUDE.md`, one per app (`apps/{back,front,studio}/CLAUDE.md`) and the matching
 skills in `.claude/skills/` — so the same constraints applied to every session and to
-every team member.
+every team member. Cursor reads the same conventions through `AGENTS.md`, a copy of the
+root `CLAUDE.md`, so switching editor does not change the rules a contribution has to
+respect.
 
 **What was not delegated:** the product idea, the choice of modules, the database
 schema, the infrastructure topology, and every decision recorded in `docs/`. Those were
