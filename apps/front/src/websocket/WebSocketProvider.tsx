@@ -18,8 +18,6 @@ type eventHandler = (input: WebSocketEvent) => void;
 
 const websocketContext = createContext<WebsocketContextValue | null>(null);
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
 export function WebSocketProvider({ children }: { children: ReactNode }): JSX.Element {
   const { loading, user } = useUser();
   const userId = user?.id;
@@ -35,7 +33,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }): JSX.El
   useEffect(() => {
     if (loading || !userId) return;
 
-    const ws = new WebSocket(`${BASE_URL}/api/ws`);
+    const ws = new WebSocket(`/api/ws`);
 
     ws.onopen = (event) => {
       if (import.meta.env.DEV) console.log('socket open', event);

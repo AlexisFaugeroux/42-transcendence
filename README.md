@@ -295,7 +295,6 @@ cp apps/studio/.env.example apps/studio/.env
 
 | Variable          | App           | Notes                                                                                       |
 | ----------------- | ------------- | ------------------------------------------------------------------------------------------- |
-| `VITE_API_URL`    | front, studio | Base URL prepended to every API call. **Leave empty in dev** — the Vite proxy routes `/api` |
 | `VITE_STUDIO_URL` | front         | Where the "open the studio" links point (`http://localhost:5174/studio/` in dev)            |
 | `VITE_FRONT_URL`  | studio        | Where the studio sends the user back on leaving (`http://localhost:5173` in dev)            |
 

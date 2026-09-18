@@ -1,10 +1,8 @@
 import { ApiErrorReponse } from '@transcendence/auth';
 import type { RegisterBody, RegisterResponse } from './types.ts';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
 export async function registerRequest(body: RegisterBody): Promise<RegisterResponse> {
-  const res = await fetch(`${BASE_URL}/api/auth/register`, {
+  const res = await fetch(`/api/auth/register`, {
     body: JSON.stringify({
       artistName: body.artistName,
       email: body.email,
