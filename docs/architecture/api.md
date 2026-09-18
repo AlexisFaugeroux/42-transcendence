@@ -97,8 +97,9 @@ matches `handle` and `artistName` on producer lists, and track `title` on
 `/:handle/liked`, case-insensitively. See [../pagination.md](../pagination.md).
 
 `/:handle/liked` lists tracks that producer liked, **public only** (same filter
-on `total`). `follow` / `unfollow` / `:handle/tracks` are rate-limited to 5/min.
-`handle` is validated by a shared `handleParamsSchema` (`^[\w.]+$`, 3–32 chars).
+on `total`). Rate limits: see [../authentication.md](../authentication.md)
+(`RATE_LIMITS`). `handle` is validated by a shared `handleParamsSchema`
+(`^[\w.]+$`, 3–32 chars).
 
 ### `/api/samples` and `/api/tracks`
 

@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { userController } from '../controllers/user/user';
 import { authUserResponseSchema, onlineUsersResponseSchema } from './schemas/user';
 
@@ -71,7 +72,7 @@ export function userRoutes(app: FastifyInstance) {
   app.put(
     '/update/profile',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.auth },
       preHandler: app.authenticate,
       schema: updateProfileSchema,
     },
@@ -81,7 +82,7 @@ export function userRoutes(app: FastifyInstance) {
   app.put(
     '/update/password',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.auth },
       preHandler: app.authenticate,
       schema: changePasswordSchema,
     },
@@ -91,6 +92,7 @@ export function userRoutes(app: FastifyInstance) {
   app.delete(
     '/delete',
     {
+      config: { rateLimit: RATE_LIMITS.destructive },
       preHandler: app.authenticate,
       schema: noContentSchema,
     },
@@ -100,6 +102,7 @@ export function userRoutes(app: FastifyInstance) {
   app.post(
     '/upload/avatar',
     {
+      config: { rateLimit: RATE_LIMITS.upload },
       preHandler: app.authenticate,
       schema: uploadAvatarSchema,
     },
@@ -109,6 +112,7 @@ export function userRoutes(app: FastifyInstance) {
   app.get(
     '/listFollowing',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: listOnlineUsersSchema,
     },
@@ -118,6 +122,7 @@ export function userRoutes(app: FastifyInstance) {
   app.get(
     '/listFollowers',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: listOnlineUsersSchema,
     },

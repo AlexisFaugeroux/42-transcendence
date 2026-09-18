@@ -97,7 +97,29 @@ lists the valid ones and `POST /api/admin/users/revoke` calls
 `revokeAllForUser`, then `webSocketRegistry.closeAll(userId)` so the account's open
 sockets drop immediately rather than lingering until its next HTTP call.
 
-Rate limiting is opt-in per route (`@fastify/rate-limit`, `global: false`).
+## Rate limiting
+
+`@fastify/rate-limit`, `global: false` — only routes with `config.rateLimit` are
+limited. Presets live in `apps/back/src/constants.ts` (`RATE_LIMITS`).
+
+| Preset        | Limit      | Used for                                 |
+| ------------- | ---------- | ---------------------------------------- |
+| `auth`        | 5 / min    | login, register, profile/password update |
+| `write`       | 30 / min   | follow, like, chat send, project save    |
+| `upload`      | 10 / 5 min | sample / track / avatar upload           |
+| `read`        | 60 / min   | list/get routes, WS handshake            |
+| `destructive` | 3 / min    | account deletes (user + admin)           |
+| `dm`          | 10 / min   | `POST /api/chat/createConversation`      |
+
+Key = `authUser.id` if logged in, else `req.ip`. Needs `trustProxy: true` and
+nginx `X-Forwarded-For` / `X-Real-IP` on `/api/` and `/api/ws`
+(`infra/nginx/reverse-proxy.conf`).
+
+Not limited (on purpose): `GET /me`, `POST /logout`, `GET /check-access`
+(nginx `auth_request` on every media hit).
+
+Store is **in-memory, per process** — fine with one back instance; not shared
+across replicas.
 
 ## Frontend
 
