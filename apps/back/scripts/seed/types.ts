@@ -29,6 +29,7 @@ export interface SampleSet {
 
 export interface TrackFixture {
   file: string;
+  likes?: string[];
   owner: SampleOwner;
   title: string;
   description?: string;
