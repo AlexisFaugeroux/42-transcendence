@@ -29,7 +29,6 @@ import { userRoutes } from './routes/user';
 import { websocketRoutes } from './routes/websocket';
 
 export async function buildApp(): Promise<FastifyInstance> {
-  // TODO: ajouter trustProxy aux options du constructeur a cause du reverse-proxy?
   const app = Fastify({
     ajv: {
       customOptions: { removeAdditional: false },
@@ -43,6 +42,7 @@ export async function buildApp(): Promise<FastifyInstance> {
               target: 'pino-pretty',
             },
           },
+    trustProxy: true,
   });
 
   app.setErrorHandler(
@@ -74,6 +74,10 @@ export async function buildApp(): Promise<FastifyInstance> {
       if (error instanceof PayloadTooLargeError) {
         request.log.error(error);
         return reply.code(413).send({ error: error.message, status: 413 });
+      }
+      if (error.statusCode === 429) {
+        request.log.warn(error);
+        return reply.code(429).send({ error: error.message, status: 429 });
       }
       if (error instanceof InternalServerError) {
         request.log.error(error);

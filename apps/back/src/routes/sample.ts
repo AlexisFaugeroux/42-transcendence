@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { sampleController } from '../controllers/sample/sample';
 import { USER_KINDS } from '../domain/sample';
 import { Family, Key, Mode, SampleKind, VisibilityType } from '../generated/prisma/enums';
@@ -172,23 +173,40 @@ const deleteSampleSchema = {
 };
 
 export function sampleRoutes(app: FastifyInstance) {
-  app.get('/get', { preHandler: app.authenticate, schema: getSampleSchema }, sampleController.get);
+  app.get(
+    '/get',
+    {
+      config: { rateLimit: RATE_LIMITS.read },
+      preHandler: app.authenticate,
+      schema: getSampleSchema,
+    },
+    sampleController.get,
+  );
 
   app.get(
     '/storage',
-    { preHandler: app.authenticate, schema: storageSampleSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.read },
+      preHandler: app.authenticate,
+      schema: storageSampleSchema,
+    },
     sampleController.storage,
   );
 
   app.post(
     '/upload',
-    { preHandler: [app.authenticate, app.authorize('sample:write')], schema: uploadSampleSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.upload },
+      preHandler: [app.authenticate, app.authorize('sample:write')],
+      schema: uploadSampleSchema,
+    },
     sampleController.upload,
   );
 
   app.put(
     '/update',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize('sample:write')],
       schema: updateSampleSchema,
     },
@@ -198,6 +216,7 @@ export function sampleRoutes(app: FastifyInstance) {
   app.delete(
     '/delete',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize('sample:write')],
       schema: deleteSampleSchema,
     },

@@ -1,5 +1,6 @@
 import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { projectController } from '../controllers/project/project';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
 import { projectSchema, projectsResponseSchema } from './schemas/project';
@@ -87,6 +88,7 @@ export function projectRoutes(app: FastifyInstance) {
   app.put(
     '/save',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: saveProjectSchema,
     },
@@ -96,6 +98,7 @@ export function projectRoutes(app: FastifyInstance) {
   app.get(
     '/load',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: loadProjectSchema,
     },
@@ -105,6 +108,7 @@ export function projectRoutes(app: FastifyInstance) {
   app.get(
     '/list',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: listProjectsSchema,
     },
@@ -114,6 +118,7 @@ export function projectRoutes(app: FastifyInstance) {
   app.put(
     '/update',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: updateProjectSchema,
     },
@@ -123,6 +128,7 @@ export function projectRoutes(app: FastifyInstance) {
   app.delete(
     '/delete',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.STUDIO_ACCESS)],
       schema: deleteProjectSchema,
     },

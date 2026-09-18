@@ -32,9 +32,23 @@ async function authPlugin(app: FastifyInstance) {
     secret,
     sign: { expiresIn: '7d' },
   });
-  // global: false → only routes that opt in via `config.rateLimit` are limited,
-  // so auth endpoints are throttled while everything else is untouched.
-  await app.register(rateLimit, { global: false });
+  app.addHook('onRequest', async (req) => {
+    try {
+      const payload = await req.jwtVerify<{ sub: string; sid: string }>();
+      const session = await sessionRepository.findValid(payload.sid);
+      if (session) {
+        req.authUser = { id: session.userId, role: session.role, sid: session.id };
+      }
+    } catch {
+      req.log.debug(error, 'no valid session, rate limiting by ip');
+    }
+  });
+
+  await app.register(rateLimit, {
+    global: false,
+    hook: 'preHandler',
+    keyGenerator: (req) => req.authUser?.id ?? req.ip,
+  });
 
   app.decorate(
     'signAuthToken',
@@ -44,17 +58,7 @@ async function authPlugin(app: FastifyInstance) {
   );
 
   app.decorate('authenticate', async function (req: FastifyRequest, reply: FastifyReply) {
-    try {
-      const payload = await req.jwtVerify<{ sub: string; sid: string }>();
-      const session = await sessionRepository.findValid(payload.sid);
-      if (!session) {
-        reply.code(401).send({ message: 'unauthorized' });
-        return;
-      }
-      req.authUser = { id: session.userId, role: session.role, sid: session.id };
-    } catch {
-      reply.code(401).send({ message: 'unauthorized' });
-    }
+    if (!req.authUser) reply.code(401).send({ message: 'unauthorized' });
   });
 
   app.decorate('authorize', (permission: Permissions) => {

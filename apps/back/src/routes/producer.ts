@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { trackController } from '../controllers/track/track';
 import { userController } from '../controllers/user/user';
 import { paginatedResponseSchema } from './schemas/pagination';
@@ -38,6 +39,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: { querystring: paginationQuerySchema, response: paginatedProducersResponse },
     },
@@ -47,6 +49,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/:handle',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: { params: handleParamsSchema, response: { 200: producerProfileResponseSchema } },
     },
@@ -56,6 +59,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/:handle/followers',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
         params: handleParamsSchema,
@@ -69,6 +73,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/:handle/following',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
         params: handleParamsSchema,
@@ -82,7 +87,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.post(
     '/:handle/follow',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: app.authenticate,
       schema: followSchema,
     },
@@ -92,7 +97,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.delete(
     '/:handle/follow',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: app.authenticate,
       schema: followSchema,
     },
@@ -102,7 +107,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/:handle/tracks',
     {
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
         params: handleParamsSchema,
@@ -116,6 +121,7 @@ export function producerRoutes(app: FastifyInstance) {
   app.get(
     '/:handle/liked',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: app.authenticate,
       schema: {
         params: handleParamsSchema,

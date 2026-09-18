@@ -1,5 +1,6 @@
 import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { chatController } from '../controllers/chat/chat';
 import {
   conversationSchema,
@@ -76,6 +77,7 @@ export function chatRoutes(app: FastifyInstance) {
   app.get(
     '/listConversations',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
       schema: listConversationsSchema,
     },
@@ -85,6 +87,7 @@ export function chatRoutes(app: FastifyInstance) {
   app.get(
     '/listMessages',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
       schema: listMessagesSchema,
     },
@@ -94,6 +97,7 @@ export function chatRoutes(app: FastifyInstance) {
   app.post(
     '/createConversation',
     {
+      config: { rateLimit: RATE_LIMITS.dm },
       preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
       schema: createChatSchema,
     },
@@ -103,6 +107,7 @@ export function chatRoutes(app: FastifyInstance) {
   app.post(
     '/sendMessage',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
       schema: sendMessageSchema,
     },
@@ -112,6 +117,7 @@ export function chatRoutes(app: FastifyInstance) {
   app.post(
     '/markAsRead',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.CHAT_ACCESS)],
       schema: markAsReadSchema,
     },

@@ -1,5 +1,6 @@
 import { Permissions, Role } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { adminController } from '../controllers/admin/admin';
 import { paginatedResponseSchema } from './schemas/pagination';
 import { sessionListResponseSchema } from './schemas/session';
@@ -125,7 +126,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.get(
     '/users/get',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_READ)],
       schema: getUsersSchema,
     },
@@ -135,7 +136,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.put(
     '/users/update',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserSchema,
     },
@@ -145,6 +146,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.get(
     '/users/sessions',
     {
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.SESSION_REVOKE)],
       schema: listSessionsSchema,
     },
@@ -154,7 +156,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.put(
     '/users/role',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_WRITE)],
       schema: updateUserRoleSchema,
     },
@@ -164,7 +166,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.delete(
     '/users/delete',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.destructive },
       preHandler: [app.authenticate, app.authorize(Permissions.USER_DELETE)],
       schema: deleteUserSchema,
     },
@@ -174,7 +176,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.post(
     '/users/revoke',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.SESSION_REVOKE)],
       schema: revokeSessionsSchema,
     },
@@ -184,7 +186,7 @@ export function adminRoutes(app: FastifyInstance) {
   app.get(
     '/tracks/get',
     {
-      config: { rateLimit: { max: 60, timeWindow: '1 minute' } },
+      config: { rateLimit: RATE_LIMITS.read },
       preHandler: [app.authenticate, app.authorize(Permissions.TRACK_MODERATE)],
       schema: getTracksSchema,
     },

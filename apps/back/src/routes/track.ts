@@ -1,5 +1,6 @@
 import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { trackController } from '../controllers/track/track';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';
 import { paginatedResponseSchema } from './schemas/pagination';
@@ -167,29 +168,50 @@ const uploadTrackSchema = {
 };
 
 export function trackRoutes(app: FastifyInstance) {
-  app.get('/get', { preHandler: app.authenticate, schema: getTrackSchema }, trackController.get);
+  app.get(
+    '/get',
+    {
+      config: { rateLimit: RATE_LIMITS.read },
+      preHandler: app.authenticate,
+      schema: getTrackSchema,
+    },
+    trackController.get,
+  );
 
   app.get(
     '/liked',
-    { preHandler: app.authenticate, schema: likedListSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.read },
+      preHandler: app.authenticate,
+      schema: likedListSchema,
+    },
     trackController.listLiked,
   );
 
   app.post(
     '/like',
-    { preHandler: app.authenticate, schema: likeTrackSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.write },
+      preHandler: app.authenticate,
+      schema: likeTrackSchema,
+    },
     trackController.like,
   );
 
   app.delete(
     '/unlike',
-    { preHandler: app.authenticate, schema: likeTrackSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.write },
+      preHandler: app.authenticate,
+      schema: likeTrackSchema,
+    },
     trackController.unlike,
   );
 
   app.post(
     '/upload',
     {
+      config: { rateLimit: RATE_LIMITS.upload },
       preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)],
       schema: uploadTrackSchema,
     },
@@ -199,6 +221,7 @@ export function trackRoutes(app: FastifyInstance) {
   app.put(
     '/update',
     {
+      config: { rateLimit: RATE_LIMITS.write },
       preHandler: [app.authenticate, app.authorize(Permissions.TRACK_WRITE)],
       schema: updateTrackSchema,
     },
@@ -207,7 +230,11 @@ export function trackRoutes(app: FastifyInstance) {
 
   app.delete(
     '/delete',
-    { preHandler: app.authenticate, schema: deleteTrackSchema },
+    {
+      config: { rateLimit: RATE_LIMITS.write },
+      preHandler: app.authenticate,
+      schema: deleteTrackSchema,
+    },
     trackController.delete,
   );
 }

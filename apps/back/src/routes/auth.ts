@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { RATE_LIMITS } from '../constants';
 import { authController } from '../controllers/auth/auth';
 import { authUserResponseSchema } from './schemas/user';
 
@@ -52,13 +53,13 @@ const logoutSchema = {
 export function authRoutes(app: FastifyInstance) {
   app.post(
     '/register',
-    { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: registerSchema },
+    { config: { rateLimit: RATE_LIMITS.auth }, schema: registerSchema },
     authController.register,
   );
 
   app.post(
     '/login',
-    { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: loginSchema },
+    { config: { rateLimit: RATE_LIMITS.auth }, schema: loginSchema },
     authController.login,
   );
 
