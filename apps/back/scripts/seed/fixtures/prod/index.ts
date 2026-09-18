@@ -172,6 +172,17 @@ export const prodConfig: SeedConfig = {
     {
       description: 'Un truc lent, écrit un soir de novembre.',
       file: join(tracksDir, 'At night.wav'),
+      likes: [
+        'Jububibi',
+        'Maya',
+        'Loprima',
+        'Sifex',
+        'Nyxette',
+        'Bruit Doux',
+        'Plume',
+        'Mélo',
+        'Kasper',
+      ],
       owner: { artistName: 'Alexoos' },
       title: 'At night',
       visibility: VisibilityType.PUBLIC,
@@ -179,6 +190,7 @@ export const prodConfig: SeedConfig = {
     {
       description: 'Trois accords et une lampe à huile.',
       file: join(tracksDir, 'Genie in a lamp.wav'),
+      likes: ['Jububibi', 'Sifex', 'Loprima', 'DJ Radiateur', 'Tonton Wav', 'Vigie'],
       owner: { artistName: 'Alexoos' },
       title: 'Genie in a lamp',
       visibility: VisibilityType.PUBLIC,
@@ -186,6 +198,7 @@ export const prodConfig: SeedConfig = {
     {
       description: "Le morceau dont je n'arrive pas à finir le mix.",
       file: join(tracksDir, 'Mirror.wav'),
+      likes: ['Maya', 'Nyxette', 'Plume', 'Kasper'],
       owner: { artistName: 'Alexoos' },
       title: 'Mirror',
       visibility: VisibilityType.PUBLIC,

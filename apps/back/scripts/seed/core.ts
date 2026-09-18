@@ -218,6 +218,7 @@ export async function seed(config: SeedConfig): Promise<void> {
 
   if (config.tracks) {
     console.log('Create tracks...');
+    let likeTimestamp = Date.now();
     for (const track of config.tracks) {
       const ownerId = resolveOwnerId(track.owner);
       const id = randomUUID();
@@ -239,6 +240,16 @@ export async function seed(config: SeedConfig): Promise<void> {
           visibility: track.visibility,
         },
       });
+
+      if (track.likes) {
+        await prisma.trackLike.createMany({
+          data: track.likes.map((artistName) => {
+            const user = users.find((candidate) => candidate.artistName === artistName);
+            if (!user) throw new Error(`Cannot find user ${artistName} in likes of ${track.title}`);
+            return { createdAt: new Date(likeTimestamp++), trackId: id, userId: user.id };
+          }),
+        });
+      }
 
       const dest = join(config.mediaDir, 'tracks', url);
       await mkdir(dirname(dest), { recursive: true });
