@@ -15,7 +15,7 @@ interface ProjectMeta {
 }
 
 function buildPayload(meta: ProjectMeta, project: Project, name = meta.name): ProjectProperties {
-return {
+  return {
     bpm: project.timelineBox.bpm.getValue(),
     duration: meta.duration,
     id: meta.id,

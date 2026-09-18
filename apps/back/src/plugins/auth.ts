@@ -83,9 +83,16 @@ async function authPlugin(app: FastifyInstance) {
     },
   );
 
-  app.decorate('authenticate', async function (req: FastifyRequest, reply: FastifyReply) {
-    if (!req.authUser) reply.code(401).send({ message: 'unauthorized' });
-  });
+  app.decorate(
+    'authenticate',
+    function (req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) {
+      if (!req.authUser) {
+        reply.code(401).send({ message: 'unauthorized' });
+        return;
+      }
+      done();
+    },
+  );
 
   app.decorate(
     'authenticateSession',

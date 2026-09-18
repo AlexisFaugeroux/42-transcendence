@@ -2,9 +2,8 @@ import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import { MsnIcon } from '@transcendence/ui';
 import type { MsnIconLabel } from '@transcendence/ui';
 import type { JSX } from 'react';
-import styles from './Community.module.scss';
-import { ImagePlaceholder } from './ImagePlaceholder';
 import frontProducer from '../../assets/landing/front-producers.png';
+import styles from './Community.module.scss';
 
 interface Bullet {
   icon: MsnIconLabel;
@@ -43,13 +42,13 @@ export function Community(): JSX.Element {
             ))}
           </ul>
         </div>
-          <img
-            src={frontProducer}
-            alt={t('landing.hero.screenshotAlt')}
-            className={styles.shot}
-            fetchPriority="high"
-          />      
-          </div>
+        <img
+          src={frontProducer}
+          alt={t('landing.hero.screenshotAlt')}
+          className={styles.shot}
+          fetchPriority="high"
+        />
+      </div>
     </section>
   );
 }

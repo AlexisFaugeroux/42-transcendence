@@ -3,7 +3,7 @@ import type { FastifyReply, HookHandlerDoneFunction } from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    authenticate: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    authenticate: (req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => void;
     authenticateSession: (
       req: FastifyRequest,
       reply: FastifyReply,
