@@ -5,6 +5,7 @@ import { CheckOutlined, CloseCircleOutlined, notification, theme } from '@transc
 import { type JSX, useState } from 'react';
 import { updateUserProfile } from '../../api/user';
 import { AccountSection } from './AccountSection';
+import { ApiKeysSection } from './ApiKeysSection';
 import { DangerSection } from './DangerSection';
 import { type ProfileErrors } from './dashboard.data';
 import styles from './Dashboard.module.scss';
@@ -123,6 +124,9 @@ export function Dashboard(): JSX.Element {
               setField={setField}
               saveProfile={updateUserProfileMutation}
             />
+          </section>
+          <section id="apiKeys">
+            <ApiKeysSection />
           </section>
           <section id="danger">
             <DangerSection handle={saved.handle} />

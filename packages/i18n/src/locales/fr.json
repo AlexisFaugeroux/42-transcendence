@@ -178,6 +178,7 @@
   "common": {
     "availableSoon": "Bientôt disponible",
     "cancel": "Annuler",
+    "close": "Fermer",
     "delete": "Supprimer",
     "download": "Télécharger",
     "edit": "Modifier",
@@ -697,6 +698,37 @@
       "subtitle": "Identifiants de connexion et sécurité.",
       "title": "Compte"
     },
+    "apiKeys": {
+      "columns": {
+        "expires": "Expiration",
+        "lastUsed": "Dernière utilisation",
+        "name": "Nom",
+        "prefix": "Clé"
+      },
+      "copied": "Clé copiée dans le presse-papiers",
+      "copy": "Copier",
+      "copyFailed": "La clé n'a pas pu être copiée",
+      "create": "Créer une clé",
+      "createFailed": "La clé n'a pas pu être créée",
+      "createTitle": "Créer une clé d'API",
+      "createdTitle": "Votre nouvelle clé d'API",
+      "createdWarning": "Copiez-la maintenant. Elle est stockée hachée et ne sera plus jamais affichée.",
+      "empty": "Aucune clé d'API pour l'instant.",
+      "expiryDays": "{{count}} jours",
+      "expiryLabel": "Expire après",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Qui va utiliser cette clé ?",
+      "nameRequired": "Donnez un nom à cette clé.",
+      "neverUsed": "Jamais utilisée",
+      "noExpiry": "Sans expiration",
+      "revoke": "Révoquer",
+      "revokeConfirm": "Révoquer cette clé ? Tout ce qui l'utilise cessera de fonctionner immédiatement.",
+      "revokeFailed": "La clé n'a pas pu être révoquée",
+      "revoked": "La clé a été révoquée",
+      "subtitle": "Autorisez un script ou un service tiers à utiliser l'API en votre nom.",
+      "title": "Clés d'API",
+      "usage": "Envoyez-la dans l'en-tête x-api-key à chaque requête :"
+    },
     "danger": {
       "action": "Supprimer le compte",
       "confirmLabel": "Saisissez <code>{{handle}}</code> pour confirmer",
@@ -720,6 +752,7 @@
     },
     "nav": {
       "account": "Compte",
+      "apiKeys": "Clés d'API",
       "danger": "Zone dangereuse",
       "label": "Paramètres",
       "profile": "Profil"

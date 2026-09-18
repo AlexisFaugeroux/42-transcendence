@@ -178,6 +178,7 @@
   "common": {
     "availableSoon": "Disponible pronto",
     "cancel": "Cancelar",
+    "close": "Cerrar",
     "delete": "Eliminar",
     "download": "Descargar",
     "edit": "Editar",
@@ -697,6 +698,37 @@
       "subtitle": "Credenciales de acceso y seguridad.",
       "title": "Cuenta"
     },
+    "apiKeys": {
+      "columns": {
+        "expires": "Caducidad",
+        "lastUsed": "Último uso",
+        "name": "Nombre",
+        "prefix": "Clave"
+      },
+      "copied": "Clave copiada al portapapeles",
+      "copy": "Copiar",
+      "copyFailed": "No se pudo copiar la clave",
+      "create": "Crear una clave",
+      "createFailed": "No se pudo crear la clave",
+      "createTitle": "Crear una clave de API",
+      "createdTitle": "Tu nueva clave de API",
+      "createdWarning": "Cópiala ahora. Se guarda cifrada y no volverá a mostrarse.",
+      "empty": "Todavía no hay ninguna clave de API.",
+      "expiryDays": "{{count}} días",
+      "expiryLabel": "Caduca en",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "¿Qué va a usar esta clave?",
+      "nameRequired": "Ponle un nombre a esta clave.",
+      "neverUsed": "Nunca usada",
+      "noExpiry": "Sin caducidad",
+      "revoke": "Revocar",
+      "revokeConfirm": "¿Revocar esta clave? Todo lo que la use dejará de funcionar de inmediato.",
+      "revokeFailed": "No se pudo revocar la clave",
+      "revoked": "La clave ha sido revocada",
+      "subtitle": "Permite que un script o un servicio externo use la API en tu nombre.",
+      "title": "Claves de API",
+      "usage": "Envíala en la cabecera x-api-key en cada petición:"
+    },
     "danger": {
       "action": "Eliminar la cuenta",
       "confirmLabel": "Escribe <code>{{handle}}</code> para confirmar",
@@ -720,6 +752,7 @@
     },
     "nav": {
       "account": "Cuenta",
+      "apiKeys": "Claves de API",
       "danger": "Zona peligrosa",
       "label": "Ajustes",
       "profile": "Perfil"

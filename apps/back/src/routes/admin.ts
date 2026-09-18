@@ -17,6 +17,9 @@ const userIdQuerySchema = {
 };
 
 const getUsersSchema = {
+  description: 'Every account, filterable by role, searchable through q and paginated.',
+  summary: 'List accounts',
+  tags: ['admin'],
   querystring: {
     additionalProperties: false,
     properties: {
@@ -38,6 +41,9 @@ const getUsersSchema = {
 };
 
 const getTracksSchema = {
+  description: 'All tracks regardless of visibility, for moderation.',
+  summary: 'List every track',
+  tags: ['admin'],
   querystring: {
     additionalProperties: false,
     properties: {
@@ -53,6 +59,10 @@ const getTracksSchema = {
 };
 
 const updateUserSchema = {
+  description:
+    'Change the role or the profile of an account. An admin cannot change their own role.',
+  summary: 'Update an account',
+  tags: ['admin'],
   body: {
     additionalProperties: false,
     minProperties: 1,
@@ -87,6 +97,9 @@ const updateUserSchema = {
 };
 
 const updateUserRoleSchema = {
+  description: 'An admin cannot change their own role.',
+  summary: 'Change the role of an account',
+  tags: ['admin'],
   body: {
     additionalProperties: false,
     properties: {
@@ -102,6 +115,9 @@ const updateUserRoleSchema = {
 };
 
 const listSessionsSchema = {
+  description: 'Every valid session of an account, so a moderator can see where it is logged in.',
+  summary: 'List the sessions of an account',
+  tags: ['admin'],
   querystring: userIdQuerySchema,
   response: {
     200: sessionListResponseSchema,
@@ -109,6 +125,9 @@ const listSessionsSchema = {
 };
 
 const deleteUserSchema = {
+  description: 'Permanently delete an account. An admin cannot delete their own.',
+  summary: 'Delete an account',
+  tags: ['admin'],
   querystring: userIdQuerySchema,
   response: {
     204: { type: 'null' },
@@ -116,6 +135,9 @@ const deleteUserSchema = {
 };
 
 const revokeSessionsSchema = {
+  description: 'Revokes all sessions and closes the live WebSockets of that account immediately.',
+  summary: 'Revoke every session of an account',
+  tags: ['admin'],
   body: userIdQuerySchema,
   response: {
     204: { type: 'null' },

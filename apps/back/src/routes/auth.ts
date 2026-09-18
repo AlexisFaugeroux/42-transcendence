@@ -4,6 +4,10 @@ import { authController } from '../controllers/auth/auth';
 import { authUserResponseSchema } from './schemas/user';
 
 const registerSchema = {
+  description:
+    'Register a new account and open a session. The role is chosen at signup and is either ARTIST or GUEST.',
+  summary: 'Create an account',
+  tags: ['auth'],
   body: {
     additionalProperties: false,
     properties: {
@@ -24,6 +28,10 @@ const registerSchema = {
 };
 
 const loginSchema = {
+  description:
+    'Exchange email and password for a session cookie. A new Session row is created; the JWT alone never grants access.',
+  summary: 'Log in',
+  tags: ['auth'],
   body: {
     additionalProperties: false,
     properties: {
@@ -39,15 +47,32 @@ const loginSchema = {
 };
 
 const meSchema = {
+  description: 'Return the account behind the current session or API key.',
+  summary: 'Get the authenticated account',
+  tags: ['auth'],
   response: {
     200: authUserResponseSchema,
   },
 };
 
 const logoutSchema = {
+  description:
+    'Revoke the current session and clear the cookie. Requires a session — an API key cannot log anything out.',
+  summary: 'Log out',
+  tags: ['auth'],
   response: {
     204: { type: 'null' },
   },
+};
+
+const checkAccessSchema = {
+  description:
+    'Internal endpoint called by nginx through auth_request before serving a file from /samples/ or /tracks/. Answers 200 when the current session or API key may read the requested path, 403 otherwise.',
+  response: {
+    200: { type: 'null' },
+  },
+  summary: 'Check access to a media file',
+  tags: ['auth'],
 };
 
 export function authRoutes(app: FastifyInstance) {
@@ -67,9 +92,13 @@ export function authRoutes(app: FastifyInstance) {
 
   app.post(
     '/logout',
-    { preHandler: app.authenticate, schema: logoutSchema },
+    { preHandler: app.authenticateSession, schema: logoutSchema },
     authController.logout,
   );
 
-  app.get('/check-access', { preHandler: app.authenticate }, authController.checkAccess);
+  app.get(
+    '/check-access',
+    { preHandler: app.authenticate, schema: checkAccessSchema },
+    authController.checkAccess,
+  );
 }

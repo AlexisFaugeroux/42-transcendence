@@ -64,6 +64,7 @@ class AuthController {
   };
 
   public logout = async (req: FastifyRequest, reply: FastifyReply) => {
+    if (req.authUser.sid === null) throw new UnauthorizedError();
     await sessionRepository.revoke(req.authUser.sid);
     reply.clearCookie('token', { path: '/' });
     return reply.code(204).send();

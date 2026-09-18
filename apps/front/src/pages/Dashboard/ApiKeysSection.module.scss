@@ -1,0 +1,42 @@
+.mono {
+  color: var(--fg2);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.secret {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 12px;
+}
+
+.key {
+  flex: 1;
+  overflow-x: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  color: var(--fg1);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.usage {
+  margin: 0 0 6px;
+  color: var(--fg2);
+  font-size: 12px;
+}
+
+.sample {
+  margin: 0;
+  overflow-x: auto;
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  color: var(--fg2);
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+}

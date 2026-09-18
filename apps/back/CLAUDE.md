@@ -31,8 +31,9 @@ The `sample` slice is the reference implementation — mirror it.
 ## Route prefixes
 
 Registered in `src/app.ts`: `/api/ws`, `/api/auth`, `/api/user` (yourself), `/api/users` (other
-producers), `/api/samples`, `/api/tracks`, `/api/project`, `/api/chat`, `/api/admin` (back-office).
-Full map in `docs/architecture/api.md`.
+producers), `/api/samples`, `/api/tracks`, `/api/project`, `/api/chat`, `/api/admin` (back-office),
+`/api/keys` (API keys). Plus `/documentation`, the Swagger UI, outside `/api` because it is not part
+of the API surface. Full map in `docs/architecture/api.md`.
 
 `/api/user` and `/api/users` are two different route files. Check which one you are in.
 
@@ -44,6 +45,7 @@ pnpm --filter @transcendence/back db:migrate   # prisma migrate dev
 pnpm --filter @transcendence/back db:seed      # dev fixtures
 pnpm --filter @transcendence/back db:reset     # drop + migrate + seed
 pnpm --filter @transcendence/back db:studio
+pnpm --filter @transcendence/back openapi       # write openapi.json without starting a server
 pnpm --filter @transcendence/back build        # esbuild bundle -> build/index.js
 ```
 

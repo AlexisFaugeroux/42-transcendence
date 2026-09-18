@@ -10,6 +10,10 @@ import {
 } from './schemas/chat';
 
 const sendMessageSchema = {
+  description:
+    'Deliver a message to another producer. It is persisted and pushed live over the WebSocket if the recipient is connected.',
+  summary: 'Send a direct message',
+  tags: ['chat'],
   body: {
     additionalProperties: false,
     properties: {
@@ -27,6 +31,10 @@ const sendMessageSchema = {
 };
 
 const createChatSchema = {
+  description:
+    'Get the thread with a producer, creating it if it does not exist. The canonical pair key makes a duplicate impossible.',
+  summary: 'Open a conversation',
+  tags: ['chat'],
   body: {
     additionalProperties: false,
     properties: {
@@ -43,6 +51,9 @@ const createChatSchema = {
 };
 
 const markAsReadSchema = {
+  description: 'Reset your unread count on a thread and record when you read it.',
+  summary: 'Mark a conversation as read',
+  tags: ['chat'],
   body: {
     additionalProperties: false,
     properties: {
@@ -54,12 +65,18 @@ const markAsReadSchema = {
 };
 
 const listConversationsSchema = {
+  description: 'Every thread the authenticated account takes part in, with its unread count.',
+  summary: 'List your conversations',
+  tags: ['chat'],
   response: {
     200: conversationsResponseSchema,
   },
 };
 
 const listMessagesSchema = {
+  description: 'The messages of one thread, newest last.',
+  summary: 'Read a conversation',
+  tags: ['chat'],
   querystring: {
     additionalProperties: false,
     properties: {

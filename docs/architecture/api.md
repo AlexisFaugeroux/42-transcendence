@@ -21,6 +21,10 @@ A one-page inventory. The per-domain reasoning lives in
 | `/api/project` | `routes/project.ts`   | studio project persistence                   |
 | `/api/chat`    | `routes/chat.ts`      | direct messages                              |
 | `/api/admin`   | `routes/admin.ts`     | back-office: accounts, sessions, moderation  |
+| `/api/keys`    | `routes/apiKey.ts`    | API keys of the authenticated account        |
+
+`/documentation` sits outside `/api` on purpose: it is the human-facing Swagger UI,
+not part of the API surface. See **Published reference** below.
 
 > **`/api/user` and `/api/users` are two different route files.** Singular is
 > yourself, identified by the session; plural is somebody else, identified by a
@@ -181,6 +185,32 @@ own back-office. See [permissions.md](./permissions.md).
 All five routes require `chat:access`, which a `GUEST` does not hold. See
 [chat.md](./chat.md).
 
+## Published reference
+
+`plugins/openapi.ts` registers `@fastify/swagger` and `@fastify/swagger-ui`. The
+spec is not written by hand: it is generated from the JSON Schemas the routes
+already declare, so a schema and its documentation cannot drift. What is written by
+hand is the prose — `summary`, `description` and `tags` on each route schema, and
+the two security schemes.
+
+| URL                   | What                               |
+| --------------------- | ---------------------------------- |
+| `/documentation`      | Swagger UI, browsable and callable |
+| `/documentation/json` | the raw OpenAPI 3.1 document       |
+| `/documentation/yaml` | the same, as YAML                  |
+
+In production the reverse proxy needs its own `location /documentation` block
+(`infra/nginx/reverse-proxy.conf`), because everything that is not `/api/` goes to
+the front container. In development Vite proxies it to `localhost:8080`.
+
+`pnpm --filter @transcendence/back run openapi` writes the spec to
+`apps/back/openapi.json` without starting a server — useful to diff the API surface
+in a review. The file is git-ignored; it is an artifact, not a source.
+
+**Two security schemes are declared:** `sessionCookie` (the `token` cookie, used by
+the web clients) and `apiKey` (the `x-api-key` header, used by scripts). Both map
+onto the same `req.authUser`; see [../authentication.md](../authentication.md).
+
 ## Conventions that apply everywhere
 
 - **Validation is Fastify JSON Schema**, written as plain objects in the route
@@ -210,6 +240,11 @@ All five routes require `chat:access`, which a `GUEST` does not hold. See
   a rule a flat permission cannot express, _owner **or** moderator_, where the
   controller calls `can()` itself (`DELETE /api/tracks/delete`).
   [permissions.md](./permissions.md) has the matrix.
+- **Every route carries its own documentation.** `summary`, `description` and
+  `tags` go on the schema object next to `querystring` / `body` / `response`, and
+  end up in the published spec. A schema shared by two routes gives them the same
+  summary, which is wrong more often than it is convenient — `like` / `unlike`,
+  `follow` / `unfollow` and the two `listFollow*` routes each got their own.
 - **Identity always comes from `req.authUser`**, never from the body or the URL,
   even when the client also sends it. Where a client does send an id (chat's
   `authorId`), the server verifies it matches the session.
