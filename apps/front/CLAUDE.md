@@ -17,10 +17,10 @@ Public: `/` (landing), `/login`, `/register`, `/terms`, `/privacy`, `/legal`. Be
 `/producers`, `/producers/:handle`, `/following`, `/messages`, `/messages/:conversationId`, and
 `/admin` (back-office). Catch-all `*` → 404.
 
-Four of those sit behind a second guard, `<RequirePermission />`: `/library`, `/tracks`, `/sessions`
-and `/admin`. It redirects to `/home` when the permission is missing, and an array of permissions
-means **any of** them. `layout/navItems.ts` filters the nav on the same rule, so an entry you cannot
-open is never rendered. See `docs/architecture/permissions.md`.
+Five of those sit behind a second guard, `<RequirePermission />`: `/library`, `/tracks`,
+`/sessions`, `/messages` and `/admin`. It redirects to `/home` when the permission is missing, and
+an array of permissions means **any of** them. `layout/navItems.ts` filters the nav on the same
+rule, so an entry you cannot open is never rendered. See `docs/architecture/permissions.md`.
 
 ## Layout
 

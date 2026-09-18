@@ -157,10 +157,10 @@ changes.
 `PresenceStatus` is `'online' | 'offline' | 'live'` (`types/user.ts`, next to the
 shared `User` type — `types/presence.ts` is gone). `'live'` is rendered purple by
 `StatusAvatar` but nothing sets it yet: the socket only ever produces online and
-offline. The backend declares a wider union of its own (`'live' | 'online' | 'idle'
-| 'offline'` in `domain/user.ts`); the two are duplicated by hand and do not have
-to match member for member, but a status the front cannot render would show up as a
-missing colour in `STATUS_COLOR`.
+offline. The backend's own union (`UserOnlineStatus['status']` in `domain/user.ts`)
+is narrower — just `'online' | 'offline'` — and the two are duplicated by hand: they
+do not have to match member for member, but a status the front cannot render would
+show up as a missing colour in `STATUS_COLOR`.
 
 `MessageListener` keeps the conversation list coherent as frames arrive — the
 unread badge is a cache patch, not a refetch. See
@@ -175,4 +175,3 @@ unread badge is a cache patch, not a refetch. See
 - **No reconnection.** `ws.onclose` logs and stops. A dropped connection means
   presence and incoming messages silently stop working until the page is
   reloaded. An exponential-backoff reconnect is the obvious next step.
-- **`console.log` on open/close** is left in place from bring-up.

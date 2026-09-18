@@ -51,10 +51,16 @@ For example, `apps/back/eslint.config.js` only uses the base config:
 ```js
 import { createBaseConfig } from "@transcendence/eslint-config";
 
-export default createBaseConfig({
-  ignores: ["dist/", "build/"],
-  tsconfigRootDir: import.meta.dirname,
-});
+export default [
+  ...createBaseConfig({
+    ignores: ["dist/", "build/", "src/generated/**", "prisma.config.ts"],
+    tsconfigRootDir: import.meta.dirname,
+  }),
+  {
+    files: ["**/*.d.ts"],
+    rules: { "@typescript-eslint/no-unused-vars": "off" },
+  },
+];
 ```
 
 While `apps/front/eslint.config.js` adds the React layer on top:

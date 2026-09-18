@@ -154,8 +154,12 @@ They read the role from the authenticated user, so they only work under
 Three consumers, all data-driven rather than hard-coded:
 
 - **Routes** — `auth/RequirePermission` wraps a `<Route>` subtree and redirects to
-  `/home` when the permission is missing (`App.tsx`). Guarding `/library`,
-  `/tracks`, `/sessions` and `/admin`.
+  `/home` when the permission is missing (`App.tsx`). Guarding `/library`
+  (`sample:write`), `/tracks` (`track:write`), `/sessions` (`studio:access`),
+  `/messages` (`chat:access`) and `/admin`. The `/admin` route passes an **array**
+  — `USER_READ`, `USER_WRITE`, `USER_DELETE`, `SESSION_REVOKE`, `TRACK_MODERATE` —
+  so any one of them opens it; the nav entry is narrower and gates on `USER_READ`
+  alone.
 - **Navigation** — `layout/navItems.ts` carries an optional `permission` per entry;
   `LeftNav` filters on it. An entry the user cannot open is never rendered.
 - **Screens** — `pages/Admin/adminTabs.tsx` gates each back-office tab, and

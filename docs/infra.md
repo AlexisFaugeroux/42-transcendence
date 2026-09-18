@@ -7,9 +7,9 @@ Orchestrated with Docker Compose from the repo root:
   pass `-f docker-compose.yaml` explicitly.
 
 A Compose **profile** splits the two modes: `db` and `nginx-media` have no
-profile (start in dev); `back`, `front`, `studio`, `reverse-proxy` are under the
-`prod` profile. Shared network `transcendence_net`; volumes `db_data` and
-`media_data`.
+profile (start in dev); `back`, `front`, `studio`, `reverse-proxy` and
+`reverse-proxy-seeder` are under the `prod` profile. Shared network
+`transcendence_net`; volumes `db_data`, `media_data` and `shared_certs`.
 
 `media_data` is the **media root**, mounted at `/var/www/media`. Uploaded content
 sits in one subdirectory per kind — `samples/`, `tracks/` and `avatars/` today —
@@ -74,12 +74,15 @@ volumes/orphans — wipes data).
 
 ```sh
 pnpm prod
-# sh scripts/gen-certs.sh && docker compose -f docker-compose.yaml --profile prod up -d --build
+# docker compose -f docker-compose.yaml --profile prod up -d --build
 ```
 
 `-f docker-compose.yaml` excludes the dev override, so only the reverse proxy
-publishes ports. `gen-certs.sh` writes a self-signed cert to `infra/nginx/certs/`
-(skipped if present).
+publishes a port. The certificate comes from `reverse-proxy-seeder`, a one-shot
+`alpine` container that runs `openssl req -x509` into the `shared_certs` volume
+when `cert.pem` is not already there; `reverse-proxy` mounts that same volume
+read-only at `/etc/nginx/certs`. Nothing is written to `infra/nginx/certs/` any
+more, and the host does not need OpenSSL installed.
 
 ```
 browser ──► reverse-proxy (nginx, TLS)
@@ -93,24 +96,25 @@ browser ──► reverse-proxy (nginx, TLS)
             back ──► db (postgres:5432)
 ```
 
-| Service         | Image / build            | Role                                                                                                                  |
-| --------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `reverse-proxy` | `nginx:1.30.3-alpine`    | Only public entry point. Ports `8080:80` (redirect) + `8443:443` (HTTPS). TLS terminated here (`reverse-proxy.conf`). |
-| `front`         | `apps/front/Dockerfile`  | Static Vite build served by nginx (`nginx-spa.conf`, SPA fallback).                                                   |
-| `studio`        | `apps/studio/Dockerfile` | Static Vite build served by nginx.                                                                                    |
-| `back`          | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `media_data` (rw).                                                  |
-| `nginx-media`   | `nginx:1.30.3-alpine`    | Serves `/samples/` and `/tracks/` from `media_data` (ro) with `auth_request`, and `/avatars/` without (`media.conf`). |
-| `db`            | `postgres:18-alpine`     | PostgreSQL, reached at host `db` on the network (not published).                                                      |
+| Service                | Image / build            | Role                                                                                                                                                                                                             |
+| ---------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reverse-proxy`        | `nginx:1.30.3-alpine`    | Only public entry point. Port `8443:443` (HTTPS), TLS terminated here (`reverse-proxy.conf`). The `listen 80` → 301 block is still in the config but is no longer published, so it is unreachable from the host. |
+| `reverse-proxy-seeder` | `alpine:latest`          | One-shot: writes a self-signed cert into `shared_certs` if absent, then exits.                                                                                                                                   |
+| `front`                | `apps/front/Dockerfile`  | Static Vite build served by nginx (`nginx-spa.conf`, SPA fallback).                                                                                                                                              |
+| `studio`               | `apps/studio/Dockerfile` | Static Vite build served by nginx.                                                                                                                                                                               |
+| `back`                 | `apps/back/Dockerfile`   | Fastify on `:8080`. `env_file: .env.prod`. Mounts `media_data` (rw).                                                                                                                                             |
+| `nginx-media`          | `nginx:1.30.3-alpine`    | Serves `/samples/` and `/tracks/` from `media_data` (ro) with `auth_request`, and `/avatars/` without (`media.conf`).                                                                                            |
+| `db`                   | `postgres:18-alpine`     | PostgreSQL, reached at host `db` on the network (not published).                                                                                                                                                 |
 
-Reach the app at **https://localhost:8443** (self-signed — accept the warning);
-`http://localhost:8080` redirects to HTTPS. Only the reverse proxy is exposed;
-everything else talks over the internal network.
+Reach the app at **https://localhost:8443** (self-signed — accept the warning).
+Only the reverse proxy is exposed; everything else talks over the internal
+network.
 
 ### Backend container startup
 
 `apps/back/docker-entrypoint.sh`: `prisma migrate deploy` → unzip
-`samples/*.zip` and `avatars/avatars.zip` → `node build/seedDb.prod.js` → start
-Fastify. The image is
+`samples/platform*.zip`, `samples/alex`, `samples/julien`, `avatars/avatars.zip`
+and `tracks/*.zip` → `node build/seedDb.prod.js` → start Fastify. The image is
 multi-stage (`node:24-alpine`, pnpm 11.1.3): install → generate Prisma client →
 esbuild → `pnpm deploy --prod`.
 

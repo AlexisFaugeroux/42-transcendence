@@ -23,7 +23,6 @@ transcendence/
   design/            UI mockups & design reference (READ-ONLY, not shipped)
   docs/              documentation
   infra/             nginx configs, postgres init, TLS certs, media data
-  scripts/           helper scripts
   docker-compose.yaml + docker-compose.override.yaml
   pnpm-workspace.yaml
 ```
@@ -58,11 +57,11 @@ timezone in one place is what keeps a timestamp rendered identically by the API
 and by both frontends — `repositories/*` call `formatISO` when mapping rows out.
 
 `permissions` holds the authorization vocabulary: `Role`
-(`ADMIN | ARTIST | MODERATOR | GUEST`), nine `Permissions` (`studio:access`,
-`sample:write`, `track:write`, `track:moderate`, `user:read`, `user:write`,
-`user:delete`, `session:revoke`, `manage_accounts`) and `can(role, perm)` over a
-`ROLES_PERMISSIONS` record. Both are plain `as const` objects with a matching type
-alias, deliberately **not** TS enums — a `const enum` cannot be erased by the
+(`ADMIN | ARTIST | MODERATOR | GUEST`), ten `Permissions` (`studio:access`,
+`sample:write`, `track:write`, `track:moderate`, `chat:access`, `user:read`,
+`user:write`, `user:delete`, `session:revoke`, `manage_accounts`) and
+`can(role, perm)` over a `ROLES_PERMISSIONS` record. Both are plain `as const`
+objects with a matching type alias, deliberately **not** TS enums — a `const enum` cannot be erased by the
 esbuild bundle the backend ships, and a runtime object is what lets the backend map
 its Prisma `Role` onto the same values. The Prisma enum and this package are kept
 in sync by hand.
@@ -96,9 +95,11 @@ pnpm links the local version — changes are picked up without publishing.
 
 ## Workspace config
 
-`pnpm-workspace.yaml` lists the package globs (`apps/*`, `packages/*`) and an
+`pnpm-workspace.yaml` lists the package globs (`apps/*`, `packages/*`), an
 `allowBuilds` block that allow-lists which dependencies may run install-time
-build scripts (pnpm blocks them by default).
+build scripts (pnpm blocks them by default), and a `catalog:` block pinning
+shared tool versions in one place — today `eslint`, which every `package.json`
+asks for as `"eslint": "catalog:"`. See [linting.md](./linting.md).
 
 ## Key commands
 

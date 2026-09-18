@@ -105,10 +105,10 @@ limited. Presets live in `apps/back/src/constants.ts` (`RATE_LIMITS`).
 | Preset        | Limit      | Used for                                 |
 | ------------- | ---------- | ---------------------------------------- |
 | `auth`        | 5 / min    | login, register, profile/password update |
-| `write`       | 30 / min   | follow, like, chat send, project save    |
+| `write`       | 40 / min   | follow, like, chat send, project save    |
 | `upload`      | 10 / 5 min | sample / track / avatar upload           |
 | `read`        | 60 / min   | list/get routes, WS handshake            |
-| `destructive` | 3 / min    | account deletes (user + admin)           |
+| `destructive` | 10 / min   | account deletes (user + admin)           |
 | `dm`          | 10 / min   | `POST /api/chat/createConversation`      |
 
 Key = `authUser.id` if logged in, else `req.ip`. Needs `trustProxy: true` and

@@ -155,7 +155,8 @@ at it.
 ### `/api/admin`
 
 The back-office. Every route is `[app.authenticate, app.authorize(<permission>)]`
-and rate-limited to 60/min. The permission is the entire access rule; the
+and rate-limited with the usual presets (`read` 60/min, `write` 40/min,
+`destructive` 10/min on the delete). The permission is the entire access rule; the
 controllers add business guards on top of it, never a second role check.
 
 | Route                      | Permission       | Notes                                                                                             |
