@@ -10,7 +10,7 @@
     "services:down": "docker compose --profile prod down",
     "services:logs": "docker compose logs -f",
     "services:kill": "docker compose --profile prod down -v --remove-orphans",
-    "prod": "sh scripts/gen-certs.sh && docker compose -f docker-compose.yaml --profile prod up -d --build",
+    "prod": "docker compose -f docker-compose.yaml --profile prod up -d --build",
     "typecheck": "pnpm -r --no-bail run typecheck"
   },
   "keywords": [],
