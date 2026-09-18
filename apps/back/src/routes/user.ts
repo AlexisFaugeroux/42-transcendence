@@ -58,7 +58,7 @@ const noContentSchema = {
 
 const uploadAvatarSchema = {
   response: {
-    201: authUserResponseSchema,
+    200: authUserResponseSchema,
   },
 };
 
