@@ -66,14 +66,17 @@ services:
     profiles:
       - "prod"
     image: alpine:latest
-    command: >
-      sh -c "apk add --no-cache openssl &&
-             if [ ! -f /certs/cert.pem ]; then
-               openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-                 -keyout /certs/key.pem \
-                 -out /certs/cert.pem \
-                 -subj '/C=FR/ST=Ile-de-France/L=Paris/O=42/OU=makesomenoise/CN=localhost';
-             fi"
+    command:
+      - sh
+      - -c
+      - |
+        apk add --no-cache openssl
+        if [ ! -f /certs/cert.pem ]; then
+          openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+            -keyout /certs/key.pem \
+            -out /certs/cert.pem \
+            -subj '/C=FR/ST=Ile-de-France/L=Paris/O=42/OU=makesomenoise/CN=localhost'
+        fi
     volumes:
       - shared_certs:/certs
 
@@ -85,11 +88,16 @@ services:
     ports:
       - 8443:443
     depends_on:
-      - front
-      - studio
-      - back
-      - nginx-media
-      - reverse-proxy-seeder
+      front:
+        condition: service_started
+      studio:
+        condition: service_started
+      back:
+        condition: service_started
+      nginx-media:
+        condition: service_started
+      reverse-proxy-seeder:
+        condition: service_completed_successfully
     volumes:
       - ./infra/nginx/reverse-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       - shared_certs:/etc/nginx/certs:ro
