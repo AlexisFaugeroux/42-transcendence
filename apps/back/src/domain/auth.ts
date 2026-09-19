@@ -34,3 +34,7 @@ export interface AuthUser {
 export interface AuthResponse {
   user: AuthUser;
 }
+
+export interface MeResponse {
+  user: AuthUser | null;
+}

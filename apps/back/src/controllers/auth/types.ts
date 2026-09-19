@@ -1,5 +1,5 @@
 import type { RouteGenericInterface } from 'fastify';
-import type { AuthResponse, LoginBody, RegisterBody } from '../../domain/auth';
+import type { AuthResponse, LoginBody, MeResponse, RegisterBody } from '../../domain/auth';
 
 export interface RegisterRoute extends RouteGenericInterface {
   Body: RegisterBody;
@@ -12,5 +12,5 @@ export interface LoginRoute extends RouteGenericInterface {
 }
 
 export interface MeRoute extends RouteGenericInterface {
-  Reply: AuthResponse;
+  Reply: MeResponse;
 }

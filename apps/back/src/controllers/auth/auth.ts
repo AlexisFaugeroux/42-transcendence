@@ -58,9 +58,11 @@ class AuthController {
   };
 
   public me = async (req: FastifyRequest, reply: FastifyReply<MeRoute>) => {
-    const user = await prisma.user.findUnique({ where: { id: req.authUser.id } });
-    if (!user) throw new UnauthorizedError();
-    return reply.send({ user: formatAuthUser(user) });
+    const authUser = req.authUser as typeof req.authUser | undefined;
+    if (!authUser) return reply.send({ user: null });
+
+    const user = await prisma.user.findUnique({ where: { id: authUser.id } });
+    return reply.send({ user: user ? formatAuthUser(user) : null });
   };
 
   public logout = async (req: FastifyRequest, reply: FastifyReply) => {

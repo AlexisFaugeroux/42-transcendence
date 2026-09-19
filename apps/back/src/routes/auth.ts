@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { RATE_LIMITS } from '../constants';
 import { authController } from '../controllers/auth/auth';
-import { authUserResponseSchema } from './schemas/user';
+import { authUserResponseSchema, meResponseSchema } from './schemas/user';
 
 const registerSchema = {
   description:
@@ -47,11 +47,12 @@ const loginSchema = {
 };
 
 const meSchema = {
-  description: 'Return the account behind the current session or API key.',
+  description:
+    'Return the account behind the current session or API key, or null when there is none. Public on purpose: a visitor must be able to ask who they are without getting an error.',
   summary: 'Get the authenticated account',
   tags: ['auth'],
   response: {
-    200: authUserResponseSchema,
+    200: meResponseSchema,
   },
 };
 
@@ -88,7 +89,7 @@ export function authRoutes(app: FastifyInstance) {
     authController.login,
   );
 
-  app.get('/me', { preHandler: app.authenticate, schema: meSchema }, authController.me);
+  app.get('/me', { schema: meSchema }, authController.me);
 
   app.post(
     '/logout',
