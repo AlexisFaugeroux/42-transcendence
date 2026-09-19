@@ -22,7 +22,7 @@ export interface AuthUser {
   location?: string;
   handle: string;
   bio?: string;
-  links?: { kind: string; url: string }[] | null;
+  links: { kind: string; url: string }[];
   role: Role;
   joined: Date;
 }

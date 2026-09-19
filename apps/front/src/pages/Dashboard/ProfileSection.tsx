@@ -179,18 +179,16 @@ export function ProfileSection({
 
         <Row label={t('settings.profile.links')} hint={t('settings.profile.linksHint')}>
           <div className={styles.links}>
-            {form.links?.map((link, index) => (
+            {form.links.map((link, index) => (
               <div key={index} className={styles.linkRow}>
                 <Tag color="blue">{link.kind}</Tag>
                 <FieldText
                   editing={isEditing}
                   value={link.url}
                   onChange={(v) => {
-                    if (form.links) {
-                      const next = [...form.links];
-                      next[index] = { ...next[index], url: v };
-                      setField('links', next);
-                    }
+                    const next = [...form.links];
+                    next[index] = { ...next[index], url: v };
+                    setField('links', next);
                   }}
                 />
                 {isEditing ? (
@@ -198,12 +196,10 @@ export function ProfileSection({
                     type="text"
                     size="small"
                     onClick={() => {
-                      if (form.links) {
-                        setField(
-                          'links',
-                          form.links.filter((_, j) => j !== index),
-                        );
-                      }
+                      setField(
+                        'links',
+                        form.links.filter((_, j) => j !== index),
+                      );
                     }}
                   >
                     ✕
@@ -216,9 +212,7 @@ export function ProfileSection({
                 size="small"
                 className={styles.addLink}
                 onClick={() => {
-                  if (form.links) {
-                    setField('links', [...form.links, { kind: 'site', url: '' }]);
-                  }
+                  setField('links', [...form.links, { kind: 'site', url: '' }]);
                 }}
               >
                 <MsnIcon name="plus" size="11px" /> {t('settings.profile.addLink')}

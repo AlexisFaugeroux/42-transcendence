@@ -64,7 +64,7 @@ export function ProducerProfile(): JSX.Element {
                   </div>
                 </div>
 
-                {producer.links && producer.links.length > 0 ? (
+                {producer.links.length > 0 ? (
                   <div className={styles.links}>
                     {producer.links.map((link) => (
                       <a
