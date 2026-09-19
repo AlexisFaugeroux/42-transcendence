@@ -1,7 +1,10 @@
 import { formatISO } from '@transcendence/date';
-import type { GetSampleInput, Sample, Visibility } from '../../domain/sample';
+import type { GetSampleInput, Sample, SampleSort, Visibility } from '../../domain/sample';
 import type { Sample as PrismaSample } from '../../generated/prisma/client';
-import type { SampleWhereInput } from '../../generated/prisma/models';
+import type {
+  SampleOrderByWithRelationInput,
+  SampleWhereInput,
+} from '../../generated/prisma/models';
 import { inFilter } from '../helpers';
 
 const OTHERS_VISIBILITIES: Visibility[] = ['PUBLIC', 'SHARED'];
@@ -16,6 +19,18 @@ export function formatSample(sample: PrismaSample): Sample {
     createdAt: formattedCreatedAt,
     peaksUrl: rest.url.replace(/\.[a-z0-9]+$/i, '.peaks'),
   };
+}
+
+const ORDER_BY: Record<SampleSort, SampleOrderByWithRelationInput[]> = {
+  recent: [{ createdAt: 'desc' }, { id: 'asc' }],
+  name: [{ name: 'asc' }, { id: 'asc' }],
+  duration: [{ duration: 'asc' }, { id: 'asc' }],
+  size: [{ bytes: 'desc' }, { id: 'asc' }],
+  bpm: [{ bpm: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
+};
+
+export function orderByFilter(sort: SampleSort = 'recent'): SampleOrderByWithRelationInput[] {
+  return ORDER_BY[sort];
 }
 
 export function criteriaFilter(input: GetSampleInput): SampleWhereInput {

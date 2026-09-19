@@ -1,7 +1,7 @@
 import { apiError, apiFetch, apiUpload } from '@transcendence/auth';
 import { type DecodedPeaks, decodePeak } from '../../lib/peaks';
 import type { Paginated } from '../../types/pagination';
-import type { Sample } from '../../types/sample';
+import type { Sample, SortKey } from '../../types/sample';
 import type {
   GetSamplesFilters,
   SampleStorageUsage,
@@ -14,15 +14,19 @@ export async function getSamples(
   page = 1,
   limit = 20,
   q = '',
+  sort?: SortKey,
 ): Promise<Paginated<Sample>> {
   const searchParams = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
   });
 
+  for (const family of filters.families ?? []) searchParams.append('families', family);
   for (const kind of filters.kinds ?? []) searchParams.append('kinds', kind);
   for (const visibility of filters.visibilities ?? [])
     searchParams.append('visibilities', visibility);
+
+  if (sort) searchParams.set('sort', sort);
 
   const search = q?.trim();
   if (search) searchParams.set('q', search);

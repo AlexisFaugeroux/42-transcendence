@@ -77,6 +77,9 @@ export interface CreateSampleInput {
   kind?: Kind | null;
 }
 
+export const SAMPLE_SORTS = ['recent', 'name', 'duration', 'size', 'bpm'] as const;
+export type SampleSort = (typeof SAMPLE_SORTS)[number];
+
 export interface GetSampleInput {
   visibilities?: Visibility[];
   ids?: string[];

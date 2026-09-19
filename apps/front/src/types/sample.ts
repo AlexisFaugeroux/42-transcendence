@@ -30,6 +30,8 @@ export type Kind = 'ONE_SHOT' | 'LOOP';
 
 export type Visibility = 'PRIVATE' | 'SHARED' | 'PUBLIC';
 
+export type SortKey = 'recent' | 'name' | 'duration' | 'size' | 'bpm';
+
 export interface Sample {
   id: string;
   bpm: number | null;

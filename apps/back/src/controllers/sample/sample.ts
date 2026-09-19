@@ -31,12 +31,18 @@ class SampleFileController {
 
     const ownerIds = [platformOwnerID, userOwnerID];
 
-    const { page: pageRaw, limit: limitRaw, q, ...filters } = req.query;
+    const { page: pageRaw, limit: limitRaw, q, sort, ...filters } = req.query;
     const pagination = parsePagination(pageRaw, limitRaw);
     const skip = pagination.unpaginated ? undefined : pagination.skip;
     const take = pagination.unpaginated ? undefined : pagination.take;
 
-    const { items, total } = await sampleRepository.get({ ownerIds, ...filters }, skip, take, q);
+    const { items, total } = await sampleRepository.get(
+      { ownerIds, ...filters },
+      skip,
+      take,
+      q,
+      sort,
+    );
 
     reply.code(200).send(toPaginatedResponse(pagination, items, total));
   };

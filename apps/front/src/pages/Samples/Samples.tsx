@@ -12,11 +12,10 @@ import {
   Spin,
   theme,
 } from '@transcendence/ui';
-import { type JSX, type Key, useEffect, useMemo, useState } from 'react';
+import { type JSX, type Key, useEffect, useState } from 'react';
 import { deleteSample, getSamples, getStorageUsage } from '../../api/samples/samples';
 import { SamplePlayerProvider } from '../../contexts/SamplePlayerProvider';
 import type { Family, Kind, Sample } from '../../types/sample';
-import { SAMPLE_COMPARATORS } from './constants';
 import { DeleteSampleModal, type DeleteTarget } from './DeleteSampleModal';
 import { EditSampleModal } from './EditSampleModal';
 import { EmptyState } from './EmptyState';
@@ -89,12 +88,18 @@ export function Samples(): JSX.Element {
   useEffect(() => {
     setPage(1);
     setSelectedKeys([]);
-  }, [debouncedQ]);
+  }, [debouncedQ, families, kinds, sort]);
 
   const samplesQuery = useQuery({
     queryFn: () =>
-      getSamples({ visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] }, page, PAGE_SIZE, debouncedQ),
-    queryKey: ['samples', user.id, page, PAGE_SIZE, debouncedQ],
+      getSamples(
+        { families, kinds, visibilities: ['PUBLIC', 'PRIVATE', 'SHARED'] },
+        page,
+        PAGE_SIZE,
+        debouncedQ,
+        sort,
+      ),
+    queryKey: ['samples', user.id, page, PAGE_SIZE, debouncedQ, families, kinds, sort],
   });
 
   const storageQuery = useQuery({
@@ -105,16 +110,7 @@ export function Samples(): JSX.Element {
   const total = samplesQuery.data?.total ?? 0;
   const storage = storageQuery.data;
 
-  const filtered = useMemo(() => {
-    const samples = samplesQuery.data?.items ?? [];
-    return samples
-      .filter(
-        (sample) =>
-          !families.length || (sample.family !== null && families.includes(sample.family)),
-      )
-      .filter((sample) => !kinds.length || (sample.kind !== null && kinds.includes(sample.kind)))
-      .sort(SAMPLE_COMPARATORS[sort]);
-  }, [samplesQuery.data?.items, families, kinds, sort]);
+  const rows = samplesQuery.data?.items ?? [];
 
   const invalidateLibrary = async (): Promise<void> => {
     await Promise.all([
@@ -238,7 +234,7 @@ export function Samples(): JSX.Element {
                 setSort={setSort}
                 view={view}
                 setView={setView}
-                shownCount={filtered.length}
+                shownCount={rows.length}
                 totalCount={total}
               />
 
@@ -254,11 +250,11 @@ export function Samples(): JSX.Element {
                 />
               )}
 
-              {filtered.length === 0 ? (
+              {rows.length === 0 ? (
                 <EmptyState onClear={clearFilters} />
               ) : view === 'list' ? (
                 <SampleTable
-                  rows={filtered}
+                  rows={rows}
                   ownerId={user.ownerId}
                   selectedKeys={selectedKeys}
                   onSelectionChange={setSelectedKeys}
@@ -272,7 +268,7 @@ export function Samples(): JSX.Element {
                 />
               ) : (
                 <SampleGrid
-                  rows={filtered}
+                  rows={rows}
                   ownerId={user.ownerId}
                   onEdit={setEditTarget}
                   onDownload={(sample) => {

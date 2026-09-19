@@ -1,6 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
 import { theme } from '@transcendence/ui';
-import type { Family, Sample, Visibility } from '../../types/sample';
+import type { Family, Visibility } from '../../types/sample';
 import type { FamilyGroup, SortKey } from './types';
 
 export const FAMILY_GROUPS: Record<FamilyGroup, Family[]> = {
@@ -53,12 +53,4 @@ export const UPLOAD_STATUS_LABEL: Record<'error' | 'queued' | 'uploading', Trans
   error: 'samples.upload.status.error',
   queued: 'samples.upload.status.queued',
   uploading: 'samples.upload.status.uploading',
-};
-
-export const SAMPLE_COMPARATORS: Record<SortKey, (a: Sample, b: Sample) => number> = {
-  bpm: (a, b) => (a.bpm ?? Number.POSITIVE_INFINITY) - (b.bpm ?? Number.POSITIVE_INFINITY),
-  duration: (a, b) => a.duration - b.duration,
-  name: (a, b) => a.name.localeCompare(b.name),
-  recent: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  size: (a, b) => b.bytes - a.bytes,
 };

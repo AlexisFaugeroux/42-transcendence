@@ -3,6 +3,7 @@ import type {
   FamilyUsage,
   GetSampleInput,
   Sample,
+  SampleSort,
   UpdateSampleInput,
 } from '../../domain/sample';
 import type {
@@ -12,7 +13,7 @@ import type {
 } from '../../generated/prisma/client';
 import { prisma } from '../../utils/prisma';
 import { mapError } from '../helpers';
-import { buildFilters, formatSample } from './helpers';
+import { buildFilters, formatSample, orderByFilter } from './helpers';
 
 class SampleRepository {
   private readonly prisma: PrismaClient;
@@ -56,6 +57,7 @@ class SampleRepository {
     skip?: number,
     take?: number,
     q?: string,
+    sort?: SampleSort,
   ): Promise<{ items: (Sample & { ownerType: OwnerType })[]; total: number }> {
     const filters = buildFilters(input);
     const search = q?.trim();
@@ -71,7 +73,7 @@ class SampleRepository {
       this.prisma.sample.findMany({
         where: whereInput,
         ...(take !== undefined ? { skip, take } : {}),
-        orderBy: { createdAt: 'desc' },
+        orderBy: orderByFilter(sort),
         include: { owner: { select: { type: true } } },
       }),
       this.prisma.sample.count({

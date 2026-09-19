@@ -3,13 +3,14 @@ import type { PaginatedResponse } from '../../domain/pagination';
 import type {
   GetSampleInput,
   Sample,
+  SampleSort,
   SampleStorageUsage,
   UpdateSampleInput,
 } from '../../domain/sample';
 import type { OwnerType } from '../../generated/prisma/client';
 
 export interface GetSamplesRoute extends RouteGenericInterface {
-  Querystring: GetSampleInput & { page?: string; limit?: string; q?: string };
+  Querystring: GetSampleInput & { page?: string; limit?: string; q?: string; sort?: SampleSort };
   Reply: PaginatedResponse<Sample & { ownerType: OwnerType }>;
 }
 

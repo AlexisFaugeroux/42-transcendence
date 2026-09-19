@@ -1,6 +1,7 @@
 import type { Family, Key, Kind, Mode, Visibility } from '../../types/sample';
 
 export interface GetSamplesFilters {
+  families?: Family[];
   kinds?: Kind[];
   visibilities?: Visibility[];
 }

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { RATE_LIMITS } from '../constants';
 import { sampleController } from '../controllers/sample/sample';
-import { USER_KINDS } from '../domain/sample';
+import { SAMPLE_SORTS, USER_KINDS } from '../domain/sample';
 import { Family, Key, Mode, SampleKind, VisibilityType } from '../generated/prisma/enums';
 import { paginatedResponseSchema } from './schemas/pagination';
 import { sampleSchema, sampleWithOwnerTypeSchema } from './schemas/sample';
@@ -77,6 +77,8 @@ const getSampleQuerySchema = {
       uniqueItems: true,
     },
 
+    sort: { enum: [...SAMPLE_SORTS], type: 'string' },
+
     page: { type: 'string' },
     limit: { type: 'string' },
     q: { type: 'string' },
@@ -86,7 +88,7 @@ const getSampleQuerySchema = {
 
 const getSampleSchema = {
   description:
-    'Your samples plus the platform library, filterable by BPM, key, mode, family, kind and visibility, searchable through q, and paginated. Omitting page and limit returns the full list.',
+    'Your samples plus the platform library, filterable by BPM, key, mode, family, kind and visibility, searchable through q, sortable through sort, and paginated. Omitting page and limit returns the full list.',
   summary: 'List samples',
   tags: ['samples'],
   querystring: getSampleQuerySchema,
