@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trans, useTranslation } from '@transcendence/i18n';
 import { Form, Input, Modal } from '@transcendence/ui';
-import { type JSX } from 'react';
+import { useEffect, type JSX } from 'react';
 import { updateUser } from '../../api/admin/admin';
 import type { UpdateUserBody, User } from '../../api/admin/types';
 import styles from './DeleteUserModal.module.scss';
@@ -43,6 +43,16 @@ export function EditUserModal({
     if (!target) return;
     updateUserMutation({ ...values, id: target.id });
   };
+
+  useEffect(() => {
+    if (!target) return;
+
+    form.setFieldsValue({
+      artistName: target.artistName,
+      email: target.email,
+      handle: target.handle,
+    });
+  }, [form, target]);
 
   return (
     <Modal
