@@ -1,7 +1,6 @@
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
-import { can, type Permissions } from '@transcendence/permissions';
 import type {
   FastifyInstance,
   FastifyReply,
@@ -9,6 +8,7 @@ import type {
   HookHandlerDoneFunction,
 } from 'fastify';
 import fp from 'fastify-plugin';
+import { can, type Permissions } from '@transcendence/permissions';
 import { ForbiddenError } from '../domain/errors';
 import { apiKeyRepository } from '../repositories/apiKey/apiKey';
 import { SessionRepository, sessionRepository } from '../repositories/session/session';

@@ -1,5 +1,5 @@
-import { Permissions } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { Permissions } from '@transcendence/permissions';
 import { RATE_LIMITS } from '../constants';
 import { projectController } from '../controllers/project/project';
 import { Key, Mode, VisibilityType } from '../generated/prisma/enums';

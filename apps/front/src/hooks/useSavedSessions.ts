@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthUser } from '@transcendence/auth';
+import { useAuthUser, usePermissions } from '@transcendence/auth';
+import { Permissions } from '@transcendence/permissions';
 import {
   deleteProject,
   getSavedSessions,
@@ -10,6 +11,9 @@ import type { Session } from '../pages/Sessions/sessions.data';
 
 export function useSavedSessions() {
   const user = useAuthUser();
+
+  const perm = usePermissions(Permissions.STUDIO_ACCESS);
+  if (!perm) return { data: [], isError: false, isLoading: false, error: null };
 
   return useQuery<Session[]>({
     queryFn: getSavedSessions,

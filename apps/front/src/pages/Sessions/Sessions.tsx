@@ -37,8 +37,6 @@ export function Sessions(): JSX.Element {
   const deleteSession = useDeleteSession();
   const updateSession = useUpdateSession();
 
-  if (isError) throw error;
-
   const notifyError = (message: string, description: string): void => {
     notificationApi.error({ description, icon: <CloseCircleOutlined />, message });
   };
@@ -64,6 +62,8 @@ export function Sessions(): JSX.Element {
       },
     });
   };
+
+  if (isError && error) notifyError(t('sessions.card.errorTitle'), error.message);
 
   const confirmRename = (name: string): void => {
     if (!renameTarget) return;

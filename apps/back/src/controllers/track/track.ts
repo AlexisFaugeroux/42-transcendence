@@ -1,6 +1,6 @@
-import { can, Permissions } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { randomUUID } from 'node:crypto';
+import { can, Permissions } from '@transcendence/permissions';
 import { BadRequestError, ConflictError, ForbiddenError } from '../../domain/errors';
 import { trackRepository } from '../../repositories/track/track';
 import { userRepository } from '../../repositories/user/user';

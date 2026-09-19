@@ -614,7 +614,8 @@
       "openInEditor": "Open in editor",
       "rename": "Rename",
       "restore": "Restore",
-      "unarchive": "Unarchive"
+      "unarchive": "Unarchive",
+      "errorTitle" : "Could not load the sessions"
     },
     "countsActive_one": "{{count}} active",
     "countsActive_other": "{{count}} active",

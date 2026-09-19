@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthUser } from '@transcendence/auth';
-import { formatDate } from '@transcendence/date';
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import {
   Alert,
@@ -18,6 +17,7 @@ import {
   Tooltip,
 } from '@transcendence/ui';
 import { type JSX, useState } from 'react';
+import { formatDate } from '@transcendence/date';
 import { createApiKey, getApiKeys, revokeApiKey } from '../../api/apiKeys/apiKeys';
 import type { ApiKey, CreatedApiKey } from '../../api/apiKeys/types';
 import styles from './ApiKeysSection.module.scss';

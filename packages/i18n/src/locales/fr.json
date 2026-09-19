@@ -614,7 +614,8 @@
       "openInEditor": "Ouvrir dans l’éditeur",
       "rename": "Renommer",
       "restore": "Restaurer",
-      "unarchive": "Désarchiver"
+      "unarchive": "Désarchiver",
+      "errorTitle" : "Could not load the sessions"
     },
     "countsActive_one": "{{count}} active",
     "countsActive_other": "{{count}} actives",

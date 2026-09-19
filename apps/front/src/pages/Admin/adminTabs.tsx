@@ -1,6 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
-import { type Permissions as PermissionsType, Permissions } from '@transcendence/permissions';
 import type { ReactNode } from 'react';
+import { type Permissions as PermissionsType, Permissions } from '@transcendence/permissions';
 import { Tracks } from './Tracks';
 import { Users } from './Users';
 

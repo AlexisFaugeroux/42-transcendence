@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Permissions } from '@transcendence/permissions';
 import type { JSX } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Permissions } from '@transcendence/permissions';
 import { RequireAuth } from './auth/RequireAuth';
 import { RequirePermission } from './auth/RequirePermission';
 import { AppLayout } from './layout/AppLayout';

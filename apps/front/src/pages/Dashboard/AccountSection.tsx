@@ -1,6 +1,5 @@
 import { type UseMutateFunction, useMutation } from '@tanstack/react-query';
 import type { AuthUser } from '@transcendence/auth';
-import { formatDate } from '@transcendence/date';
 import { type TranslationKey, useTranslation } from '@transcendence/i18n';
 import {
   Button,
@@ -12,6 +11,7 @@ import {
   theme,
 } from '@transcendence/ui';
 import { type Dispatch, type JSX, type SetStateAction, useState } from 'react';
+import { formatDate } from '@transcendence/date';
 import { updateUserPassword } from '../../api/user';
 import { PasswordStrength } from '../Register/PasswordStrength';
 import styles from './AccountSection.module.scss';

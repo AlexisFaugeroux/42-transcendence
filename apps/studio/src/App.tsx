@@ -1,8 +1,8 @@
 import { usePermissions, useUser } from '@transcendence/auth';
 import { useTranslation } from '@transcendence/i18n';
-import { Permissions } from '@transcendence/permissions';
 import { Button, MsnIcon, MsnWordmark, theme } from '@transcendence/ui';
 import { type JSX, useEffect } from 'react';
+import { Permissions } from '@transcendence/permissions';
 import styles from './App.module.scss';
 import { ProjectProvider } from './contexts/ProjectContext';
 import { TracksProvider } from './contexts/TracksContext';

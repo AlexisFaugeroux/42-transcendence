@@ -1,5 +1,5 @@
-import { Role } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { Role } from '@transcendence/permissions';
 import { BadRequestError, ConflictError } from '../../domain/errors';
 import { USER_SEARCH_FIELDS } from '../../domain/user';
 import { sessionRepository } from '../../repositories/session/session';

@@ -614,7 +614,8 @@
       "openInEditor": "Abrir en el editor",
       "rename": "Renombrar",
       "restore": "Restaurar",
-      "unarchive": "Desarchivar"
+      "unarchive": "Desarchivar",
+      "errorTitle" : "Error al cargar las sesiones"
     },
     "countsActive_one": "{{count}} activa",
     "countsActive_other": "{{count}} activas",

@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAuthUser, usePermissions, useUser } from '@transcendence/auth';
 import { LanguageSelect, useTranslation } from '@transcendence/i18n';
-import { Permissions } from '@transcendence/permissions';
 import {
   Button,
   CloseCircleOutlined,
@@ -18,6 +17,7 @@ import {
 } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Permissions } from '@transcendence/permissions';
 import { NotificationsBell } from '../components/NotificationsBell/NotificationsBell';
 import { UserChip } from '../components/UserChip/UserChip';
 import styles from './ShellHeader.module.scss';

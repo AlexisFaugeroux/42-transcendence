@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ApiErrorReponse } from '@transcendence/auth';
 import { LanguageSelect, Trans, useTranslation } from '@transcendence/i18n';
-import { Role } from '@transcendence/permissions';
 import {
   Button,
   CheckOutlined,
@@ -15,6 +14,7 @@ import {
 } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Role } from '@transcendence/permissions';
 import { registerRequest } from '../../api/auth/auth';
 import type { RegisterBody } from '../../api/auth/types';
 import { PasswordStrength } from './PasswordStrength';

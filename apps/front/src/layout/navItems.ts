@@ -1,6 +1,6 @@
 import type { TranslationKey } from '@transcendence/i18n';
-import { type Permissions as PermissionsType, Permissions } from '@transcendence/permissions';
 import type { MsnIconLabel } from '@transcendence/ui';
+import { type Permissions as PermissionsType, Permissions } from '@transcendence/permissions';
 
 export interface NavItemDef {
   icon: MsnIconLabel;
