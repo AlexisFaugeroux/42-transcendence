@@ -26,7 +26,7 @@ export interface AuthUser {
   avatarUpdatedAt: string | null;
   location?: string;
   handle: string;
-  links?: { kind: string; url: string }[] | null;
+  links: { kind: string; url: string }[];
   bio?: string;
   role: Role;
 }

@@ -11,7 +11,7 @@ export interface User {
   location?: string;
   bio?: string;
   handle: string;
-  links?: { kind: string; url: string }[] | null;
+  links: { kind: string; url: string }[];
   artistName: string;
   role: Role;
   ownerId: string;
@@ -36,7 +36,7 @@ export interface Producer {
   handle: string;
   bio?: string;
   location?: string;
-  links?: { kind: string; url: string }[] | null;
+  links: { kind: string; url: string }[];
   role: Role;
   joined: Date;
 }

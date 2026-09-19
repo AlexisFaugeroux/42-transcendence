@@ -10,7 +10,7 @@ const linksSchema = {
     required: ['kind', 'url'],
     type: 'object',
   },
-  type: ['array', 'null'],
+  type: 'array',
 };
 
 const roleSchema = { enum: Object.values(Role), type: 'string' };
@@ -42,6 +42,7 @@ export const authUserSchema = {
     'lastname',
     'avatarUpdatedAt',
     'handle',
+    'links',
     'role',
   ],
   type: 'object',
@@ -73,7 +74,7 @@ export const producerSchema = {
     location: { type: 'string' },
     role: roleSchema,
   },
-  required: ['id', 'artistName', 'handle', 'role', 'joined'],
+  required: ['id', 'artistName', 'handle', 'links', 'role', 'joined'],
   type: 'object',
 };
 

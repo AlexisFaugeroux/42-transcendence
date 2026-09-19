@@ -1,7 +1,7 @@
 import type { JsonValue } from '../../generated/prisma/internal/prismaNamespace';
 
-export function toLinks(value: JsonValue | null): { kind: string; url: string }[] | null {
-  if (!Array.isArray(value)) return null;
+export function toLinks(value: JsonValue | null): { kind: string; url: string }[] {
+  if (!Array.isArray(value)) return [];
   const links: { kind: string; url: string }[] = [];
   for (const entry of value) {
     if (

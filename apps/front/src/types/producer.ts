@@ -6,7 +6,7 @@ export interface Producer {
   handle: string;
   bio?: string;
   location?: string;
-  links?: { kind: string; url: string }[] | null;
+  links: { kind: string; url: string }[];
   role: Role;
   joined: string; // JSON no Date
 }
