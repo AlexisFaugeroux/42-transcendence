@@ -59,13 +59,14 @@ Two entries in that table are not plain string targets:
 - **`/api/ws`** needs `ws: true`, otherwise Vite proxies the HTTP request but not
   the protocol upgrade, and the socket never opens. It is declared _after_ `/api`
   and wins because it is more specific.
-- **`/tracks`** collides with a real SPA route. `GET /tracks` from the address bar
-  must render the app; `GET /tracks/<ownerId>/<uuid>.wav` must reach nginx. The
-  proxy disambiguates on the `Accept` header — a `bypass()` that returns
-  `/index.html` when the request accepts `text/html`
-  (`apps/front/vite.config.ts`). In prod the same collision does not exist,
-  because the reverse proxy matches `/tracks/` **with** a trailing slash before
-  falling through to the SPA at `/`.
+- **`/tracks`** used to collide with the SPA route of the same name. It no longer
+  does: the page moved to `/myTracks`, so `/tracks` is a media path on both sides
+  and needs no special handling. The collision was real in production too — a
+  `location /tracks/` in `proxy_pass` answers `GET /tracks` with a **301 to the
+  trailing-slash URI**, built from `$host` and the container's own port, which
+  drops the published one (`8443`). `absolute_redirect off` in
+  `infra/nginx/reverse-proxy.conf` keeps every such redirect relative, so the
+  browser's port survives.
 
 Teardown: `pnpm services:down` (keep data) or `pnpm services:kill` (remove
 volumes/orphans — wipes data).

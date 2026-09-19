@@ -27,7 +27,7 @@ export const WORKSPACE_ITEMS: NavItemDef[] = [
     to: '/sessions',
     permission: Permissions.STUDIO_ACCESS,
   },
-  { icon: 'music', labelKey: 'nav.tracks', to: '/tracks', permission: Permissions.TRACK_WRITE },
+  { icon: 'music', labelKey: 'nav.tracks', to: '/myTracks', permission: Permissions.TRACK_WRITE },
   {
     icon: 'waveform',
     labelKey: 'nav.library',

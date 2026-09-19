@@ -28,7 +28,7 @@ export function LeftNav(): JSX.Element {
   const social = isVisible(SOCIAL_ITEMS);
 
   const badges: Record<NavItemDef['to'], number | undefined> = {
-    '/tracks': tracks?.length,
+    '/myTracks': tracks?.length,
     '/sessions': sessions?.length,
     '/following': following?.total,
     '/messages': unreadMessagesCount,

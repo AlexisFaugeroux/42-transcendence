@@ -759,7 +759,7 @@ One contract shared by every list endpoint — `page`, `limit`, `q` returning
   of the query, `total` comes from the response, and the pager is an Ant Design
   `Pagination`. Not a slice of an array already in memory.
 
-> **⚠️ Known gap.** The `/tracks` page has search, filters and sorting but **no pager** —
+> **⚠️ Known gap.** The `/myTracks` page has search, filters and sorting but **no pager** —
 > it loads the full list. It is the one list page where the contract is not wired end to
 > end, and it is the one an evaluator is most likely to open after the sample library.
 

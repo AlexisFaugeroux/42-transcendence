@@ -64,7 +64,7 @@ export function App(): JSX.Element {
               </Route>
 
               <Route element={<RequirePermission permission={Permissions.TRACK_WRITE} />}>
-                <Route path="/tracks" element={<Tracks />} />
+                <Route path="/myTracks" element={<Tracks />} />
               </Route>
 
               <Route element={<RequirePermission permission={Permissions.STUDIO_ACCESS} />}>

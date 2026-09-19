@@ -13,11 +13,11 @@ route.
 ## Pages
 
 Public: `/` (landing), `/login`, `/register`, `/terms`, `/privacy`, `/legal`. Behind
-`<RequireAuth />`: `/home`, `/library` (samples), `/tracks`, `/sessions`, `/liked`, `/settings`,
+`<RequireAuth />`: `/home`, `/library` (samples), `/myTracks`, `/sessions`, `/liked`, `/settings`,
 `/producers`, `/producers/:handle`, `/following`, `/messages`, `/messages/:conversationId`, and
 `/admin` (back-office). Catch-all `*` → 404.
 
-Five of those sit behind a second guard, `<RequirePermission />`: `/library`, `/tracks`,
+Five of those sit behind a second guard, `<RequirePermission />`: `/library`, `/myTracks`,
 `/sessions`, `/messages` and `/admin`. It redirects to `/home` when the permission is missing, and
 an array of permissions means **any of** them. `layout/navItems.ts` filters the nav on the same
 rule, so an entry you cannot open is never rendered. See `docs/architecture/permissions.md`.
@@ -59,8 +59,7 @@ pnpm --filter @transcendence/front build
 ```
 
 The dev server proxies `/api`, `/api/ws`, `/samples`, `/tracks` and `/avatars` so app code uses
-relative URLs in both dev and prod — see `docs/infra.md`, including why `/tracks` needs a
-`bypass()`.
+relative URLs in both dev and prod — see `docs/infra.md`.
 
 ## Also relevant
 
