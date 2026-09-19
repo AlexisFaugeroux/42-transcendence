@@ -1,7 +1,7 @@
 import { usePermissions } from '@transcendence/auth';
-import type { Permissions } from '@transcendence/permissions';
 import type { JSX } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import type { Permissions } from '@transcendence/permissions';
 
 export function RequirePermission({
   permission,

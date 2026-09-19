@@ -1,5 +1,5 @@
-import type { Role } from '@transcendence/permissions';
 import type { RouteGenericInterface } from 'fastify';
+import type { Role } from '@transcendence/permissions';
 import type { PaginatedResponse } from '../../domain/pagination';
 import type { SessionListResponse } from '../../domain/session';
 import type { Track } from '../../domain/track';

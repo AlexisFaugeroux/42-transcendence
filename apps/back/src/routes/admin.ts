@@ -1,5 +1,5 @@
-import { Permissions, Role } from '@transcendence/permissions';
 import type { FastifyInstance } from 'fastify';
+import { Permissions, Role } from '@transcendence/permissions';
 import { RATE_LIMITS } from '../constants';
 import { adminController } from '../controllers/admin/admin';
 import { paginatedResponseSchema } from './schemas/pagination';

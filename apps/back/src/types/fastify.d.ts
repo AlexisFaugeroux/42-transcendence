@@ -1,5 +1,5 @@
-import type { Permissions, Role } from '@transcendence/permissions';
 import type { FastifyReply, HookHandlerDoneFunction } from 'fastify';
+import type { Permissions, Role } from '@transcendence/permissions';
 
 declare module 'fastify' {
   interface FastifyInstance {

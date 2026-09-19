@@ -608,6 +608,7 @@
       "archivedRibbon": "archivée",
       "bpm": "{{bpm}} BPM",
       "edited": "Modifiée {{when}}",
+      "errorTitle": "Could not load the sessions",
       "exportBounce": "Exporter le bounce",
       "noBpm": "— BPM",
       "open": "Ouvrir",

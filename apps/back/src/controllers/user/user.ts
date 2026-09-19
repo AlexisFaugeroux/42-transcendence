@@ -1,5 +1,5 @@
-import { dayjs } from '@transcendence/date';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { dayjs } from '@transcendence/date';
 import { AVATAR_MAX_BYTES } from '../../constants';
 import { BadRequestError, ForbiddenError, PayloadTooLargeError } from '../../domain/errors';
 import type { UserOnlineStatus } from '../../domain/user';

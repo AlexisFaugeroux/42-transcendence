@@ -1,8 +1,8 @@
-import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
 import { MsnIcon, Spin } from '@transcendence/ui';
 import type { JSX } from 'react';
 import { useParams } from 'react-router-dom';
+import { formatDate } from '@transcendence/date';
 import { StatusAvatar } from '../../components/StatusAvatar/StatusAvatar';
 import { useProducer } from '../../hooks/useProducers';
 import { FollowButton } from './FollowButton';

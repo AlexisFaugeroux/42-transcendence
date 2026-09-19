@@ -1,5 +1,5 @@
-import { can, Permissions } from '@transcendence/permissions';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { can, Permissions } from '@transcendence/permissions';
 import { ForbiddenError } from '../../domain/errors';
 import { chatRepository } from '../../repositories/chat/chat';
 import { userRepository } from '../../repositories/user/user';

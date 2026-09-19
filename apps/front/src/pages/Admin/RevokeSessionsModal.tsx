@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { formatDate } from '@transcendence/date';
 import { Trans, useTranslation } from '@transcendence/i18n';
 import { Modal, Spin } from '@transcendence/ui';
 import type { JSX } from 'react';
+import { formatDate } from '@transcendence/date';
 import { getUserSessions, revokeAllUserSessions } from '../../api/admin/admin';
 import type { User } from '../../api/admin/types';
 import styles from './RevokeSessionsModal.module.scss';

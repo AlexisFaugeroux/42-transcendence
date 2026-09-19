@@ -1,7 +1,7 @@
-import { formatDate } from '@transcendence/date';
 import { useTranslation } from '@transcendence/i18n';
 import { Button, Dropdown, type MenuProps, MsnIcon, type MsnIconLabel } from '@transcendence/ui';
 import type { CSSProperties, JSX } from 'react';
+import { formatDate } from '@transcendence/date';
 import { CoverArt } from '../../components/CoverArt/CoverArt';
 import styles from './SessionCard.module.scss';
 import { type Session, TYPE_COLOR, TYPE_ICON, TYPE_LABEL } from './sessions.data';
