@@ -185,6 +185,19 @@ own back-office. See [permissions.md](./permissions.md).
 All five routes require `chat:access`, which a `GUEST` does not hold. See
 [chat.md](./chat.md).
 
+### `/api/keys`
+
+| Route                | Notes                                                                        |
+| -------------------- | ---------------------------------------------------------------------------- |
+| `POST   /create`     | `name` + optional `expiresInDays` (1–365) → 201 with the plaintext key, once |
+| `GET    /get`        | the caller's active keys — never a key value                                 |
+| `DELETE /revoke?id=` | 204, or 404 if the key is not yours or already revoked                       |
+
+The three of them are guarded by `authenticateSession`, not `authenticate`: managing
+keys needs a browser session, so a leaked key can neither mint another one nor
+revoke the key that would lock it out. 10 active keys per account, enforced in the
+controller. See [../authentication.md](../authentication.md).
+
 ## Published reference
 
 `plugins/openapi.ts` registers `@fastify/swagger` and `@fastify/swagger-ui`. The

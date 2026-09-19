@@ -96,7 +96,9 @@ samples library, studio workspace.
   `docs/architecture/audio-file-storage.md` and `docs/peaks.md`.
 - **Infrastructure:** Docker Compose (dev override + prod profile). See `docs/infra.md`.
 - **API shape:** RPC-style paths (`/get`, `/upload`, `/update?id=`) everywhere except
-  `/api/users/:handle/*`. Nine prefixes, mapped in `docs/architecture/api.md`.
+  `/api/users/:handle/*`. Ten prefixes, mapped in `docs/architecture/api.md`.
+  Scripts authenticate with an `X-API-Key` header instead of the session cookie; the
+  generated OpenAPI reference is served at `/documentation`.
 - **Pagination:** list endpoints share one `page` / `limit` / `q` contract returning
   `{ items, total, page, limit }`; omitting both paging params returns the full list.
   See `docs/pagination.md`.

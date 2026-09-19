@@ -71,6 +71,7 @@ client). Commit both.
 | `TrackLike`               | A user's like on a track: `(userId, trackId)`. Unique pair; cascades if the user or the track is deleted.                                                                      |
 | `StudioProject`           | A studio session: serialized `state` (`Bytes`), `name`, `duration`, `bpm`, `visibility`, `type`, `archived`, optional `key` / `mode`. Belongs to an `Owner`.                   |
 | `Session`                 | Auth session: `expiresAt`, `revokedAt?`, `userAgent?`. Cascades on user delete.                                                                                                |
+| `ApiKey`                  | Programmatic credential of a `User`: `name`, unique `prefix` (kept in clear), `hash` (sha256 of the key), `lastUsedAt?`, `expiresAt?`, `revokedAt?`. Cascades on user delete.  |
 | `Conversation`            | A DM thread: `pairKey` (unique), `lastMessageAt`.                                                                                                                              |
 | `ConversationParticipant` | Join row `(conversationId, userId)` carrying that participant's `unreadCount` and `lastReadAt`.                                                                                |
 | `Message`                 | `content`, `createdAt`, and both ends of the exchange as participant references.                                                                                               |
@@ -78,8 +79,8 @@ client). Commit both.
 Relationships: `User` 1–1 `Owner`; `Owner` 1–N `Sample` / `Track` /
 `StudioProject`; `Sample` N–N `StudioProject` (the samples a project uses);
 `StudioProject` 1–N `Track`; `User` 1–N `TrackLike` N–1 `Track`; `User` 1–N
-`Session`; `User` N–N `User` (follow graph `UserFollows`); `Conversation` 1–N
-`ConversationParticipant` 1–N `Message`.
+`Session` and 1–N `ApiKey`; `User` N–N `User` (follow graph `UserFollows`);
+`Conversation` 1–N `ConversationParticipant` 1–N `Message`.
 
 Modelling decisions worth knowing before you touch these tables:
 
@@ -94,6 +95,11 @@ Modelling decisions worth knowing before you touch these tables:
   like per (user, track). A double-click or two parallel requests cannot insert
   two rows. Profile `likesReceived` stays a real count of distinct
   likers×tracks, not inflated duplicates.
+- **`ApiKey` keeps its `prefix` in clear and stores only the hash of the key.** The
+  prefix is unique and is what a request is resolved by, so authenticating a key costs
+  one indexed read plus one constant-time digest comparison instead of a scan of the
+  table. The secret half is never written down and the plaintext is returned once, at
+  creation. See [../authentication.md](../authentication.md).
 - **`Message` points at `ConversationParticipant`, not at `User`,** through the
   composite foreign keys `(conversationId, authorId)` and `(conversationId, toId)`.
   That makes "author is a participant of this conversation" a referential

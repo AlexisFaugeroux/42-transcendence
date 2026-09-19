@@ -231,6 +231,18 @@ erDiagram
     datetime createdAt
     datetime updatedAt
   }
+  ApiKey {
+    string id PK
+    string userId FK
+    string name
+    string prefix UK
+    string hash
+    datetime lastUsedAt "nullable"
+    datetime expiresAt "nullable"
+    datetime revokedAt "nullable"
+    datetime createdAt
+    datetime updatedAt
+  }
   TrackLike {
     string id PK
     string userId FK
@@ -264,6 +276,7 @@ erDiagram
   Owner ||--o{ Track : owns
   Owner ||--o{ StudioProject : owns
   User  ||--o{ Session : has
+  User  ||--o{ ApiKey : holds
   User  }o--o{ User : follows
   Sample }o--o{ StudioProject : "used in"
   StudioProject ||--o{ Track : "exported as"
@@ -299,6 +312,10 @@ erDiagram
   samples it uses) and has many `Track`s.
 - **Session** — authentication session for a user (`expiresAt`, optional `revokedAt`,
   `userAgent`); cascades on user deletion.
+- **ApiKey** — a programmatic credential for a user: `name`, a unique `prefix` kept in
+  clear, the `hash` of the key (sha256), optional `expiresAt`, `revokedAt` and
+  `lastUsedAt`. Only the hash is stored — the key itself is shown once, at creation —
+  and the prefix is what a request is resolved by. Cascades on user deletion.
 - **TrackLike** — a user's like on a track, `@@unique([userId, trackId])` so a
   double-click or two parallel requests cannot insert two rows. Cascades when
   either the user or the track is deleted.
@@ -409,14 +426,15 @@ for the detailed breakdown.
 
 ### Accounts & access
 
-| Feature                | Description                                                                                                                                                                   | Owner(s)                |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| Sign up / log in       | Email + password, passwords hashed and salted, inputs validated on both sides (JSON Schema server-side, form validation client-side)                                          | `afaugero` · `lvilmain` |
-| Server-side sessions   | Every login creates a `Session` row (`expiresAt`, `userAgent`); a JWT alone is not enough — a revoked session is rejected immediately                                         | `lvilmain`              |
-| Session management     | A user sees their active sessions and can revoke them; an admin can revoke every session of an account, which also closes its live sockets                                    | `afaugero` · `jbayonne` |
-| Roles & permissions    | Four roles (`GUEST`, `ARTIST`, `MODERATOR`, `ADMIN`) over one explicit permission table shared by the three apps; the same `can()` gates the server guard and the rendered UI | `lvilmain`              |
-| Back-office (`/admin`) | User CRUD, role changes, session revocation, track moderation — route-guarded by permission, not by role                                                                      | `afaugero`              |
-| Profile                | Avatar upload, artist name, handle, bio, location, external links                                                                                                             | `afaugero`              |
+| Feature                | Description                                                                                                                                                                                     | Owner(s)                |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| Sign up / log in       | Email + password, passwords hashed and salted, inputs validated on both sides (JSON Schema server-side, form validation client-side)                                                            | `afaugero` · `lvilmain` |
+| Server-side sessions   | Every login creates a `Session` row (`expiresAt`, `userAgent`); a JWT alone is not enough — a revoked session is rejected immediately                                                           | `lvilmain`              |
+| Session management     | A user sees their active sessions and can revoke them; an admin can revoke every session of an account, which also closes its live sockets                                                      | `afaugero` · `jbayonne` |
+| Roles & permissions    | Four roles (`GUEST`, `ARTIST`, `MODERATOR`, `ADMIN`) over one explicit permission table shared by the three apps; the same `can()` gates the server guard and the rendered UI                   | `lvilmain`              |
+| Back-office (`/admin`) | User CRUD, role changes, session revocation, track moderation — route-guarded by permission, not by role                                                                                        | `afaugero`              |
+| Profile                | Avatar upload, artist name, handle, bio, location, external links                                                                                                                               | `afaugero`              |
+| API keys               | `X-API-Key` credentials created and revoked from `/settings`, stored hashed and shown once; a key carries exactly its owner's permissions, and the public API is documented at `/documentation` | `afaugero`              |
 
 ### Creation
 
@@ -840,7 +858,30 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
   dashboard (#66) pages, the admin back-office (#267, #269), the legal pages (#142, #143,
   #144), the shared auth package (#133), and the French and Spanish translations (#171).
 
-**Challenges:** …
+**Challenges:** A role I had never held, an SDK nobody on the team knew, and an
+infrastructure layer outside my background — all while holding a job alongside 42. The
+answer was the same for the three: decide, and write the decision down, before anyone
+writes code.
+
+- **Tech Lead for the first time.** A wrong architectural call was no longer mine alone
+  to pay — it was four people rewriting their work. Hence the planning made visible:
+  every decision written in `docs/` before implementation, each app carrying its own
+  conventions in `CLAUDE.md`, and a repository readable at a glance — labelled and
+  assigned issues, a naming convention for issues and commits, one branch per issue.
+  That is what let an issue be handed over without a meeting attached to it.
+- **openDAW, then the infrastructure.** The SDK's reactive box graph fails at runtime,
+  not at compile time, and Docker, nginx and TLS were not my background — both cost far
+  more than feature work of the same size. The habit that fixed it was a discovery pass
+  on every non-trivial issue: read, spike the smallest version, write the spec, so the
+  development that followed went in a direction we had already checked. Each setup was
+  then documented once — `docs/infra.md`, `docs/architecture/studio-devices.md` —
+  instead of re-derived.
+- **A team ramping up on TypeScript and React.** Writing the hard parts myself would
+  have been faster that week and fatal over a semester, so I spent the time on pairing,
+  on reviews that explain the _why_, and on shared foundations the others could build on
+  (`@transcendence/ui`, `@transcendence/auth`, the repository layer). The cost was my
+  own velocity for a few weeks; the return was a team shipping vertical slices end to
+  end without me in the loop.
 
 ### Antoine Audibert — `anaudibe`
 
@@ -859,7 +900,16 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
   leaking in a response (#231), and the error-handling layer (#121).
 - **Frontend** — the signup page integration (#15).
 
-**Challenges:** …
+**Challenges:** Most of my work sat on the backend and on the API contracts — the public
+producer DTOs, follow and likes, the shared pagination and search rules, and the
+hardening around the leaked password hash and the rate limits. The hard part was never
+writing an endpoint in isolation; it was keeping the HTTP shape stable enough that the
+frontend could mirror it without guessing. That pulled me further into React Query than
+I expected: wiring the hooks and the optimistic updates behind follow and like meant
+getting cache keys, pagination params and profile counts to still agree once the
+mutation came back. And fixing the rate limiting behind nginx — `trustProxy` and the
+forwarded headers — was the reminder that production behaviour is part of the API
+design, not something bolted on afterwards.
 
 ### Julien Bayonne-Chenard — `jbayonne`
 
@@ -879,7 +929,17 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
   authenticated audio route (#126), the access-check route (#115), and nginx serving
   files from the media volume (#126).
 
-**Challenges:** …
+**Challenges:** Most of the difficulty was the stack itself — I was learning the
+language and the tooling while shipping with them. Two things took real time: how React
+decides to re-render, and how TanStack Query's cache decides what a component actually
+sees. The second one is what made the real-time work hard, because a message or a
+presence event arriving on the socket has to land in the cache the pages already render
+from, not in a local state next to it. Working as a team had its own learning curve —
+rebasing on `main` before a pull request and resolving the conflicts that come with five
+people in the same files. And the media and deployment side pushed me into ground I had
+not touched: nginx configuration, and the CORS rules between the front and the backend,
+which only start making sense once you see where the browser draws its security
+boundary.
 
 ### Naëlle Vilmain — `lvilmain`
 
@@ -897,7 +957,16 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
   console error and warning (#414) — a mandatory requirement of the subject.
 - **Translations** — Spanish and French fixes.
 
-**Challenges:** …
+**Challenges:** The hard part was holding the two roles at once — organizing the work
+and writing code inside it. Several features were being built in parallel, and nothing
+on its own guarantees that two people working in different slices produce changes that
+integrate cleanly. As Scrum Master I treated that as the job: splitting large tickets
+into pieces small enough to finish and review in one go, keeping the priorities explicit
+so nobody had to guess what mattered that week, and going to whoever was blocked instead
+of waiting for the next meeting to hear about it. What made it hold was rhythm more than
+process — the Thursday planning to close and re-prioritize the board, Discord for the
+blockers in between, and vertical slices so a feature stayed reviewable in a single pull
+request.
 
 ### Maya-Line Pelage — `mpelage`
 
@@ -921,11 +990,14 @@ Reconstructed from the git history; the issue numbers refer to the GitHub board.
 - **Upload robustness** — rejecting oversized files in `UploadModal` and aligning
   `client_max_body_size` with `MAX_UPLOAD_BYTES` (#249, #244).
 
-**Challenges:** …
-
-> **⚠️ TODO (each member).** Add your **challenges faced and how they were overcome** —
-> the subject asks for it explicitly and it is the question asked at the defence. One
-> concrete problem each, with what you tried and what finally worked.
+**Challenges:** Almost every issue opened new ground. I was not starting from a stack I
+already knew — React, TypeScript, the shared design system, then a browser DAW running
+on an undocumented third-party engine — so most tickets meant learning something I had
+not used the week before. What made it hold was writing it down before moving on: a
+short note on the new API, the new convention, the new corner of the SDK, so the next
+issue did not start from zero. It was slow, and it compounded — the notes made the
+reviews easier, and the tracks page and the studio export path shipped even though I
+knew none of that when I started.
 
 > **Note on the history.** The initial authentication work (#41–#47) and the login page
 > (#12) were done by a member who has since left the team. The team took the code over:
