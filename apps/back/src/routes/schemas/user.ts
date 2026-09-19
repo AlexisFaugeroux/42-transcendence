@@ -54,6 +54,13 @@ export const authUserResponseSchema = {
   type: 'object',
 };
 
+export const meResponseSchema = {
+  additionalProperties: false,
+  properties: { user: { ...authUserSchema, type: ['object', 'null'] } },
+  required: ['user'],
+  type: 'object',
+};
+
 export const producerSchema = {
   additionalProperties: false,
   properties: {

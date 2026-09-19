@@ -1,5 +1,5 @@
 import { ApiErrorReponse } from './errors';
-import type { AuthResponse, AuthUser, LoginBody } from './types';
+import type { AuthResponse, AuthUser, LoginBody, MeResponse } from './types';
 
 export async function loginRequest(body: LoginBody): Promise<AuthResponse> {
   const res = await fetch(`/api/auth/login`, {
@@ -37,11 +37,9 @@ export async function meRequest(): Promise<AuthUser | null> {
     method: 'GET',
   });
 
-  if (res.status === 401) return null;
-
   if (!res.ok)
     throw new ApiErrorReponse(`[api/auth/me] me request failed ${res.status}`, res.status);
-  const data = (await res.json()) as AuthResponse;
+  const data = (await res.json()) as MeResponse;
 
   return data.user;
 }
