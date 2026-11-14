@@ -14,6 +14,7 @@ const TAGS = [
   { description: 'Studio project persistence', name: 'project' },
   { description: 'Direct messages', name: 'chat' },
   { description: 'Back-office: accounts, sessions, moderation', name: 'admin' },
+  { description: 'Liveness probe for the orchestrator', name: 'health' },
 ];
 
 async function openApiPlugin(app: FastifyInstance) {
