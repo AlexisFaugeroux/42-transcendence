@@ -23,6 +23,7 @@ import { adminRoutes } from './routes/admin';
 import { apiKeyRoutes } from './routes/apiKey';
 import { authRoutes } from './routes/auth';
 import { chatRoutes } from './routes/chat';
+import { healthRoutes } from './routes/health';
 import { producerRoutes } from './routes/producer';
 import { projectRoutes } from './routes/project';
 import { sampleRoutes } from './routes/sample';
@@ -103,6 +104,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(openApiPlugin);
 
   // Routes
+  await app.register(healthRoutes, { prefix: '/api/health' });
   await app.register(adminRoutes, { prefix: '/api/admin' });
   await app.register(apiKeyRoutes, { prefix: '/api/keys' });
   await app.register(websocketRoutes, { prefix: '/api' });

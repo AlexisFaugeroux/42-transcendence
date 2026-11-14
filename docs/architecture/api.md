@@ -22,6 +22,7 @@ A one-page inventory. The per-domain reasoning lives in
 | `/api/chat`    | `routes/chat.ts`      | direct messages                              |
 | `/api/admin`   | `routes/admin.ts`     | back-office: accounts, sessions, moderation  |
 | `/api/keys`    | `routes/apiKey.ts`    | API keys of the authenticated account        |
+| `/api/health`  | `routes/health.ts`    | liveness probe (server + database)           |
 
 `/documentation` sits outside `/api` on purpose: it is the human-facing Swagger UI,
 not part of the API surface. See **Published reference** below.
@@ -68,6 +69,18 @@ Stay in the RPC style for new endpoints unless you are adding to the producer
 routes.
 
 ## Routes
+
+### `/api/health`
+
+| Route             | Auth | Rate limit | Notes                                                |
+| ----------------- | ---- | ---------- | ---------------------------------------------------- |
+| `GET /api/health` | —    | —          | `200` if PostgreSQL answers `SELECT 1`, `503` if not |
+
+Public and unthrottled because the caller is the orchestrator, not a user. The
+503 is sent by the controller, not thrown: going through the global error
+handler would turn it into a 500. Successful calls are not logged
+(`logLevel: 'warn'`) so a probe every few seconds does not flood the logs;
+failures are.
 
 ### `/api/auth`
 
